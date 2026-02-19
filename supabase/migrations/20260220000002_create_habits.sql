@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS public.habits (
   type          TEXT NOT NULL DEFAULT 'binary' CHECK (type IN ('binary', 'quantitative')),
   target_value  NUMERIC,
   unit          TEXT,
+  estimated_duration_minutes INTEGER NOT NULL DEFAULT 15,
   start_time    TIME,
   end_time      TIME,
   frequency     TEXT NOT NULL DEFAULT 'daily' CHECK (frequency IN ('daily', 'weekly', 'custom')),

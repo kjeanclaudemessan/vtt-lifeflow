@@ -233,5 +233,159 @@
   "notificationsChannelReminders": "Rappels",
   "notificationsChannelRemindersDesc": "Rappels et alertes importants",
   "notificationsChannelSocial": "Activité sociale",
-  "notificationsChannelSocialDesc": "Activité des personnes que vous suivez"
+  "notificationsChannelSocialDesc": "Activité des personnes que vous suivez",
+
+  "@_DOMAINS": {},
+  "domainsTitle": "Domaines de vie",
+  "domainsEmptyTitle": "Aucun domaine",
+  "domainsEmptyDescription": "Ajoutez votre premier domaine de vie pour organiser vos habitudes.",
+  "domainAdd": "Nouveau domaine",
+  "domainName": "Nom du domaine",
+  "domainIcon": "Icône",
+  "domainColor": "Couleur",
+  "domainArchive": "Archiver",
+  "domainUnarchive": "Désarchiver",
+  "domainArchived": "Archivé",
+  "domainArchivedSection": "Domaines archivés",
+  "domainCannotArchiveLast": "Vous devez garder au moins un domaine actif.",
+  "domainHabitCount": "{count, plural, =0{Aucune habitude} =1{1 habitude} other{{count} habitudes}}",
+  "@domainHabitCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
+  "@_HABITS": {},
+  "habitsTitle": "Habitudes",
+  "habitsEmptyTitle": "Aucune habitude",
+  "habitsEmptyDescription": "Créez votre première habitude pour commencer à tracker votre temps.",
+  "habitAdd": "Nouvelle habitude",
+  "habitEdit": "Modifier l'habitude",
+  "habitName": "Nom de l'habitude",
+  "habitDescription": "Description (optionnel)",
+  "habitType": "Type",
+  "habitTypeBinary": "Oui / Non",
+  "habitTypeQuantitative": "Quantitative",
+  "habitTargetValue": "Valeur cible",
+  "habitUnit": "Unité",
+  "habitEstimatedDuration": "Durée estimée",
+  "habitEstimatedDurationHelper": "Ce temps sera compté dans ton compteur",
+  "habitEstimatedDurationMinutes": "{minutes} min",
+  "@habitEstimatedDurationMinutes": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  "habitTimeRange": "Plage horaire",
+  "habitFrequency": "Fréquence",
+  "habitFrequencyDaily": "Tous les jours",
+  "habitFrequencyWeekly": "Jours spécifiques",
+  "habitFrequencyCustom": "Personnalisé",
+  "habitArchive": "Archiver cette habitude",
+  "habitDomain": "Domaine",
+  "habitSelectDomain": "Choisir un domaine",
+  "habitChecked": "Fait !",
+  "habitUnchecked": "Décochée",
+  "habitBackdateLimit": "Vous pouvez antidater jusqu'à 7 jours.",
+
+  "@_STREAKS": {},
+  "streakDays": "{count}j",
+  "@streakDays": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "streakBest": "Record : {count}j",
+  "@streakBest": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "streakFreezeActive": "Freeze actif",
+  "streakFreezeUsed": "Freeze utilisé",
+  "streakFreezeAvailable": "1 freeze disponible par semaine",
+  "streakDetail": "Détail du streak",
+  "streakFreeze": "Streak Freeze",
+  "streakFreezeDescription": "Préserve automatiquement ton streak si tu rates un jour par semaine.",
+  "streakFreezeEnabled": "Streak freeze activé",
+
+  "@_COUNTER": {},
+  "counterTitle": "Compteur temps",
+  "counterEmptyTitle": "Pas encore de données",
+  "counterEmptyDescription": "Coche tes habitudes pour voir ton temps par domaine.",
+  "counterThisWeek": "Cette semaine",
+  "counterLastWeek": "Semaine dernière",
+  "counterTotal": "Total",
+  "counterHours": "{hours}h {minutes}m",
+  "@counterHours": {
+    "placeholders": {
+      "hours": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
+  "counterDelta": "{sign}{hours}h {minutes}m vs semaine dernière",
+  "@counterDelta": {
+    "placeholders": {
+      "sign": {"type": "String"},
+      "hours": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
+  "counterPerHabit": "{minutes}min × {days}j",
+  "@counterPerHabit": {
+    "placeholders": {
+      "minutes": {"type": "int"},
+      "days": {"type": "int"}
+    }
+  },
+
+  "@_TODAY": {},
+  "todayGreetingMorning": "Bonjour ☀️",
+  "todayGreetingAfternoon": "Continue comme ça 💪",
+  "todayGreetingEvening": "Belle journée 🌙",
+  "todayHabitsRemaining": "{count, plural, =0{Tout est fait !} =1{1 habitude restante} other{{count} habitudes restantes}}",
+  "@todayHabitsRemaining": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "todayProgress": "{done}/{total} habitudes faites",
+  "@todayProgress": {
+    "placeholders": {
+      "done": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "todayNoHabits": "Pas d'habitudes pour aujourd'hui",
+  "todayCounterSummary": "Cette semaine : {hours}h {minutes}m",
+  "@todayCounterSummary": {
+    "placeholders": {
+      "hours": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
+  "todaySectionMorning": "Matin",
+  "todaySectionAfternoon": "Après-midi",
+  "todaySectionEvening": "Soir",
+  "todaySectionAnytime": "Sans horaire",
+
+  "@_BILAN": {},
+  "bilanTitle": "Bilan hebdomadaire",
+  "bilanReady": "📊 Ton bilan est prêt !",
+  "bilanShare": "Partager mon bilan",
+  "bilanCompletionRate": "Taux de complétion",
+  "bilanTopHabit": "Habitude star",
+  "bilanLongestStreak": "Plus long streak",
+  "bilanFirstWeek": "C'est ta première semaine — pas de comparaison encore. Continue !",
+  "bilanWeekOf": "Semaine du {date}",
+  "@bilanWeekOf": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+
+  "@_NAVIGATION": {},
+  "navToday": "Aujourd'hui",
+  "navHabits": "Habitudes",
+  "navCounter": "Compteur"
 }

@@ -26,10 +26,10 @@
 
 **Purpose**: Clean DS duplicates, update enums, add i18n keys.
 
-- [ ] T001 [P] [SETUP] **DS Cleanup** — Delete `flutter/lib/design_system/colors/app_colors.dart` (dead duplicate). Delete `flutter/lib/design_system/radius/app_radius.dart` (dead duplicate). Delete `flutter/lib/design_system/typography/app_typography.dart` (dead duplicate). Update `flutter/lib/ui/bottom_sheets/notice/notice_sheet.dart` and `flutter/lib/ui/dialogs/info_alert/info_alert_dialog.dart` to import from `design_system/tokens/app_colors.dart` instead of `ui/common/app_colors.dart`. Verify barrel file `design_system/design_system.dart` already exports from `tokens/` (it does).
-- [ ] T002 [P] [SETUP] **Update enums** in `flutter/lib/core/enums/lifeflow_enums.dart` — Add `TimeSlot` enum (morning, afternoon, evening, anytime) with `fromHour(int hour)` factory. Verify existing enums (HabitType, HabitFrequency) still valid.
-- [ ] T003 [P] [SETUP] Add Phase 1 English i18n keys in `flutter/lib/l10n/arb/app_en.arb` — domains, habits, counter, today, bilan, streak labels. Include contextual messages for TodayView modes.
-- [ ] T004 [P] [SETUP] Add Phase 1 French i18n keys in `flutter/lib/l10n/arb/app_fr.arb` — matching French translations.
+- [x] T001 [P] [SETUP] **DS Cleanup** — Delete `flutter/lib/design_system/colors/app_colors.dart` (dead duplicate). Delete `flutter/lib/design_system/radius/app_radius.dart` (dead duplicate). Delete `flutter/lib/design_system/typography/app_typography.dart` (dead duplicate). Update `flutter/lib/ui/bottom_sheets/notice/notice_sheet.dart` and `flutter/lib/ui/dialogs/info_alert/info_alert_dialog.dart` to import from `design_system/tokens/app_colors.dart` instead of `ui/common/app_colors.dart`. Verify barrel file `design_system/design_system.dart` already exports from `tokens/` (it does).
+- [x] T002 [P] [SETUP] **Update enums** in `flutter/lib/core/enums/lifeflow_enums.dart` — Add `TimeSlot` enum (morning, afternoon, evening, anytime) with `fromHour(int hour)` factory. Verify existing enums (HabitType, HabitFrequency) still valid.
+- [x] T003 [P] [SETUP] Add Phase 1 English i18n keys in `flutter/lib/l10n/arb/app_en.arb` — domains, habits, counter, today, bilan, streak labels. Include contextual messages for TodayView modes.
+- [x] T004 [P] [SETUP] Add Phase 1 French i18n keys in `flutter/lib/l10n/arb/app_fr.arb` — matching French translations.
 
 ---
 

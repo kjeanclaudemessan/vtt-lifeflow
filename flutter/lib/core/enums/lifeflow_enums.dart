@@ -2,6 +2,66 @@
 ///
 /// Shared enums used across features in Phase 1.
 
+/// Time slot for grouping habits in TodayView.
+enum TimeSlot {
+  /// Morning habits (before 12:00).
+  morning,
+
+  /// Afternoon habits (12:00–18:00).
+  afternoon,
+
+  /// Evening habits (after 18:00).
+  evening,
+
+  /// Habits without a specific time range.
+  anytime;
+
+  /// Determines the [TimeSlot] from an hour (0–23).
+  ///
+  /// Returns [anytime] if [hour] is null.
+  static TimeSlot fromHour(int? hour) {
+    if (hour == null) return TimeSlot.anytime;
+    if (hour < 12) return TimeSlot.morning;
+    if (hour < 18) return TimeSlot.afternoon;
+    return TimeSlot.evening;
+  }
+
+  /// Human-readable label for this slot (used as section header).
+  String get label => switch (this) {
+        TimeSlot.morning => 'Matin',
+        TimeSlot.afternoon => 'Après-midi',
+        TimeSlot.evening => 'Soir',
+        TimeSlot.anytime => 'Sans horaire',
+      };
+
+  /// Sort weight for ordering sections.
+  int get sortWeight => switch (this) {
+        TimeSlot.morning => 0,
+        TimeSlot.afternoon => 1,
+        TimeSlot.evening => 2,
+        TimeSlot.anytime => 3,
+      };
+}
+
+/// The contextual mode of TodayView based on current hour.
+enum TodayMode {
+  /// Morning mode (5h–12h): greeting, habits by slot, mini counter.
+  morning,
+
+  /// Progress mode (12h–18h): X/Y done, progress bar, remaining habits.
+  progress,
+
+  /// Bilan mode (18h–5h): day summary, time per domain today.
+  bilan;
+
+  /// Determines the [TodayMode] from the current hour (0–23).
+  static TodayMode fromHour(int hour) {
+    if (hour >= 5 && hour < 12) return TodayMode.morning;
+    if (hour >= 12 && hour < 18) return TodayMode.progress;
+    return TodayMode.bilan;
+  }
+}
+
 /// The type of a habit.
 enum HabitType {
   /// A binary habit — either done or not done.
