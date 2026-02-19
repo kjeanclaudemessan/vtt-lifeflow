@@ -107,9 +107,9 @@ class OnboardingViewModel extends BaseViewModel {
     _navigateToNextScreen();
   }
 
-  /// Navigate to the next screen (home).
+  /// Navigate to the next screen (login — user must authenticate).
   void _navigateToNextScreen() {
-    _navigationService.clearStackAndShow(Routes.homeView);
+    _navigationService.clearStackAndShow(Routes.loginView);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

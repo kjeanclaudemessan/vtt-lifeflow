@@ -4,6 +4,7 @@ import 'package:stacked/stacked.dart';
 import '../../../core/enums/lifeflow_enums.dart';
 import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
+import '../../../domain/entities/domain_entity.dart';
 import '../../domains/widgets/domain_picker_sheet.dart';
 import '../viewmodels/habit_form_viewmodel.dart';
 
@@ -123,6 +124,7 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
               context: context,
               domains: viewModel.domains,
               selectedDomainId: domain?.id,
+              onCreateNew: () => _showCreateDomainDialog(context, viewModel),
             );
             if (selected != null) {
               viewModel.setSelectedDomain(selected);
@@ -447,6 +449,68 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
         );
       }),
     );
+  }
+
+  Future<void> _showCreateDomainDialog(
+    BuildContext context,
+    HabitFormViewModel viewModel,
+  ) async {
+    final nameController = TextEditingController();
+    final iconController = TextEditingController(text: '🎯');
+
+    final result = await AppDialog.show<DomainEntity>(
+      context: context,
+      title: 'Nouveau domaine',
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: 56,
+                child: AppTextField(
+                  label: 'Icône',
+                  controller: iconController,
+                  maxLength: 2,
+                ),
+              ),
+              SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: AppTextField(
+                  label: 'Nom',
+                  hint: 'Ex: Santé',
+                  controller: nameController,
+                  autofocus: true,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      primaryAction: AppDialogAction(
+        label: 'Créer',
+        onPressed: () {
+          final name = nameController.text.trim();
+          if (name.isEmpty) return;
+          final entity = DomainEntity.empty().copyWith(
+            name: name,
+            icon: iconController.text.trim().isEmpty
+                ? '🎯'
+                : iconController.text.trim(),
+          );
+          Navigator.of(context).pop(entity);
+        },
+      ),
+      secondaryAction: AppDialogAction(
+        label: 'Annuler',
+        isSecondary: true,
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    );
+
+    if (result != null) {
+      await viewModel.createDomainAndSelect(result);
+    }
   }
 
   @override

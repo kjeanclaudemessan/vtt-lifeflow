@@ -204,6 +204,20 @@ class HabitFormViewModel extends BaseViewModel {
     );
   }
 
+  /// Creates a new domain and selects it in the form.
+  Future<void> createDomainAndSelect(DomainEntity domain) async {
+    final result = await _domainRepo.createDomain(domain);
+    result.fold(
+      (failure) => setError(failure.message),
+      (created) {
+        _domains.add(created);
+        _selectedDomain = created;
+        _domainError = null;
+        rebuildUi();
+      },
+    );
+  }
+
   @override
   void dispose() {
     nameController.dispose();

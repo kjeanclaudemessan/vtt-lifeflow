@@ -24,7 +24,7 @@ class MainApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
-          title: 'VTT Flutter Template',
+          title: 'LifeFlow',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
@@ -38,9 +38,9 @@ class MainApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.supportedLocales,
-          locale: const Locale('en'),
+          locale: const Locale('fr'),
 
-          initialRoute: Routes.designShowcaseView,
+          initialRoute: Routes.splashView,
           onGenerateRoute: StackedRouter().onGenerateRoute,
           navigatorKey: StackedService.navigatorKey,
           navigatorObservers: [StackedService.routeObserver],

@@ -20,7 +20,7 @@ class DevConfig implements EnvConfig {
   @override
   String get supabaseUrl => const String.fromEnvironment(
         'SUPABASE_URL',
-        defaultValue: 'http://127.0.0.1:54321',
+        defaultValue: 'http://127.0.0.1:54421',
       );
 
   @override
@@ -46,7 +46,7 @@ class DevConfig implements EnvConfig {
   bool get enableCrashReporting => false;
 
   @override
-  String get appName => 'MyApp Dev';
+  String get appName => 'LifeFlow Dev';
 
   @override
   Duration get apiTimeout => const Duration(seconds: 60);
