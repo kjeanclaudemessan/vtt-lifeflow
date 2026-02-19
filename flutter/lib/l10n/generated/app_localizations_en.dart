@@ -565,6 +565,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'Create your account and start your journey with us today.';
 
   @override
+  String get onboardingDomainsTitle => 'Choose your life domains';
+
+  @override
+  String get onboardingDomainsDescription =>
+      'Select the domains you want to track. You can add more later.';
+
+  @override
+  String get onboardingDomainsMinimum => 'Select at least 1 domain';
+
+  @override
   String get welcomeBack => 'Welcome back!';
 
   @override
@@ -708,4 +718,293 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get notificationsChannelSocialDesc =>
       'Activity from people you follow';
+
+  @override
+  String get domainsTitle => 'Life Domains';
+
+  @override
+  String get domainsEmptyTitle => 'No Domains';
+
+  @override
+  String get domainsEmptyDescription =>
+      'Add your first life domain to organize your habits.';
+
+  @override
+  String get domainAdd => 'New Domain';
+
+  @override
+  String get domainName => 'Domain name';
+
+  @override
+  String get domainIcon => 'Icon';
+
+  @override
+  String get domainColor => 'Color';
+
+  @override
+  String get domainArchive => 'Archive';
+
+  @override
+  String get domainUnarchive => 'Unarchive';
+
+  @override
+  String get domainArchived => 'Archived';
+
+  @override
+  String get domainArchivedSection => 'Archived domains';
+
+  @override
+  String get domainCannotArchiveLast =>
+      'You must keep at least one active domain.';
+
+  @override
+  String domainHabitCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count habits',
+      one: '1 habit',
+      zero: 'No habits',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get habitsTitle => 'Habits';
+
+  @override
+  String get habitsEmptyTitle => 'No Habits Yet';
+
+  @override
+  String get habitsEmptyDescription =>
+      'Create your first habit to start tracking your time.';
+
+  @override
+  String get habitAdd => 'New Habit';
+
+  @override
+  String get habitEdit => 'Edit Habit';
+
+  @override
+  String get habitName => 'Habit name';
+
+  @override
+  String get habitDescription => 'Description (optional)';
+
+  @override
+  String get habitType => 'Type';
+
+  @override
+  String get habitTypeBinary => 'Yes / No';
+
+  @override
+  String get habitTypeQuantitative => 'Quantitative';
+
+  @override
+  String get habitTargetValue => 'Target value';
+
+  @override
+  String get habitUnit => 'Unit';
+
+  @override
+  String get habitEstimatedDuration => 'Estimated duration';
+
+  @override
+  String get habitEstimatedDurationHelper =>
+      'This time counts toward your counter';
+
+  @override
+  String habitEstimatedDurationMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get habitTimeRange => 'Time range';
+
+  @override
+  String get habitFrequency => 'Frequency';
+
+  @override
+  String get habitFrequencyDaily => 'Every day';
+
+  @override
+  String get habitFrequencyWeekly => 'Specific days';
+
+  @override
+  String get habitFrequencyCustom => 'Custom';
+
+  @override
+  String get habitArchive => 'Archive this habit';
+
+  @override
+  String get habitDomain => 'Domain';
+
+  @override
+  String get habitSelectDomain => 'Select a domain';
+
+  @override
+  String get habitChecked => 'Done!';
+
+  @override
+  String get habitUnchecked => 'Unchecked';
+
+  @override
+  String get habitBackdateLimit => 'You can only backdate up to 7 days.';
+
+  @override
+  String streakDays(int count) {
+    return '${count}d';
+  }
+
+  @override
+  String streakBest(int count) {
+    return 'Best: ${count}d';
+  }
+
+  @override
+  String get streakFreezeActive => 'Freeze active';
+
+  @override
+  String get streakFreezeUsed => 'Freeze used';
+
+  @override
+  String get streakFreezeAvailable => '1 freeze available per week';
+
+  @override
+  String get streakDetail => 'Streak Detail';
+
+  @override
+  String get streakFreeze => 'Streak Freeze';
+
+  @override
+  String get streakFreezeDescription =>
+      'Automatically preserves your streak if you miss one day per week.';
+
+  @override
+  String get streakFreezeEnabled => 'Streak freeze enabled';
+
+  @override
+  String get counterTitle => 'Time Counter';
+
+  @override
+  String get counterEmptyTitle => 'No Data Yet';
+
+  @override
+  String get counterEmptyDescription =>
+      'Check off habits to see your time per domain.';
+
+  @override
+  String get counterThisWeek => 'This week';
+
+  @override
+  String get counterLastWeek => 'Last week';
+
+  @override
+  String get counterTotal => 'Total';
+
+  @override
+  String counterHours(int hours, int minutes) {
+    return '${hours}h ${minutes}m';
+  }
+
+  @override
+  String counterDelta(String sign, int hours, int minutes) {
+    return '$sign${hours}h ${minutes}m vs last week';
+  }
+
+  @override
+  String counterPerHabit(int minutes, int days) {
+    return '${minutes}min × ${days}d';
+  }
+
+  @override
+  String get todayEmptyTitle => 'No habits yet';
+
+  @override
+  String get todayEmptySubtitle => 'Start by adding your first habit!';
+
+  @override
+  String get todayGreetingMorning => 'Good morning ☀️';
+
+  @override
+  String get todayGreetingAfternoon => 'Keep going 💪';
+
+  @override
+  String get todayGreetingEvening => 'Well done today 🌙';
+
+  @override
+  String todayHabitsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count habits remaining',
+      one: '1 habit remaining',
+      zero: 'All done!',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String todayProgress(int done, int total) {
+    return '$done/$total habits done';
+  }
+
+  @override
+  String get todayNoHabits => 'No habits for today';
+
+  @override
+  String todayCounterSummary(int hours, int minutes) {
+    return 'This week: ${hours}h ${minutes}m';
+  }
+
+  @override
+  String get todaySectionMorning => 'Morning';
+
+  @override
+  String get todaySectionAfternoon => 'Afternoon';
+
+  @override
+  String get todaySectionEvening => 'Evening';
+
+  @override
+  String get todaySectionAnytime => 'Anytime';
+
+  @override
+  String get bilanTitle => 'Weekly Summary';
+
+  @override
+  String get bilanReady => '📊 Your summary is ready!';
+
+  @override
+  String get bilanShare => 'Share my summary';
+
+  @override
+  String get bilanCompletionRate => 'Completion rate';
+
+  @override
+  String get bilanTopHabit => 'Top habit';
+
+  @override
+  String get bilanLongestStreak => 'Longest streak';
+
+  @override
+  String get bilanFirstWeek =>
+      'This is your first week — no comparison yet. Keep going!';
+
+  @override
+  String get bilanDomainBreakdown => 'Domain breakdown';
+
+  @override
+  String bilanWeekOf(String date) {
+    return 'Week of $date';
+  }
+
+  @override
+  String get navToday => 'Today';
+
+  @override
+  String get navHabits => 'Habits';
+
+  @override
+  String get navCounter => 'Counter';
 }

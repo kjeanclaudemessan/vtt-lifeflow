@@ -252,6 +252,9 @@
   "onboardingSlide2Description": "Get real-time updates and notifications to never miss anything important.",
   "onboardingSlide3Title": "Get Started",
   "onboardingSlide3Description": "Create your account and start your journey with us today.",
+  "onboardingDomainsTitle": "Choose your life domains",
+  "onboardingDomainsDescription": "Select the domains you want to track. You can add more later.",
+  "onboardingDomainsMinimum": "Select at least 1 domain",
   "@_MISC": {},
   "welcomeBack": "Welcome back!",
   "welcomeBackUser": "Welcome back, {name}!",
@@ -422,6 +425,8 @@
   },
 
   "@_TODAY": {},
+  "todayEmptyTitle": "No habits yet",
+  "todayEmptySubtitle": "Start by adding your first habit!",
   "todayGreetingMorning": "Good morning ☀️",
   "todayGreetingAfternoon": "Keep going 💪",
   "todayGreetingEvening": "Well done today 🌙",
@@ -459,6 +464,7 @@
   "bilanTopHabit": "Top habit",
   "bilanLongestStreak": "Longest streak",
   "bilanFirstWeek": "This is your first week — no comparison yet. Keep going!",
+  "bilanDomainBreakdown": "Domain breakdown",
   "bilanWeekOf": "Week of {date}",
   "@bilanWeekOf": {
     "placeholders": {

@@ -2,7 +2,11 @@ import 'package:lifeflow/services/moneroo/moneroo_service.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:lifeflow/data/repositories/auth_repository_impl.dart';
+import 'package:lifeflow/data/repositories/domain_repository_impl.dart';
+import 'package:lifeflow/data/repositories/habit_repository_impl.dart';
 import 'package:lifeflow/domain/repositories/i_auth_repository.dart';
+import 'package:lifeflow/domain/repositories/i_domain_repository.dart';
+import 'package:lifeflow/domain/repositories/i_habit_repository.dart';
 import 'package:lifeflow/modules/auth/views/forgot_password_view.dart';
 import 'package:lifeflow/modules/auth/views/login_view.dart';
 import 'package:lifeflow/modules/auth/views/register_view.dart';
@@ -13,7 +17,14 @@ import 'package:lifeflow/modules/profile/views/edit_profile_view.dart';
 import 'package:lifeflow/modules/profile/views/profile_view.dart';
 import 'package:lifeflow/modules/settings/views/settings_view.dart';
 import 'package:lifeflow/modules/splash/views/splash_view.dart';
+import 'package:lifeflow/features/domains/views/domains_view.dart';
+import 'package:lifeflow/features/habits/views/habits_view.dart';
+import 'package:lifeflow/features/habits/views/habit_form_view.dart';
+import 'package:lifeflow/features/counter/views/counter_view.dart';
+import 'package:lifeflow/features/today/views/today_view.dart';
+import 'package:lifeflow/features/bilan/views/bilan_view.dart';
 import 'package:lifeflow/services/api/api_service.dart';
+import 'package:lifeflow/services/bilan_service.dart';
 import 'package:lifeflow/services/connectivity/connectivity_service.dart';
 import 'package:lifeflow/services/dialog/dialog_helper.dart';
 import 'package:lifeflow/services/storage/local_storage_service.dart';
@@ -21,6 +32,7 @@ import 'package:lifeflow/services/storage/secure_storage_service.dart';
 import 'package:lifeflow/services/storage/storage_service.dart';
 import 'package:lifeflow/services/supabase/supabase_auth_service.dart';
 import 'package:lifeflow/services/supabase/supabase_service.dart';
+import 'package:lifeflow/services/time_counter_service.dart';
 import 'package:lifeflow/ui/bottom_sheets/notice/notice_sheet.dart';
 import 'package:lifeflow/ui/dialogs/info_alert/info_alert_dialog.dart';
 import 'package:lifeflow/ui/views/design_showcase/design_showcase_view.dart';
@@ -59,6 +71,16 @@ import 'package:lifeflow/ui/views/startup/startup_view.dart';
     MaterialRoute(page: HomeView),
     MaterialRoute(page: StartupView),
     MaterialRoute(page: DesignShowcaseView),
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // FEATURE ROUTES (Phase 1)
+    // ═══════════════════════════════════════════════════════════════════════
+    MaterialRoute(page: DomainsView),
+    MaterialRoute(page: HabitsView),
+    MaterialRoute(page: HabitFormView),
+    MaterialRoute(page: CounterView),
+    MaterialRoute(page: TodayView),
+    MaterialRoute(page: BilanView),
 
     // ═══════════════════════════════════════════════════════════════════════
     // FEATURE ROUTES (Development)
@@ -113,6 +135,14 @@ import 'package:lifeflow/ui/views/startup/startup_view.dart';
     // REPOSITORIES
     // ═══════════════════════════════════════════════════════════════════════
     LazySingleton(classType: AuthRepositoryImpl, asType: IAuthRepository),
+    LazySingleton(classType: DomainRepositoryImpl, asType: IDomainRepository),
+    LazySingleton(classType: HabitRepositoryImpl, asType: IHabitRepository),
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // FEATURE SERVICES (Phase 1)
+    // ═══════════════════════════════════════════════════════════════════════
+    LazySingleton(classType: TimeCounterService),
+    LazySingleton(classType: BilanService),
 
     // ═══════════════════════════════════════════════════════════════════════
     // OPTIONAL MODULE SERVICES

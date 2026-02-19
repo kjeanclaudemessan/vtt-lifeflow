@@ -186,6 +186,9 @@
   "onboardingSlide2Description": "Recevez des mises à jour et notifications en temps réel pour ne rien manquer d'important.",
   "onboardingSlide3Title": "Commencez",
   "onboardingSlide3Description": "Créez votre compte et démarrez votre aventure avec nous dès aujourd'hui.",
+  "onboardingDomainsTitle": "Choisis tes domaines de vie",
+  "onboardingDomainsDescription": "Sélectionne les domaines que tu veux tracker. Tu pourras en ajouter plus tard.",
+  "onboardingDomainsMinimum": "Choisis au moins 1 domaine",
   "@_MISC": {},
   "welcomeBack": "Bon retour !",
   "welcomeBackUser": "Bon retour, {name} !",
@@ -340,6 +343,8 @@
   },
 
   "@_TODAY": {},
+  "todayEmptyTitle": "Pas encore d'habitudes",
+  "todayEmptySubtitle": "Commence par ajouter ta première habitude !",
   "todayGreetingMorning": "Bonjour ☀️",
   "todayGreetingAfternoon": "Continue comme ça 💪",
   "todayGreetingEvening": "Belle journée 🌙",
@@ -377,6 +382,7 @@
   "bilanTopHabit": "Habitude star",
   "bilanLongestStreak": "Plus long streak",
   "bilanFirstWeek": "C'est ta première semaine — pas de comparaison encore. Continue !",
+  "bilanDomainBreakdown": "Répartition par domaine",
   "bilanWeekOf": "Semaine du {date}",
   "@bilanWeekOf": {
     "placeholders": {

@@ -37,6 +37,7 @@ class SettingsViewModel extends BaseViewModel {
 
   bool _pushNotificationsEnabled = true;
   bool _emailNotificationsEnabled = true;
+  bool _streakFreezeEnabled = true;
 
   /// Current theme mode.
   ThemeMode get themeMode => _themeMode;
@@ -59,6 +60,9 @@ class SettingsViewModel extends BaseViewModel {
 
   /// Whether email notifications are enabled.
   bool get emailNotificationsEnabled => _emailNotificationsEnabled;
+
+  /// Whether streak freeze is enabled.
+  bool get streakFreezeEnabled => _streakFreezeEnabled;
 
   /// Get theme mode display name.
   String getThemeModeLabel(ThemeMode mode) {
@@ -107,6 +111,9 @@ class SettingsViewModel extends BaseViewModel {
         _localStorage.getBool('push_notifications') ?? true;
     _emailNotificationsEnabled =
         _localStorage.getBool('email_notifications') ?? true;
+
+    _streakFreezeEnabled =
+        _localStorage.getBool('streak_freeze_enabled') ?? true;
 
     rebuildUi();
   }
@@ -179,11 +186,19 @@ class SettingsViewModel extends BaseViewModel {
     rebuildUi();
   }
 
+  /// Toggle streak freeze feature.
+  Future<void> toggleStreakFreeze(bool value) async {
+    _streakFreezeEnabled = value;
+    await _localStorage.setBool('streak_freeze_enabled', value);
+    rebuildUi();
+  }
+
   /// Get toggle value for a specific item.
   bool getToggleValue(String itemId) {
     return switch (itemId) {
       'push_notifications' => _pushNotificationsEnabled,
       'email_notifications' => _emailNotificationsEnabled,
+      'streak_freeze' => _streakFreezeEnabled,
       _ => false,
     };
   }
@@ -195,6 +210,8 @@ class SettingsViewModel extends BaseViewModel {
         await togglePushNotifications(value);
       case 'email_notifications':
         await toggleEmailNotifications(value);
+      case 'streak_freeze':
+        await toggleStreakFreeze(value);
     }
   }
 

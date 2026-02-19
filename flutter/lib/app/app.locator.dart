@@ -13,17 +13,23 @@ import 'package:stacked_services/src/snackbar/snackbar_service.dart';
 import 'package:stacked_shared/stacked_shared.dart';
 
 import '../data/repositories/auth_repository_impl.dart';
+import '../data/repositories/domain_repository_impl.dart';
+import '../data/repositories/habit_repository_impl.dart';
 import '../domain/repositories/i_auth_repository.dart';
+import '../domain/repositories/i_domain_repository.dart';
+import '../domain/repositories/i_habit_repository.dart';
 import '../modules/optional/payments/payment_service.dart';
 import '../services/api/api_service.dart';
+import '../services/bilan_service.dart';
 import '../services/connectivity/connectivity_service.dart';
-import '../services/moneroo/moneroo_service.dart';
 import '../services/dialog/dialog_helper.dart';
+import '../services/moneroo/moneroo_service.dart';
 import '../services/storage/local_storage_service.dart';
 import '../services/storage/secure_storage_service.dart';
 import '../services/storage/storage_service.dart';
 import '../services/supabase/supabase_auth_service.dart';
 import '../services/supabase/supabase_service.dart';
+import '../services/time_counter_service.dart';
 
 final locator = StackedLocator.instance;
 
@@ -49,6 +55,11 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => SupabaseAuthService());
   locator.registerLazySingleton(() => StorageService());
   locator.registerLazySingleton<IAuthRepository>(() => AuthRepositoryImpl());
-  locator.registerLazySingleton(() => MonerooService());
+  locator
+      .registerLazySingleton<IDomainRepository>(() => DomainRepositoryImpl());
+  locator.registerLazySingleton<IHabitRepository>(() => HabitRepositoryImpl());
+  locator.registerLazySingleton(() => TimeCounterService());
+  locator.registerLazySingleton(() => BilanService());
   locator.registerLazySingleton(() => PaymentService());
+  locator.registerLazySingleton(() => MonerooService());
 }

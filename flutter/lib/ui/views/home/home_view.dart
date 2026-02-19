@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
+import '../../../features/counter/views/counter_view.dart';
+import '../../../features/habits/views/habits_view.dart';
+import '../../../features/today/views/today_view.dart';
 import 'home_viewmodel.dart';
 
 class HomeView extends StackedView<HomeViewModel> {
@@ -9,54 +13,37 @@ class HomeView extends StackedView<HomeViewModel> {
 
   @override
   Widget builder(BuildContext context, HomeViewModel viewModel, Widget? child) {
+    final l10n = context.l10n;
+
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(height: AppSpacing.xxl),
-                Column(
-                  children: [
-                    Text(
-                      'Hello, STACKED!',
-                      style: AppTypography.displaySmall.copyWith(
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    SizedBox(height: AppSpacing.md),
-                    AppButton.primary(
-                      label: viewModel.counterLabel,
-                      onPressed: viewModel.incrementCounter,
-                      isFullWidth: false,
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: AppSpacing.xl),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AppButton.secondary(
-                        label: 'Show Dialog',
-                        onPressed: viewModel.showDialog,
-                        size: AppButtonSize.small,
-                      ),
-                      AppButton.secondary(
-                        label: 'Show Bottom Sheet',
-                        onPressed: viewModel.showBottomSheet,
-                        size: AppButtonSize.small,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+      body: IndexedStack(
+        index: viewModel.currentTabIndex,
+        children: const [
+          TodayView(),
+          HabitsView(),
+          CounterView(),
+        ],
+      ),
+      bottomNavigationBar: AppBottomNav(
+        currentIndex: viewModel.currentTabIndex,
+        onTap: viewModel.setTabIndex,
+        items: [
+          AppBottomNavItem(
+            icon: Icons.today_outlined,
+            selectedIcon: Icons.today,
+            label: l10n.navToday,
           ),
-        ),
+          AppBottomNavItem(
+            icon: Icons.check_circle_outline,
+            selectedIcon: Icons.check_circle,
+            label: l10n.navHabits,
+          ),
+          AppBottomNavItem(
+            icon: Icons.timer_outlined,
+            selectedIcon: Icons.timer,
+            label: l10n.navCounter,
+          ),
+        ],
       ),
     );
   }

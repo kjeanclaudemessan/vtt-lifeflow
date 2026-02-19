@@ -361,4 +361,14 @@ abstract final class AppColors {
   /// Get appropriate focus state for theme
   static Color stateFocus(Brightness brightness) =>
       brightness == Brightness.light ? stateFocusLight : stateFocusDark;
+
+  /// Get appropriate text tertiary for theme
+  static Color textTertiary(Brightness brightness) =>
+      brightness == Brightness.light ? textTertiaryLight : textTertiaryDark;
+
+  /// Get appropriate surface secondary for theme
+  static Color surfaceSecondary(Brightness brightness) =>
+      brightness == Brightness.light
+          ? surfaceSecondaryLight
+          : surfaceSecondaryDark;
 }

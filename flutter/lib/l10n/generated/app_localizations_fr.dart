@@ -567,6 +567,16 @@ class AppLocalizationsFr extends AppLocalizations {
       'Créez votre compte et démarrez votre aventure avec nous dès aujourd\'hui.';
 
   @override
+  String get onboardingDomainsTitle => 'Choisis tes domaines de vie';
+
+  @override
+  String get onboardingDomainsDescription =>
+      'Sélectionne les domaines que tu veux tracker. Tu pourras en ajouter plus tard.';
+
+  @override
+  String get onboardingDomainsMinimum => 'Choisis au moins 1 domaine';
+
+  @override
   String get welcomeBack => 'Bon retour !';
 
   @override
@@ -710,4 +720,294 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get notificationsChannelSocialDesc =>
       'Activité des personnes que vous suivez';
+
+  @override
+  String get domainsTitle => 'Domaines de vie';
+
+  @override
+  String get domainsEmptyTitle => 'Aucun domaine';
+
+  @override
+  String get domainsEmptyDescription =>
+      'Ajoutez votre premier domaine de vie pour organiser vos habitudes.';
+
+  @override
+  String get domainAdd => 'Nouveau domaine';
+
+  @override
+  String get domainName => 'Nom du domaine';
+
+  @override
+  String get domainIcon => 'Icône';
+
+  @override
+  String get domainColor => 'Couleur';
+
+  @override
+  String get domainArchive => 'Archiver';
+
+  @override
+  String get domainUnarchive => 'Désarchiver';
+
+  @override
+  String get domainArchived => 'Archivé';
+
+  @override
+  String get domainArchivedSection => 'Domaines archivés';
+
+  @override
+  String get domainCannotArchiveLast =>
+      'Vous devez garder au moins un domaine actif.';
+
+  @override
+  String domainHabitCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count habitudes',
+      one: '1 habitude',
+      zero: 'Aucune habitude',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get habitsTitle => 'Habitudes';
+
+  @override
+  String get habitsEmptyTitle => 'Aucune habitude';
+
+  @override
+  String get habitsEmptyDescription =>
+      'Créez votre première habitude pour commencer à tracker votre temps.';
+
+  @override
+  String get habitAdd => 'Nouvelle habitude';
+
+  @override
+  String get habitEdit => 'Modifier l\'habitude';
+
+  @override
+  String get habitName => 'Nom de l\'habitude';
+
+  @override
+  String get habitDescription => 'Description (optionnel)';
+
+  @override
+  String get habitType => 'Type';
+
+  @override
+  String get habitTypeBinary => 'Oui / Non';
+
+  @override
+  String get habitTypeQuantitative => 'Quantitative';
+
+  @override
+  String get habitTargetValue => 'Valeur cible';
+
+  @override
+  String get habitUnit => 'Unité';
+
+  @override
+  String get habitEstimatedDuration => 'Durée estimée';
+
+  @override
+  String get habitEstimatedDurationHelper =>
+      'Ce temps sera compté dans ton compteur';
+
+  @override
+  String habitEstimatedDurationMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get habitTimeRange => 'Plage horaire';
+
+  @override
+  String get habitFrequency => 'Fréquence';
+
+  @override
+  String get habitFrequencyDaily => 'Tous les jours';
+
+  @override
+  String get habitFrequencyWeekly => 'Jours spécifiques';
+
+  @override
+  String get habitFrequencyCustom => 'Personnalisé';
+
+  @override
+  String get habitArchive => 'Archiver cette habitude';
+
+  @override
+  String get habitDomain => 'Domaine';
+
+  @override
+  String get habitSelectDomain => 'Choisir un domaine';
+
+  @override
+  String get habitChecked => 'Fait !';
+
+  @override
+  String get habitUnchecked => 'Décochée';
+
+  @override
+  String get habitBackdateLimit => 'Vous pouvez antidater jusqu\'à 7 jours.';
+
+  @override
+  String streakDays(int count) {
+    return '${count}j';
+  }
+
+  @override
+  String streakBest(int count) {
+    return 'Record : ${count}j';
+  }
+
+  @override
+  String get streakFreezeActive => 'Freeze actif';
+
+  @override
+  String get streakFreezeUsed => 'Freeze utilisé';
+
+  @override
+  String get streakFreezeAvailable => '1 freeze disponible par semaine';
+
+  @override
+  String get streakDetail => 'Détail du streak';
+
+  @override
+  String get streakFreeze => 'Streak Freeze';
+
+  @override
+  String get streakFreezeDescription =>
+      'Préserve automatiquement ton streak si tu rates un jour par semaine.';
+
+  @override
+  String get streakFreezeEnabled => 'Streak freeze activé';
+
+  @override
+  String get counterTitle => 'Compteur temps';
+
+  @override
+  String get counterEmptyTitle => 'Pas encore de données';
+
+  @override
+  String get counterEmptyDescription =>
+      'Coche tes habitudes pour voir ton temps par domaine.';
+
+  @override
+  String get counterThisWeek => 'Cette semaine';
+
+  @override
+  String get counterLastWeek => 'Semaine dernière';
+
+  @override
+  String get counterTotal => 'Total';
+
+  @override
+  String counterHours(int hours, int minutes) {
+    return '${hours}h ${minutes}m';
+  }
+
+  @override
+  String counterDelta(String sign, int hours, int minutes) {
+    return '$sign${hours}h ${minutes}m vs semaine dernière';
+  }
+
+  @override
+  String counterPerHabit(int minutes, int days) {
+    return '${minutes}min × ${days}j';
+  }
+
+  @override
+  String get todayEmptyTitle => 'Pas encore d\'habitudes';
+
+  @override
+  String get todayEmptySubtitle =>
+      'Commence par ajouter ta première habitude !';
+
+  @override
+  String get todayGreetingMorning => 'Bonjour ☀️';
+
+  @override
+  String get todayGreetingAfternoon => 'Continue comme ça 💪';
+
+  @override
+  String get todayGreetingEvening => 'Belle journée 🌙';
+
+  @override
+  String todayHabitsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count habitudes restantes',
+      one: '1 habitude restante',
+      zero: 'Tout est fait !',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String todayProgress(int done, int total) {
+    return '$done/$total habitudes faites';
+  }
+
+  @override
+  String get todayNoHabits => 'Pas d\'habitudes pour aujourd\'hui';
+
+  @override
+  String todayCounterSummary(int hours, int minutes) {
+    return 'Cette semaine : ${hours}h ${minutes}m';
+  }
+
+  @override
+  String get todaySectionMorning => 'Matin';
+
+  @override
+  String get todaySectionAfternoon => 'Après-midi';
+
+  @override
+  String get todaySectionEvening => 'Soir';
+
+  @override
+  String get todaySectionAnytime => 'Sans horaire';
+
+  @override
+  String get bilanTitle => 'Bilan hebdomadaire';
+
+  @override
+  String get bilanReady => '📊 Ton bilan est prêt !';
+
+  @override
+  String get bilanShare => 'Partager mon bilan';
+
+  @override
+  String get bilanCompletionRate => 'Taux de complétion';
+
+  @override
+  String get bilanTopHabit => 'Habitude star';
+
+  @override
+  String get bilanLongestStreak => 'Plus long streak';
+
+  @override
+  String get bilanFirstWeek =>
+      'C\'est ta première semaine — pas de comparaison encore. Continue !';
+
+  @override
+  String get bilanDomainBreakdown => 'Répartition par domaine';
+
+  @override
+  String bilanWeekOf(String date) {
+    return 'Semaine du $date';
+  }
+
+  @override
+  String get navToday => 'Aujourd\'hui';
+
+  @override
+  String get navHabits => 'Habitudes';
+
+  @override
+  String get navCounter => 'Compteur';
 }

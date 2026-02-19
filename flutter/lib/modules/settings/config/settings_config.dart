@@ -37,6 +37,7 @@ class SettingsConfig {
   static SettingsConfig get defaultConfig => SettingsConfig(
         sections: [
           SettingsSection.appearance(),
+          SettingsSection.habits(),
           SettingsSection.notifications(),
           SettingsSection.legal(),
           SettingsSection.account(),
@@ -93,6 +94,16 @@ class SettingsSection {
         items: [
           SettingsItem.pushNotifications(),
           SettingsItem.emailNotifications(),
+        ],
+      );
+
+  /// Habits section (streak freeze, etc.).
+  factory SettingsSection.habits() => const SettingsSection(
+        id: 'habits',
+        titleKey: 'habitsTitle',
+        icon: Icons.check_circle_outline,
+        items: [
+          SettingsItem.streakFreeze(),
         ],
       );
 
@@ -213,6 +224,20 @@ class SettingsItem {
           titleKey: 'settingsEmailNotifications',
           type: SettingsItemType.toggle,
           icon: Icons.email_outlined,
+        );
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // HABITS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Streak freeze toggle.
+  const SettingsItem.streakFreeze()
+      : this(
+          id: 'streak_freeze',
+          titleKey: 'streakFreeze',
+          subtitleKey: 'streakFreezeDescription',
+          type: SettingsItemType.toggle,
+          icon: Icons.ac_unit_outlined,
         );
 
   // ═══════════════════════════════════════════════════════════════════════════

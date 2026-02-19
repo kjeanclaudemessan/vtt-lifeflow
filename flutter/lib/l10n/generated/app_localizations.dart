@@ -1130,6 +1130,24 @@ abstract class AppLocalizations {
   /// **'Create your account and start your journey with us today.'**
   String get onboardingSlide3Description;
 
+  /// No description provided for @onboardingDomainsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your life domains'**
+  String get onboardingDomainsTitle;
+
+  /// No description provided for @onboardingDomainsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the domains you want to track. You can add more later.'**
+  String get onboardingDomainsDescription;
+
+  /// No description provided for @onboardingDomainsMinimum.
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least 1 domain'**
+  String get onboardingDomainsMinimum;
+
   /// No description provided for @welcomeBack.
   ///
   /// In en, this message translates to:
@@ -1399,6 +1417,498 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Activity from people you follow'**
   String get notificationsChannelSocialDesc;
+
+  /// No description provided for @domainsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Life Domains'**
+  String get domainsTitle;
+
+  /// No description provided for @domainsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Domains'**
+  String get domainsEmptyTitle;
+
+  /// No description provided for @domainsEmptyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first life domain to organize your habits.'**
+  String get domainsEmptyDescription;
+
+  /// No description provided for @domainAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'New Domain'**
+  String get domainAdd;
+
+  /// No description provided for @domainName.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain name'**
+  String get domainName;
+
+  /// No description provided for @domainIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get domainIcon;
+
+  /// No description provided for @domainColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get domainColor;
+
+  /// No description provided for @domainArchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get domainArchive;
+
+  /// No description provided for @domainUnarchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Unarchive'**
+  String get domainUnarchive;
+
+  /// No description provided for @domainArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get domainArchived;
+
+  /// No description provided for @domainArchivedSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived domains'**
+  String get domainArchivedSection;
+
+  /// No description provided for @domainCannotArchiveLast.
+  ///
+  /// In en, this message translates to:
+  /// **'You must keep at least one active domain.'**
+  String get domainCannotArchiveLast;
+
+  /// No description provided for @domainHabitCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No habits} =1{1 habit} other{{count} habits}}'**
+  String domainHabitCount(int count);
+
+  /// No description provided for @habitsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Habits'**
+  String get habitsTitle;
+
+  /// No description provided for @habitsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Habits Yet'**
+  String get habitsEmptyTitle;
+
+  /// No description provided for @habitsEmptyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first habit to start tracking your time.'**
+  String get habitsEmptyDescription;
+
+  /// No description provided for @habitAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'New Habit'**
+  String get habitAdd;
+
+  /// No description provided for @habitEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Habit'**
+  String get habitEdit;
+
+  /// No description provided for @habitName.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit name'**
+  String get habitName;
+
+  /// No description provided for @habitDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description (optional)'**
+  String get habitDescription;
+
+  /// No description provided for @habitType.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get habitType;
+
+  /// No description provided for @habitTypeBinary.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes / No'**
+  String get habitTypeBinary;
+
+  /// No description provided for @habitTypeQuantitative.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantitative'**
+  String get habitTypeQuantitative;
+
+  /// No description provided for @habitTargetValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Target value'**
+  String get habitTargetValue;
+
+  /// No description provided for @habitUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get habitUnit;
+
+  /// No description provided for @habitEstimatedDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated duration'**
+  String get habitEstimatedDuration;
+
+  /// No description provided for @habitEstimatedDurationHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'This time counts toward your counter'**
+  String get habitEstimatedDurationHelper;
+
+  /// No description provided for @habitEstimatedDurationMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String habitEstimatedDurationMinutes(int minutes);
+
+  /// No description provided for @habitTimeRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Time range'**
+  String get habitTimeRange;
+
+  /// No description provided for @habitFrequency.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency'**
+  String get habitFrequency;
+
+  /// No description provided for @habitFrequencyDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get habitFrequencyDaily;
+
+  /// No description provided for @habitFrequencyWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Specific days'**
+  String get habitFrequencyWeekly;
+
+  /// No description provided for @habitFrequencyCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get habitFrequencyCustom;
+
+  /// No description provided for @habitArchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive this habit'**
+  String get habitArchive;
+
+  /// No description provided for @habitDomain.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain'**
+  String get habitDomain;
+
+  /// No description provided for @habitSelectDomain.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a domain'**
+  String get habitSelectDomain;
+
+  /// No description provided for @habitChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Done!'**
+  String get habitChecked;
+
+  /// No description provided for @habitUnchecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Unchecked'**
+  String get habitUnchecked;
+
+  /// No description provided for @habitBackdateLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'You can only backdate up to 7 days.'**
+  String get habitBackdateLimit;
+
+  /// No description provided for @streakDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}d'**
+  String streakDays(int count);
+
+  /// No description provided for @streakBest.
+  ///
+  /// In en, this message translates to:
+  /// **'Best: {count}d'**
+  String streakBest(int count);
+
+  /// No description provided for @streakFreezeActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Freeze active'**
+  String get streakFreezeActive;
+
+  /// No description provided for @streakFreezeUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Freeze used'**
+  String get streakFreezeUsed;
+
+  /// No description provided for @streakFreezeAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'1 freeze available per week'**
+  String get streakFreezeAvailable;
+
+  /// No description provided for @streakDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak Detail'**
+  String get streakDetail;
+
+  /// No description provided for @streakFreeze.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak Freeze'**
+  String get streakFreeze;
+
+  /// No description provided for @streakFreezeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically preserves your streak if you miss one day per week.'**
+  String get streakFreezeDescription;
+
+  /// No description provided for @streakFreezeEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak freeze enabled'**
+  String get streakFreezeEnabled;
+
+  /// No description provided for @counterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Counter'**
+  String get counterTitle;
+
+  /// No description provided for @counterEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Data Yet'**
+  String get counterEmptyTitle;
+
+  /// No description provided for @counterEmptyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Check off habits to see your time per domain.'**
+  String get counterEmptyDescription;
+
+  /// No description provided for @counterThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get counterThisWeek;
+
+  /// No description provided for @counterLastWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Last week'**
+  String get counterLastWeek;
+
+  /// No description provided for @counterTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get counterTotal;
+
+  /// No description provided for @counterHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h {minutes}m'**
+  String counterHours(int hours, int minutes);
+
+  /// No description provided for @counterDelta.
+  ///
+  /// In en, this message translates to:
+  /// **'{sign}{hours}h {minutes}m vs last week'**
+  String counterDelta(String sign, int hours, int minutes);
+
+  /// No description provided for @counterPerHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}min × {days}d'**
+  String counterPerHabit(int minutes, int days);
+
+  /// No description provided for @todayEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No habits yet'**
+  String get todayEmptyTitle;
+
+  /// No description provided for @todayEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start by adding your first habit!'**
+  String get todayEmptySubtitle;
+
+  /// No description provided for @todayGreetingMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning ☀️'**
+  String get todayGreetingMorning;
+
+  /// No description provided for @todayGreetingAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going 💪'**
+  String get todayGreetingAfternoon;
+
+  /// No description provided for @todayGreetingEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Well done today 🌙'**
+  String get todayGreetingEvening;
+
+  /// No description provided for @todayHabitsRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{All done!} =1{1 habit remaining} other{{count} habits remaining}}'**
+  String todayHabitsRemaining(int count);
+
+  /// No description provided for @todayProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{done}/{total} habits done'**
+  String todayProgress(int done, int total);
+
+  /// No description provided for @todayNoHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'No habits for today'**
+  String get todayNoHabits;
+
+  /// No description provided for @todayCounterSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'This week: {hours}h {minutes}m'**
+  String todayCounterSummary(int hours, int minutes);
+
+  /// No description provided for @todaySectionMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get todaySectionMorning;
+
+  /// No description provided for @todaySectionAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon'**
+  String get todaySectionAfternoon;
+
+  /// No description provided for @todaySectionEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get todaySectionEvening;
+
+  /// No description provided for @todaySectionAnytime.
+  ///
+  /// In en, this message translates to:
+  /// **'Anytime'**
+  String get todaySectionAnytime;
+
+  /// No description provided for @bilanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Summary'**
+  String get bilanTitle;
+
+  /// No description provided for @bilanReady.
+  ///
+  /// In en, this message translates to:
+  /// **'📊 Your summary is ready!'**
+  String get bilanReady;
+
+  /// No description provided for @bilanShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share my summary'**
+  String get bilanShare;
+
+  /// No description provided for @bilanCompletionRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion rate'**
+  String get bilanCompletionRate;
+
+  /// No description provided for @bilanTopHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Top habit'**
+  String get bilanTopHabit;
+
+  /// No description provided for @bilanLongestStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Longest streak'**
+  String get bilanLongestStreak;
+
+  /// No description provided for @bilanFirstWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This is your first week — no comparison yet. Keep going!'**
+  String get bilanFirstWeek;
+
+  /// No description provided for @bilanDomainBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain breakdown'**
+  String get bilanDomainBreakdown;
+
+  /// No description provided for @bilanWeekOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Week of {date}'**
+  String bilanWeekOf(String date);
+
+  /// No description provided for @navToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get navToday;
+
+  /// No description provided for @navHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'Habits'**
+  String get navHabits;
+
+  /// No description provided for @navCounter.
+  ///
+  /// In en, this message translates to:
+  /// **'Counter'**
+  String get navCounter;
 }
 
 class _AppLocalizationsDelegate

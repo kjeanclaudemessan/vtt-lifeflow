@@ -25,6 +25,8 @@ dependencies:
   json_annotation: ^4.9.0
   moneroo_flutter_sdk: ^0.3.4
   package_info_plus: ^9.0.0
+  path_provider: ^2.1.5
+  share_plus: ^10.1.4
   shared_preferences: ^2.5.4
   stacked: ^3.4.0
   stacked_services: ^1.1.0

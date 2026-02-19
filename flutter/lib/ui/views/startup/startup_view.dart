@@ -14,26 +14,29 @@ class StartupView extends StackedView<StartupViewModel> {
     StartupViewModel viewModel,
     Widget? child,
   ) {
+    final brightness = Theme.of(context).brightness;
+
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'STACKED',
+              'LifeFlow',
               style: AppTypography.displaySmall.copyWith(
                 fontWeight: FontWeight.w900,
+                color: AppColors.primary,
               ),
             ),
-            SizedBox(height: AppSpacing.md),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Loading ...', style: AppTypography.bodyMedium),
-                SizedBox(width: AppSpacing.sm),
-                const AppLoader.small(),
-              ],
+            SizedBox(height: AppSpacing.xs),
+            Text(
+              'Habitudes & Temps',
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.textSecondary(brightness),
+              ),
             ),
+            SizedBox(height: AppSpacing.xl),
+            const AppLoader.small(),
           ],
         ),
       ),
