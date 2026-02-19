@@ -21,10 +21,13 @@
 │                      (IA: 30 min)                               │
 │                                                                 │
 ├─────────────────────────────────────────────────────────────────┤
-│                   PENDANT — Cadrage (1-2h)                      │
+│                   PENDANT — Cadrage (1.5-2.5h)                  │
 │                                                                 │
 │   Analyse concurrence ──→ Feature scoring ──→ Voice & Tone     │
 │      (IA: 45 min)          (IA: 30 min)       (IA: 20 min)     │
+│                                         ↓                       │
+│                                  DS Config (10 min)             │
+│                          (couleurs + config du projet)          │
 │                                                                 │
 ├─────────────────────────────────────────────────────────────────┤
 │                   PENDANT — Par feature (SpecKit)               │
@@ -131,6 +134,16 @@
 | **Résultat** | Guide de voix avec exemples concrets pour chaque contexte (succès, échec, demande, erreur). |
 | **Règle** | Lis les exemples de notifications à voix haute. Si ça sonne faux, corrige. |
 
+### Étape 7 — Design System Config `⏱ 10 min — TOI`
+
+| | |
+|---|---|
+| **Input** | Voice & Tone + BM (section 4 — contexte culturel) |
+| **Qui fait quoi** | TOI tu configures ton Design System partagé pour ce projet : palette de couleurs, variantes de thème, assets spécifiques (icône, splash). L'IA peut proposer une palette basée sur le Voice & Tone. |
+| **Résultat** | `AppColors` configuré pour le projet. Thème light/dark validé. |
+| **Ce que tu NE fais PAS** | Recréer le DS. Tu réutilises ton kit existant (widgets, tokens, spacing, typo). Tu changes uniquement les couleurs et les petites configs. |
+| **Règle** | Si un composant manque dans le DS, note-le. Tu le créeras dans le DS partagé (pas dans le projet) quand tu en auras besoin. |
+
 ---
 
 ## PENDANT — Développement par feature (boucle)
@@ -154,7 +167,7 @@ Pour chaque feature (dans l'ordre du scoring Phase 1 → 2 → 3) :
     └─ Tests ──→ Feature validée ──→ Feature suivante
 ```
 
-### Étape 7 — Spec (par feature) `⏱ variable — IA + toi`
+### Étape 8 — Spec (par feature) `⏱ variable — IA + toi`
 
 | | |
 |---|---|
@@ -163,7 +176,7 @@ Pour chaque feature (dans l'ordre du scoring Phase 1 → 2 → 3) :
 | **Checklist** | Passe la spec dans `templates/spec-quality-checklist.md` AVANT d'implémenter |
 | **Règle** | Si la checklist dit "PAS PRÊTE" → corriger d'abord. Jamais coder une spec incomplète. |
 
-### Étape 8 — Implémentation `⏱ variable`
+### Étape 9 — Implémentation `⏱ variable`
 
 | | |
 |---|---|
@@ -171,7 +184,7 @@ Pour chaque feature (dans l'ordre du scoring Phase 1 → 2 → 3) :
 | **Ordre** | Supabase (migrations + RLS) → Domain (entities) → Data (models + repos) → Features (UI) |
 | **Règle** | Respecter la constitution. Respecter le design system. Respecter le voice & tone. |
 
-### Étape 9 — Validation `⏱ 15-30 min`
+### Étape 10 — Validation `⏱ 15-30 min`
 
 | | |
 |---|---|
@@ -186,7 +199,7 @@ Pour chaque feature (dans l'ordre du scoring Phase 1 → 2 → 3) :
 > Objectif : vérifier que le produit est utilisé (pas juste construit).
 > Commence dès que la Phase 1 est en production.
 
-### Étape 10 — Mesurer
+### Étape 11 — Mesurer
 
 | Quoi | Comment | Fréquence |
 |------|---------|-----------|
@@ -195,7 +208,7 @@ Pour chaque feature (dans l'ordre du scoring Phase 1 → 2 → 3) :
 | Taux conversion Free → Pro | Supabase + store metrics | Mensuel |
 | Feedback qualitatif | Avis stores + feedback in-app | Continu |
 
-### Étape 11 — Ajuster
+### Étape 12 — Ajuster
 
 | Signal | Action |
 |--------|--------|
@@ -205,7 +218,7 @@ Pour chaque feature (dans l'ordre du scoring Phase 1 → 2 → 3) :
 | Plainte récurrente | Ajouter au backlog en priorité — re-scorer |
 | Activation metric non atteint | C'est une URGENCE — tout s'arrête jusqu'à ce que ce soit résolu |
 
-### Étape 12 — Phase suivante
+### Étape 13 — Phase suivante
 
 | Condition | Action |
 |-----------|--------|
