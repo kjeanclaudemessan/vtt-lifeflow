@@ -1,22 +1,31 @@
-# Data Model: Phase 1 — Daily Foundations
+# Data Model: Phase 1 — Le Cockpit Quotidien
 
-**Branch**: `001-phase1-daily-foundations` | **Date**: 2026-02-19
-**Input**: spec.md (Key Entities), Supabase migrations
+**Branch**: `001-phase1-daily-foundations` | **Date**: 2026-02-19 | **Revised**: 2026-02-19
+**Input**: spec.md (Key Entities), Supabase migrations existantes
+**Scope**: 2 tables actives (domains, habits + habit_logs). Les migrations P2 (routines, tasks, inbox_items) existent mais ne sont pas implémentées côté Flutter en P1.
 
-## Entity Relationship Diagram (Textual)
+## Entity Relationship Diagram
 
 ```
 auth.users (Supabase managed)
   │
-  ├── 1:N ──► profiles        (existing — 20260122000000)
-  ├── 1:N ──► domains          ◄── categorizes ──► habits, routines, tasks
-  ├── 1:N ──► habits           ──► 1:N ──► habit_logs
-  ├── 1:N ──► routines         ──► 1:N ──► routine_steps
-  │                             ──► 1:N ──► routine_logs
-  ├── 1:N ──► tasks
-  └── 1:N ──► inbox_items      ──► 0..1 ──► tasks (linked_task_id)
-                                ──► 0..1 ──► habits (linked_habit_id)
+  ├── 1:N ──► profiles           (existing — 20260122000000)
+  │
+  ├── 1:N ──► domains            (P1 — catégorise les habitudes)
+  │             │
+  │             └── 1:N ──► habits      (P1 — comportements à tracker)
+  │                           │
+  │                           └── 1:N ──► habit_logs  (P1 — logs quotidiens)
+  │
+  ├── 1:N ──► routines           (P2 — migration existe, pas d'UI Flutter)
+  ├── 1:N ──► tasks              (P2 — migration existe, pas d'UI Flutter)
+  └── 1:N ──► inbox_items        (P2 — migration existe, pas d'UI Flutter)
 ```
+
+**Seules les 3 entités P1 (Domain, Habit, HabitLog) ont des entities/models/repos Flutter.**
+Les 4 autres tables existent en SQL pour faciliter la transition P2, mais sont ignorées côté app.
+
+---
 
 ## Entities
 
@@ -29,23 +38,25 @@ auth.users (Supabase managed)
 | name | TEXT | NO | — | — |
 | icon | TEXT | NO | `'🎯'` | Emoji string |
 | color | TEXT | NO | `'#6200EE'` | Hex color string |
-| sort_order | INTEGER | NO | `0` | For drag-and-drop reorder |
-| is_archived | BOOLEAN | NO | `FALSE` | Soft delete — archived domains hidden from pickers |
+| sort_order | INTEGER | NO | `0` | Pour drag-and-drop |
+| is_archived | BOOLEAN | NO | `FALSE` | Soft delete — archivé = caché des pickers |
 | created_at | TIMESTAMPTZ | NO | `NOW()` | — |
 | updated_at | TIMESTAMPTZ | NO | `NOW()` | Auto-updated via trigger |
 
 **Supabase table**: `public.domains`
-**Migration**: `20260220000001_create_domains.sql`
+**Migration**: `20260220000001_create_domains.sql` (existante, inchangée)
 **RLS**: All CRUD scoped to `auth.uid() = user_id`
 **Indexes**: `(user_id)`, `(user_id, sort_order) WHERE NOT is_archived`
+**Seeds**: `seeds/001_default_domains.sql` — 5 domaines (Santé, Travail, Relations, Finances, Dev perso)
 
 **Business rules**:
-- Domains are never hard-deleted, only archived (`is_archived = true`)
-- Archived domains remain linked to existing habits/routines/tasks
-- 5 defaults seeded: Santé, Travail, Relations, Finances, Développement personnel
+- Jamais de hard delete, uniquement archivage (`is_archived = true`)
+- Les habitudes gardent le lien vers un domaine archivé
+- Minimum 1 domaine actif (enforced côté Flutter)
 
 **Flutter entity computed properties**:
-- `isDefault` — name matches one of the 5 default domain names
+- `isDefault` → name matches one of the 5 default names
+- `displayColor` → `Color` parsée depuis hex string
 
 ---
 
@@ -60,28 +71,32 @@ auth.users (Supabase managed)
 | description | TEXT | YES | — | — |
 | type | TEXT | NO | `'binary'` | CHECK IN ('binary', 'quantitative') |
 | target_value | NUMERIC | YES | — | Required when type = 'quantitative' |
-| unit | TEXT | YES | — | e.g. 'ml', 'min', 'pages' |
-| start_time | TIME | YES | — | Start of time window |
-| end_time | TIME | YES | — | End of time window |
+| unit | TEXT | YES | — | ex: 'ml', 'min', 'pages' |
+| **estimated_duration_minutes** | **INTEGER** | **NO** | **`15`** | **⚡ NOUVEAU — temps que l'habitude représente pour le compteur** |
+| start_time | TIME | YES | — | Début de la plage horaire (grouping TodayView) |
+| end_time | TIME | YES | — | Fin de la plage horaire |
 | frequency | TEXT | NO | `'daily'` | CHECK IN ('daily', 'weekly', 'custom') |
-| frequency_days | INTEGER[] | YES | `'{}'` | Days of week (0=Sun, 6=Sat) for weekly/custom |
+| frequency_days | INTEGER[] | YES | `'{}'` | Jours de semaine (0=Sun, 6=Sat) |
 | is_archived | BOOLEAN | NO | `FALSE` | Soft delete |
 | created_at | TIMESTAMPTZ | NO | `NOW()` | — |
 | updated_at | TIMESTAMPTZ | NO | `NOW()` | Auto-updated via trigger |
 
 **Supabase table**: `public.habits`
-**Migration**: `20260220000002_create_habits.sql`
+**Migration**: `20260220000002_create_habits.sql` — **⚠️ À MODIFIER : ajouter `estimated_duration_minutes`** (tâche T004 dans tasks.md)
 **RLS**: All CRUD scoped to `auth.uid() = user_id`
 **Indexes**: `(user_id)`, `(user_id) WHERE NOT is_archived`, `(domain_id) WHERE NOT NULL`
 
 **Business rules**:
-- If `type = 'quantitative'`, `target_value` and `unit` should be set
-- `start_time`/`end_time` define the daily time window (used for Today view grouping)
-- Habits without time range are grouped under "Anytime"
+- Si `type = 'quantitative'`, `target_value` et `unit` doivent être renseignés
+- `start_time`/`end_time` = plage horaire "quand faire l'habitude" (pour grouping TodayView)
+- `estimated_duration_minutes` = "combien de temps ça prend" (pour le compteur temps)
+- Habits sans plage horaire → groupées dans "Sans horaire" dans le TodayView
 
 **Flutter entity computed properties**:
-- `isQuantitative` — `type == HabitType.quantitative`
-- `timeRangeLabel` — formatted string from `startTime`/`endTime`
+- `isQuantitative` → `type == HabitType.quantitative`
+- `timeRangeLabel` → formatted string from `startTime`/`endTime` (ex: "6h – 8h")
+- `timeSlot` → `TimeSlot.morning` / `.afternoon` / `.evening` / `.anytime` (basé sur `startTime`)
+- `effectiveDuration(logValue)` → si quantitative + unit='min' → `logValue`, sinon → `estimatedDurationMinutes`
 
 ---
 
@@ -93,192 +108,73 @@ auth.users (Supabase managed)
 | habit_id | UUID | NO | — | FK → habits, ON DELETE CASCADE |
 | log_date | DATE | NO | — | — |
 | completed | BOOLEAN | NO | `FALSE` | — |
-| value | NUMERIC | YES | — | For quantitative habits |
+| value | NUMERIC | YES | — | Pour habitudes quantitatives |
 | created_at | TIMESTAMPTZ | NO | `NOW()` | — |
 
 **Supabase table**: `public.habit_logs`
-**Migration**: `20260220000002_create_habits.sql` (same file)
+**Migration**: `20260220000002_create_habits.sql` (même fichier que habits)
 **RLS**: Via habit ownership — `EXISTS (SELECT 1 FROM habits WHERE habits.id = habit_logs.habit_id AND habits.user_id = auth.uid())`
-**Unique constraint**: `(habit_id, log_date)` — one log per habit per day
-**Indexes**: `(habit_id)`, `(log_date)`, `(habit_id, log_date)`
+**Indexes**: `(habit_id)`, `(log_date)`, `(habit_id, log_date)` UNIQUE
 
 **Business rules**:
-- Maximum one log per habit per day (UNIQUE constraint)
-- Backdating allowed up to 7 days in the past (enforced client-side)
-- For binary habits: `completed = true/false`, `value` is null
-- For quantitative habits: `value` holds the tracked amount, `completed` is derived (`value >= target_value`)
+- Max 1 log par habitude par jour (UNIQUE constraint)
+- Backdating autorisé jusqu'à 7 jours en arrière (enforced côté Flutter)
+- Pour les habitudes binaires : `completed = true`, `value = NULL`
+- Pour les habitudes quantitatives : `completed = (value >= target_value)`, `value = saisie`
 
 **Flutter entity computed properties**:
-- `completionPercentage` — for quantitative: `value / target * 100`
+- `completionPercentage(targetValue)` → `value / targetValue` pour quantitatives, 1.0 ou 0.0 pour binaires
+- `contributedMinutes(habit)` → temps comptabilisé pour le compteur (voir D-006 dans research.md)
 
 ---
 
-### Routine
+## Computed Entities (pas de table — calculées côté Flutter)
 
-| Field | Type | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| id | UUID | NO | `gen_random_uuid()` | PK |
-| user_id | UUID | NO | — | FK → auth.users, ON DELETE CASCADE |
-| domain_id | UUID | YES | — | FK → domains, ON DELETE SET NULL |
-| name | TEXT | NO | — | — |
-| description | TEXT | YES | — | — |
-| is_archived | BOOLEAN | NO | `FALSE` | Soft delete |
-| created_at | TIMESTAMPTZ | NO | `NOW()` | — |
-| updated_at | TIMESTAMPTZ | NO | `NOW()` | Auto-updated via trigger |
+### TimeCounter
 
-**Supabase table**: `public.routines`
-**Migration**: `20260220000003_create_routines.sql`
-**RLS**: All CRUD scoped to `auth.uid() = user_id`
-**Indexes**: `(user_id)`, `(user_id) WHERE NOT is_archived`, `(domain_id) WHERE NOT NULL`
+Pas de table Supabase. Calculé à partir de `habit_logs` × `habits`.
 
-**Flutter entity computed properties**:
-- `totalEstimatedDuration` — sum of all steps' `estimatedDuration`
-- `stepCount` — `steps.length`
+| Field | Type | Description |
+|-------|------|-------------|
+| domainId | UUID | Le domaine |
+| domainName | String | Nom du domaine |
+| domainColor | Color | Couleur du domaine |
+| totalMinutesThisWeek | int | Minutes accumulées cette semaine |
+| totalMinutesLastWeek | int | Minutes semaine dernière |
+| deltaMinutes | int | Différence (this - last) |
+| habitBreakdown | Map<HabitEntity, int> | Minutes par habitude (pour le détail) |
 
----
+**Calcul** : voir `research.md` D-006.
 
-### RoutineStep
+### WeeklyBilan
 
-| Field | Type | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| id | UUID | NO | `gen_random_uuid()` | PK |
-| routine_id | UUID | NO | — | FK → routines, ON DELETE CASCADE |
-| name | TEXT | NO | — | — |
-| description | TEXT | YES | — | — |
-| estimated_duration | INTEGER | NO | `300` | In seconds (default = 5 minutes) |
-| sort_order | INTEGER | NO | `0` | Position in routine sequence |
-| created_at | TIMESTAMPTZ | NO | `NOW()` | — |
+Pas de table Supabase. Calculé à partir de `habit_logs` × `habits` × `domains`.
 
-**Supabase table**: `public.routine_steps`
-**Migration**: `20260220000003_create_routines.sql` (same file)
-**RLS**: Via routine ownership — `EXISTS (SELECT 1 FROM routines WHERE routines.id = routine_steps.routine_id AND routines.user_id = auth.uid())`
-**Indexes**: `(routine_id, sort_order)`
+| Field | Type | Description |
+|-------|------|-------------|
+| weekStartDate | DateTime | Lundi de la semaine |
+| domainTimes | List<TimeCounter> | Temps par domaine |
+| totalMinutes | int | Total toutes domaines |
+| completionRate | double | Habitudes complétées / total prévu (%) |
+| topHabit | HabitEntity? | Habitude la plus régulière (meilleur taux) |
+| longestStreak | StreakInfo? | Plus long streak actif |
+| isFirstWeek | bool | Pas de semaine précédente = pas de delta |
 
-**Business rules**:
-- Steps are ordered by `sort_order` (drag-and-drop reorder)
-- `estimated_duration` is in seconds (Flutter converts to `Duration`)
+**Calcul** : voir `research.md` D-007.
 
 ---
 
-### RoutineLog
+## Migrations Status
 
-| Field | Type | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| id | UUID | NO | `gen_random_uuid()` | PK |
-| routine_id | UUID | NO | — | FK → routines, ON DELETE CASCADE |
-| user_id | UUID | NO | — | FK → auth.users, ON DELETE CASCADE |
-| started_at | TIMESTAMPTZ | NO | `NOW()` | When the runner was launched |
-| completed_at | TIMESTAMPTZ | YES | — | When the runner finished (null if abandoned mid-way) |
-| total_duration | INTEGER | YES | — | In seconds |
-| status | TEXT | NO | `'completed'` | CHECK IN ('completed', 'abandoned') |
-| steps_completed | INTEGER | NO | `0` | How many steps were completed |
-| created_at | TIMESTAMPTZ | NO | `NOW()` | — |
+| Fichier | Table(s) | Statut | P1 Flutter? |
+|---------|----------|--------|-------------|
+| `20260122000000_create_profiles.sql` | profiles | ✅ Existant | Existant (template) |
+| `20260123000005_create_payments.sql` | payments | ✅ Existant | Non (P2+) |
+| `20260220000001_create_domains.sql` | domains | ✅ Existant | **OUI** |
+| `20260220000002_create_habits.sql` | habits, habit_logs | ⚠️ **À modifier** (ajouter `estimated_duration_minutes`) | **OUI** |
+| `20260220000003_create_routines.sql` | routines, routine_steps, routine_logs | ✅ Existant | Non (P2) |
+| `20260220000004_create_tasks.sql` | tasks | ✅ Existant | Non (P2) |
+| `20260220000005_create_inbox_items.sql` | inbox_items | ✅ Existant | Non (P2) |
+| `seeds/001_default_domains.sql` | — | ✅ Existant | **OUI** |
 
-**Supabase table**: `public.routine_logs`
-**Migration**: `20260220000003_create_routines.sql` (same file)
-**RLS**: All CRUD scoped to `auth.uid() = user_id`
-**Indexes**: `(routine_id)`, `(user_id)`
-
-**Business rules**:
-- Only ONE active routine at a time (enforced client-side)
-- `status = 'abandoned'` when user quits before completing all steps
-- `total_duration` is actual elapsed time, not estimated
-
----
-
-### Task
-
-| Field | Type | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| id | UUID | NO | `gen_random_uuid()` | PK |
-| user_id | UUID | NO | — | FK → auth.users, ON DELETE CASCADE |
-| domain_id | UUID | YES | — | FK → domains, ON DELETE SET NULL |
-| title | TEXT | NO | — | — |
-| description | TEXT | YES | — | — |
-| priority | TEXT | NO | `'medium'` | CHECK IN ('low', 'medium', 'high') |
-| due_date | DATE | YES | — | — |
-| completed_at | TIMESTAMPTZ | YES | — | Set when task is marked done |
-| is_archived | BOOLEAN | NO | `FALSE` | Soft delete |
-| created_at | TIMESTAMPTZ | NO | `NOW()` | — |
-| updated_at | TIMESTAMPTZ | NO | `NOW()` | Auto-updated via trigger |
-
-**Supabase table**: `public.tasks`
-**Migration**: `20260220000004_create_tasks.sql`
-**RLS**: All CRUD scoped to `auth.uid() = user_id`
-**Indexes**: `(user_id)`, `(user_id) WHERE NOT archived AND NOT completed`, `(domain_id) WHERE NOT NULL`, `(due_date) WHERE NOT NULL AND NOT completed`
-
-**Flutter entity computed properties**:
-- `isCompleted` — `completedAt != null`
-- `isOverdue` — `dueDate != null && dueDate.isBefore(today) && !isCompleted`
-- `isDueToday` — `dueDate != null && dueDate == today`
-
----
-
-### InboxItem
-
-| Field | Type | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| id | UUID | NO | `gen_random_uuid()` | PK |
-| user_id | UUID | NO | — | FK → auth.users, ON DELETE CASCADE |
-| raw_text | TEXT | NO | — | The captured thought |
-| status | TEXT | NO | `'pending'` | CHECK IN ('pending', 'processed', 'discarded') |
-| processed_as | TEXT | YES | — | CHECK IN ('task', 'habit', NULL) |
-| linked_task_id | UUID | YES | — | FK → tasks, ON DELETE SET NULL |
-| linked_habit_id | UUID | YES | — | FK → habits, ON DELETE SET NULL |
-| created_at | TIMESTAMPTZ | NO | `NOW()` | — |
-| updated_at | TIMESTAMPTZ | NO | `NOW()` | Auto-updated via trigger |
-
-**Supabase table**: `public.inbox_items`
-**Migration**: `20260220000005_create_inbox_items.sql`
-**RLS**: All CRUD scoped to `auth.uid() = user_id`
-**Indexes**: `(user_id)`, `(user_id) WHERE status = 'pending'`
-
-**Business rules**:
-- When triaged as task: create task → set `processed_as = 'task'`, `linked_task_id`, `status = 'processed'`
-- When triaged as habit: create habit → set `processed_as = 'habit'`, `linked_habit_id`, `status = 'processed'`
-- When discarded: set `status = 'discarded'`
-- If the linked entity is deleted, FK is SET NULL but inbox item remains processed
-
-**Flutter entity computed properties**:
-- `isPending` — `status == InboxItemStatus.pending`
-- `isProcessed` — `status == InboxItemStatus.processed`
-
----
-
-## Validation Rules (Client-Side)
-
-| Entity | Field | Rule |
-|--------|-------|------|
-| Habit | name | Required, min 1 char, max 100 chars |
-| Habit | target_value | Required if type = quantitative, must be > 0 |
-| Habit | unit | Required if type = quantitative, min 1 char |
-| Routine | name | Required, min 1 char, max 100 chars |
-| RoutineStep | name | Required, min 1 char, max 100 chars |
-| RoutineStep | estimated_duration | Required, min 1 second |
-| Task | title | Required, min 1 char, max 200 chars |
-| InboxItem | raw_text | Required, min 1 char, max 500 chars |
-| Domain | name | Required, min 1 char, max 50 chars |
-
-## State Transitions
-
-### InboxItem Lifecycle
-
-```
-[Created] ──► pending ──► processed (with linked entity)
-                     └──► discarded
-```
-
-### RoutineLog Lifecycle
-
-```
-[Runner Started] ──► in-progress (local state) ──► completed (all steps done)
-                                                └──► abandoned (user quit)
-```
-
-### Task Lifecycle
-
-```
-[Created] ──► active (completed_at = null) ──► completed (completed_at set)
-                                           └──► archived (is_archived = true)
-completed ──► active (uncomplete — clear completed_at)
-```
+**⚠️ Seule modification migration requise** : ajouter `estimated_duration_minutes INTEGER NOT NULL DEFAULT 15` dans `create_habits.sql`, entre `unit` et `start_time`.

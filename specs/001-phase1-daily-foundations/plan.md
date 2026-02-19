@@ -1,23 +1,27 @@
-# Implementation Plan: Phase 1 — Daily Foundations
+# Implementation Plan: Phase 1 — Le Cockpit Quotidien
 
-**Branch**: `001-phase1-daily-foundations` | **Date**: 2026-02-19 | **Spec**: [spec.md](spec.md)
-**Input**: Feature specification from `/specs/001-phase1-daily-foundations/spec.md`
+**Branch**: `001-phase1-daily-foundations` | **Date**: 2026-02-19 | **Revised**: 2026-02-19
+**Spec**: [spec.md](spec.md) | **Data Model**: [data-model.md](data-model.md) | **Research**: [research.md](research.md)
 
 ## Summary
 
-Phase 1 delivers the MVP of LifeFlow: users can track daily habits (binary/quantitative with time ranges), execute step-by-step routines with a timer, manage tasks, capture raw thoughts via a GTD inbox, and see everything assembled in a "Today" view. Domains provide cross-cutting categorization. All data lives in Supabase with RLS. Flutter implements Stacked MVVM + Clean Architecture with the existing design system.
+Phase 1 delivers 6 features answering one question: **"Où va mon temps ?"**. Users track daily habits linked to life domains, see a real-time time counter per domain, navigate a contextual TodayView, benefit from automatic streak freeze, and receive a shareable weekly summary. All data lives in Supabase with RLS. Flutter implements Stacked MVVM + Clean Architecture with the design system.
+
+**What Phase 1 IS NOT**: no tasks, no routines, no inbox, no OKR, no AI.
 
 ## Technical Context
 
-**Language/Version**: Dart 3.x / Flutter 3.x
-**Primary Dependencies**: Stacked (MVVM + DI), supabase_flutter, dartz (Either), equatable, json_annotation, flutter_screenutil
-**Storage**: Supabase (PostgreSQL 17 with RLS), local state via Stacked ViewModels
-**Testing**: Flutter test + Mockito (mocks via @GenerateMocks)
-**Target Platform**: Web (Chrome for dev), iOS 15+, Android 6+
-**Project Type**: Mobile + BaaS (Supabase direct, no API for Phase 1)
-**Performance Goals**: < 2s page load, < 3s inbox capture, 60 fps UI
-**Constraints**: Online-only (Phase 1), RLS enforced on every table, design system tokens only (no hardcoded values)
-**Scale/Scope**: Single user, ~10 screens, 7 Supabase tables, 6 features
+| Aspect | Value |
+|--------|-------|
+| **Language** | Dart 3.x / Flutter 3.x |
+| **Dependencies** | Stacked (MVVM + DI), supabase_flutter, dartz (Either), equatable, json_annotation, flutter_screenutil |
+| **Storage** | Supabase PostgreSQL 17 with RLS. Local state via Stacked ViewModels |
+| **Testing** | Flutter test + Mockito |
+| **Platform** | Web (Chrome dev), iOS 15+, Android 6+ |
+| **Architecture** | Mobile + BaaS (Supabase direct, no FastAPI) |
+| **Performance** | < 2s page load, < 500ms habit check, 60 fps |
+| **Constraints** | Online-only, RLS enforced, DS tokens only, no hardcoded values |
+| **Scale** | Single user, 6 features, 3 entities, ~8 screens |
 
 ## Constitution Check
 
@@ -25,133 +29,118 @@ Phase 1 delivers the MVP of LifeFlow: users can track daily habits (binary/quant
 
 | Principle | Status | Notes |
 |-----------|--------|-------|
-| I. Stacked MVVM + Clean Architecture | ✅ PASS | Entity → Model → Repo → Feature structure followed |
-| II. Supabase-First | ✅ PASS | All CRUD via supabase_flutter, no FastAPI in Phase 1 |
+| I. Stacked MVVM + Clean Architecture | ✅ PASS | Entity → Model → Repo → Feature structure |
+| II. Supabase-First | ✅ PASS | All CRUD via supabase_flutter, no FastAPI |
 | III. Entity/Model Separation | ✅ PASS | Pure entities in domain/, @JsonSerializable models in data/ |
-| IV. IA Passive-Informative | ✅ N/A | No AI in Phase 1 |
-| V. Feature Independence | ✅ PASS | Each feature owns its views/viewmodels/widgets, shared via domain/ |
-| VI. Progressive Disclosure | ✅ PASS | Surface = habits/routines/tasks/inbox, depth = later phases |
-| Coding Workflow | ✅ PASS | Supabase migrations first → `db reset` → domain → data → features |
-| Quality Gates | ✅ PASS | Either<Failure,T>, RLS, Equatable, i18n, design system tokens |
+| IV. IA Passive-Informative | ✅ N/A | Zero IA in Phase 1 — l'intelligence est structurelle |
+| V. Feature Independence | ✅ PASS | Each feature owns views/viewmodels/widgets, shared via domain/ |
+| VI. Progressive Disclosure | ✅ PASS | Surface = habits + counter, depth = later phases |
+| Coding Workflow | ✅ PASS | Migration → `db reset` → domain → data → features |
+| Quality Gates | ✅ PASS | Either<Failure,T>, RLS, Equatable, i18n, DS tokens |
+| DS Mandatory | ✅ PASS | All views use AppCard, AppButton, AppBadge, etc. Zero hardcoded values |
 
 ## Project Structure
 
-### Documentation (this feature)
+### Specs (this feature)
 
 ```text
-.specify/specs/001-phase1-daily-foundations/
-├── spec.md              # Feature specification (done)
+specs/001-phase1-daily-foundations/
+├── spec.md              # User stories + requirements (6 US)
+├── research.md          # Technical decisions (D-001 to D-012)
+├── data-model.md        # 3 entities (Domain, Habit, HabitLog) + 2 computed
 ├── plan.md              # This file
-├── data-model.md        # Entity/table definitions
-└── tasks.md             # Implementation task breakdown
+├── wireframes.md        # ASCII wireframes (~8 screens)
+├── quickstart.md        # E2E validation scenarios
+└── tasks.md             # Implementation task breakdown (~45 tasks)
 ```
 
 ### Source Code
 
 ```text
-supabase/migrations/
-├── 20260122000000_create_profiles.sql          # Existing
-├── 20260123000005_create_payments.sql           # Existing
-├── 20260220000001_create_domains.sql            # NEW
-├── 20260220000002_create_habits.sql             # NEW
-├── 20260220000003_create_routines.sql           # NEW
-├── 20260220000004_create_tasks.sql              # NEW
-├── 20260220000005_create_inbox_items.sql        # NEW
-├── 20260220000006_seed_default_domains.sql      # NEW (seed via migration)
-└── 20260220000007_create_domain_functions.sql   # NEW (RPC helpers)
+supabase/
+├── migrations/
+│   ├── 20260220000001_create_domains.sql        # Existant (inchangé)
+│   ├── 20260220000002_create_habits.sql         # ⚠️ MODIFIER (+ estimated_duration_minutes)
+│   ├── 20260220000003_create_routines.sql       # Existant (P2 — non implémenté Flutter)
+│   ├── 20260220000004_create_tasks.sql          # Existant (P2 — non implémenté Flutter)
+│   └── 20260220000005_create_inbox_items.sql    # Existant (P2 — non implémenté Flutter)
+└── seeds/
+    └── 001_default_domains.sql                  # Existant (5 domaines)
 
 flutter/lib/
-├── core/enums/
-│   └── lifeflow_enums.dart                      # NEW — HabitType, TaskPriority, InboxItemStatus, etc.
-├── domain/entities/
-│   ├── domain_entity.dart                       # NEW
-│   ├── habit_entity.dart                        # NEW
-│   ├── habit_log_entity.dart                    # NEW
-│   ├── routine_entity.dart                      # NEW
-│   ├── routine_step_entity.dart                 # NEW
-│   ├── routine_log_entity.dart                  # NEW
-│   ├── task_entity.dart                         # NEW
-│   └── inbox_item_entity.dart                   # NEW
-├── domain/repositories/
-│   ├── i_domain_repository.dart                 # NEW
-│   ├── i_habit_repository.dart                  # NEW
-│   ├── i_routine_repository.dart                # NEW
-│   ├── i_task_repository.dart                   # NEW
-│   └── i_inbox_repository.dart                  # NEW
-├── data/models/
-│   ├── domain_model.dart                        # NEW
-│   ├── habit_model.dart                         # NEW
-│   ├── habit_log_model.dart                     # NEW
-│   ├── routine_model.dart                       # NEW
-│   ├── routine_step_model.dart                  # NEW
-│   ├── routine_log_model.dart                   # NEW
-│   ├── task_model.dart                          # NEW
-│   └── inbox_item_model.dart                    # NEW
-├── data/repositories/
-│   ├── domain_repository_impl.dart              # NEW
-│   ├── habit_repository_impl.dart               # NEW
-│   ├── routine_repository_impl.dart             # NEW
-│   ├── task_repository_impl.dart                # NEW
-│   └── inbox_repository_impl.dart               # NEW
+├── core/
+│   └── enums/
+│       └── lifeflow_enums.dart                  # Existant (HabitType, HabitFrequency, etc.)
+├── domain/
+│   ├── entities/
+│   │   ├── domain_entity.dart                   # NEW
+│   │   ├── habit_entity.dart                    # NEW
+│   │   └── habit_log_entity.dart                # NEW
+│   └── repositories/
+│       ├── i_domain_repository.dart             # NEW
+│       └── i_habit_repository.dart              # NEW
+├── data/
+│   ├── models/
+│   │   ├── domain_model.dart                    # NEW
+│   │   ├── habit_model.dart                     # NEW
+│   │   └── habit_log_model.dart                 # NEW
+│   └── repositories/
+│       ├── domain_repository_impl.dart          # NEW
+│       └── habit_repository_impl.dart           # NEW
+├── services/
+│   ├── time_counter_service.dart                # NEW — calcul temps/domaine
+│   └── bilan_service.dart                       # NEW — génération bilan hebdo
 ├── features/
 │   ├── domains/
-│   │   ├── views/domains_view.dart              # Domain management (settings)
+│   │   ├── views/domains_view.dart
 │   │   ├── viewmodels/domains_viewmodel.dart
 │   │   └── widgets/
-│   │       ├── domain_picker_sheet.dart          # Reusable bottom sheet
+│   │       ├── domain_picker_sheet.dart         # Reusable bottom sheet
 │   │       └── domain_tile.dart
 │   ├── habits/
 │   │   ├── views/
-│   │   │   ├── habits_view.dart                 # Habits list
-│   │   │   └── habit_form_view.dart             # Create/edit habit
+│   │   │   ├── habits_view.dart                 # Liste habitudes
+│   │   │   └── habit_form_view.dart             # Créer/éditer habitude
 │   │   ├── viewmodels/
 │   │   │   ├── habits_viewmodel.dart
 │   │   │   └── habit_form_viewmodel.dart
 │   │   └── widgets/
-│   │       ├── habit_check_tile.dart            # Checkable habit for today view
-│   │       └── habit_streak_badge.dart
-│   ├── routines/
-│   │   ├── views/
-│   │   │   ├── routines_view.dart               # Routines list
-│   │   │   ├── routine_form_view.dart           # Create/edit routine
-│   │   │   └── routine_runner_view.dart         # Step-by-step timer
-│   │   ├── viewmodels/
-│   │   │   ├── routines_viewmodel.dart
-│   │   │   ├── routine_form_viewmodel.dart
-│   │   │   └── routine_runner_viewmodel.dart
+│   │       ├── habit_check_tile.dart            # Checkable habit pour TodayView
+│   │       └── habit_streak_badge.dart          # Badge streak 🔥/❄️
+│   ├── counter/
+│   │   ├── views/counter_view.dart              # Compteur temps détaillé
+│   │   ├── viewmodels/counter_viewmodel.dart
 │   │   └── widgets/
-│   │       ├── routine_tile.dart
-│   │       └── routine_step_tile.dart
-│   ├── tasks/
-│   │   ├── views/
-│   │   │   ├── tasks_view.dart                  # Tasks list
-│   │   │   └── task_form_view.dart              # Create/edit task
-│   │   ├── viewmodels/
-│   │   │   ├── tasks_viewmodel.dart
-│   │   │   └── task_form_viewmodel.dart
+│   │       ├── domain_time_bar.dart             # Barre temps par domaine
+│   │       └── domain_time_detail.dart          # Détail: quelles habitudes
+│   ├── today/
+│   │   ├── views/today_view.dart                # TodayView contextuel
+│   │   ├── viewmodels/today_viewmodel.dart
 │   │   └── widgets/
-│   │       └── task_tile.dart
-│   ├── inbox/
-│   │   ├── views/inbox_view.dart                # Capture + list
-│   │   ├── viewmodels/inbox_viewmodel.dart
-│   │   └── widgets/
-│   │       ├── inbox_capture_field.dart
-│   │       └── inbox_triage_sheet.dart          # Bottom sheet: → task/habit/discard
-│   └── today/
-│       ├── views/today_view.dart                # The "Vue Aujourd'hui"
-│       ├── viewmodels/today_viewmodel.dart
+│   │       ├── today_habits_section.dart        # Habitudes groupées par plage
+│   │       ├── today_counter_summary.dart       # Mini compteur inline
+│   │       └── today_bilan_card.dart            # Carte "Bilan prêt" (dimanche)
+│   └── bilan/
+│       ├── views/bilan_view.dart                # Bilan hebdo complet
+│       ├── viewmodels/bilan_viewmodel.dart
 │       └── widgets/
-│           ├── today_habits_section.dart
-│           ├── today_routine_card.dart
-│           ├── today_tasks_section.dart
-│           └── today_inbox_badge.dart
+│           ├── bilan_domain_chart.dart          # Barres horizontales par domaine
+│           ├── bilan_highlights.dart            # Top habit, streak, completion rate
+│           └── bilan_share_widget.dart          # Widget optimisé pour screenshot
 └── l10n/arb/
-    ├── app_en.arb                               # UPDATE — add Phase 1 keys
-    └── app_fr.arb                               # UPDATE — add Phase 1 keys
+    ├── app_en.arb                               # UPDATE — add P1 keys
+    └── app_fr.arb                               # UPDATE — add P1 keys
 ```
-
-**Structure Decision**: Mobile + BaaS (Option 3 variant). Flutter talks directly to Supabase — no FastAPI backend in Phase 1. Features live in `flutter/lib/features/` per constitution. Shared entities in `domain/`, models in `data/`.
 
 ## Complexity Tracking
 
-No constitution violations. All patterns follow established conventions.
+| Item | Complexité | Notes |
+|------|-----------|-------|
+| `estimated_duration_minutes` addition | Faible | Modifier 1 migration existante |
+| Streak calculation with freeze | Moyenne | Algorithme client-side, voir D-005 |
+| Time counter calculation | Moyenne | Join habits × habit_logs, voir D-006 |
+| TodayView contextuel (3 modes) | Moyenne | Même données, rendu différent selon l'heure |
+| Bilan share (image generation) | Moyenne | `RepaintBoundary.toImage()`, widget dédié |
+| DS cleanup (3 doublons) | Faible | Supprimer fichiers morts, 2 imports à corriger |
+
+**Aucune violation constitutionnelle. Tous les patterns suivent les conventions établies.**

@@ -1,144 +1,213 @@
-# Wireframes: Phase 1 — Daily Foundations
+# Wireframes: Phase 1 — Le Cockpit Quotidien
 
-**Branch**: `001-phase1-daily-foundations` | **Date**: 2026-02-19
-**Design system**: All wireframes reference `AppColors`, `AppSpacing`, `AppTextStyles`, `AppGaps`.
-**Widgets**: `AppButton`, `AppCard`, `AppTextField`, `AppListTile`, `AppBadge`, `AppProgress`, `AppEmptyState`, `AppChip`, `AppBottomNav`.
+**Branch**: `001-phase1-daily-foundations` | **Date**: 2026-02-19 | **Revised**: 2026-02-19
+**Design system**: Tous les wireframes utilisent `AppColors`, `AppSpacing`, `AppTextStyles`, `AppGaps`.
+**Widgets DS**: `AppButton`, `AppCard`, `AppTextField`, `AppListTile`, `AppBadge`, `AppProgress`, `AppEmptyState`, `AppChip`, `AppBottomNav`, `AppFab`, `AppBottomSheet`, `AppSlider`.
 
 ---
 
 ## Navigation Structure
 
 ```
-AppBottomNav
-├── Tab 0: TodayView         (home icon)
-├── Tab 1: HabitsView         (repeat icon)
-├── Tab 2: [+] FAB            (capture inbox / quick create)
-├── Tab 3: RoutinesView        (play-list icon)
-└── Tab 4: TasksView           (check-square icon)
-```
+AppBottomNav (3 tabs)
+├── Tab 0: TodayView         (🏠 home icon)
+├── Tab 1: HabitsView         (🔄 repeat icon)
+└── Tab 2: CounterView         (⏱️ timer icon)
 
-Inbox badge count shown on FAB or as AppBadge on a dedicated icon.
+AppBar actions:
+├── Settings icon (gear) → SettingsView (existant)
+└── Notifications icon → future (placeholder)
+
+Settings → Domains management (DomainsView)
+CounterView → Bilan hebdo (BilanView)
+```
 
 ---
 
-## 1. TodayView (Tab 0 — Main Screen)
+## 1. TodayView — Mode Matin (Tab 0, 5h-12h)
 
 ```
 ┌─────────────────────────────┐
-│ ☰   Aujourd'hui    🔔 [5]  │  ← AppBar: title=l10n.today, notif icon + AppBadge(inbox count)
+│ ☰   Aujourd'hui        ⚙️  │  ← AppBar: title=l10n.today, settings icon
 ├─────────────────────────────┤
 │                             │
-│ ┌─── 📅 Lun 19 Fév ──────┐ │  ← Date header (AppTextStyles.titleMedium)
+│ 👋 Bonjour Amadou !         │  ← AppTextStyles.headlineSmall
+│ Lundi 19 février            │  ← AppTextStyles.bodyMedium, AppColors.onSurfaceVariant
+│                             │
+│ ┌─────────────────────────┐ │  ← today_counter_summary (AppCard)
+│ │ ⏱️ Cette semaine         │ │
+│ │ ██████░░ 12h40 / 20h    │ │  ← AppProgress(0.63) + total
+│ │ 🏥 5h20  💼 4h  🧠 3h20 │ │  ← Mini counters par domaine (chips)
 │ └─────────────────────────┘ │
 │                             │
-│ ── Matin (6h – 8h) ─────── │  ← Time range section header (AppTextStyles.labelLarge)
+│ ── Matin (6h – 12h) ────── │  ← Section header (AppTextStyles.labelLarge)
 │ ┌─────────────────────────┐ │
-│ │ ☐ Méditer 10 min        │ │  ← HabitCheckTile: checkbox + name + domain chip
-│ │   🟢 Santé   🔥 12j     │ │     AppChip(domain) + streak icon
+│ │ ☐ Méditer               │ │  ← HabitCheckTile: checkbox + name
+│ │   🏥 Santé  🔥 12j  10m │ │     AppChip(domain) + streak + durée
 │ ├─────────────────────────┤ │
-│ │ ☐ Boire 2L   ████░ 75% │ │  ← Quantitative: AppProgress(0.75) inline
-│ │   🟢 Santé   1500/2000  │ │     Value / target display
+│ │ ☐ Sport                 │ │
+│ │   🏥 Santé  🔥 5j   60m │ │
 │ └─────────────────────────┘ │
 │                             │
-│ ── Midi (12h – 14h) ────── │
+│ ── Après-midi (12h – 18h)── │
 │ ┌─────────────────────────┐ │
-│ │ ☐ Lire 30 min           │ │
-│ │   🔵 Dev perso  🔥 3j   │ │
+│ │ ☐ Lire 30 min           │ │  ← Quantitative: nom + target
+│ │   🧠 Dev perso  🔥 3j   │ │
 │ └─────────────────────────┘ │
 │                             │
-│ ── Routines ─────────────── │  ← Section header
+│ ── Sans horaire ──────────── │
 │ ┌─────────────────────────┐ │
-│ │ 🏃 Routine Matin        │ │  ← AppCard: routine name + step count + duration
-│ │   4 étapes · ~30 min    │ │
-│ │   [ ▶ Lancer ]          │ │     AppButton.primary (l10n.startRoutine)
+│ │ ☐ Boire 2L d'eau ░░ 0%  │ │  ← Quantitative sans plage
+│ │   🏥 Santé  ❄️ 8j   5m  │ │     ❄️ = streak avec freeze
 │ └─────────────────────────┘ │
 │                             │
-│ ── Tâches du jour ────────── │  ← Section header + count
+├─────────────────────────────┤
+│  🏠      🔄      ⏱️        │  ← AppBottomNav (3 tabs)
+│ Today  Habits  Compteur     │
+└─────────────────────────────┘
+```
+
+---
+
+## 2. TodayView — Mode Progression (12h-18h)
+
+```
+┌─────────────────────────────┐
+│ ☰   Aujourd'hui        ⚙️  │
+├─────────────────────────────┤
+│                             │
+│ 🎯 3/5 habitudes faites     │  ← AppTextStyles.headlineSmall
+│ Continue comme ça !          │  ← Message encourageant
+│                             │
+│ ┌─────────────────────────┐ │  ← Barre de progression jour
+│ │ ████████████░░░░ 60%    │ │  ← AppProgress(0.6)
+│ │ +1h10 aujourd'hui       │ │  ← Temps ajouté aujourd'hui
+│ └─────────────────────────┘ │
+│                             │
+│ ── ✅ Faites ────────────── │  ← Habitudes cochées (collapsed)
 │ ┌─────────────────────────┐ │
-│ │ ☐ Acheter du lait       │ │  ← AppListTile: checkbox + title
-│ │   🟢 Santé  ● Haute     │ │     Priority indicator (AppBadge)
-│ ├─────────────────────────┤ │
-│ │ ☐ Préparer réunion      │ │
-│ │   🟠 Travail ● Moyenne  │ │
-│ ├─────────────────────────┤ │
-│ │ ⚠ Appeler dentiste      │ │  ← Overdue: red text (AppColors.error)
-│ │   🟢 Santé  hier        │ │     Overdue date label
+│ │ ✅ Méditer        🔥 13j │ │  ← Checked, grisé
+│ │ ✅ Sport          🔥 6j  │ │
+│ │ ✅ Lire 25/30min  🔥 4j  │ │  ← Quantitative: value/target
 │ └─────────────────────────┘ │
 │                             │
-│ ── Sans horaire ──────────── │  ← Habits without time range
+│ ── ⏳ Restantes ──────────── │  ← Habitudes non cochées (expanded)
 │ ┌─────────────────────────┐ │
 │ │ ☐ Gratitude journal     │ │
-│ │   🔵 Dev perso          │ │
+│ │   🧠 Dev perso     15m  │ │
+│ ├─────────────────────────┤ │
+│ │ ☐ Boire 2L  ████░ 75%  │ │
+│ │   🏥 Santé  1500/2000ml │ │
 │ └─────────────────────────┘ │
 │                             │
 ├─────────────────────────────┤
-│ 🏠  📋  [＋]  🔄  ✅      │  ← AppBottomNav (5 tabs, center FAB)
-└─────────────────────────────┘
-```
-
-**Empty state** (no data at all):
-```
-┌─────────────────────────────┐
-│ ☰   Aujourd'hui    🔔       │
-├─────────────────────────────┤
-│                             │
-│       ┌───────────┐        │
-│       │  📋  ☀️   │        │  ← AppEmptyState
-│       └───────────┘        │
-│                             │
-│  Votre journée est vide !   │  ← l10n.todayEmpty (AppTextStyles.headlineSmall)
-│  Commencez par créer votre  │
-│  première habitude.         │  ← l10n.todayEmptySubtitle (AppTextStyles.bodyMedium)
-│                             │
-│  [ Créer une habitude ]     │  ← AppButton.primary → HabitFormView
-│                             │
-├─────────────────────────────┤
-│ 🏠  📋  [＋]  🔄  ✅      │
+│  🏠      🔄      ⏱️        │
 └─────────────────────────────┘
 ```
 
 ---
 
-## 2. HabitsView (Tab 1)
+## 3. TodayView — Mode Bilan (18h-5h)
 
 ```
 ┌─────────────────────────────┐
-│ ☰    Habitudes       🔍  ＋│  ← AppBar: title=l10n.habits, search + add actions
+│ ☰   Aujourd'hui        ⚙️  │
 ├─────────────────────────────┤
 │                             │
-│ [Toutes] [Santé] [Travail]  │  ← Domain filter chips (AppChip, horizontal scroll)
+│ 🌙 Bonne soirée !           │
+│ Tu as complété 4/5 habitudes│  ← AppTextStyles.headlineSmall
+│                             │
+│ ┌─────────────────────────┐ │  ← Résumé du jour (AppCard elevated)
+│ │ 📊 Aujourd'hui           │ │
+│ │ 🏥 Santé      1h15      │ │
+│ │ 💼 Travail    0h        │ │  ← 0h = AppColors.onSurfaceVariant
+│ │ 🧠 Dev perso  45m       │ │
+│ │ ─────────────────────── │ │
+│ │ Total: 2h00             │ │
+│ └─────────────────────────┘ │
+│                             │
+│ ┌─────────────────────────┐ │  ← Si dimanche/lundi (AppCard accent)
+│ │ 📊 Ton bilan de la       │ │
+│ │    semaine est prêt !    │ │  ← AppColors.primary
+│ │         [ Voir → ]       │ │  ← AppButton.text → BilanView
+│ └─────────────────────────┘ │
+│                             │
+│ 💬 "Chaque jour compte,     │  ← Citation (AppTextStyles.bodySmall, italic)
+│    même les imparfaits."    │
+│                             │
+├─────────────────────────────┤
+│  🏠      🔄      ⏱️        │
+└─────────────────────────────┘
+```
+
+---
+
+## 4. TodayView — Empty State
+
+```
+┌─────────────────────────────┐
+│ ☰   Aujourd'hui        ⚙️  │
+├─────────────────────────────┤
+│                             │
+│                             │
+│       🌱                    │  ← Illustration (simple icon)
+│                             │
+│   Ta journée est vide.      │  ← AppEmptyState
+│   Crée ta première          │     title + subtitle
+│   habitude pour commencer   │
+│   à voir où va ton temps.   │
+│                             │
+│   [ Créer une habitude ]    │  ← AppButton.primary → HabitFormView
+│                             │
+│                             │
+├─────────────────────────────┤
+│  🏠      🔄      ⏱️        │
+└─────────────────────────────┘
+```
+
+---
+
+## 5. HabitsView (Tab 1)
+
+```
+┌─────────────────────────────┐
+│ ←  Mes habitudes       🔍  │  ← AppBar: title, search icon
+├─────────────────────────────┤
+│                             │
+│ [Toutes] [Santé] [Travail]  │  ← Filtre par domaine (AppChip toggleable)
+│ [Dev perso] [+2]            │
 │                             │
 │ ┌─────────────────────────┐ │
-│ │ Méditer 10 min          │ │  ← AppListTile: swipeable
-│ │ 🟢 Santé · Binaire      │ │     Domain chip + type label
-│ │ 6h – 8h  🔥 12 jours   │ │     Time range + streak
-│ │ ☐ Aujourd'hui           │ │     Quick check toggle for today
+│ │ 🏥 Méditer              │ │  ← AppCard: domain icon + name
+│ │    Binaire · 10 min     │ │     Type + durée estimée
+│ │    6h – 8h  🔥 12j      │ │     Plage + streak
 │ ├─────────────────────────┤ │
-│ │ Boire 2L d'eau          │ │
-│ │ 🟢 Santé · Quantitatif  │ │
-│ │ Toute la journée        │ │     No time range → "Anytime"
-│ │ ████████░░ 75%          │ │     AppProgress bar
+│ │ 🏥 Sport                │ │
+│ │    Binaire · 60 min     │ │
+│ │    7h – 8h  🔥 5j       │ │
 │ ├─────────────────────────┤ │
-│ │ Lire 30 pages           │ │
-│ │ 🔵 Dev perso · Quanti.  │ │
-│ │ 18h – 20h  🔥 3 jours  │ │
-│ │ ░░░░░░░░░░ 0%           │ │
+│ │ 🧠 Lire                 │ │
+│ │    Quantitatif · 30 min │ │
+│ │    12h – 14h  🔥 3j     │ │
+│ ├─────────────────────────┤ │
+│ │ 🏥 Boire 2L             │ │
+│ │    Quantitatif · 5 min  │ │
+│ │    Sans horaire  ❄️ 8j  │ │
 │ └─────────────────────────┘ │
 │                             │
-│ ── Archivées (2) ────────── │  ← Collapsed section, tap to expand
-│                             │
+│                         [+] │  ← AppFab → HabitFormView
 ├─────────────────────────────┤
-│ 🏠  📋  [＋]  🔄  ✅      │
+│  🏠      🔄      ⏱️        │
 └─────────────────────────────┘
 ```
 
 ---
 
-## 3. HabitFormView (Create / Edit)
+## 6. HabitFormView (Create/Edit)
 
 ```
 ┌─────────────────────────────┐
-│ ←  Nouvelle habitude        │  ← AppBar: back + title (l10n.newHabit / l10n.editHabit)
+│ ←  Nouvelle habitude   💾  │  ← AppBar: back + save icon
 ├─────────────────────────────┤
 │                             │
 │ Nom *                       │
@@ -147,518 +216,310 @@ Inbox badge count shown on FAB or as AppBadge on a dedicated icon.
 │ └─────────────────────────┘ │
 │                             │
 │ Description                 │
-│ ┌─────────────────────────┐ │  ← AppTextField (optional, multiline)
-│ │                         │ │
+│ ┌─────────────────────────┐ │  ← AppTextField (optional)
+│ │ 10 minutes de pleine... │ │
+│ └─────────────────────────┘ │
+│                             │
+│ Domaine *                   │
+│ ┌─────────────────────────┐ │  ← Tap → DomainPickerSheet
+│ │ 🏥 Santé            ▼   │ │
 │ └─────────────────────────┘ │
 │                             │
 │ Type                        │
-│ ○ Binaire  ● Quantitatif   │  ← SegmentedButton / Radio
+│ [ Binaire ]  [ Quantitatif ]│  ← Toggle (AppChip exclusive)
 │                             │
-│ ┌── Quantitatif ──────────┐ │  ← Conditional section (shown if quantitative)
-│ │ Objectif *    Unité *   │ │
-│ │ ┌────────┐  ┌────────┐  │ │  ← AppTextField (number) + AppTextField
-│ │ │ 2000   │  │ ml     │  │ │
-│ │ └────────┘  └────────┘  │ │
+│ ── Si Quantitatif ──────── │  ← Conditionnel
+│ │ Objectif: [    30    ]   │ │  ← AppTextField numeric
+│ │ Unité:    [   min    ]   │ │  ← AppTextField ou dropdown
 │ └─────────────────────────┘ │
 │                             │
-│ Domaine                     │
-│ ┌─────────────────────────┐ │  ← Tap → DomainPickerSheet
-│ │ 🟢 Santé            ▼  │ │
-│ └─────────────────────────┘ │
+│ Temps estimé *              │  ← ⚡ NOUVEAU CHAMP
+│ ┌─────────────────────────┐ │
+│ │ 10 minutes          ▼   │ │  ← AppSlider ou stepper
+│ └─────────────────────────┘ │     (5, 10, 15, 30, 45, 60, 90, 120)
+│ 💡 Ce temps sera compté     │  ← Helper text
+│    dans ton compteur.       │
 │                             │
-│ Plage horaire               │
-│ ┌───────────┐ ┌───────────┐ │  ← TimePicker × 2
-│ │ Début: 6h │ │ Fin: 8h   │ │
-│ └───────────┘ └───────────┘ │
+│ Plage horaire (optionnel)   │
+│ ┌──────┐     ┌──────┐      │
+│ │ 06:00│  →  │ 08:00│      │  ← 2 time pickers
+│ └──────┘     └──────┘      │
 │                             │
 │ Fréquence                   │
-│ [Quotidien ▼]               │  ← AppDropdown (daily/weekly/custom)
-│                             │
-│ ┌── Jours (weekly/custom) ┐ │  ← Conditional: day selector chips
-│ │ L  Ma  Me  J  V  S  D  │ │     Toggle chips for each day
+│ [Chaque jour] [X jours/sem] │  ← Toggle
+│ ── Si X jours/sem ──────── │
+│ │ L M M J V S D            │ │  ← Day selector (AppChip)
 │ └─────────────────────────┘ │
 │                             │
-│ [ Enregistrer ]             │  ← AppButton.primary (full width)
+│ [ Créer l'habitude ]        │  ← AppButton.primary (full width)
 │                             │
 ├─────────────────────────────┤
-│         (no bottom nav)     │
+│  🏠      🔄      ⏱️        │
 └─────────────────────────────┘
 ```
 
 ---
 
-## 4. RoutinesView (Tab 3)
+## 7. CounterView (Tab 2) — Compteur Temps
 
 ```
 ┌─────────────────────────────┐
-│ ☰    Routines        🔍  ＋│  ← AppBar
+│ ←  Mon temps           📅  │  ← AppBar: title + date picker (semaine)
 ├─────────────────────────────┤
 │                             │
+│ Semaine du 17 – 23 fév      │  ← AppTextStyles.titleSmall
+│                             │
 │ ┌─────────────────────────┐ │
-│ │ 🏃 Routine Matin        │ │  ← AppCard
-│ │ 🟢 Santé                │ │     Domain chip
-│ │ 4 étapes · ~30 min      │ │     Step count + total estimated duration
-│ │                         │ │
-│ │ [ ▶ Lancer ]  [ ✏ ]    │ │     AppButton.primary + edit icon button
-│ ├─────────────────────────┤ │
-│ │ 🌙 Routine Soir         │ │
-│ │ 🔵 Dev perso            │ │
-│ │ 3 étapes · ~20 min      │ │
-│ │                         │ │
-│ │ [ ▶ Lancer ]  [ ✏ ]    │ │
+│ │ Total: 12h40             │ │  ← AppTextStyles.headlineMedium, bold
+│ │ ▲ +2h30 vs sem. dernière │ │  ← Delta (vert si positif)
+│ └─────────────────────────┘ │
+│                             │
+│ 🏥 Santé                    │
+│ ██████████████░░░░ 5h20     │  ← DomainTimeBar (couleur domaine)
+│ ▲ +1h20                     │  ← Delta inline
+│                             │
+│ 💼 Travail                   │
+│ ██████████░░░░░░░░ 4h00     │
+│ ▼ -30min                    │  ← Delta négatif (rouge subtil)
+│                             │
+│ 🧠 Dev perso                 │
+│ ████████░░░░░░░░░░ 3h20     │
+│ ▲ +1h40                     │
+│                             │
+│ ── Détail tap ──────────── │  ← Tap sur un domaine → expand
+│ ┌─────────────────────────┐ │
+│ │ 🏥 Santé — 5h20          │ │  ← DomainTimeDetail
+│ │  Méditer: 50min (10m×5j) │ │
+│ │  Sport: 4h30 (60m×4j+30) │ │
+│ │  Boire 2L: 25min (5m×5j) │ │
+│ └─────────────────────────┘ │
+│                             │
+│ ┌─────────────────────────┐ │  ← AppCard accent (si bilan dispo)
+│ │ 📊 Bilan de la semaine   │ │
+│ │ dernière disponible      │ │
+│ │      [ Voir le bilan ]   │ │  ← → BilanView
 │ └─────────────────────────┘ │
 │                             │
 ├─────────────────────────────┤
-│ 🏠  📋  [＋]  🔄  ✅      │
+│  🏠      🔄      ⏱️        │
 └─────────────────────────────┘
 ```
 
 ---
 
-## 5. RoutineFormView (Create / Edit)
+## 8. CounterView — Empty State
 
 ```
 ┌─────────────────────────────┐
-│ ←  Nouvelle routine         │  ← AppBar
+│ ←  Mon temps           📅  │
 ├─────────────────────────────┤
 │                             │
-│ Nom *                       │
-│ ┌─────────────────────────┐ │  ← AppTextField
-│ │ Routine Matin           │ │
-│ └─────────────────────────┘ │
 │                             │
-│ Description                 │
-│ ┌─────────────────────────┐ │
-│ │                         │ │
-│ └─────────────────────────┘ │
+│          ⏱️                 │
 │                             │
-│ Domaine                     │
-│ ┌─────────────────────────┐ │  ← Tap → DomainPickerSheet
-│ │ 🟢 Santé            ▼  │ │
-│ └─────────────────────────┘ │
+│   Ton temps t'attend.       │  ← AppEmptyState
+│   Crée ta première          │
+│   habitude pour voir        │
+│   où vont tes heures.       │
 │                             │
-│ Étapes                      │  ← Section header
-│ ┌─────────────────────────┐ │
-│ │ ≡  1. Réveil     5 min  │ │  ← Drag handle + name + duration
-│ │ ≡  2. Douche    10 min  │ │     ReorderableListView
-│ │ ≡  3. Méditer   15 min  │ │
-│ │ ≡  4. Petit-déj  0 min  │ │
-│ └─────────────────────────┘ │
+│   [ Créer une habitude ]    │  ← AppButton.primary
 │                             │
-│ [ ＋ Ajouter une étape ]   │  ← TextButton → StepFormDialog
-│                             │
-│ Durée totale: 30 min        │  ← Computed, AppTextStyles.labelLarge
-│                             │
-│ [ Enregistrer ]             │  ← AppButton.primary
-│                             │
+├─────────────────────────────┤
+│  🏠      🔄      ⏱️        │
 └─────────────────────────────┘
-```
-
-### StepFormDialog (Modal)
-
-```
-┌─────────────────────────┐
-│   Nouvelle étape        │  ← Dialog title
-│                         │
-│ Nom *                   │
-│ ┌─────────────────────┐ │
-│ │ Douche              │ │
-│ └─────────────────────┘ │
-│                         │
-│ Durée estimée (min) *   │
-│ ┌─────────────────────┐ │
-│ │ 10                  │ │
-│ └─────────────────────┘ │
-│                         │
-│ Description             │
-│ ┌─────────────────────┐ │
-│ │                     │ │
-│ └─────────────────────┘ │
-│                         │
-│ [Annuler]  [Ajouter]   │  ← AppButton.text + AppButton.primary
-└─────────────────────────┘
 ```
 
 ---
 
-## 6. RoutineRunnerView (Full Screen Overlay)
+## 9. BilanView (Weekly Summary)
 
 ```
 ┌─────────────────────────────┐
-│ ✕  Routine Matin    2/4    │  ← Close (abandon?) + title + step counter
+│ ←  Bilan semaine       📤  │  ← AppBar: back + share icon
 ├─────────────────────────────┤
 │                             │
+│ 📊 Semaine du 10 – 16 fév   │  ← AppTextStyles.titleMedium
 │                             │
-│         ┌───────┐           │
-│         │ 08:42 │           │  ← Timer countdown (large, AppTextStyles.displayLarge)
-│         └───────┘           │     AppColors.primary when > 50% time left
-│                             │     AppColors.warning when < 30%
-│                             │     AppColors.error when < 10%
+│ ┌─────────────────────────┐ │
+│ │ 12h40 au total           │ │  ← AppTextStyles.headlineLarge, bold
+│ │ ▲ +2h30 vs semaine       │ │
+│ │   précédente              │ │
+│ └─────────────────────────┘ │
 │                             │
-│      ═══════════════        │  ← AppProgress.linear (time remaining)
+│ ── Temps par domaine ────── │
 │                             │
-│   ┌───────────────────┐     │
-│   │    🚿 Douche      │     │  ← Current step name (AppTextStyles.headlineMedium)
-│   │   Durée: 10 min   │     │     Estimated duration label
-│   └───────────────────┘     │
+│ 🏥 Santé                    │
+│ ████████████████ 5h20  42%  │  ← Barre + % du total
 │                             │
-│   Description de l'étape    │  ← Optional step description
-│   si elle existe            │     (AppTextStyles.bodyMedium, muted color)
+│ 💼 Travail                   │
+│ ████████████░░░░ 4h00  32%  │
 │                             │
+│ 🧠 Dev perso                 │
+│ ██████████░░░░░░ 3h20  26%  │
 │                             │
-│  ┌───────────────────────┐  │
-│  │     [ ▶ Suivant ]     │  │  ← AppButton.primary (large, full width)
-│  └───────────────────────┘  │     "Terminer" on last step
+│ ── Highlights ──────────── │
+│ ┌─────────────────────────┐ │
+│ │ 🏆 Habitude star         │ │  ← BilanHighlights
+│ │    Méditer — 100% (7/7)  │ │
+│ │                          │ │
+│ │ 🔥 Plus long streak       │ │
+│ │    Sport — 12 jours      │ │
+│ │                          │ │
+│ │ 📈 Taux de complétion     │ │
+│ │    78% (27/35 habitudes) │ │
+│ └─────────────────────────┘ │
 │                             │
-│  ── Progression ──────────  │
-│  ✅ Réveil (5 min)          │  ← Completed steps (green check)
-│  🔵 Douche (10 min) ◄──    │  ← Current step (highlighted)
-│  ○  Méditer (15 min)        │  ← Upcoming steps (muted)
-│  ○  Petit-déj (0 min)      │
+│ ── Si première semaine ─── │
+│ ┌─────────────────────────┐ │
+│ │ 🌱 Première semaine !     │ │  ← Au lieu du delta
+│ │ Tu as posé les           │ │
+│ │ fondations. Continue !   │ │
+│ └─────────────────────────┘ │
+│                             │
+│ [    Partager mon bilan   ] │  ← AppButton.primary (full width)
 │                             │
 ├─────────────────────────────┤
-│  [ Passer ]   [ Abandonner ]│  ← Secondary actions
+│  🏠      🔄      ⏱️        │
 └─────────────────────────────┘
-```
-
-### Abandon Confirmation Dialog
-
-```
-┌─────────────────────────┐
-│   Abandonner la routine?│
-│                         │
-│   Vous avez complété    │
-│   2/4 étapes.           │
-│   Un log sera sauvegardé│
-│   avec le statut        │
-│   "abandonné".          │
-│                         │
-│ [Continuer]  [Abandonner]│
-└─────────────────────────┘
 ```
 
 ---
 
-## 7. TasksView (Tab 4)
+## 10. Bilan Share Widget (Screenshot optimisé)
 
 ```
 ┌─────────────────────────────┐
-│ ☰    Tâches          🔍  ＋│  ← AppBar
-├─────────────────────────────┤
+│                             │  ← Fond: AppColors.surface
+│  LifeFlow 📊                │  ← Logo + titre
+│  Semaine du 10 – 16 fév     │
 │                             │
-│ [Toutes] [Santé] [Travail]  │  ← Domain filter chips
+│  12h40 investies            │  ← Chiffre gros, AppColors.primary
 │                             │
-│ [Actives ▼]                 │  ← Sort/filter dropdown: Actives, Terminées, Toutes
+│  🏥 Santé      5h20  ████  │  ← Barres simplifiées
+│  💼 Travail    4h00  ███   │
+│  🧠 Dev perso  3h20  ██   │
 │                             │
-│ ── En retard ───────────── │  ← Section: overdue (AppColors.error)
-│ ┌─────────────────────────┐ │
-│ │ ☐ Appeler dentiste      │ │  ← AppListTile
-│ │   🟢 Santé  ● Haute     │ │     Priority badge (red for high)
-│ │   📅 Hier               │ │     Overdue date in red
-│ └─────────────────────────┘ │
+│  🏆 Star: Méditer (7/7)    │
+│  🔥 Streak: 12 jours       │
+│  📈 Complétion: 78%        │
 │                             │
-│ ── Aujourd'hui ──────────── │  ← Section: due today
-│ ┌─────────────────────────┐ │
-│ │ ☐ Acheter du lait       │ │
-│ │   🟢 Santé  ● Haute     │ │
-│ ├─────────────────────────┤ │
-│ │ ☐ Préparer réunion      │ │
-│ │   🟠 Travail ● Moyenne  │ │
-│ └─────────────────────────┘ │
-│                             │
-│ ── À venir ─────────────── │  ← Section: future tasks
-│ ┌─────────────────────────┐ │
-│ │ ☐ Déclarer impôts       │ │
-│ │   🟡 Finances ● Basse   │ │
-│ │   📅 25 Fév             │ │
-│ └─────────────────────────┘ │
-│                             │
-│ ── Sans date ──────────── │  ← Section: no due date
-│ ┌─────────────────────────┐ │
-│ │ ☐ Ranger le garage      │ │
-│ │   🟢 Santé              │ │
-│ └─────────────────────────┘ │
-│                             │
-├─────────────────────────────┤
-│ 🏠  📋  [＋]  🔄  ✅      │
+│  lifeflow.app               │  ← URL pour viralité
 └─────────────────────────────┘
 ```
 
+*Ce widget n'est jamais affiché à l'écran — il est rendu en mémoire via `RepaintBoundary.toImage()` puis partagé.*
+
 ---
 
-## 8. TaskFormView (Create / Edit)
+## 11. DomainsView (Settings → Domaines)
 
 ```
 ┌─────────────────────────────┐
-│ ←  Nouvelle tâche           │  ← AppBar
+│ ←  Mes domaines        [+] │  ← AppBar: back + add icon
 ├─────────────────────────────┤
 │                             │
-│ Titre *                     │
-│ ┌─────────────────────────┐ │  ← AppTextField
-│ │ Acheter du lait         │ │
-│ └─────────────────────────┘ │
+│ ≡ 🏥 Santé                  │  ← DomainTile: drag handle + icon + name
+│      5 habitudes            │     Nombre d'habitudes liées
+│ ≡ 💼 Travail                 │
+│      3 habitudes            │
+│ ≡ 💙 Relations               │
+│      0 habitudes            │
+│ ≡ 🧠 Développement perso    │
+│      2 habitudes            │
 │                             │
-│ Description                 │
+│ ── Archivés ─────────────── │  ← Section collapsed
 │ ┌─────────────────────────┐ │
-│ │                         │ │
+│ │ 💰 Finances (archivé)   │ │  ← Grisé, action "Restaurer"
 │ └─────────────────────────┘ │
 │                             │
-│ Domaine                     │
-│ ┌─────────────────────────┐ │  ← Tap → DomainPickerSheet
-│ │ 🟢 Santé            ▼  │ │
-│ └─────────────────────────┘ │
-│                             │
-│ Priorité                    │
-│ [Basse] [Moyenne] [Haute]   │  ← SegmentedButton (3 segments)
-│                             │
-│ Date d'échéance             │
-│ ┌─────────────────────────┐ │  ← Tap → DatePicker
-│ │ 📅 19 Fév 2026      ✕  │ │     Clear button to remove date
-│ └─────────────────────────┘ │
-│                             │
-│ [ Enregistrer ]             │  ← AppButton.primary
+│ 💡 Glisse pour réordonner.  │  ← Helper text
+│    Swipe ← pour archiver.  │
 │                             │
 └─────────────────────────────┘
 ```
 
 ---
 
-## 9. InboxView (FAB → Bottom Sheet or Dedicated Screen)
+## 12. DomainPickerSheet (Bottom Sheet réutilisable)
 
 ```
 ┌─────────────────────────────┐
-│ ←  Inbox           📥 (3)  │  ← AppBar: title + pending count badge
+│         ─────               │  ← Drag handle
+│ Choisir un domaine          │  ← AppTextStyles.titleMedium
 ├─────────────────────────────┤
 │                             │
-│ Capturer une idée           │
-│ ┌───────────────────── 📤┐ │  ← AppTextField + send button
-│ │ Appeler le dentiste     │ │     Auto-focus on open
-│ └─────────────────────────┘ │     Submit → clear → ready for next
+│ 🏥 Santé                    │  ← Tappable list item
+│ 💼 Travail                   │
+│ 💙 Relations                 │
+│ 🧠 Développement perso      │
 │                             │
-│ ── En attente (3) ──────── │  ← Section header
-│ ┌─────────────────────────┐ │
-│ │ 📝 Acheter cadeau Marie │ │  ← AppListTile: tap → InboxTriageSheet
-│ │    il y a 2h            │ │     Relative time
-│ ├─────────────────────────┤ │
-│ │ 📝 Idée article blog    │ │
-│ │    il y a 5h            │ │
-│ ├─────────────────────────┤ │
-│ │ 📝 Appeler dentiste     │ │
-│ │    à l'instant          │ │
-│ └─────────────────────────┘ │
+│ [ + Nouveau domaine ]       │  ← AppButton.text → inline creation
 │                             │
-│ ── Traités récemment ────── │  ← Collapsed section (optional, last 5)
-│                             │
-├─────────────────────────────┤
-│ 🏠  📋  [＋]  🔄  ✅      │
 └─────────────────────────────┘
 ```
 
 ---
 
-## 10. InboxTriageSheet (Bottom Sheet)
+## 13. Onboarding — Étape Domaines
 
 ```
 ┌─────────────────────────────┐
-│ ─── TriageSheet ─────────── │  ← Drag handle
-│                             │
-│   "Appeler le dentiste"     │  ← raw_text display (AppTextStyles.titleMedium)
-│    Capturé il y a 2h        │
-│                             │
-│ Que voulez-vous en faire ?  │  ← l10n.inboxTriagePrompt
-│                             │
-│ ┌─────────────────────────┐ │
-│ │ 📋  Créer une tâche     │ │  ← Tap → TaskFormView (pre-filled title)
-│ ├─────────────────────────┤ │
-│ │ 🔄  Créer une habitude  │ │  ← Tap → HabitFormView (pre-filled name)
-│ ├─────────────────────────┤ │
-│ │ 🗑  Supprimer           │ │  ← Discard → status = 'discarded'
-│ └─────────────────────────┘ │
-│                             │
-│ [ Annuler ]                 │  ← AppButton.text → close sheet
-│                             │
-└─────────────────────────────┘
-```
-
----
-
-## 11. DomainsView (Settings → Domains)
-
-```
-┌─────────────────────────────┐
-│ ←  Domaines de vie      ＋  │  ← AppBar: back + add
+│                      Passer │  ← Skip button (AppTextStyles.labelMedium)
 ├─────────────────────────────┤
 │                             │
-│ Glissez pour réordonner     │  ← Hint text (AppTextStyles.bodySmall, muted)
+│ 🌍                          │
+│ Tes domaines de vie          │  ← AppTextStyles.headlineMedium
+│ Sur quoi veux-tu             │
+│ investir ton temps ?         │
 │                             │
 │ ┌─────────────────────────┐ │
-│ │ ≡ 🟢 Santé          ✏  │ │  ← Drag handle + color dot + name + edit
-│ │ ≡ 🟠 Travail        ✏  │ │     ReorderableListView
-│ │ ≡ 🔴 Relations      ✏  │ │
-│ │ ≡ 🟡 Finances       ✏  │ │
-│ │ ≡ 🔵 Dev perso      ✏  │ │
-│ │ ≡ 🟣 Spiritualité   ✏  │ │  ← User-added domain
+│ │ ✅ 🏥 Santé              │ │  ← Checkbox list (pré-cochés)
+│ │ ✅ 💼 Travail             │ │
+│ │ ✅ 💙 Relations           │ │
+│ │ ✅ 💰 Finances            │ │
+│ │ ✅ 🧠 Dev perso           │ │
 │ └─────────────────────────┘ │
 │                             │
-│ ── Archivés (1) ──────────  │  ← Collapsed section
-│ ┌─────────────────────────┐ │
-│ │   ⚫ Ancien domaine  ↩  │ │  ← Restore button
-│ └─────────────────────────┘ │
+│ [ + Ajouter un domaine ]    │  ← AppButton.text
 │                             │
+│                             │
+│ [      Continuer →      ]   │  ← AppButton.primary
+│                             │
+│ ● ● ◉ ●                    │  ← Step indicator (2/4)
 └─────────────────────────────┘
 ```
 
 ---
 
-## 12. DomainPickerSheet (Bottom Sheet — reused in forms)
+## 14. Streak Badge Detail (Bottom Sheet)
 
 ```
 ┌─────────────────────────────┐
-│ ─── Choisir un domaine ──── │  ← Drag handle + title
-│                             │
-│ ┌─────────────────────────┐ │
-│ │ 🟢 Santé               │ │  ← AppListTile, tap to select
-│ │ 🟠 Travail              │ │
-│ │ 🔴 Relations            │ │     Only non-archived domains shown
-│ │ 🟡 Finances             │ │
-│ │ 🔵 Développement perso  │ │
-│ │ 🟣 Spiritualité         │ │
-│ └─────────────────────────┘ │
-│                             │
-│ [ ＋ Nouveau domaine ]     │  ← Optional: inline create
-│                             │
-└─────────────────────────────┘
-```
-
----
-
-## 13. DomainFormDialog (Create / Edit Domain)
-
-```
-┌─────────────────────────┐
-│   Nouveau domaine       │  ← Dialog title
-│                         │
-│ Nom *                   │
-│ ┌─────────────────────┐ │
-│ │ Spiritualité        │ │
-│ └─────────────────────┘ │
-│                         │
-│ Icône                   │
-│ [🎯] [💪] [📚] [💰]   │  ← Emoji grid picker (scrollable)
-│ [❤️] [🧘] [🌟] [🏠]   │
-│                         │
-│ Couleur                 │
-│ [🟢][🟠][🔴][🟡]      │  ← Color selector circles
-│ [🔵][🟣][⚫][🟤]      │
-│                         │
-│ [Annuler]  [Créer]     │  ← AppButton.text + AppButton.primary
-└─────────────────────────┘
-```
-
----
-
-## 14. Onboarding — Step 2: Domain Selection
-
-```
-┌─────────────────────────────┐
-│        Étape 2/3            │  ← AppProgress.linear (66%)
+│         ─────               │
+│ 🔥 Streak: Méditer          │
 ├─────────────────────────────┤
 │                             │
-│  Choisissez vos domaines    │  ← AppTextStyles.headlineSmall
-│  de vie                     │
+│ 12 jours consécutifs        │  ← Streak actuel
+│ Record: 15 jours            │  ← Meilleur streak
 │                             │
-│  Sélectionnez les domaines  │  ← AppTextStyles.bodyMedium (muted)
-│  que vous souhaitez suivre. │
+│ Derniers 14 jours:          │
+│ 🔥🔥🔥❄️🔥🔥🔥🔥🔥🔥🔥🔥☐☐    │
+│ ↑ freeze utilisé            │  ← ❄️ = freeze, ☐ = pas encore
 │                             │
-│ ┌─────────────────────────┐ │
-│ │ ☑ 🟢 Santé             │ │  ← Checkbox tiles (pre-selected defaults)
-│ │ ☑ 🟠 Travail           │ │
-│ │ ☑ 🔴 Relations         │ │
-│ │ ☑ 🟡 Finances          │ │
-│ │ ☑ 🔵 Développement     │ │
-│ └─────────────────────────┘ │
-│                             │
-│ [ ＋ Ajouter un domaine ]  │  ← Opens DomainFormDialog
-│                             │
-│                             │
-│ [ Continuer ]               │  ← AppButton.primary → Step 3
+│ Freeze: 1/semaine (actif)   │  ← Status
+│ Prochain freeze dispo: jeu  │
 │                             │
 └─────────────────────────────┘
 ```
 
 ---
 
-## 15. Onboarding — Step 3: First Habit
+## Responsive Notes
 
-```
-┌─────────────────────────────┐
-│        Étape 3/3            │  ← AppProgress.linear (100%)
-├─────────────────────────────┤
-│                             │
-│  Créez votre première       │  ← AppTextStyles.headlineSmall
-│  habitude                   │
-│                             │
-│  Commencez simplement.      │  ← AppTextStyles.bodyMedium (muted)
-│  Vous pourrez en ajouter    │
-│  d'autres plus tard.        │
-│                             │
-│ Suggestions:                │
-│ ┌─────────────────────────┐ │
-│ │ 🧘 Méditer 10 min      │ │  ← Tap to pre-fill form below
-│ │ 💧 Boire 2L d'eau      │ │
-│ │ 📖 Lire 30 min         │ │
-│ │ 🏃 Faire du sport      │ │
-│ └─────────────────────────┘ │
-│                             │
-│ -- ou créez la vôtre --     │
-│                             │
-│ Nom *                       │
-│ ┌─────────────────────────┐ │
-│ │                         │ │  ← AppTextField
-│ └─────────────────────────┘ │
-│                             │
-│ Domaine                     │
-│ ┌─────────────────────────┐ │  ← Pre-select first domain
-│ │ 🟢 Santé            ▼  │ │
-│ └─────────────────────────┘ │
-│                             │
-│ [ Commencer ]               │  ← AppButton.primary → TodayView
-│ [ Passer ]                  │  ← AppButton.text → TodayView (skip)
-│                             │
-└─────────────────────────────┘
-```
+| Breakpoint | Comportement |
+|-----------|-------------|
+| Mobile (< 600px) | Layout par défaut — tous les wireframes ci-dessus |
+| Tablet (600-900px) | TodayView: counter summary à droite en side panel |
+| Desktop (> 900px) | 3 colonnes: Today + Habits + Counter visibles simultanément |
 
----
-
-## Design System Widget Mapping
-
-| Screen Element | Widget | Token |
-|----------------|--------|-------|
-| Habit check toggle | Custom `HabitCheckTile` | AppListTile + Checkbox |
-| Quantitative progress | `AppProgress.linear` | AppColors.primary fill |
-| Domain label | `AppChip` | Domain.color as chip background |
-| Streak indicator | `Icon` + `Text` | 🔥 + AppTextStyles.labelSmall |
-| Priority badge | `AppBadge` | high=AppColors.error, medium=AppColors.warning, low=AppColors.success |
-| Overdue indicator | `Text` | AppColors.error, AppTextStyles.bodySmall |
-| Timer display | `Text` | AppTextStyles.displayLarge |
-| Timer progress | `AppProgress.linear` | Color changes by remaining % |
-| Empty state | `AppEmptyState` | icon + title + subtitle + CTA button |
-| Section headers | `Text` | AppTextStyles.labelLarge, divider below |
-| Form fields | `AppTextField` | Standard spacing (AppSpacing.md) |
-| Primary actions | `AppButton.primary` | Full width in forms |
-| Secondary actions | `AppButton.text` | Inline |
-| Bottom navigation | `AppBottomNav` | 5 items, center FAB |
-| Bottom sheets | `showModalBottomSheet` | AppRadius.lg top corners |
-| Cards | `AppCard` | AppShadows.sm, AppRadius.md |
-| Drag handles | `Icon(Icons.drag_handle)` | Muted color |
-
----
-
-## Interaction Notes
-
-1. **Swipe actions** — HabitsView and TasksView items: swipe left = archive, swipe right = quick action (check/complete).
-2. **Pull to refresh** — All list views support pull-to-refresh (re-fetch from Supabase).
-3. **Loading states** — All views show shimmer/skeleton loading (not spinners) during data fetch.
-4. **Haptic feedback** — Checkbox toggles and timer transitions trigger light haptic.
-5. **Transitions** — Form views slide up from bottom. Runner view is a full-screen route with fade-in.
-6. **Keyboard** — InboxView auto-focuses text field on open. Forms dismiss keyboard on scroll.
+*Phase 1 cible principalement mobile. Tablet/desktop sont des bonus via `flutter_screenutil` + responsive breakpoints.*

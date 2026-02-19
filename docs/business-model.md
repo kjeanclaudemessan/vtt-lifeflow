@@ -364,44 +364,54 @@ Ce n'est pas une app de plus. C'est le **tableau de bord de sa vie**.
 
 #### 🟢 Phase 1 — MVP : "Le cockpit quotidien" (M1-M3)
 
-| # | Feature | Description | Valeur |
-|---|---------|-------------|--------|
-| F01 | **TodayView contextuel** | Écran d'accueil adapté à l'heure (matin=plan, midi=check, soir=bilan) | Première chose que l'user voit |
-| F02 | **Domaines de vie** | 5 domaines prédéfinis + possibilité d'en changer | Structure de base |
-| F03 | **Habitudes** | Créer, tracker, streak, lien domaine. Création en 1 champ | Usage quotidien #1 |
-| F04 | **Tâches** | Créer, prioriser, lier à un domaine. Création en 1 champ | Usage quotidien #2 |
-| F05 | **Routines** | Séquences d'étapes avec timer | Structure la journée |
-| F06 | **Compteur temps/domaine** | Calcul automatique depuis habits+routines+tâches. Vue semaine | **La killer metric — visible dès la semaine 1** |
-| F07 | **Bilan hebdo simplifié** | "Cette semaine : X h par domaine" + 3 wins + 1 focus | Premier moment de prise de conscience |
-| F08 | **Micro-récompenses** | Animation/haptic quand on complète, messages de retour après absence | Anti-culpabilité |
-| F09 | **Streak freeze** | 1 jour de grâce par semaine, protège le streak | Sécurité psychologique |
-| F10 | **Inbox rapide** | Capturer une idée/tâche en 1 tap, trier plus tard | Zéro friction d'entrée |
+> Scope validé par le Feature Scoring (voir `docs/feature-scoring.md`). 6 features seulement — pas 10.
 
-#### 🟡 Phase 2 — "Le système connecté" (M4-M6)
+| # | Feature | Description | Valeur | Score |
+|---|---------|-------------|--------|-------|
+| F02 | **Domaines de vie** | 5 domaines prédéfinis + possibilité d'en changer | Fondation de tout | 22/25 |
+| F03 | **Habitudes** | Créer, tracker, streak, lien domaine. Création en 1 champ | Usage quotidien #1 | 20/25 |
+| F06 | **Compteur temps/domaine** | Calcul automatique depuis habits cochées. Vue semaine | **LA killer metric** | 23/25 |
+| F01 | **TodayView contextuel** | Écran d'accueil adapté à l'heure (matin=plan, midi=check, soir=bilan) | Première chose vue | 21/25 |
+| F07 | **Bilan hebdo simplifié** | "Cette semaine : X h par domaine" — auto-généré, partageable | Aha moment + viralité | 21/25 |
+| F09 | **Streak freeze** | 1 jour de grâce par semaine, protège le streak automatiquement | Anti-churn semaine 3 | 19/25 |
+
+> **Repoussé en P2** (après scoring) : Tâches (F04), Routines (F05), Inbox (F10), Micro-récompenses complètes (F08), Weekly Review guidée (F16). Voir `feature-scoring.md` pour les justifications.
+
+#### 🟡 Phase 2 — "Le système connecté + IA interprète" (M4-M6)
 
 | # | Feature | Description |
 |---|---------|-------------|
-| F11 | **Budget temps complet** | Objectifs heures/domaine, mode strict/flexible, alertes |
+| F04 | **Tâches** | Créer, prioriser, lier à un domaine (remonté de P1, scope serré) |
+| F05 | **Routines** | Séquences d'étapes avec timer (remonté de P1) |
+| F08 | **Micro-récompenses** | Système complet : animations, haptic, messages retour |
+| F10 | **Inbox rapide** | Capturer une idée/tâche en 1 tap, trier plus tard |
+| F11 | **Budget temps complet** | Objectifs heures/domaine, alertes, mode strict/flexible (raison de payer Pro) |
 | F12 | **OKR + Key Results** | Objectifs trimestriels liés aux domaines |
 | F13 | **Lien Habit → KR** | L'habit fait progresser automatiquement le Key Result |
-| F14 | **Thèmes par domaine** | Sous-catégories (ex: Santé → Fitness, Nutrition, Sommeil) |
-| F15 | **Blocs de temps** | Deep work, shallow, perso. Tâches assignées aux blocs |
-| F16 | **Weekly Review guidée** | Prompts structurés, suggestions IA basiques |
-| F17 | **Calendrier unifié** | Vue jour/semaine avec tout : routines, blocs, tâches, habits |
-| F18 | **IA suggestions niveau 1** | Calculs simples : rythme KR, alerte budget, suggestion bloc |
+| F16 | **Weekly Review guidée** | Prompts structurés ("quel domaine prioriser ?") |
+| F18 | **IA — Interprète de données** | Requêtes SQL pré-construites → résultats formatés → LLM → bilan en phrases actionnables. Ex: "C'est la 3ème semaine où Santé est sous 3h. Les heures perdues vont dans Travail, surtout mardi/jeudi soir." Coût: ~0.01€/user/semaine |
+| F19 | **IA — Patterns configurables** | Bibliothèque de 15-20 patterns pré-définis que l'utilisateur active. Chaque pattern = requête SQL + interprétation LLM. Ex: "Quand je fais du sport le matin, je complète +23% d'habitudes." L'utilisateur choisit ce qu'il veut explorer, l'app exécute et interprète |
+| F25 | **Partage de bilan** | Screenshot optimisé stories/Twitter (viralité) |
 
-#### 🔴 Phase 3 — "L'intelligence" (M7-M12)
+#### 🔴 Phase 3 — "L'intelligence actionnable" (M7-M12)
 
 | # | Feature | Description |
 |---|---------|-------------|
-| F19 | **IA patterns** | Détection de corrélations (sommeil vs productivité, routine vs completion) |
+| F27 | **IA — Conseiller actionnable** | Passe de "voici ce qui se passe" à "voici ce que tu pourrais faire". Suggestions spécifiques basées sur les patterns détectés + données personnelles. Ex: "Tu perds tes habitudes Santé le mercredi. Déplace ton sport du soir au matin ce jour-là — tu complètes 90% de tes habitudes matin vs 45% le soir." |
+| F15 | **Blocs de temps** | Deep work, shallow, perso. Tâches assignées aux blocs |
 | F20 | **Compensation mensuelle** | Rattrapage flexible du budget temps sur le mois |
 | F21 | **Projets** | Groupes de tâches liés à OKR |
 | F22 | **Monthly/Quarterly Review** | Bilan long terme, révision stratégique |
-| F23 | **Deep links apps** | Ouvrir une app externe depuis une étape de routine |
-| F24 | **Sync calendrier externe** | Google Calendar, Apple Calendar |
-| F25 | **Partage de bilan** | Screenshot/export du bilan hebdo (viralité) |
-| F26 | **Multi-langue** | Anglais, espagnol (expansion) |
+| F14 | **Thèmes par domaine** | Sous-catégories (ex: Santé → Fitness, Nutrition, Sommeil) |
+
+#### ⚫ Backlog
+
+| # | Feature | Raison |
+|---|---------|--------|
+| F23 | Deep links apps | Impact quasi nul sur rétention |
+| F24 | Sync Google Calendar | Intégration lourde (OAuth), calendrier coexiste |
+| F26 | Multi-langue | Le marché francophone suffit pour valider |
+| F17 | Calendrier unifié | Google Calendar coexiste, coût technique élevé |
 
 ### 9.3 La boucle de valeur croissante
 
@@ -434,6 +444,45 @@ Si l'utilisateur complète 3+ habitudes pendant 7 jours consécutifs
 - L'onboarding suggère 3 habitudes basées sur les domaines choisis
 - Les rappels sont calés sur les moments de la journée où l'utilisateur est sur son tel
 - Les 3 premiers jours, micro-récompenses renforcées (animation, message)
+
+### 9.5 Stratégie IA
+
+> **Principe** : l'IA dans LifeFlow n'est PAS un chatbot, PAS un coach motivationnel, PAS une mascotte. C'est un **data analyst personnel** qui a accès aux données de vie de l'utilisateur — quelque chose qu'aucun LLM générique ne peut faire.
+
+#### Ce qui rend l'IA utile ici
+
+LifeFlow accumule des données structurées personnelles : habitudes complétées, temps par domaine, streaks, patterns de complétion par jour/heure, corrélations entre domaines. Ces données sont PRIVÉES et UNIQUES à chaque utilisateur. L'IA transforme ces données en phrases actionnables que l'utilisateur ne pourrait pas extraire seul.
+
+#### Les 3 rôles de l'IA — par phase
+
+| Rôle | Phase | Ce que fait l'IA | Technique | Coût/user |
+|------|-------|-----------------|-----------|----------|
+| **0. Zéro IA** | P1 | Rien. Le TodayView, le compteur temps, le streak freeze = du code (`if/else`, arithmétique). L'intelligence de P1 est structurelle, pas algorithmique | Dart + SQL | 0€ |
+| **1. Interprète de données** | P2 | Transforme les chiffres en phrases. "28h Travail, 2h Santé" → "C'est la 3ème semaine où Santé est sous 3h. Les heures perdues vont dans Travail, surtout mardi/jeudi soir." | Requêtes SQL pré-construites → résultats formatés → API LLM (prompt structuré) | ~0.01€/semaine |
+| **2. Détecteur de patterns** | P2 | L'utilisateur active des patterns depuis une bibliothèque de 15-20 questions pré-définies. L'app exécute la requête SQL correspondante et envoie les résultats au LLM pour interprétation | Bibliothèque de patterns (SQL) + LLM pour interprétation | ~0.01€/semaine |
+| **3. Conseiller actionnable** | P3 | Passe de "voici ce qui se passe" à "voici ce que tu pourrais faire". Suggestions concrètes et personnalisées basées sur les patterns détectés | Même stack + logique de recommandation | ~0.03€/semaine |
+
+#### Bibliothèque de patterns pré-définis (exemples)
+
+| Pattern | Question utilisateur | Requête sous-jacente |
+|---------|---------------------|---------------------|
+| Corrélation A→B | "Quand je fais du sport, suis-je plus productif ?" | Taux complétion habitudes Travail les jours avec/sans Sport |
+| Meilleur/pire jour | "Quel jour de la semaine je lâche ?" | Taux de complétion par jour de semaine |
+| Heure optimale | "À quelle heure je suis le plus régulier ?" | Distribution horaire des habitudes cochées |
+| Effet weekend | "Je décroche le weekend ?" | Complétion lundi-vendredi vs samedi-dimanche |
+| Tendance domaine | "Mon domaine Santé monte ou descend ?" | Heures/semaine par domaine sur 4-8 semaines (slope) |
+| Effet cascade | "Quand Travail monte, quoi descend ?" | Corrélation négative entre domaines |
+| Prédiction streak | "Risque de casser mon streak ?" | Pattern de complétion des jours précédents vs historique |
+
+#### Ce que l'IA ne fait PAS
+
+| Tentation | Pourquoi non |
+|-----------|-------------|
+| Chatbot conversationnel | Tout le monde a ChatGPT. Zéro valeur ajoutée |
+| Création auto d'habitudes | Prescriptif — Fabulous fait ça et les gens détestent |
+| Coaching motivationnel | "Tu peux le faire !" → pas besoin d'IA pour ça |
+| Génération de contenu | Articles, tips → c'est du blog, pas du produit |
+| IA visible (mascotte, avatar) | Vieillit vite, infantilise |
 
 ---
 
@@ -606,8 +655,9 @@ Si l'utilisateur complète 3+ habitudes pendant 7 jours consécutifs
 ### Phase 1 — "Le cockpit quotidien" (M1-M3)
 
 > **Objectif** : prouver que les gens utilisent le compteur temps/domaine et reviennent quotidiennement
+> **IA** : Aucune. L'intelligence est structurelle (TodayView contextuel = `if/else` sur l'heure, compteur = arithmétique)
 >
-> **Features** : F01-F10 (TodayView, domaines, habits, tâches, routines, compteur temps, bilan hebdo simplifié, micro-récompenses, streak freeze, inbox rapide)
+> **Features (6)** : F02 Domaines, F03 Habitudes, F06 Compteur temps, F01 TodayView, F07 Bilan hebdo, F09 Streak freeze
 >
 > **Critère de succès** :
 > - 500+ utilisateurs actifs mensuels
@@ -618,26 +668,29 @@ Si l'utilisateur complète 3+ habitudes pendant 7 jours consécutifs
 > - L'activation metric est validé (3 habits × 7 jours → rétention D30)
 > - Le compteur temps est consulté (preuve que H1 est vraie)
 
-### Phase 2 — "Le système connecté" (M4-M6)
+### Phase 2 — "Le système connecté + IA interprète" (M4-M6)
 
-> **Objectif** : transformer les utilisateurs retenus en utilisateurs Pro via le budget temps complet et les OKR
+> **Objectif** : transformer les utilisateurs retenus en Pro via budget temps complet, et introduire l'IA comme interprète de données + détecteur de patterns
+> **IA** : Rôle 1 (interprète de données) + Rôle 2 (patterns configurables). Technique : requêtes SQL → LLM API. Coût ~0.01€/user/semaine
 >
-> **Features** : F11-F18 (budget temps complet, OKR, lien Habit→KR, thèmes, blocs de temps, weekly review guidée, calendrier, IA niveau 1)
+> **Features (11)** : F04 Tâches, F05 Routines, F08 Micro-récompenses, F10 Inbox, F11 Budget temps, F12 OKR, F13 Lien Habit→KR, F16 Weekly Review, F18 IA interprète, F19 IA patterns, F25 Partage bilan
 >
 > **Critère de succès** :
 > - Conversion Free→Pro ≥ 3%
 > - MRR ≥ 3.000€
-> - NPS ≥ 40
+> - ≥ 40% des Pro activent ≥3 patterns IA
 >
 > **Critère pour passer à Phase 3** :
 > - La conversion Pro est stable (pas juste des early adopters)
 > - Le churn Pro < 10%/mois
+> - Les patterns IA sont consultés (preuve que les gens veulent des insights)
 
-### Phase 3 — "L'intelligence & l'expansion" (M7-M12)
+### Phase 3 — "L'intelligence actionnable" (M7-M12)
 
-> **Objectif** : augmenter le MRR et la viralité avec les features avancées et le partage
+> **Objectif** : IA conseiller (suggestions personnalisées), features de profondeur, viralité
+> **IA** : Rôle 3 (conseiller actionnable). Passe de "voici ce qui se passe" à "voici ce que tu pourrais faire". Coût ~0.03€/user/semaine
 >
-> **Features** : F19-F26 (IA patterns, compensation, projets, reviews avancées, deep links, sync calendrier, partage bilan, multi-langue)
+> **Features (6)** : F27 IA conseiller, F15 Blocs de temps, F20 Compensation mensuelle, F21 Projets, F22 Reviews mensuelles/trimestrielles, F14 Thèmes
 >
 > **Critère de succès** :
 > - MRR ≥ 10.000€
