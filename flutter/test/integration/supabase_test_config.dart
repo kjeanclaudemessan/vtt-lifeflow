@@ -3,8 +3,8 @@
 /// Uses the local Supabase instance for testing.
 library;
 
-/// Local Supabase URL.
-const String testSupabaseUrl = 'http://127.0.0.1:54321';
+/// Local Supabase URL (custom port — Hyper-V conflict with default 54321).
+const String testSupabaseUrl = 'http://127.0.0.1:54421';
 
 /// Local Supabase anon key.
 const String testSupabaseAnonKey =

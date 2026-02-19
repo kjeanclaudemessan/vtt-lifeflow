@@ -173,3 +173,66 @@ chat_platform  -> widget_templates, scheduled_messages (auto-included)
 8. **Each layer has its own `.github/`** — use stack-specific instructions for code patterns.
 9. **`modules.yaml` is the source of truth** — every module file must be registered there.
 10. **Presets override individual toggles** — if `preset:` is set in `vtt.yaml`, it takes precedence.
+
+---
+
+## SpecKit Workflow (MANDATORY)
+
+> **Every feature MUST follow the SpecKit pipeline.** No implementation without specs.
+> The `.specify/memory/constitution.md` is the supreme law of this project — it overrides all other guidance.
+
+### Pipeline
+
+```
+speckit.specify → speckit.plan → speckit.tasks → speckit.implement
+```
+
+| Step | Command | Produces | Required Before |
+|------|---------|----------|-----------------|
+| 1. Specify | `/speckit.specify` | `spec.md` — user stories, acceptance criteria, wireframes | Any design work |
+| 2. Plan | `/speckit.plan` | `research.md`, `data-model.md`, `quickstart.md`, `plan.md`, `contracts/` | Any implementation |
+| 3. Tasks | `/speckit.tasks` | `tasks.md` — ordered, dependency-aware task breakdown | Any coding |
+| 4. Implement | `/speckit.implement` | Working code following tasks.md phase by phase | — |
+
+### Feature Directory Convention
+
+```
+specs/<branch-name>/          # Branch MUST match ^[0-9]{3}-<name>
+├── spec.md                   # The WHAT — user stories, acceptance, wireframes
+├── research.md               # The DECISIONS — tech choices, alternatives
+├── data-model.md             # The ENTITIES — tables, fields, relationships
+├── plan.md                   # The HOW — stack, structure, constitution check
+├── quickstart.md             # The TESTS — end-to-end validation scenarios
+├── wireframes.md             # The SCREENS — ASCII wireframes (optional, can be in spec.md)
+├── tasks.md                  # The ACTION PLAN — ordered tasks with dependencies
+├── contracts/                # The API — OpenAPI specs (when FastAPI involved)
+└── checklists/               # The GATES — UX, security, a11y checklists
+```
+
+### Prerequisites Script
+
+```powershell
+# Must pass before implementation
+.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks
+```
+
+### Rules
+
+1. **No coding without `tasks.md`** — run `/speckit.tasks` first.
+2. **`check-prerequisites.ps1` MUST pass** — it validates branch name, feature dir, and required docs.
+3. **Constitution check in `plan.md`** — every principle must PASS before implementation.
+4. **Mark tasks as complete** — update `tasks.md` checkboxes as work progresses.
+5. **Architecture is NON-NEGOTIABLE** — follow `flutter/.github/`, `fastapi/.github/`, `supabase/.github/` patterns exactly.
+6. **Design system is MANDATORY** — no hardcoded colors, spacing, or typography in Flutter. Use `AppColors`, `AppSpacing`, `AppTextStyles`, `AppGaps`, and design system widgets (`AppButton`, `AppCard`, `AppTextField`, `AppListTile`, `AppBadge`, `AppProgress`, `AppEmptyState`, `AppChip`, `AppBottomNav`).
+7. **Entity/Model separation is MANDATORY** — pure entities in `domain/`, `@JsonSerializable` models in `data/`. No exceptions.
+
+### Constitution
+
+The project constitution lives at `.specify/memory/constitution.md`. It defines:
+- Inviolable architectural principles (per stack)
+- Naming conventions (cross-stack)
+- Coding workflow (Supabase → Domain → Data → Features)
+- Quality gates (RLS, Either, Equatable, i18n, design tokens)
+- Governance (priority order of conflicting instructions)
+
+**Priority order**: Constitution > This file > Stack-specific `.github/` > Feature-specific `plan.md`

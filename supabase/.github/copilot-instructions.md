@@ -240,3 +240,5 @@ RLS is automatically bypassed when using the service role key (used by FastAPI b
 8. **Section banners** — use `-- ═══` separators for readability.
 9. **Dependencies noted in header** — list required tables in migration header comment.
 10. **Module names match across layers** — table names align with Flutter/FastAPI module names.
+11. **Seeds ≠ Migrations** — Migrations contain ONLY schema (CREATE TABLE, ALTER, indexes, RLS, triggers). Default data, seed data, and trigger functions that INSERT data belong in `supabase/seeds/`. NEVER put INSERT statements or data-generating functions in migrations.
+12. **`supabase db reset` is a gate** — must pass with zero errors after any migration or seed change, before any downstream code is written.
