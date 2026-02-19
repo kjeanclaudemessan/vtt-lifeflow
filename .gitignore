@@ -1,0 +1,37 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# VTT Template - Root .gitignore
+# Sub-projects have their own .gitignore for specific ignores
+# ══════════════════════════════════════════════════════════════════════════════
+
+# ═══ OS ═══
+.DS_Store
+Thumbs.db
+Desktop.ini
+._*
+
+# ═══ IDEs ═══
+.idea/
+*.swp
+*.swo
+*~
+
+# ═══ Environment ═══
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ═══ Secrets ═══
+*.pem
+*.key
+*credentials*.json
+
+# ═══ Logs ═══
+*.log
+
+# ═══ Generated test projects (from test_init.ps1) ═══
+/test_*/
+/generated/
+
+# ═══ Personal / Non-template content ═══
+/_projects_example/

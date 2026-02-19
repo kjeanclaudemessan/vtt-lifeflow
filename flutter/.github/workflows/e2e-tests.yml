@@ -1,0 +1,110 @@
+# ════════════════════════════════════════════════════════════════════════════
+# E2E Tests Workflow - Runs with Patrol on Android Emulator in GitHub Actions
+# ════════════════════════════════════════════════════════════════════════════
+name: E2E Tests (Patrol)
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # Permet de lancer manuellement
+
+jobs:
+  e2e-android:
+    name: E2E Tests (Android)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.0"
+          channel: "stable"
+          cache: true
+
+      - name: Install Patrol CLI
+        run: dart pub global activate patrol_cli
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate code (build_runner)
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      # ══════════════════════════════════════════════════════════════════════
+      # ANDROID EMULATOR + PATROL TESTS
+      # ══════════════════════════════════════════════════════════════════════
+      - name: Enable KVM (Linux)
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run Patrol E2E tests on Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          arch: x86_64
+          profile: pixel_6
+          target: google_apis
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          script: |
+            patrol test --target integration_test/app_test.dart --verbose
+
+      # ══════════════════════════════════════════════════════════════════════
+      # ARTIFACTS (Screenshots si échec)
+      # ══════════════════════════════════════════════════════════════════════
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-screenshots
+          path: integration_test/screenshots/
+          retention-days: 7
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # iOS Tests (macOS runner - plus coûteux en minutes)
+  # ══════════════════════════════════════════════════════════════════════════
+  e2e-ios:
+    name: E2E Tests (iOS)
+    runs-on: macos-latest
+    timeout-minutes: 45
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' # Seulement sur main
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.0"
+          channel: "stable"
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate code
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      - name: Start iOS Simulator
+        run: |
+          UDID=$(xcrun simctl list devices available | grep "iPhone 15" | head -1 | grep -oE '[0-9A-F-]{36}')
+          xcrun simctl boot "$UDID"
+          echo "SIMULATOR_UDID=$UDID" >> $GITHUB_ENV
+
+      - name: Run E2E tests on iOS Simulator
+        run: flutter test integration_test/app_test.dart -d $SIMULATOR_UDID --verbose

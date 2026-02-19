@@ -1,0 +1,1 @@
+"""VTT FastAPI Template - Tests."""

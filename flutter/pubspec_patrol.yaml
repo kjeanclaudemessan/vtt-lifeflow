@@ -1,0 +1,9 @@
+patrol:
+  app_name: VTT Flutter Template
+  android:
+    package_name: com.example.vtt_flutter_template
+  ios:
+    bundle_id: com.example.vttFlutterTemplate
+
+targets:
+  - integration_test/app_test.dart

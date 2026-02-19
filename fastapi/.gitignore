@@ -1,0 +1,55 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# FastAPI / Python
+# (OS, IDE, secrets sont gérés par le .gitignore root)
+# ══════════════════════════════════════════════════════════════════════════════
+
+# ═══ Python ═══
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ═══ Virtual Environments ═══
+.venv/
+venv/
+ENV/
+env/
+
+# ═══ Environment Variables ═══
+.env
+.env.local
+.env.development
+.env.staging
+.env.production
+!.env.example
+
+# ═══ Testing ═══
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ═══ Logs ═══
+*.log
+logs/
+
+# ═══ Lockfile (generated per project) ═══
+uv.lock
+
+# ═══ Docker ═══
+docker-compose.override.yml
