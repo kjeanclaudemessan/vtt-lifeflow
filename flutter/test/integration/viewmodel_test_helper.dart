@@ -20,11 +20,19 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:supabase/supabase.dart';
+import 'package:lifeflow/core/config/app_config.dart';
+import 'package:lifeflow/core/config/env/environment.dart';
 import 'package:lifeflow/data/repositories/auth_repository_impl.dart';
+import 'package:lifeflow/data/repositories/domain_repository_impl.dart';
+import 'package:lifeflow/data/repositories/habit_repository_impl.dart';
 import 'package:lifeflow/domain/repositories/i_auth_repository.dart';
+import 'package:lifeflow/domain/repositories/i_domain_repository.dart';
+import 'package:lifeflow/domain/repositories/i_habit_repository.dart';
+import 'package:lifeflow/services/bilan_service.dart';
 import 'package:lifeflow/services/storage/local_storage_service.dart';
 import 'package:lifeflow/services/supabase/supabase_auth_service.dart';
 import 'package:lifeflow/services/supabase/supabase_service.dart';
+import 'package:lifeflow/services/time_counter_service.dart';
 
 import 'supabase_test_config.dart';
 
@@ -68,6 +76,9 @@ class ViewModelTestHelper {
   static Future<void> initialize() async {
     await _locator.reset();
 
+    // 0. AppConfig (needed by ErrorHandler in repositories)
+    AppConfig.initialize(Environment.development);
+
     // 1. Real SupabaseClient (from `supabase` package, NOT supabase_flutter)
     //    Use implicit flow — PKCE requires asyncStorage which isn't available
     //    in pure Dart tests (no SharedPreferences).
@@ -105,6 +116,18 @@ class ViewModelTestHelper {
     _locator.registerSingleton<DialogService>(TestDialogService());
     _locator.registerSingleton<BottomSheetService>(BottomSheetService());
     _locator.registerSingleton<SnackbarService>(SnackbarService());
+
+    // 7. Phase 1 repositories (real impl, using real Supabase)
+    _locator.registerSingleton<IDomainRepository>(
+      DomainRepositoryImpl(supabaseService: supabaseSvc),
+    );
+    _locator.registerSingleton<IHabitRepository>(
+      HabitRepositoryImpl(supabaseService: supabaseSvc),
+    );
+
+    // 8. Phase 1 pure services (no Supabase dependency)
+    _locator.registerSingleton<TimeCounterService>(TimeCounterService());
+    _locator.registerSingleton<BilanService>(BilanService());
   }
 
   /// Create a confirmed test user via admin API.
@@ -158,7 +181,30 @@ class ViewModelTestHelper {
         (u) => u.email == email,
         orElse: () => throw Exception('not found'),
       );
-      await adminClient.auth.admin.deleteUser(user.id);
+      await deleteUserById(user.id);
+    } catch (_) {}
+  }
+
+  /// Delete a test user by ID (cleans DB data + auth user).
+  static Future<void> deleteUserById(String userId) async {
+    try {
+      // Delete in dependency order (habit_logs → habits → domains → profiles)
+      await adminClient.from('habit_logs').delete().eq(
+            'habit_id',
+            adminClient.from('habits').select('id').eq('user_id', userId),
+          );
+    } catch (_) {}
+    try {
+      await adminClient.from('habits').delete().eq('user_id', userId);
+    } catch (_) {}
+    try {
+      await adminClient.from('domains').delete().eq('user_id', userId);
+    } catch (_) {}
+    try {
+      await adminClient.from('profiles').delete().eq('id', userId);
+    } catch (_) {}
+    try {
+      await adminClient.auth.admin.deleteUser(userId);
     } catch (_) {}
   }
 
@@ -174,6 +220,7 @@ class ViewModelTestHelper {
       }
     } catch (_) {}
     await _locator.reset();
+    AppConfig.reset();
   }
 }
 

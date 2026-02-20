@@ -187,8 +187,9 @@ class HabitsViewModel extends BaseViewModel {
     final result = await _habitRepo.archiveHabit(habitId);
     result.fold(
       (failure) => setError(failure.message),
-      (_) => _loadData(),
+      (_) {},
     );
+    if (result.isRight()) await _loadData();
   }
 
   /// Refreshes data.

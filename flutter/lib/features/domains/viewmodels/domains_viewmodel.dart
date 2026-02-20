@@ -47,16 +47,18 @@ class DomainsViewModel extends BaseViewModel {
     );
     result.fold(
       (failure) => setError(failure.message),
-      (_) => _loadDomains(),
+      (_) {},
     );
+    if (result.isRight()) await _loadDomains();
   }
 
   Future<void> updateDomain(DomainEntity entity) async {
     final result = await _domainRepo.updateDomain(entity);
     result.fold(
       (failure) => setError(failure.message),
-      (_) => _loadDomains(),
+      (_) {},
     );
+    if (result.isRight()) await _loadDomains();
   }
 
   Future<void> reorderDomains(int oldIndex, int newIndex) async {
@@ -84,23 +86,23 @@ class DomainsViewModel extends BaseViewModel {
     }
 
     final result = await _domainRepo.archiveDomain(id);
-    return result.fold(
-      (failure) {
-        setError(failure.message);
-        return false;
-      },
-      (_) {
-        _loadDomains();
-        return true;
-      },
+    result.fold(
+      (failure) => setError(failure.message),
+      (_) {},
     );
+    if (result.isRight()) {
+      await _loadDomains();
+      return true;
+    }
+    return false;
   }
 
   Future<void> unarchiveDomain(String id) async {
     final result = await _domainRepo.unarchiveDomain(id);
     result.fold(
       (failure) => setError(failure.message),
-      (_) => _loadDomains(),
+      (_) {},
     );
+    if (result.isRight()) await _loadDomains();
   }
 }

@@ -1,0 +1,9 @@
+# Dart test configuration for lifeflow
+#
+# Integration tests require a local Supabase instance and a shared
+# auth session — they MUST run sequentially.
+
+concurrency: 1
+
+tags:
+  integration:
