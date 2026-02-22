@@ -26,6 +26,8 @@ jobs:
 
       - name: Push migrations to staging
         run: supabase db push --db-url "${{ secrets.STAGING_SUPABASE_DB_URL }}"
+        env:
+          PGSSLMODE: disable
 
   # ═══════════════════════════════════════════════════════════════════════
   # Deploy FastAPI to Coolify VPS (webhook trigger)
