@@ -1,0 +1,42 @@
+# ═══════════════════════════════════════════════════════════════════════
+# LifeFlow FastAPI — Fly.io Staging Configuration
+# ═══════════════════════════════════════════════════════════════════════
+
+app = "lifeflow-api-staging"
+primary_region = "cdg"  # Paris
+
+[build]
+  dockerfile = "Dockerfile"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "requests"
+    hard_limit = 100
+    soft_limit = 80
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1
+
+[checks]
+  [checks.health]
+    port = 8000
+    type = "http"
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "15s"
+    method = "GET"
+    path = "/health"
+
+[env]
+  ENV = "staging"
+  LOG_LEVEL = "debug"

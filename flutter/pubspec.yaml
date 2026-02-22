@@ -51,3 +51,13 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
+
+# ═══════════════════════════════════════════════════════════════════════
+# Cider — Automated versioning
+# https://pub.dev/packages/cider
+# Usage: dart pub global run cider bump patch|minor|major
+# ═══════════════════════════════════════════════════════════════════════
+cider:
+  changelog:
+    path: ../CHANGELOG.md
+    diff_link_template: "https://github.com/vibetech/lifeflow/compare/%from%...%to%"

@@ -1,0 +1,269 @@
+name: Deploy Production
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      skip_stores:
+        description: "Skip Store submission"
+        type: boolean
+        default: false
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  # ═══════════════════════════════════════════════════════════════════════
+  # Validate tag & version
+  # ═══════════════════════════════════════════════════════════════════════
+  validate:
+    name: "Validate Release"
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      build_number: ${{ steps.version.outputs.build_number }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG="${GITHUB_REF#refs/tags/v}"
+          VERSION=$(echo $TAG | cut -d'+' -f1)
+          BUILD=$(echo $TAG | cut -d'+' -f2)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "build_number=${BUILD:-$GITHUB_RUN_NUMBER}" >> $GITHUB_OUTPUT
+          echo "🏷️ Version: $VERSION+${BUILD:-$GITHUB_RUN_NUMBER}"
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # Deploy Supabase Migrations to Production
+  # ═══════════════════════════════════════════════════════════════════════
+  supabase-production:
+    name: "Supabase → Production"
+    runs-on: ubuntu-latest
+    needs: [validate]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link to production project
+        run: supabase link --project-ref ${{ secrets.PROD_PROJECT_ID }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Push migrations to production
+        run: supabase db push
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.PROD_DB_PASSWORD }}
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # Deploy FastAPI to Fly.io Production
+  # ═══════════════════════════════════════════════════════════════════════
+  fastapi-production:
+    name: "FastAPI → Fly.io Production"
+    runs-on: ubuntu-latest
+    needs: [validate]
+    defaults:
+      run:
+        working-directory: fastapi
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to Fly.io production
+        run: flyctl deploy --app lifeflow-api --config fly.toml
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # Build & Release Flutter Android → Play Store
+  # ═══════════════════════════════════════════════════════════════════════
+  flutter-android-release:
+    name: "Flutter Android → Play Store"
+    runs-on: ubuntu-latest
+    needs: [validate, supabase-production]
+    defaults:
+      run:
+        working-directory: flutter
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.0"
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build runner
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/upload-keystore.jks
+
+      - name: Build App Bundle
+        run: |
+          flutter build appbundle --release \
+            --build-name=${{ needs.validate.outputs.version }} \
+            --build-number=${{ needs.validate.outputs.build_number }} \
+            --dart-define=ENV=production
+        env:
+          KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+
+      - name: Setup Ruby & Fastlane
+        if: ${{ !inputs.skip_stores }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+          working-directory: flutter/android
+
+      - name: Upload to Play Store
+        if: ${{ !inputs.skip_stores }}
+        run: |
+          cd android
+          bundle exec fastlane release
+        env:
+          GOOGLE_PLAY_JSON_KEY: ${{ secrets.GOOGLE_PLAY_JSON_KEY }}
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-aab
+          path: flutter/build/app/outputs/bundle/release/app-release.aab
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # Build & Release Flutter iOS → App Store
+  # ═══════════════════════════════════════════════════════════════════════
+  flutter-ios-release:
+    name: "Flutter iOS → App Store"
+    runs-on: macos-latest
+    needs: [validate, supabase-production]
+    defaults:
+      run:
+        working-directory: flutter
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.0"
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build runner
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Setup Ruby & Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+          working-directory: flutter/ios
+
+      - name: Build & upload to App Store Connect
+        if: ${{ !inputs.skip_stores }}
+        run: |
+          cd ios
+          bundle exec fastlane release
+        env:
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # Shorebird OTA Patch (optional)
+  # ═══════════════════════════════════════════════════════════════════════
+  shorebird-patch:
+    name: "Shorebird OTA Patch"
+    runs-on: ubuntu-latest
+    needs: [validate, flutter-android-release]
+    if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+    defaults:
+      run:
+        working-directory: flutter
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shorebirdtech/setup-shorebird@v1
+
+      - name: Create patch
+        run: shorebird patch android --release-version=${{ needs.validate.outputs.version }}+${{ needs.validate.outputs.build_number }}
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # Create GitHub Release
+  # ═══════════════════════════════════════════════════════════════════════
+  github-release:
+    name: "GitHub Release"
+    runs-on: ubuntu-latest
+    needs: [validate, flutter-android-release, flutter-ios-release, fastapi-production, supabase-production]
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: android-release-aab
+          path: artifacts/
+
+      - name: Generate release notes
+        id: notes
+        run: |
+          echo "## LifeFlow v${{ needs.validate.outputs.version }}" > release_notes.md
+          echo "" >> release_notes.md
+          git log --oneline $(git describe --tags --abbrev=0 HEAD^)..HEAD >> release_notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.validate.outputs.version }}+${{ needs.validate.outputs.build_number }}
+          body_path: release_notes.md
+          files: artifacts/*
+          generate_release_notes: true
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # Notify
+  # ═══════════════════════════════════════════════════════════════════════
+  notify:
+    name: "Notify"
+    runs-on: ubuntu-latest
+    needs: [validate, supabase-production, fastapi-production, flutter-android-release, flutter-ios-release]
+    if: always()
+
+    steps:
+      - name: Summary
+        run: |
+          echo "## 🚀 Production Release v${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Service | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Supabase | ${{ needs.supabase-production.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| FastAPI | ${{ needs.fastapi-production.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Android | ${{ needs.flutter-android-release.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| iOS | ${{ needs.flutter-ios-release.result }} |" >> $GITHUB_STEP_SUMMARY

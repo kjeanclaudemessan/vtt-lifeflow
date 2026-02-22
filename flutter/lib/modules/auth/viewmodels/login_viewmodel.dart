@@ -24,10 +24,12 @@ class LoginViewModel extends BaseViewModel {
   // Form State
   // ─────────────────────────────────────────────────────────────────
 
-  String _email = '';
+  // Dev defaults for quick testing
+  String _email = AppConfig.isDevelopment ? 'messanjeanclaude@gmail.com' : '';
   String get email => _email;
 
-  String _password = '';
+  String _password =
+      AppConfig.isDevelopment ? 'messanjeanclaude@gmail.com' : '';
   String get password => _password;
 
   bool _rememberMe = false;

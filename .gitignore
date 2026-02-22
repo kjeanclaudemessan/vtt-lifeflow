@@ -25,6 +25,20 @@ Desktop.ini
 *.pem
 *.key
 *credentials*.json
+google-play-key.json
+upload-keystore.jks
+*.keystore
+*.jks
+
+# ═══ Fastlane ═══
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots/**/*.png
+**/fastlane/test_output
+
+# ═══ Ruby (Fastlane) ═══
+Gemfile.lock
+vendor/bundle/
 
 # ═══ Logs ═══
 *.log

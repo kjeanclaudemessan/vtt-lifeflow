@@ -23,19 +23,22 @@ class RegisterViewModel extends BaseViewModel {
   // Form State
   // ─────────────────────────────────────────────────────────────────
 
-  String _firstName = '';
+  // Dev defaults for quick testing
+  String _firstName = AppConfig.isDevelopment ? 'Jean-Claude' : '';
   String get firstName => _firstName;
 
-  String _lastName = '';
+  String _lastName = AppConfig.isDevelopment ? 'Messan' : '';
   String get lastName => _lastName;
 
-  String _email = '';
+  String _email = AppConfig.isDevelopment ? 'messanjeanclaude@gmail.com' : '';
   String get email => _email;
 
-  String _password = '';
+  String _password =
+      AppConfig.isDevelopment ? 'messanjeanclaude@gmail.com' : '';
   String get password => _password;
 
-  String _confirmPassword = '';
+  String _confirmPassword =
+      AppConfig.isDevelopment ? 'messanjeanclaude@gmail.com' : '';
   String get confirmPassword => _confirmPassword;
 
   bool _acceptedTerms = false;
