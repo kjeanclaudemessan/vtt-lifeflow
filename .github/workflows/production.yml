@@ -115,7 +115,7 @@ jobs:
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
 
       - name: Setup Ruby & Fastlane
-        if: ${{ !inputs.skip_stores && secrets.GOOGLE_PLAY_JSON_KEY != '' }}
+        if: false  # Skip until Google Play secrets are configured
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2"
@@ -123,7 +123,7 @@ jobs:
           working-directory: flutter/android
 
       - name: Upload to Play Store
-        if: ${{ !inputs.skip_stores && secrets.GOOGLE_PLAY_JSON_KEY != '' }}
+        if: false  # Skip until Google Play secrets are configured
         run: |
           cd android
           bundle exec fastlane release
@@ -189,7 +189,7 @@ jobs:
         run: flutter build ios --release --no-codesign --dart-define=ENV=production
 
       - name: Setup Ruby & Fastlane
-        if: ${{ secrets.MATCH_GIT_URL != '' }}
+        if: false  # Skip until Apple secrets are configured
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2"
@@ -197,7 +197,7 @@ jobs:
           working-directory: flutter/ios
 
       - name: Build & upload to App Store Connect
-        if: ${{ !inputs.skip_stores && secrets.MATCH_GIT_URL != '' }}
+        if: false  # Skip until Apple secrets are configured
         run: |
           cd ios
           bundle exec fastlane release

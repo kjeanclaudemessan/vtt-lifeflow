@@ -82,7 +82,7 @@ jobs:
           retention-days: 30
 
       - name: Upload to Firebase App Distribution
-        if: ${{ secrets.FIREBASE_APP_ID_ANDROID != '' }}
+        if: false  # Skip until Firebase secrets are configured
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
@@ -130,7 +130,7 @@ jobs:
 
       # TestFlight upload — activé quand les secrets Apple sont configurés
       - name: Setup Ruby & Fastlane
-        if: ${{ secrets.MATCH_GIT_URL != '' }}
+        if: false  # Skip until Apple secrets are configured
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2"
@@ -138,7 +138,7 @@ jobs:
           working-directory: flutter/ios
 
       - name: Upload to TestFlight
-        if: ${{ secrets.MATCH_GIT_URL != '' }}
+        if: false  # Skip until Apple secrets are configured
         run: |
           cd ios
           bundle exec fastlane beta
