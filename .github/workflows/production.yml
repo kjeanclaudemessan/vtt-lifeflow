@@ -39,10 +39,10 @@ jobs:
           echo "🏷️ Version: $VERSION+${BUILD:-$GITHUB_RUN_NUMBER}"
 
   # ═══════════════════════════════════════════════════════════════════════
-  # Deploy Supabase Migrations to Production
+  # Deploy Supabase Migrations to Production (Coolify VPS)
   # ═══════════════════════════════════════════════════════════════════════
   supabase-production:
-    name: "Supabase → Production"
+    name: "Supabase → Production (Coolify)"
     runs-on: ubuntu-latest
     needs: [validate]
 
@@ -53,37 +53,22 @@ jobs:
         with:
           version: latest
 
-      - name: Link to production project
-        run: supabase link --project-ref ${{ secrets.PROD_PROJECT_ID }}
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-
       - name: Push migrations to production
-        run: supabase db push
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.PROD_DB_PASSWORD }}
+        run: supabase db push --db-url "${{ secrets.PROD_SUPABASE_DB_URL }}"
 
   # ═══════════════════════════════════════════════════════════════════════
-  # Deploy FastAPI to Fly.io Production
+  # Deploy FastAPI to Coolify VPS (webhook trigger)
   # ═══════════════════════════════════════════════════════════════════════
   fastapi-production:
-    name: "FastAPI → Fly.io Production"
+    name: "FastAPI → Coolify Production"
     runs-on: ubuntu-latest
     needs: [validate]
-    defaults:
-      run:
-        working-directory: fastapi
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-
-      - name: Deploy to Fly.io production
-        run: flyctl deploy --app lifeflow-api --config fly.toml
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - name: Trigger Coolify deploy via webhook
+        run: |
+          curl -f -s -X GET "${{ secrets.COOLIFY_WEBHOOK_PROD_API }}" \
+            || echo "::warning::Coolify webhook failed — deploy manually from Coolify dashboard"
 
   # ═══════════════════════════════════════════════════════════════════════
   # Build & Release Flutter Android → Play Store
@@ -120,14 +105,17 @@ jobs:
           flutter build appbundle --release \
             --build-name=${{ needs.validate.outputs.version }} \
             --build-number=${{ needs.validate.outputs.build_number }} \
-            --dart-define=ENV=production
+            --dart-define=ENV=production \
+            --dart-define=SUPABASE_URL=${{ secrets.PROD_SUPABASE_URL }} \
+            --dart-define=SUPABASE_ANON_KEY=${{ secrets.PROD_SUPABASE_ANON_KEY }} \
+            --dart-define=API_BASE_URL=${{ vars.PROD_API_BASE_URL }}
         env:
           KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
 
       - name: Setup Ruby & Fastlane
-        if: ${{ !inputs.skip_stores }}
+        if: ${{ !inputs.skip_stores && secrets.GOOGLE_PLAY_JSON_KEY != '' }}
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2"
@@ -135,7 +123,7 @@ jobs:
           working-directory: flutter/android
 
       - name: Upload to Play Store
-        if: ${{ !inputs.skip_stores }}
+        if: ${{ !inputs.skip_stores && secrets.GOOGLE_PLAY_JSON_KEY != '' }}
         run: |
           cd android
           bundle exec fastlane release
@@ -147,14 +135,37 @@ jobs:
         with:
           name: android-release-aab
           path: flutter/build/app/outputs/bundle/release/app-release.aab
+          retention-days: 90
+
+      - name: Build APK (for direct install)
+        run: |
+          flutter build apk --release \
+            --build-name=${{ needs.validate.outputs.version }} \
+            --build-number=${{ needs.validate.outputs.build_number }} \
+            --dart-define=ENV=production \
+            --dart-define=SUPABASE_URL=${{ secrets.PROD_SUPABASE_URL }} \
+            --dart-define=SUPABASE_ANON_KEY=${{ secrets.PROD_SUPABASE_ANON_KEY }} \
+            --dart-define=API_BASE_URL=${{ vars.PROD_API_BASE_URL }}
+        env:
+          KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-apk
+          path: flutter/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 90
 
   # ═══════════════════════════════════════════════════════════════════════
-  # Build & Release Flutter iOS → App Store
+  # Build & Release Flutter iOS → App Store (skipped until Apple account)
   # ═══════════════════════════════════════════════════════════════════════
   flutter-ios-release:
     name: "Flutter iOS → App Store"
     runs-on: macos-latest
     needs: [validate, supabase-production]
+    if: ${{ vars.ENABLE_IOS_BUILD == 'true' }}
     defaults:
       run:
         working-directory: flutter
@@ -174,7 +185,11 @@ jobs:
       - name: Build runner
         run: dart run build_runner build --delete-conflicting-outputs
 
+      - name: Build iOS (no codesign)
+        run: flutter build ios --release --no-codesign --dart-define=ENV=production
+
       - name: Setup Ruby & Fastlane
+        if: ${{ secrets.MATCH_GIT_URL != '' }}
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2"
@@ -182,7 +197,7 @@ jobs:
           working-directory: flutter/ios
 
       - name: Build & upload to App Store Connect
-        if: ${{ !inputs.skip_stores }}
+        if: ${{ !inputs.skip_stores && secrets.MATCH_GIT_URL != '' }}
         run: |
           cd ios
           bundle exec fastlane release
@@ -194,13 +209,13 @@ jobs:
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
 
   # ═══════════════════════════════════════════════════════════════════════
-  # Shorebird OTA Patch (optional)
+  # Shorebird OTA Patch (optional — activé quand SHOREBIRD_TOKEN configuré)
   # ═══════════════════════════════════════════════════════════════════════
   shorebird-patch:
     name: "Shorebird OTA Patch"
     runs-on: ubuntu-latest
     needs: [validate, flutter-android-release]
-    if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+    if: ${{ vars.ENABLE_SHOREBIRD == 'true' }}
     defaults:
       run:
         working-directory: flutter
@@ -221,7 +236,7 @@ jobs:
   github-release:
     name: "GitHub Release"
     runs-on: ubuntu-latest
-    needs: [validate, flutter-android-release, flutter-ios-release, fastapi-production, supabase-production]
+    needs: [validate, flutter-android-release, fastapi-production, supabase-production]
     if: startsWith(github.ref, 'refs/tags/v')
 
     steps:
@@ -229,22 +244,24 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: android-release-aab
           path: artifacts/
+          merge-multiple: true
 
       - name: Generate release notes
         id: notes
         run: |
           echo "## LifeFlow v${{ needs.validate.outputs.version }}" > release_notes.md
           echo "" >> release_notes.md
-          git log --oneline $(git describe --tags --abbrev=0 HEAD^)..HEAD >> release_notes.md
+          git log --oneline $(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo HEAD~10)..HEAD >> release_notes.md
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ needs.validate.outputs.version }}+${{ needs.validate.outputs.build_number }}
           body_path: release_notes.md
-          files: artifacts/*
+          files: |
+            artifacts/*.aab
+            artifacts/*.apk
           generate_release_notes: true
 
   # ═══════════════════════════════════════════════════════════════════════
@@ -253,7 +270,7 @@ jobs:
   notify:
     name: "Notify"
     runs-on: ubuntu-latest
-    needs: [validate, supabase-production, fastapi-production, flutter-android-release, flutter-ios-release]
+    needs: [validate, supabase-production, fastapi-production, flutter-android-release]
     if: always()
 
     steps:
@@ -266,4 +283,5 @@ jobs:
           echo "| Supabase | ${{ needs.supabase-production.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| FastAPI | ${{ needs.fastapi-production.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Android | ${{ needs.flutter-android-release.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| iOS | ${{ needs.flutter-ios-release.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Download from [Artifacts](../actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY

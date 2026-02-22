@@ -21,20 +21,20 @@ Code → Lint/Analyze → Test → Build → Screenshots → Sign → Distribute
 │     ├─ Supabase: supabase db start + db reset + gen types                │
 │     └─ Golden tests (screenshots de régression)                          │
 │                                                                          │
-│  ② Merge sur develop → Staging                                           │
-│     ├─ Supabase: db push vers staging project                            │
-│     ├─ FastAPI: Docker build + deploy Fly.io staging                     │
-│     ├─ Flutter: Codemagic build → Firebase App Distribution              │
-│     └─ Notification Slack                                                │
+│  ② Merge sur dev → Staging                                              │
+│     ├─ Supabase: db push vers staging DB (Coolify VPS)                   │
+│     ├─ FastAPI: Webhook Coolify → auto re-deploy conteneur               │
+│     ├─ Flutter: Build APK → GitHub Artifacts + Firebase App Distribution │
+│     └─ Summary GitHub Actions                                            │
 │                                                                          │
-│  ③ Merge sur main → Production                                           │
-│     ├─ cider bump + release-please (version + CHANGELOG)                 │
-│     ├─ Supabase: db push vers production                                 │
-│     ├─ FastAPI: Docker deploy Fly.io production                          │
-│     ├─ Flutter Android: fastlane supply → Google Play                    │
-│     ├─ Flutter iOS: fastlane deliver → App Store Connect                 │
-│     ├─ Screenshots: golden_toolkit + frameit → Store listings            │
-│     └─ Shorebird: release (pour futurs patches OTA)                      │
+│  ③ Tag v* → Production                                                   │
+│     ├─ cider bump + tag (version + CHANGELOG)                            │
+│     ├─ Supabase: db push vers production DB (Coolify VPS)                │
+│     ├─ FastAPI: Webhook Coolify → auto re-deploy conteneur               │
+│     ├─ Flutter Android: Build AAB/APK → GitHub Release                   │
+│     ├─ Flutter iOS: Build (quand compte Apple dispo)                     │
+│     ├─ Play Store / App Store (quand comptes dispos)                     │
+│     └─ Shorebird: release OTA (quand activé)                             │
 │                                                                          │
 │  ④ Hotfix urgent                                                         │
 │     └─ Shorebird patch → OTA en minutes (pas besoin de review Store)     │
@@ -55,8 +55,7 @@ Code → Lint/Analyze → Test → Build → Screenshots → Sign → Distribute
 
 | Outil | Rôle | Coût |
 |-------|------|------|
-| **GitHub Actions** | CI principal (lint, tests, Supabase) | Gratuit (2000 min/mois) |
-| **Codemagic** | Builds iOS/Android (macOS M2 inclus) | Gratuit (500 min/mois) |
+| **GitHub Actions** | CI + builds + deploy triggers | Gratuit (2000 min/mois) |
 
 ### 2. Build & Deploy
 
@@ -121,8 +120,7 @@ Code → Lint/Analyze → Test → Build → Screenshots → Sign → Distribute
 
 | Outil | Rôle | Coût |
 |-------|------|------|
-| **Fly.io** | Deploy FastAPI (Docker, global edge) | Gratuit → $5/mois |
-| **Supabase Cloud** | DB + Auth + Storage + Realtime | Gratuit → $25/mois |
+| **Coolify (VPS)** | Deploy FastAPI + Supabase (staging+prod) | $0 (VPS déjà payé) |
 
 ---
 
@@ -131,14 +129,12 @@ Code → Lint/Analyze → Test → Build → Screenshots → Sign → Distribute
 | Outil | Coût/mois |
 |-------|-----------|
 | GitHub Actions | $0 |
-| Codemagic | $0 (500 min) → $39 |
 | Fastlane | $0 (open source) |
 | Firebase (Crashlytics + App Distribution + Analytics) | $0 |
-| Supabase (staging + prod) | $0 → $25 |
+| Coolify + VPS (Supabase staging + prod + FastAPI) | $0 (déjà payé) |
 | Shorebird | $0 (5000 installs) → $20 |
-| Fly.io | $0 → $5 |
 | Cider | $0 (open source) |
-| **TOTAL** | **$0 → $89/mois** |
+| **TOTAL** | **$0** |
 
 ---
 
@@ -149,8 +145,8 @@ lifeflow/
 ├── .github/
 │   └── workflows/
 │       ├── ci.yml                  # CI: lint + test (chaque PR)
-│       ├── staging.yml             # Deploy staging (merge develop)
-│       └── production.yml          # Deploy production (merge main)
+│       ├── staging.yml             # Deploy staging (push dev)
+│       └── production.yml          # Deploy production (tag v*)
 ├── flutter/
 │   ├── android/
 │   │   └── fastlane/
@@ -167,7 +163,9 @@ lifeflow/
 ├── fastapi/
 │   ├── Dockerfile
 │   ├── docker-compose.yml
-│   └── fly.toml
+│   ├── .dockerignore
+│   ├── fly.toml                    # (backup, Coolify utilisé)
+│   └── fly.staging.toml            # (backup, Coolify utilisé)
 ├── scripts/
 │   ├── setup.ps1                   # Setup local dev environment
 │   ├── test.ps1                    # Run all tests
@@ -191,26 +189,26 @@ jobs:
   supabase-ci:   db start → db reset → gen types (vérifie types à jour)
 ```
 
-### Phase 2 : Merge sur develop (Staging)
+### Phase 2 : Merge sur dev (Staging)
 
 ```
-on: push (develop branch)
+on: push (dev branch)
 jobs:
-  deploy-supabase-staging:   supabase db push → staging project
-  deploy-fastapi-staging:    docker build → fly deploy staging
-  deploy-flutter-staging:    flutter build → firebase app distribution
+  deploy-supabase-staging:   supabase db push --db-url → staging DB (Coolify VPS)
+  deploy-fastapi-staging:    curl webhook Coolify → re-deploy conteneur
+  deploy-flutter-staging:    flutter build apk → artifact + firebase app distribution
 ```
 
-### Phase 3 : Merge sur main (Production)
+### Phase 3 : Tag v* (Production)
 
 ```
-on: push (main branch)
+on: tag v*
 jobs:
-  deploy-supabase-prod:      supabase db push → production project
-  deploy-fastapi-prod:       docker build → fly deploy production
-  deploy-flutter-android:    flutter build appbundle → fastlane supply
-  deploy-flutter-ios:        flutter build ipa → fastlane deliver
-  shorebird-release:         shorebird release android + ios
+  deploy-supabase-prod:      supabase db push --db-url → production DB (Coolify VPS)
+  deploy-fastapi-prod:       curl webhook Coolify → re-deploy conteneur
+  deploy-flutter-android:    flutter build appbundle + apk → GitHub Release artifacts
+  deploy-flutter-ios:        flutter build ios (quand compte Apple dispo)
+  github-release:            GitHub Release + changelog + artifacts AAB/APK
 ```
 
 ---
@@ -219,26 +217,23 @@ jobs:
 
 | Secret | Description |
 |--------|-------------|
-| `SUPABASE_ACCESS_TOKEN` | Token personnel Supabase CLI |
-| `STAGING_PROJECT_ID` | Ref du projet Supabase staging |
-| `STAGING_DB_PASSWORD` | Mot de passe DB staging |
-| `PRODUCTION_PROJECT_ID` | Ref du projet Supabase production |
-| `PRODUCTION_DB_PASSWORD` | Mot de passe DB production |
-| `FLY_API_TOKEN` | Token API Fly.io |
-| `FIREBASE_APP_ID_ANDROID` | ID app Firebase Android |
-| `FIREBASE_APP_ID_IOS` | ID app Firebase iOS |
-| `FIREBASE_TOKEN` | Token Firebase CLI |
-| `PLAY_STORE_JSON_KEY` | Service account JSON Google Play |
-| `APP_STORE_CONNECT_API_KEY` | API key App Store Connect (base64) |
-| `APP_STORE_CONNECT_ISSUER_ID` | Issuer ID App Store Connect |
-| `APP_STORE_CONNECT_KEY_ID` | Key ID App Store Connect |
-| `MATCH_GIT_URL` | URL du repo Git pour certificats iOS |
-| `MATCH_PASSWORD` | Password pour décrypter les certificats |
-| `SHOREBIRD_TOKEN` | Token Shorebird pour code push |
+| `STAGING_SUPABASE_DB_URL` | URL Postgres staging (Coolify VPS) |
+| `PROD_SUPABASE_DB_URL` | URL Postgres production (Coolify VPS) |
+| `COOLIFY_WEBHOOK_STAGING_API` | Webhook Coolify pour re-deploy FastAPI staging |
+| `COOLIFY_WEBHOOK_PROD_API` | Webhook Coolify pour re-deploy FastAPI production |
 | `ANDROID_KEYSTORE_BASE64` | Keystore Android encodé base64 |
 | `ANDROID_KEY_ALIAS` | Alias de la clé Android |
 | `ANDROID_KEY_PASSWORD` | Password de la clé Android |
-| `ANDROID_STORE_PASSWORD` | Password du keystore Android |
+| `ANDROID_KEYSTORE_PASSWORD` | Password du keystore Android |
+| `FIREBASE_APP_ID_ANDROID` | ID app Firebase Android |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | Service account JSON Firebase |
+| `GOOGLE_PLAY_JSON_KEY` | Service account JSON Google Play (quand compte dispo) |
+| `APP_STORE_CONNECT_API_KEY` | API key App Store Connect base64 (quand compte dispo) |
+| `APP_STORE_CONNECT_ISSUER_ID` | Issuer ID App Store Connect (quand compte dispo) |
+| `APP_STORE_CONNECT_KEY_ID` | Key ID App Store Connect (quand compte dispo) |
+| `MATCH_GIT_URL` | URL du repo Git pour certificats iOS (quand compte dispo) |
+| `MATCH_PASSWORD` | Password pour décrypter les certificats (quand compte dispo) |
+| `SHOREBIRD_TOKEN` | Token Shorebird pour code push (quand activé) |
 
 ---
 
@@ -247,10 +242,12 @@ jobs:
 | Semaine | Tâche | Priorité |
 |---------|-------|----------|
 | **S1** | GitHub Actions CI (lint + tests + Supabase) | 🔴 Critique |
-| **S2** | Scripts locaux (setup, test, reset_db) + Docker FastAPI | 🔴 Critique |
-| **S3** | Fastlane setup (match iOS + keystore Android) | 🟡 Haute |
-| **S4** | Codemagic builds + Firebase App Distribution | 🟡 Haute |
-| **S5** | Golden tests screenshots + cider versioning | 🟢 Moyenne |
-| **S6** | Fastlane deliver/supply vers les Stores | 🟢 Moyenne |
-| **S7** | Shorebird integration + Crashlytics | 🔵 Nice-to-have |
-| **S8** | Pipeline production complète + monitoring | 🔵 Nice-to-have |
+| **S1** | Scripts locaux (setup, test, reset_db) + Docker FastAPI | 🔴 Critique |
+| **S2** | Supabase staging+prod sur Coolify VPS | 🔴 Critique |
+| **S2** | FastAPI staging+prod sur Coolify VPS (webhook) | 🔴 Critique |
+| **S3** | Firebase App Distribution + keystore Android | 🟡 Haute |
+| **S3** | cider versioning + CHANGELOG | 🟡 Haute |
+| **S4** | Golden tests screenshots | 🟢 Moyenne |
+| **S5** | Comptes Google Play + Apple Developer | 🟢 Moyenne |
+| **S5** | Fastlane deliver/supply vers les Stores | 🟢 Moyenne |
+| **S6** | Shorebird OTA + Crashlytics | 🔵 Nice-to-have |

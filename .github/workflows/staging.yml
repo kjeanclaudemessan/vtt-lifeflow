@@ -2,7 +2,7 @@ name: Deploy Staging
 
 on:
   push:
-    branches: [develop]
+    branches: [dev]
   workflow_dispatch:
 
 concurrency:
@@ -11,10 +11,10 @@ concurrency:
 
 jobs:
   # ═══════════════════════════════════════════════════════════════════════
-  # Deploy Supabase Migrations to Staging
+  # Deploy Supabase Migrations to Staging (Coolify VPS)
   # ═══════════════════════════════════════════════════════════════════════
   supabase-staging:
-    name: "Supabase → Staging"
+    name: "Supabase → Staging (Coolify)"
     runs-on: ubuntu-latest
 
     steps:
@@ -24,42 +24,27 @@ jobs:
         with:
           version: latest
 
-      - name: Link to staging project
-        run: supabase link --project-ref ${{ secrets.STAGING_PROJECT_ID }}
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-
       - name: Push migrations to staging
-        run: supabase db push
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
+        run: supabase db push --db-url "${{ secrets.STAGING_SUPABASE_DB_URL }}"
 
   # ═══════════════════════════════════════════════════════════════════════
-  # Deploy FastAPI to Fly.io Staging
+  # Deploy FastAPI to Coolify VPS (webhook trigger)
   # ═══════════════════════════════════════════════════════════════════════
   fastapi-staging:
-    name: "FastAPI → Fly.io Staging"
+    name: "FastAPI → Coolify Staging"
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: fastapi
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-
-      - name: Deploy to Fly.io staging
-        run: flyctl deploy --app lifeflow-api-staging --config fly.staging.toml
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - name: Trigger Coolify deploy via webhook
+        run: |
+          curl -f -s -X GET "${{ secrets.COOLIFY_WEBHOOK_STAGING_API }}" \
+            || echo "::warning::Coolify webhook failed — deploy manually from Coolify dashboard"
 
   # ═══════════════════════════════════════════════════════════════════════
-  # Build Flutter & Distribute Beta via Firebase
+  # Build Flutter APK & upload as artifact + Firebase App Distribution
   # ═══════════════════════════════════════════════════════════════════════
   flutter-beta-android:
-    name: "Flutter Android → Firebase"
+    name: "Flutter Android → APK"
     runs-on: ubuntu-latest
     needs: [supabase-staging]
     defaults:
@@ -82,9 +67,22 @@ jobs:
         run: dart run build_runner build --delete-conflicting-outputs
 
       - name: Build APK (staging)
-        run: flutter build apk --release --dart-define=ENV=staging
+        run: |
+          flutter build apk --release \
+            --dart-define=ENV=staging \
+            --dart-define=SUPABASE_URL=${{ secrets.STAGING_SUPABASE_URL }} \
+            --dart-define=SUPABASE_ANON_KEY=${{ secrets.STAGING_SUPABASE_ANON_KEY }} \
+            --dart-define=API_BASE_URL=${{ vars.STAGING_API_BASE_URL }}
+
+      - name: Upload APK as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-apk
+          path: flutter/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
 
       - name: Upload to Firebase App Distribution
+        if: ${{ secrets.FIREBASE_APP_ID_ANDROID != '' }}
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
@@ -95,10 +93,14 @@ jobs:
             Branch: ${{ github.ref_name }}
             Commit: ${{ github.sha }}
 
+  # ═══════════════════════════════════════════════════════════════════════
+  # Build Flutter iOS (artifact only — TestFlight quand compte Apple dispo)
+  # ═══════════════════════════════════════════════════════════════════════
   flutter-beta-ios:
-    name: "Flutter iOS → TestFlight"
+    name: "Flutter iOS → Build"
     runs-on: macos-latest
     needs: [supabase-staging]
+    if: ${{ vars.ENABLE_IOS_BUILD == 'true' }}
     defaults:
       run:
         working-directory: flutter
@@ -118,14 +120,25 @@ jobs:
       - name: Build runner
         run: dart run build_runner build --delete-conflicting-outputs
 
+      - name: Build iOS (no codesign)
+        run: |
+          flutter build ios --release --no-codesign \
+            --dart-define=ENV=staging \
+            --dart-define=SUPABASE_URL=${{ secrets.STAGING_SUPABASE_URL }} \
+            --dart-define=SUPABASE_ANON_KEY=${{ secrets.STAGING_SUPABASE_ANON_KEY }} \
+            --dart-define=API_BASE_URL=${{ vars.STAGING_API_BASE_URL }}
+
+      # TestFlight upload — activé quand les secrets Apple sont configurés
       - name: Setup Ruby & Fastlane
+        if: ${{ secrets.MATCH_GIT_URL != '' }}
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2"
           bundler-cache: true
           working-directory: flutter/ios
 
-      - name: Build & upload to TestFlight
+      - name: Upload to TestFlight
+        if: ${{ secrets.MATCH_GIT_URL != '' }}
         run: |
           cd ios
           bundle exec fastlane beta
@@ -149,6 +162,10 @@ jobs:
       - name: Summary
         run: |
           echo "## Staging Deployment Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- Supabase: ${{ needs.supabase-staging.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- FastAPI: ${{ needs.fastapi-staging.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Flutter Android: ${{ needs.flutter-beta-android.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "| Service | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Supabase | ${{ needs.supabase-staging.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| FastAPI | ${{ needs.fastapi-staging.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Flutter APK | ${{ needs.flutter-beta-android.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Download APK from [Artifacts](../actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY

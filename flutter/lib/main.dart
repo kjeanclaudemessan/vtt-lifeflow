@@ -9,7 +9,15 @@ import 'package:lifeflow/design_system/theme/app_theme.dart';
 import 'package:lifeflow/l10n/generated/app_localizations.dart';
 
 Future<void> main() async {
-  await bootstrap(environment: Environment.development);
+  // Read environment from --dart-define=ENV=staging (or development/production)
+  // Defaults to development when not specified (e.g. plain `flutter run`)
+  const envName = String.fromEnvironment('ENV', defaultValue: 'development');
+  final environment = Environment.values.firstWhere(
+    (e) => e.name == envName,
+    orElse: () => Environment.development,
+  );
+
+  await bootstrap(environment: environment);
   runApp(const MainApp());
 }
 
