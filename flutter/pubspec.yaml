@@ -60,4 +60,4 @@ flutter:
 cider:
   changelog:
     path: ../CHANGELOG.md
-    diff_link_template: "https://github.com/vibetech/lifeflow/compare/%from%...%to%"
+    diff_link_template: "https://github.com/vitatech/lifeflow/compare/%from%...%to%"

@@ -1,2 +1,2 @@
 json_key_file(ENV["GOOGLE_PLAY_JSON_KEY_PATH"] || "fastlane/google-play-key.json")
-package_name("com.vibetech.lifeflow")
+package_name("com.vitatech.lifeflow")

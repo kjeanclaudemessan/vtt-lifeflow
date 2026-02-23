@@ -29,5 +29,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings module
 - Notifications module
 
-[Unreleased]: https://github.com/vibetech/lifeflow/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/vibetech/lifeflow/releases/tag/v0.1.0
+[Unreleased]: https://github.com/vitatech/lifeflow/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/vitatech/lifeflow/releases/tag/v0.1.0

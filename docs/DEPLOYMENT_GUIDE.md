@@ -166,7 +166,7 @@ Répète pour la production avec la branche `main`.
 1. Va sur [console.firebase.google.com](https://console.firebase.google.com)
 2. Crée un projet `lifeflow`
 3. Ajoute une app Android :
-   - Package name : `com.vibetech.lifeflow`
+   - Package name : `com.vitatech.lifeflow`
    - Télécharge `google-services.json` → mets-le dans `flutter/android/app/`
 4. Va dans **Project Settings → Service Accounts**
 5. Clique **Generate new private key** → télécharge le JSON
@@ -184,7 +184,7 @@ Répète pour la production avec la branche `main`.
 keytool -genkey -v -keystore upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
 
 # Il te demande un mot de passe — note-le bien
-# Réponses : ton nom, organisation "VibeTech", pays "TG" etc.
+# Réponses : ton nom, organisation "Vitatech", pays "TG" etc.
 ```
 
 Encode le keystore en base64 pour GitHub :
