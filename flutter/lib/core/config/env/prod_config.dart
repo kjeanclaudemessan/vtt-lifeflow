@@ -25,7 +25,13 @@ class ProdConfig implements EnvConfig {
       const String.fromEnvironment('SUPABASE_ANON_KEY');
 
   @override
-  String get sentryDsn => const String.fromEnvironment('SENTRY_DSN');
+  String get posthogApiKey => const String.fromEnvironment('POSTHOG_API_KEY');
+
+  @override
+  String get posthogHost => const String.fromEnvironment(
+        'POSTHOG_HOST',
+        defaultValue: 'https://us.i.posthog.com',
+      );
 
   @override
   bool get enableLogging => false;
@@ -37,7 +43,7 @@ class ProdConfig implements EnvConfig {
   bool get enableCrashReporting => true;
 
   @override
-  String get appName => 'MyApp';
+  String get appName => 'LifeFlow';
 
   @override
   Duration get apiTimeout => const Duration(seconds: 30);

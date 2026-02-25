@@ -31,9 +31,15 @@ class DevConfig implements EnvConfig {
       );
 
   @override
-  String get sentryDsn => const String.fromEnvironment(
-        'SENTRY_DSN',
+  String get posthogApiKey => const String.fromEnvironment(
+        'POSTHOG_API_KEY',
         defaultValue: '', // Disabled in dev by default
+      );
+
+  @override
+  String get posthogHost => const String.fromEnvironment(
+        'POSTHOG_HOST',
+        defaultValue: 'https://us.i.posthog.com',
       );
 
   @override

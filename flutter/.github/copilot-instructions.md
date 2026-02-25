@@ -208,20 +208,20 @@ import '../viewmodels/login_viewmodel.dart';
 import '../widgets/auth_header.dart';
 
 // Cross-module — barrel files
-import 'package:vtt_flutter_template/core/core.dart';
-import 'package:vtt_flutter_template/services/services.dart';
-import 'package:vtt_flutter_template/design_system/design_system.dart';
+import 'package:lifeflow/core/core.dart';
+import 'package:lifeflow/services/services.dart';
+import 'package:lifeflow/design_system/design_system.dart';
 
 // App-level (DI, routing)
-import 'package:vtt_flutter_template/app/app.locator.dart';
-import 'package:vtt_flutter_template/app/app.router.dart';
+import 'package:lifeflow/app/app.locator.dart';
+import 'package:lifeflow/app/app.router.dart';
 ```
 
 **Import grouping order:**
 1. `dart:` SDK imports
 2. `package:flutter/` framework imports
 3. `package:` third-party packages
-4. `package:vtt_flutter_template/` app-level imports
+4. `package:lifeflow/` app-level imports
 5. Relative imports (`../`, `./`)
 
 ---

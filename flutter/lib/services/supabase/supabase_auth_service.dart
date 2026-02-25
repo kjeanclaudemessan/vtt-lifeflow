@@ -178,7 +178,7 @@ class SupabaseAuthService with ListenableServiceMixin {
     try {
       final success = await _supabase.client.auth.signInWithOAuth(
         provider,
-        redirectTo: redirectTo ?? 'io.supabase.vttflutter://login-callback/',
+        redirectTo: redirectTo ?? 'com.vitatech.lifeflow://login-callback/',
       );
       return Right(success);
     } catch (e) {

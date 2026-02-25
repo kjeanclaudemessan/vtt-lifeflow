@@ -90,8 +90,11 @@ class AppConfig {
   /// Supabase anonymous key.
   String get supabaseAnonKey => _config.supabaseAnonKey;
 
-  /// Sentry DSN for error reporting.
-  String get sentryDsn => _config.sentryDsn;
+  /// PostHog API key for analytics and error tracking.
+  String get posthogApiKey => _config.posthogApiKey;
+
+  /// PostHog host URL.
+  String get posthogHost => _config.posthogHost;
 
   /// Whether logging is enabled.
   bool get enableLogging => _config.enableLogging;

@@ -1223,7 +1223,7 @@ NotificationsList(
 
 ```
 1. CLONE & SETUP (5 min)
-   ├── git clone vtt_flutter_template mon_app
+   ├── git clone lifeflow mon_app
    ├── cd mon_app
    ├── Renommer bundle ID dans pubspec.yaml
    └── flutter pub get

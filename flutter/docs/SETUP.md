@@ -55,7 +55,7 @@ git --version
 
 ```bash
 # Clone the template
-git clone https://github.com/your-org/vtt_flutter_template.git my_new_app
+git clone https://github.com/your-org/lifeflow.git my_new_app
 cd my_new_app
 
 # Remove template git history
@@ -116,7 +116,7 @@ android {
 **Rename Kotlin package:**
 
 1. Navigate to `android/app/src/main/kotlin/`
-2. Rename folder structure from `com/example/vtt_flutter_template/` to match your bundle ID
+2. Rename folder structure from `com/example/lifeflow/` to match your bundle ID
 3. Update `MainActivity.kt` package declaration:
    ```kotlin
    package com.mycompany.myapp  // Change this
@@ -134,7 +134,7 @@ android {
 **Option B: Manual**
 Edit `ios/Runner.xcodeproj/project.pbxproj`:
 
-- Search and replace `com.example.vtt_flutter_template` with your bundle ID
+- Search and replace `com.example.lifeflow` with your bundle ID
 
 #### 3.4 Web Configuration
 
@@ -174,7 +174,7 @@ set(BINARY_NAME "my_app")
 
 Search and replace in all `.dart` files:
 
-- From: `package:vtt_flutter_template/`
+- From: `package:lifeflow/`
 - To: `package:my_app/`
 
 #### 3.7 Regenerate

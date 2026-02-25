@@ -29,8 +29,8 @@ class SecureStorageService {
       accessibility: KeychainAccessibility.first_unlock,
     ),
     webOptions: WebOptions(
-      dbName: 'vtt_secure_storage',
-      publicKey: 'vtt_flutter_template',
+      dbName: 'lifeflow_secure_storage',
+      publicKey: 'lifeflow',
     ),
   );
 

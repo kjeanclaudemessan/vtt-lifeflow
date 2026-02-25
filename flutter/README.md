@@ -55,7 +55,7 @@ A comprehensive Flutter template using **Stacked (MVVM)** architecture with **Cl
 ### 1. Clone the Template
 
 ```bash
-git clone https://github.com/your-org/vtt_flutter_template.git my_new_app
+git clone https://github.com/your-org/lifeflow.git my_new_app
 cd my_new_app
 ```
 

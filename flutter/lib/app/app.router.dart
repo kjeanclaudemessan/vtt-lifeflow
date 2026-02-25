@@ -5,6 +5,7 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:flutter/foundation.dart' as _i22;
 import 'package:flutter/material.dart' as _i20;
 import 'package:flutter/material.dart';
 import 'package:lifeflow/features/bilan/views/bilan_view.dart' as _i19;
@@ -17,16 +18,16 @@ import 'package:lifeflow/modules/auth/views/forgot_password_view.dart' as _i5;
 import 'package:lifeflow/modules/auth/views/login_view.dart' as _i3;
 import 'package:lifeflow/modules/auth/views/register_view.dart' as _i4;
 import 'package:lifeflow/modules/notifications/config/notifications_config.dart'
-    as _i24;
+    as _i25;
 import 'package:lifeflow/modules/notifications/views/notifications_view.dart'
     as _i10;
 import 'package:lifeflow/modules/onboarding/config/onboarding_config.dart'
     as _i21;
 import 'package:lifeflow/modules/onboarding/views/onboarding_view.dart' as _i6;
-import 'package:lifeflow/modules/profile/config/profile_config.dart' as _i22;
+import 'package:lifeflow/modules/profile/config/profile_config.dart' as _i23;
 import 'package:lifeflow/modules/profile/views/edit_profile_view.dart' as _i8;
 import 'package:lifeflow/modules/profile/views/profile_view.dart' as _i7;
-import 'package:lifeflow/modules/settings/config/settings_config.dart' as _i23;
+import 'package:lifeflow/modules/settings/config/settings_config.dart' as _i24;
 import 'package:lifeflow/modules/settings/views/settings_view.dart' as _i9;
 import 'package:lifeflow/modules/splash/views/splash_view.dart' as _i2;
 import 'package:lifeflow/ui/views/design_showcase/design_showcase_view.dart'
@@ -34,7 +35,7 @@ import 'package:lifeflow/ui/views/design_showcase/design_showcase_view.dart'
 import 'package:lifeflow/ui/views/home/home_view.dart' as _i11;
 import 'package:lifeflow/ui/views/startup/startup_view.dart' as _i12;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i25;
+import 'package:stacked_services/stacked_services.dart' as _i26;
 
 class Routes {
   static const splashView = '/';
@@ -317,7 +318,7 @@ class OnboardingViewArguments {
 
   final _i21.OnboardingConfig? config;
 
-  final _i20.Key? key;
+  final _i22.Key? key;
 
   @override
   String toString() {
@@ -342,9 +343,9 @@ class ProfileViewArguments {
     this.key,
   });
 
-  final _i22.ProfileConfig? config;
+  final _i23.ProfileConfig? config;
 
-  final _i20.Key? key;
+  final _i22.Key? key;
 
   @override
   String toString() {
@@ -369,9 +370,9 @@ class EditProfileViewArguments {
     this.key,
   });
 
-  final _i22.ProfileConfig? config;
+  final _i23.ProfileConfig? config;
 
-  final _i20.Key? key;
+  final _i22.Key? key;
 
   @override
   String toString() {
@@ -396,9 +397,9 @@ class SettingsViewArguments {
     this.key,
   });
 
-  final _i23.SettingsConfig? config;
+  final _i24.SettingsConfig? config;
 
-  final _i20.Key? key;
+  final _i22.Key? key;
 
   @override
   String toString() {
@@ -423,9 +424,9 @@ class NotificationsViewArguments {
     this.key,
   });
 
-  final _i24.NotificationsConfig? config;
+  final _i25.NotificationsConfig? config;
 
-  final _i20.Key? key;
+  final _i22.Key? key;
 
   @override
   String toString() {
@@ -444,7 +445,7 @@ class NotificationsViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i25.NavigationService {
+extension NavigatorStateExtension on _i26.NavigationService {
   Future<dynamic> navigateToSplashView([
     int? routerId,
     bool preventDuplicates = true,
@@ -503,7 +504,7 @@ extension NavigatorStateExtension on _i25.NavigationService {
 
   Future<dynamic> navigateToOnboardingView({
     _i21.OnboardingConfig? config,
-    _i20.Key? key,
+    _i22.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -519,8 +520,8 @@ extension NavigatorStateExtension on _i25.NavigationService {
   }
 
   Future<dynamic> navigateToProfileView({
-    _i22.ProfileConfig? config,
-    _i20.Key? key,
+    _i23.ProfileConfig? config,
+    _i22.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -536,8 +537,8 @@ extension NavigatorStateExtension on _i25.NavigationService {
   }
 
   Future<dynamic> navigateToEditProfileView({
-    _i22.ProfileConfig? config,
-    _i20.Key? key,
+    _i23.ProfileConfig? config,
+    _i22.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -553,8 +554,8 @@ extension NavigatorStateExtension on _i25.NavigationService {
   }
 
   Future<dynamic> navigateToSettingsView({
-    _i23.SettingsConfig? config,
-    _i20.Key? key,
+    _i24.SettingsConfig? config,
+    _i22.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -570,8 +571,8 @@ extension NavigatorStateExtension on _i25.NavigationService {
   }
 
   Future<dynamic> navigateToNotificationsView({
-    _i24.NotificationsConfig? config,
-    _i20.Key? key,
+    _i25.NotificationsConfig? config,
+    _i22.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -770,7 +771,7 @@ extension NavigatorStateExtension on _i25.NavigationService {
 
   Future<dynamic> replaceWithOnboardingView({
     _i21.OnboardingConfig? config,
-    _i20.Key? key,
+    _i22.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -786,8 +787,8 @@ extension NavigatorStateExtension on _i25.NavigationService {
   }
 
   Future<dynamic> replaceWithProfileView({
-    _i22.ProfileConfig? config,
-    _i20.Key? key,
+    _i23.ProfileConfig? config,
+    _i22.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -803,8 +804,8 @@ extension NavigatorStateExtension on _i25.NavigationService {
   }
 
   Future<dynamic> replaceWithEditProfileView({
-    _i22.ProfileConfig? config,
-    _i20.Key? key,
+    _i23.ProfileConfig? config,
+    _i22.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -820,8 +821,8 @@ extension NavigatorStateExtension on _i25.NavigationService {
   }
 
   Future<dynamic> replaceWithSettingsView({
-    _i23.SettingsConfig? config,
-    _i20.Key? key,
+    _i24.SettingsConfig? config,
+    _i22.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -837,8 +838,8 @@ extension NavigatorStateExtension on _i25.NavigationService {
   }
 
   Future<dynamic> replaceWithNotificationsView({
-    _i24.NotificationsConfig? config,
-    _i20.Key? key,
+    _i25.NotificationsConfig? config,
+    _i22.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,

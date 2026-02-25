@@ -1,12 +1,15 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:lifeflow/app/app.router.dart';
 import 'package:lifeflow/bootstrap.dart';
 import 'package:lifeflow/core/config/env/environment.dart';
 import 'package:lifeflow/design_system/theme/app_theme.dart';
 import 'package:lifeflow/l10n/generated/app_localizations.dart';
+import 'package:lifeflow/services/push_notification/push_notification_service.dart';
 
 Future<void> main() async {
   // Read environment from --dart-define=ENV=staging (or development/production)
@@ -16,6 +19,9 @@ Future<void> main() async {
     (e) => e.name == envName,
     orElse: () => Environment.development,
   );
+
+  // Register background message handler (must be top-level)
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   await bootstrap(environment: environment);
   runApp(const MainApp());
@@ -31,7 +37,8 @@ class MainApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
+        return PostHogWidget(
+      child: MaterialApp(
           title: 'LifeFlow',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.light,
@@ -51,8 +58,12 @@ class MainApp extends StatelessWidget {
           initialRoute: Routes.splashView,
           onGenerateRoute: StackedRouter().onGenerateRoute,
           navigatorKey: StackedService.navigatorKey,
-          navigatorObservers: [StackedService.routeObserver],
-        );
+          navigatorObservers: [
+            StackedService.routeObserver,
+            PosthogObserver(),
+          ],
+        ),
+    );
       },
     );
   }

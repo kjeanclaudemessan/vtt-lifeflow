@@ -19,11 +19,13 @@ import '../domain/repositories/i_auth_repository.dart';
 import '../domain/repositories/i_domain_repository.dart';
 import '../domain/repositories/i_habit_repository.dart';
 import '../modules/optional/payments/payment_service.dart';
+import '../services/analytics/analytics_service.dart';
 import '../services/api/api_service.dart';
 import '../services/bilan_service.dart';
 import '../services/connectivity/connectivity_service.dart';
 import '../services/dialog/dialog_helper.dart';
 import '../services/moneroo/moneroo_service.dart';
+import '../services/push_notification/push_notification_service.dart';
 import '../services/storage/local_storage_service.dart';
 import '../services/storage/secure_storage_service.dart';
 import '../services/storage/storage_service.dart';
@@ -54,6 +56,8 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => SupabaseService());
   locator.registerLazySingleton(() => SupabaseAuthService());
   locator.registerLazySingleton(() => StorageService());
+  locator.registerLazySingleton(() => AnalyticsService());
+  locator.registerLazySingleton(() => PushNotificationService());
   locator.registerLazySingleton<IAuthRepository>(() => AuthRepositoryImpl());
   locator
       .registerLazySingleton<IDomainRepository>(() => DomainRepositoryImpl());

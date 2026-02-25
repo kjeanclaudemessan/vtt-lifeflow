@@ -1,7 +1,7 @@
 patrol:
   app_name: VTT Flutter Template
   android:
-    package_name: com.example.vtt_flutter_template
+    package_name: com.vitatech.lifeflow
   ios:
     bundle_id: com.example.vttFlutterTemplate
 

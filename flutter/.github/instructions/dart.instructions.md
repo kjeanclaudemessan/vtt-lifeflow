@@ -36,8 +36,8 @@ import 'package:dio/dio.dart';
 import 'package:stacked/stacked.dart';
 
 // 4. Project imports (alphabetically)
-import 'package:vtt_flutter_template/core/core.dart';
-import 'package:vtt_flutter_template/services/services.dart';
+import 'package:lifeflow/core/core.dart';
+import 'package:lifeflow/services/services.dart';
 ```
 
 ### Documentation
@@ -310,7 +310,7 @@ export 'extensions/extensions.dart';
 export 'utils/utils.dart';
 
 // Usage
-import 'package:vtt_flutter_template/core/core.dart';
+import 'package:lifeflow/core/core.dart';
 ```
 
 ---

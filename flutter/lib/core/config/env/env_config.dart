@@ -21,11 +21,17 @@ abstract class EnvConfig {
   /// Supabase anonymous key for public access.
   String get supabaseAnonKey;
 
-  /// Sentry DSN for error reporting.
+  /// PostHog API key for analytics and error tracking.
   ///
-  /// Get your DSN from https://sentry.io
-  /// Leave empty to disable Sentry.
-  String get sentryDsn;
+  /// Get your API key from https://posthog.com
+  /// Leave empty to disable PostHog.
+  String get posthogApiKey;
+
+  /// PostHog host URL.
+  ///
+  /// Default: https://us.i.posthog.com (US cloud)
+  /// Use https://eu.i.posthog.com for EU cloud.
+  String get posthogHost;
 
   /// Whether to enable verbose logging.
   ///

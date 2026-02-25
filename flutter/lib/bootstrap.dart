@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,9 @@ import 'app/app.dialogs.dart';
 import 'app/app.locator.dart';
 import 'core/config/app_config.dart';
 import 'core/config/env/environment.dart';
+import 'services/analytics/analytics_service.dart';
 import 'services/connectivity/connectivity_service.dart';
+import 'services/push_notification/push_notification_service.dart';
 import 'services/storage/local_storage_service.dart';
 import 'services/supabase/supabase_auth_service.dart';
 import 'services/supabase/supabase_service.dart';
@@ -58,6 +61,21 @@ Future<void> _initializeServices() async {
   // Supabase services
   await locator<SupabaseService>().init();
   await locator<SupabaseAuthService>().init();
+
+  // Firebase (required by push notifications)
+  // Gracefully disabled if google-services.json is not present
+  try {
+    await Firebase.initializeApp();
+    debugPrint('[Firebase] Initialized');
+  } catch (e) {
+    debugPrint('[Firebase] No config found — push notifications disabled: $e');
+  }
+
+  // Analytics & error tracking (PostHog)
+  await locator<AnalyticsService>().init();
+
+  // Push notifications (FCM) — gracefully skips if no Firebase config
+  await locator<PushNotificationService>().init();
 }
 
 /// Logs startup information in debug mode.
