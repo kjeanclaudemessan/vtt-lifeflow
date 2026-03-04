@@ -11,10 +11,10 @@ concurrency:
 
 jobs:
   # ═══════════════════════════════════════════════════════════════════════
-  # Deploy Supabase Migrations to Staging (Coolify VPS)
+  # Deploy Supabase Migrations to Staging (Supabase Cloud)
   # ═══════════════════════════════════════════════════════════════════════
   supabase-staging:
-    name: "Supabase → Staging (Coolify)"
+    name: "Supabase → Staging (Cloud)"
     runs-on: ubuntu-latest
 
     steps:
@@ -25,25 +25,12 @@ jobs:
           version: latest
 
       - name: Push migrations to staging
-        run: supabase db push --db-url "${{ secrets.STAGING_SUPABASE_DB_URL }}"
+        run: supabase db push --project-ref ${{ vars.STAGING_SUPABASE_PROJECT_REF }}
         env:
-          PGSSLMODE: disable
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
   # ═══════════════════════════════════════════════════════════════════════
-  # Deploy FastAPI to Coolify VPS (webhook trigger)
-  # ═══════════════════════════════════════════════════════════════════════
-  fastapi-staging:
-    name: "FastAPI → Coolify Staging"
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Trigger Coolify deploy via webhook
-        run: |
-          curl -f -s -X GET "${{ secrets.COOLIFY_WEBHOOK_STAGING_API }}" \
-            || echo "::warning::Coolify webhook failed — deploy manually from Coolify dashboard"
-
-  # ═══════════════════════════════════════════════════════════════════════
-  # Build Flutter APK & upload as artifact + Firebase App Distribution
+  # Build Flutter APK & upload as artifact
   # ═══════════════════════════════════════════════════════════════════════
   flutter-beta-android:
     name: "Flutter Android → APK"
@@ -68,23 +55,23 @@ jobs:
       - name: Build runner
         run: dart run build_runner build --delete-conflicting-outputs
 
-      # ── Signing setup ──────────────────────────────────────────────
+      # ── Android Signing setup ────────────────────────────────────────
       - name: Decode keystore
-        if: ${{ env.KEYSTORE_BASE64 != '' }}
+        if: ${{ env.ANDROID_KEYSTORE_BASE64 != '' }}
         env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
 
       - name: Create key.properties
-        if: ${{ env.KEYSTORE_BASE64 != '' }}
+        if: ${{ env.ANDROID_KEYSTORE_BASE64 != '' }}
         env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
-          cat > android/key.properties << EOF
-          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword=${{ secrets.KEY_PASSWORD }}
-          keyAlias=${{ secrets.KEY_ALIAS }}
+          cat > android/app/key.properties << EOF
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
           storeFile=release.keystore
           EOF
 
@@ -95,7 +82,8 @@ jobs:
             --dart-define=ENV=staging \
             --dart-define=SUPABASE_URL=${{ secrets.STAGING_SUPABASE_URL }} \
             --dart-define=SUPABASE_ANON_KEY=${{ secrets.STAGING_SUPABASE_ANON_KEY }} \
-            --dart-define=API_BASE_URL=${{ vars.STAGING_API_BASE_URL }}
+            --dart-define=POSTHOG_API_KEY=${{ secrets.POSTHOG_API_KEY }} \
+            --dart-define=POSTHOG_HOST=https://us.i.posthog.com
 
       - name: Upload APK as artifact
         uses: actions/upload-artifact@v4
@@ -104,18 +92,83 @@ jobs:
           path: flutter/build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
 
-      # ── Firebase App Distribution ──────────────────────────────────
-      - name: Upload to Firebase App Distribution
-        if: ${{ vars.ENABLE_FIREBASE_DISTRIBUTION == 'true' }}
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
+  # ═══════════════════════════════════════════════════════════════════════
+  # Build AAB & Deploy to Play Store Internal Track
+  # ═══════════════════════════════════════════════════════════════════════
+  flutter-playstore-staging:
+    name: "Flutter Android → Play Store (Internal)"
+    runs-on: ubuntu-latest
+    needs: [supabase-staging, flutter-beta-android]
+    if: ${{ vars.ENABLE_PLAYSTORE_STAGING == 'true' }}
+    defaults:
+      run:
+        working-directory: flutter
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
         with:
-          appId: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
-          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
-          groups: internal-testers
-          file: flutter/build/app/outputs/flutter-apk/app-release.apk
-          releaseNotes: |
-            Branch: ${{ github.ref_name }}
-            Commit: ${{ github.sha }}
+          flutter-version: "3.38.6"
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build runner
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      # ── Android Signing setup ────────────────────────────────────────
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
+
+      - name: Create key.properties
+        run: |
+          cat > android/app/key.properties << 'EOF'
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=upload-keystore.jks
+          EOF
+
+      # ── Build AAB ──────────────────────────────────────────────────
+      - name: Build App Bundle
+        run: |
+          flutter build appbundle --release \
+            --build-number=${{ github.run_number }} \
+            --dart-define=ENV=staging \
+            --dart-define=SUPABASE_URL=${{ secrets.STAGING_SUPABASE_URL }} \
+            --dart-define=SUPABASE_ANON_KEY=${{ secrets.STAGING_SUPABASE_ANON_KEY }} \
+            --dart-define=POSTHOG_API_KEY=${{ secrets.POSTHOG_API_KEY }} \
+            --dart-define=POSTHOG_HOST=https://us.i.posthog.com
+
+      - name: Upload AAB as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-aab
+          path: flutter/build/app/outputs/bundle/release/app-release.aab
+          retention-days: 30
+
+      # ── Play Store upload via Fastlane ─────────────────────────────
+      - name: Setup Ruby & Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+          working-directory: flutter/android
+
+      - name: Decode Google Play service account key
+        run: |
+          echo "${{ secrets.ANDROID_GOOGLE_PLAY_SA_JSON }}" | base64 --decode > android/fastlane/google-play-key.json
+
+      - name: Upload to Play Store (internal track)
+        run: |
+          cd android
+          bundle exec fastlane internal
+        env:
+          GOOGLE_PLAY_JSON_KEY_PATH: fastlane/google-play-key.json
 
   # ═══════════════════════════════════════════════════════════════════════
   # Build Flutter iOS (artifact only — TestFlight quand compte Apple dispo)
@@ -150,7 +203,8 @@ jobs:
             --dart-define=ENV=staging \
             --dart-define=SUPABASE_URL=${{ secrets.STAGING_SUPABASE_URL }} \
             --dart-define=SUPABASE_ANON_KEY=${{ secrets.STAGING_SUPABASE_ANON_KEY }} \
-            --dart-define=API_BASE_URL=${{ vars.STAGING_API_BASE_URL }}
+            --dart-define=POSTHOG_API_KEY=${{ secrets.POSTHOG_API_KEY }} \
+            --dart-define=POSTHOG_HOST=https://us.i.posthog.com
 
       # TestFlight upload — activé quand les secrets Apple sont configurés
       - name: Setup Ruby & Fastlane
@@ -167,11 +221,11 @@ jobs:
           cd ios
           bundle exec fastlane beta
         env:
-          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-          APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          MATCH_GIT_URL: ${{ secrets.APPLE_MATCH_GIT_URL }}
+          MATCH_PASSWORD: ${{ secrets.APPLE_MATCH_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APPLE_APPSTORE_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APPLE_APPSTORE_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APPLE_APPSTORE_API_KEY }}
 
   # ═══════════════════════════════════════════════════════════════════════
   # Notify team
@@ -179,7 +233,7 @@ jobs:
   notify:
     name: "Notify"
     runs-on: ubuntu-latest
-    needs: [supabase-staging, fastapi-staging, flutter-beta-android]
+    needs: [supabase-staging, flutter-beta-android, flutter-playstore-staging]
     if: always()
 
     steps:
@@ -189,7 +243,7 @@ jobs:
           echo "| Service | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|---------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| Supabase | ${{ needs.supabase-staging.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| FastAPI | ${{ needs.fastapi-staging.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Flutter APK | ${{ needs.flutter-beta-android.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Play Store (Internal) | ${{ needs.flutter-playstore-staging.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "📦 Download APK from [Artifacts](../actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY

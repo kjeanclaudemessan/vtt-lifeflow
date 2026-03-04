@@ -39,10 +39,10 @@ jobs:
           echo "🏷️ Version: $VERSION+${BUILD:-$GITHUB_RUN_NUMBER}"
 
   # ═══════════════════════════════════════════════════════════════════════
-  # Deploy Supabase Migrations to Production (Coolify VPS)
+  # Deploy Supabase Migrations to Production (Supabase Cloud)
   # ═══════════════════════════════════════════════════════════════════════
   supabase-production:
-    name: "Supabase → Production (Coolify)"
+    name: "Supabase → Production (Cloud)"
     runs-on: ubuntu-latest
     needs: [validate]
 
@@ -54,23 +54,9 @@ jobs:
           version: latest
 
       - name: Push migrations to production
-        run: supabase db push --db-url "${{ secrets.PROD_SUPABASE_DB_URL }}"
+        run: supabase db push --project-ref ${{ vars.PROD_SUPABASE_PROJECT_REF }}
         env:
-          PGSSLMODE: disable
-
-  # ═══════════════════════════════════════════════════════════════════════
-  # Deploy FastAPI to Coolify VPS (webhook trigger)
-  # ═══════════════════════════════════════════════════════════════════════
-  fastapi-production:
-    name: "FastAPI → Coolify Production"
-    runs-on: ubuntu-latest
-    needs: [validate]
-
-    steps:
-      - name: Trigger Coolify deploy via webhook
-        run: |
-          curl -f -s -X GET "${{ secrets.COOLIFY_WEBHOOK_PROD_API }}" \
-            || echo "::warning::Coolify webhook failed — deploy manually from Coolify dashboard"
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
   # ═══════════════════════════════════════════════════════════════════════
   # Build & Release Flutter Android → Play Store
@@ -102,6 +88,15 @@ jobs:
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/upload-keystore.jks
 
+      - name: Create key.properties
+        run: |
+          cat > android/app/key.properties << 'EOF'
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=upload-keystore.jks
+          EOF
+
       - name: Build App Bundle
         run: |
           flutter build appbundle --release \
@@ -110,27 +105,27 @@ jobs:
             --dart-define=ENV=production \
             --dart-define=SUPABASE_URL=${{ secrets.PROD_SUPABASE_URL }} \
             --dart-define=SUPABASE_ANON_KEY=${{ secrets.PROD_SUPABASE_ANON_KEY }} \
-            --dart-define=API_BASE_URL=${{ vars.PROD_API_BASE_URL }}
-        env:
-          KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+            --dart-define=POSTHOG_API_KEY=${{ secrets.POSTHOG_API_KEY }} \
+            --dart-define=POSTHOG_HOST=https://us.i.posthog.com
 
       - name: Setup Ruby & Fastlane
-        if: false  # Skip until Google Play secrets are configured
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2"
           bundler-cache: true
           working-directory: flutter/android
 
-      - name: Upload to Play Store
-        if: false  # Skip until Google Play secrets are configured
+      - name: Decode Google Play service account key
+        run: |
+          echo "${{ secrets.ANDROID_GOOGLE_PLAY_SA_JSON }}" | base64 -d > android/fastlane/google-play-key.json
+
+      - name: Upload to Play Store (production)
+        if: ${{ !inputs.skip_stores }}
         run: |
           cd android
           bundle exec fastlane release
         env:
-          GOOGLE_PLAY_JSON_KEY: ${{ secrets.GOOGLE_PLAY_JSON_KEY }}
+          GOOGLE_PLAY_JSON_KEY_PATH: fastlane/google-play-key.json
 
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
@@ -147,11 +142,8 @@ jobs:
             --dart-define=ENV=production \
             --dart-define=SUPABASE_URL=${{ secrets.PROD_SUPABASE_URL }} \
             --dart-define=SUPABASE_ANON_KEY=${{ secrets.PROD_SUPABASE_ANON_KEY }} \
-            --dart-define=API_BASE_URL=${{ vars.PROD_API_BASE_URL }}
-        env:
-          KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+            --dart-define=POSTHOG_API_KEY=${{ secrets.POSTHOG_API_KEY }} \
+            --dart-define=POSTHOG_HOST=https://us.i.posthog.com
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -204,11 +196,11 @@ jobs:
           cd ios
           bundle exec fastlane release
         env:
-          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-          APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          MATCH_GIT_URL: ${{ secrets.APPLE_MATCH_GIT_URL }}
+          MATCH_PASSWORD: ${{ secrets.APPLE_MATCH_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APPLE_APPSTORE_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APPLE_APPSTORE_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APPLE_APPSTORE_API_KEY }}
 
   # ═══════════════════════════════════════════════════════════════════════
   # Shorebird OTA Patch (optional — activé quand SHOREBIRD_TOKEN configuré)
@@ -238,7 +230,7 @@ jobs:
   github-release:
     name: "GitHub Release"
     runs-on: ubuntu-latest
-    needs: [validate, flutter-android-release, fastapi-production, supabase-production]
+    needs: [validate, supabase-production, flutter-android-release]
     if: startsWith(github.ref, 'refs/tags/v')
 
     steps:
@@ -272,7 +264,7 @@ jobs:
   notify:
     name: "Notify"
     runs-on: ubuntu-latest
-    needs: [validate, supabase-production, fastapi-production, flutter-android-release]
+    needs: [validate, supabase-production, flutter-android-release]
     if: always()
 
     steps:
@@ -283,7 +275,6 @@ jobs:
           echo "| Service | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|---------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| Supabase | ${{ needs.supabase-production.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| FastAPI | ${{ needs.fastapi-production.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Android | ${{ needs.flutter-android-release.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "📦 Download from [Artifacts](../actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
