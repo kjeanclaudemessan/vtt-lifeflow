@@ -22,10 +22,18 @@ Future<void> main() async {
     orElse: () => Environment.development,
   );
 
-  // Register background message handler (must be top-level)
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
   await bootstrap(environment: environment);
+
+  // Register background message handler AFTER Firebase is initialized in bootstrap
+  try {
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    debugPrint('[Push] Background handler registered');
+    // ignore: avoid_catches_without_on_clauses
+  } catch (e) {
+    debugPrint(
+        '[Push] Firebase not available — background handler skipped: $e');
+  }
+
   runApp(const MainApp());
 }
 
