@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="180" fill="#6C5CE7" opacity="0.06"/>
+  <circle cx="200" cy="200" r="140" fill="#6C5CE7" opacity="0.08"/>
+
+  <!-- Central checkmark circle -->
+  <circle cx="200" cy="170" r="70" fill="#6C5CE7"/>
+  <path d="M172 170 L192 190 L230 150" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Habit streak dots row -->
+  <g transform="translate(95, 280)">
+    <circle cx="0" cy="0" r="14" fill="#6C5CE7"/>
+    <path d="M-5 0 L-1 4 L6 -3" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+    <circle cx="44" cy="0" r="14" fill="#6C5CE7"/>
+    <path d="M39 0 L43 4 L50 -3" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+    <circle cx="88" cy="0" r="14" fill="#6C5CE7"/>
+    <path d="M83 0 L87 4 L94 -3" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+    <circle cx="132" cy="0" r="14" fill="#6C5CE7"/>
+    <path d="M127 0 L131 4 L138 -3" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+    <circle cx="176" cy="0" r="14" fill="#6C5CE7"/>
+    <path d="M171 0 L175 4 L182 -3" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+    <!-- Today's empty circle -->
+    <circle cx="220" cy="0" r="14" fill="none" stroke="#6C5CE7" stroke-width="2.5" stroke-dasharray="4 3"/>
+  </g>
+
+  <!-- Streak fire icon -->
+  <g transform="translate(182, 240)">
+    <path d="M18 36C8 32 0 24 0 14C0 8 2 4 6 0C8 6 12 8 14 6C12 2 14 -2 18 -4C20 2 26 6 28 12C32 6 30 0 32 -2C36 4 36 10 34 16C38 12 38 8 38 4C42 10 44 18 40 26C38 30 34 34 28 36C24 38 20 38 18 36Z" fill="#FF6B6B" opacity="0.9"/>
+    <path d="M18 36C14 34 10 30 10 24C10 20 12 16 16 14C18 18 20 18 20 16C20 14 22 12 24 12C24 16 26 18 28 20C28 24 26 30 22 34C20 36 18 36 18 36Z" fill="#FECA57" opacity="0.9"/>
+  </g>
+
+  <!-- Floating elements -->
+  <circle cx="80" cy="100" r="8" fill="#A29BFE" opacity="0.5"/>
+  <circle cx="320" cy="120" r="6" fill="#6C5CE7" opacity="0.4"/>
+  <circle cx="100" cy="200" r="5" fill="#A29BFE" opacity="0.3"/>
+  <circle cx="310" cy="230" r="7" fill="#6C5CE7" opacity="0.3"/>
+
+  <!-- Small stars -->
+  <path d="M330 80 L333 88 L341 88 L335 93 L337 101 L330 96 L323 101 L325 93 L319 88 L327 88Z" fill="#FECA57" opacity="0.6"/>
+  <path d="M70 160 L72 166 L78 166 L73 170 L75 176 L70 172 L65 176 L67 170 L62 166 L68 166Z" fill="#FECA57" opacity="0.5"/>
+</svg>

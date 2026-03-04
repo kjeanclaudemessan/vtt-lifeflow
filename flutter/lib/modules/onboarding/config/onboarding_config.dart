@@ -40,21 +40,21 @@ class OnboardingConfig {
     this.autoAdvanceDuration = const Duration(seconds: 5),
   });
 
-  /// Default config with sample slides.
+  /// Default config — LifeFlow onboarding slides with custom SVG illustrations.
   static OnboardingConfig get defaultConfig => const OnboardingConfig(
         slides: [
           OnboardingSlide(
-            image: 'assets/images/onboarding_1.svg',
+            image: 'assets/images/onboarding/onboarding_habits.svg',
             titleKey: 'onboardingSlide1Title',
             descriptionKey: 'onboardingSlide1Description',
           ),
           OnboardingSlide(
-            image: 'assets/images/onboarding_2.svg',
+            image: 'assets/images/onboarding/onboarding_time.svg',
             titleKey: 'onboardingSlide2Title',
             descriptionKey: 'onboardingSlide2Description',
           ),
           OnboardingSlide(
-            image: 'assets/images/onboarding_3.svg',
+            image: 'assets/images/onboarding/onboarding_progress.svg',
             titleKey: 'onboardingSlide3Title',
             descriptionKey: 'onboardingSlide3Description',
           ),

@@ -33,13 +33,13 @@ class NotificationsConfig {
     this.emptyState = const NotificationsEmptyState(),
   });
 
-  /// Default configuration with standard channels.
+  /// Default configuration with LifeFlow channels.
   static const defaultConfig = NotificationsConfig(
     channels: [
-      NotificationChannel.marketing(),
-      NotificationChannel.orders(),
       NotificationChannel.reminders(),
-      NotificationChannel.social(),
+      NotificationChannel.streaks(),
+      NotificationChannel.bilan(),
+      NotificationChannel.general(),
     ],
   );
 }
@@ -99,6 +99,30 @@ class NotificationChannel {
         nameKey = 'notificationsChannelSocial',
         descriptionKey = 'notificationsChannelSocialDesc',
         icon = Icons.people_outline,
+        enabledByDefault = true;
+
+  /// Streaks notifications channel.
+  const NotificationChannel.streaks()
+      : id = 'streaks',
+        nameKey = 'notificationsChannelStreaks',
+        descriptionKey = 'notificationsChannelStreaksDesc',
+        icon = Icons.local_fire_department_outlined,
+        enabledByDefault = true;
+
+  /// Bilan/weekly review notifications channel.
+  const NotificationChannel.bilan()
+      : id = 'bilan',
+        nameKey = 'notificationsChannelBilan',
+        descriptionKey = 'notificationsChannelBilanDesc',
+        icon = Icons.bar_chart_outlined,
+        enabledByDefault = true;
+
+  /// General notifications channel.
+  const NotificationChannel.general()
+      : id = 'general',
+        nameKey = 'notificationsChannelGeneral',
+        descriptionKey = 'notificationsChannelGeneralDesc',
+        icon = Icons.notifications_outlined,
         enabledByDefault = true;
 }
 

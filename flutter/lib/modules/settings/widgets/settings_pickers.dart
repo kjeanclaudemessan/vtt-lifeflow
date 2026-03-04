@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/core.dart';
 import '../../../design_system/design_system.dart';
 
 /// Theme picker content for bottom sheet.
@@ -20,6 +21,7 @@ class ThemePickerSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -30,22 +32,22 @@ class ThemePickerSheet extends StatelessWidget {
             _buildThemeOption(
               context: context,
               icon: Icons.brightness_auto_outlined,
-              title: 'System',
-              subtitle: 'Follow device settings',
+              title: l10n.settingsThemeSystem,
+              subtitle: l10n.settingsThemeSystemDesc,
               mode: ThemeMode.system,
             ),
             _buildThemeOption(
               context: context,
               icon: Icons.light_mode_outlined,
-              title: 'Light',
-              subtitle: 'Always use light theme',
+              title: l10n.settingsThemeLight,
+              subtitle: l10n.settingsThemeLightDesc,
               mode: ThemeMode.light,
             ),
             _buildThemeOption(
               context: context,
               icon: Icons.dark_mode_outlined,
-              title: 'Dark',
-              subtitle: 'Always use dark theme',
+              title: l10n.settingsThemeDark,
+              subtitle: l10n.settingsThemeDarkDesc,
               mode: ThemeMode.dark,
             ),
           ],

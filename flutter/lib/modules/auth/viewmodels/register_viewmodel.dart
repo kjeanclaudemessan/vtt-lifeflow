@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -5,8 +7,10 @@ import 'package:stacked_services/stacked_services.dart';
 import '../../../app/app.locator.dart';
 import '../../../app/app.router.dart';
 import '../../../core/core.dart';
+import '../../../core/enums/auth_enums.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../domain/repositories/i_auth_repository.dart';
+import '../../../services/supabase/supabase_auth_service.dart';
 import '../config/auth_config.dart';
 
 /// ViewModel for the Register screen.
@@ -15,6 +19,11 @@ import '../config/auth_config.dart';
 class RegisterViewModel extends BaseViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final IAuthRepository _authRepository = locator<IAuthRepository>();
+  final SupabaseAuthService _authService = locator<SupabaseAuthService>();
+
+  StreamSubscription? _authSubscription;
+  bool _isWaitingForOAuth = false;
+  bool get isWaitingForOAuth => _isWaitingForOAuth;
 
   /// Configuration for the auth module.
   AuthConfig get config => const AuthConfig();
@@ -227,6 +236,64 @@ class RegisterViewModel extends BaseViewModel {
         }
       },
     );
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // Navigation
+  // ─────────────────────────────────────────────────────────────────
+
+  // ─────────────────────────────────────────────────────────────────
+  // OAuth Registration (same flow as login — social accounts auto-create)
+  // ─────────────────────────────────────────────────────────────────
+
+  Future<void> registerWithGoogle() async {
+    await _handleOAuth(OAuthProvider.google);
+  }
+
+  Future<void> registerWithApple() async {
+    await _handleOAuth(OAuthProvider.apple);
+  }
+
+  Future<void> registerWithGithub() async {
+    await _handleOAuth(OAuthProvider.github);
+  }
+
+  Future<void> _handleOAuth(OAuthProvider provider) async {
+    final result = await runBusyFuture(
+      _authRepository.signInWithOAuth(provider: provider),
+      busyObject: RegisterViewModel.registerBusyKey,
+    );
+
+    result.fold(
+      (failure) {
+        _isWaitingForOAuth = false;
+        setError(failure.message);
+      },
+      (success) {
+        if (success) {
+          _isWaitingForOAuth = true;
+          _listenForOAuthCompletion();
+          rebuildUi();
+        }
+      },
+    );
+  }
+
+  void _listenForOAuthCompletion() {
+    _authSubscription?.cancel();
+    _authSubscription = _authService.authStateChanges.listen((user) {
+      if (user != null && _isWaitingForOAuth) {
+        _isWaitingForOAuth = false;
+        _authSubscription?.cancel();
+        _navigationService.clearStackAndShow(Routes.homeView);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    super.dispose();
   }
 
   // ─────────────────────────────────────────────────────────────────

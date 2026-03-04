@@ -4,12 +4,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:lifeflow/app/app.locator.dart';
 import 'package:lifeflow/app/app.router.dart';
 import 'package:lifeflow/bootstrap.dart';
 import 'package:lifeflow/core/config/env/environment.dart';
 import 'package:lifeflow/design_system/theme/app_theme.dart';
 import 'package:lifeflow/l10n/generated/app_localizations.dart';
 import 'package:lifeflow/services/push_notification/push_notification_service.dart';
+import 'package:lifeflow/services/settings/app_settings_service.dart';
 
 Future<void> main() async {
   // Read environment from --dart-define=ENV=staging (or development/production)
@@ -32,38 +34,50 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settings = locator<AppSettingsService>();
+
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return PostHogWidget(
-      child: MaterialApp(
-          title: 'LifeFlow',
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.light,
-          darkTheme: AppTheme.dark,
-          themeMode: ThemeMode.light,
+        return ValueListenableBuilder<ThemeMode>(
+          valueListenable: settings.themeMode,
+          builder: (context, themeMode, _) {
+            return ValueListenableBuilder<Locale>(
+              valueListenable: settings.locale,
+              builder: (context, locale, _) {
+                return PostHogWidget(
+                  child: MaterialApp(
+                    title: 'LifeFlow',
+                    debugShowCheckedModeBanner: false,
+                    theme: AppTheme.light,
+                    darkTheme: AppTheme.dark,
+                    themeMode: themeMode,
 
-          // Localization
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: AppLocalizations.supportedLocales,
-          locale: const Locale('fr'),
+                    // Localization
+                    localizationsDelegates: const [
+                      AppLocalizations.delegate,
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                      GlobalCupertinoLocalizations.delegate,
+                    ],
+                    supportedLocales: AppLocalizations.supportedLocales,
+                    locale: locale,
 
-          initialRoute: Routes.splashView,
-          onGenerateRoute: StackedRouter().onGenerateRoute,
-          navigatorKey: StackedService.navigatorKey,
-          navigatorObservers: [
-            StackedService.routeObserver,
-            PosthogObserver(),
-          ],
-        ),
-    );
+                    initialRoute: Routes.splashView,
+                    onGenerateRoute: StackedRouter().onGenerateRoute,
+                    navigatorKey: StackedService.navigatorKey,
+                    navigatorObservers: [
+                      StackedService.routeObserver,
+                      PosthogObserver(),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        );
       },
     );
   }

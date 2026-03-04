@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/core.dart';
 import '../../../design_system/design_system.dart';
 import '../config/settings_config.dart';
 
@@ -93,11 +94,12 @@ class SettingsSectionWidget extends StatelessWidget {
   }
 
   Widget _buildThemeSelector(BuildContext context, SettingsItem item) {
+    final l10n = context.l10n;
     final currentLabel = switch (themeMode) {
-      ThemeMode.system => 'System',
-      ThemeMode.light => 'Light',
-      ThemeMode.dark => 'Dark',
-      null => 'System',
+      ThemeMode.system => l10n.settingsThemeSystem,
+      ThemeMode.light => l10n.settingsThemeLight,
+      ThemeMode.dark => l10n.settingsThemeDark,
+      null => l10n.settingsThemeSystem,
     };
 
     return AppIconListTile(
@@ -163,26 +165,29 @@ class SettingsSectionWidget extends StatelessWidget {
   }
 
   String _getLocalizedTitle(BuildContext context, String key) {
-    // In a real app, use context.l10n to get localized strings
-    // For now, return formatted key as fallback
+    final l10n = context.l10n;
     return switch (key) {
-      'settingsAppearance' => 'Appearance',
-      'settingsNotifications' => 'Notifications',
-      'settingsLegal' => 'Legal',
-      'settingsAccount' => 'Account',
-      'settingsAbout' => 'About',
-      'settingsTheme' => 'Theme',
-      'settingsLanguage' => 'Language',
-      'settingsPushNotifications' => 'Push Notifications',
-      'settingsEmailNotifications' => 'Email Notifications',
-      'settingsTerms' => 'Terms of Service',
-      'settingsPrivacy' => 'Privacy Policy',
-      'settingsChangePassword' => 'Change Password',
-      'settingsLogout' => 'Logout',
-      'settingsDeleteAccount' => 'Delete Account',
-      'settingsVersion' => 'Version',
-      'settingsRateApp' => 'Rate App',
-      'settingsShareApp' => 'Share App',
+      'settingsAppearance' => l10n.settingsAppearance,
+      'settingsNotifications' => l10n.settingsNotifications,
+      'settingsLegal' => l10n.settingsLegal,
+      'settingsAccount' => l10n.settingsAccount,
+      'settingsAbout' => l10n.settingsAbout,
+      'settingsTheme' => l10n.settingsTheme,
+      'settingsLanguage' => l10n.settingsLanguage,
+      'settingsPushNotifications' => l10n.settingsPushNotifications,
+      'settingsEmailNotifications' => l10n.settingsEmailNotifications,
+      'notificationPreferences' => l10n.notificationPreferences,
+      'settingsTerms' => l10n.settingsTerms,
+      'settingsPrivacy' => l10n.settingsPrivacy,
+      'profile' => l10n.profile,
+      'settingsChangePassword' => l10n.settingsChangePassword,
+      'settingsLogout' => l10n.settingsLogout,
+      'settingsDeleteAccount' => l10n.settingsDeleteAccount,
+      'settingsVersion' => l10n.settingsVersion,
+      'settingsRateApp' => l10n.settingsRateApp,
+      'settingsShareApp' => l10n.settingsShareApp,
+      'habitsTitle' => l10n.habitsTitle,
+      'streakFreeze' => l10n.streakFreeze,
       _ => key,
     };
   }

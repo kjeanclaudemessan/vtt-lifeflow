@@ -546,25 +546,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String get splashReady => 'Prêt !';
 
   @override
-  String get onboardingSlide1Title => 'Bienvenue';
+  String get onboardingSlide1Title => 'Construis tes habitudes';
 
   @override
   String get onboardingSlide1Description =>
-      'Découvrez toutes les fonctionnalités de notre application conçue pour vous simplifier la vie.';
+      'Crée tes habitudes quotidiennes, organise-les par domaine de vie et suis ta progression chaque jour.';
 
   @override
-  String get onboardingSlide2Title => 'Restez Connecté';
+  String get onboardingSlide2Title => 'Suis ton temps';
 
   @override
   String get onboardingSlide2Description =>
-      'Recevez des mises à jour et notifications en temps réel pour ne rien manquer d\'important.';
+      'Visualise le temps investi dans chaque domaine grâce au compteur automatique. Chaque habitude cochée compte.';
 
   @override
-  String get onboardingSlide3Title => 'Commencez';
+  String get onboardingSlide3Title => 'Progresse chaque semaine';
 
   @override
   String get onboardingSlide3Description =>
-      'Créez votre compte et démarrez votre aventure avec nous dès aujourd\'hui.';
+      'Reçois ton bilan hebdomadaire, maintiens tes séries et deviens la meilleure version de toi-même.';
 
   @override
   String get onboardingDomainsTitle => 'Choisis tes domaines de vie';
@@ -662,10 +662,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsThemeSystem => 'Système';
 
   @override
+  String get settingsThemeSystemDesc => 'Suivre les paramètres de l\'appareil';
+
+  @override
   String get settingsThemeLight => 'Clair';
 
   @override
+  String get settingsThemeLightDesc => 'Toujours utiliser le thème clair';
+
+  @override
   String get settingsThemeDark => 'Sombre';
+
+  @override
+  String get settingsThemeDarkDesc => 'Toujours utiliser le thème sombre';
 
   @override
   String get settingsLanguageEnglish => 'Anglais';
@@ -720,6 +729,27 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get notificationsChannelSocialDesc =>
       'Activité des personnes que vous suivez';
+
+  @override
+  String get notificationsChannelStreaks => 'Séries';
+
+  @override
+  String get notificationsChannelStreaksDesc =>
+      'Notifications quand tu maintiens ou perds une série';
+
+  @override
+  String get notificationsChannelBilan => 'Bilan hebdomadaire';
+
+  @override
+  String get notificationsChannelBilanDesc =>
+      'Reçois ton bilan chaque dimanche';
+
+  @override
+  String get notificationsChannelGeneral => 'Général';
+
+  @override
+  String get notificationsChannelGeneralDesc =>
+      'Mises à jour et informations générales';
 
   @override
   String get domainsTitle => 'Domaines de vie';

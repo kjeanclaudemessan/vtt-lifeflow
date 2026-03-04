@@ -397,13 +397,13 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
     final difference = now.difference(dateTime);
 
     if (difference.inMinutes < 1) {
-      return 'Just now';
+      return 'À l\'instant';
     } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}m';
+      return '${difference.inMinutes} min';
     } else if (difference.inHours < 24) {
       return '${difference.inHours}h';
     } else if (difference.inDays < 7) {
-      return '${difference.inDays}d';
+      return '${difference.inDays}j';
     } else {
       return '${dateTime.day}/${dateTime.month}';
     }
@@ -415,9 +415,9 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
     final yesterday = today.subtract(const Duration(days: 1));
 
     if (date == today) {
-      return 'Today';
+      return 'Aujourd\'hui';
     } else if (date == yesterday) {
-      return 'Yesterday';
+      return 'Hier';
     } else {
       return '${date.day}/${date.month}/${date.year}';
     }

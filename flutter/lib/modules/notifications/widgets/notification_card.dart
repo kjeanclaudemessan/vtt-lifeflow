@@ -204,13 +204,13 @@ class NotificationCard extends StatelessWidget {
     final difference = now.difference(dateTime);
 
     if (difference.inMinutes < 1) {
-      return 'Just now';
+      return 'À l\'instant';
     } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}m ago';
+      return 'il y a ${difference.inMinutes} min';
     } else if (difference.inHours < 24) {
-      return '${difference.inHours}h ago';
+      return 'il y a ${difference.inHours}h';
     } else if (difference.inDays < 7) {
-      return '${difference.inDays}d ago';
+      return 'il y a ${difference.inDays}j';
     } else {
       return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
     }

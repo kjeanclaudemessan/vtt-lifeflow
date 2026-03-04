@@ -8,6 +8,8 @@ import '../../../domain/entities/habit_log_entity.dart';
 import '../../../domain/entities/streak_info.dart';
 import '../../../domain/repositories/i_domain_repository.dart';
 import '../../../domain/repositories/i_habit_repository.dart';
+import '../../../domain/repositories/i_notification_repository.dart';
+import '../../../services/analytics/analytics_service.dart';
 import '../../../services/time_counter_service.dart';
 
 /// ViewModel for the today dashboard.
@@ -17,11 +19,16 @@ class TodayViewModel extends BaseViewModel {
   final _habitRepo = locator<IHabitRepository>();
   final _domainRepo = locator<IDomainRepository>();
   final _counterService = locator<TimeCounterService>();
+  final _notifRepo = locator<INotificationRepository>();
 
   List<HabitEntity> _todayHabits = [];
   List<DomainEntity> _domains = [];
   Map<String, HabitLogEntity> _todayLogs = {};
   Map<String, StreakInfo> _streaks = {};
+
+  /// Unread notification count for badge.
+  int _unreadNotificationCount = 0;
+  int get unreadNotificationCount => _unreadNotificationCount;
 
   /// Current mode based on hour.
   TodayMode get mode => TodayMode.fromHour(DateTime.now().hour);
@@ -166,6 +173,13 @@ class TodayViewModel extends BaseViewModel {
       );
     }
 
+    // Load unread notification count
+    final notifResult = await _notifRepo.getUnreadCount();
+    notifResult.fold(
+      (_) {},
+      (count) => _unreadNotificationCount = count,
+    );
+
     rebuildUi();
   }
 
@@ -182,6 +196,9 @@ class TodayViewModel extends BaseViewModel {
         (f) => setError(f.message),
         (_) {
           _todayLogs.remove(habitId);
+          locator<AnalyticsService>().capture('habit_uncompleted', properties: {
+            'habit_id': habitId,
+          });
           rebuildUi();
         },
       );
@@ -196,6 +213,10 @@ class TodayViewModel extends BaseViewModel {
         (f) => setError(f.message),
         (log) {
           _todayLogs[habitId] = log;
+          locator<AnalyticsService>().capture('habit_completed', properties: {
+            'habit_id': habitId,
+            'completion_rate': completionRate,
+          });
           rebuildUi();
         },
       );

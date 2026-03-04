@@ -544,25 +544,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get splashReady => 'Ready!';
 
   @override
-  String get onboardingSlide1Title => 'Welcome';
+  String get onboardingSlide1Title => 'Build your habits';
 
   @override
   String get onboardingSlide1Description =>
-      'Discover all the features of our app designed to make your life easier.';
+      'Create daily habits, organize them by life domain and track your progress every day.';
 
   @override
-  String get onboardingSlide2Title => 'Stay Connected';
+  String get onboardingSlide2Title => 'Track your time';
 
   @override
   String get onboardingSlide2Description =>
-      'Get real-time updates and notifications to never miss anything important.';
+      'Visualize the time invested in each domain with the automatic counter. Every checked habit counts.';
 
   @override
-  String get onboardingSlide3Title => 'Get Started';
+  String get onboardingSlide3Title => 'Progress every week';
 
   @override
   String get onboardingSlide3Description =>
-      'Create your account and start your journey with us today.';
+      'Receive your weekly review, maintain your streaks and become the best version of yourself.';
 
   @override
   String get onboardingDomainsTitle => 'Choose your life domains';
@@ -660,10 +660,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsThemeSystem => 'System';
 
   @override
+  String get settingsThemeSystemDesc => 'Follow device settings';
+
+  @override
   String get settingsThemeLight => 'Light';
 
   @override
+  String get settingsThemeLightDesc => 'Always use light theme';
+
+  @override
   String get settingsThemeDark => 'Dark';
+
+  @override
+  String get settingsThemeDarkDesc => 'Always use dark theme';
 
   @override
   String get settingsLanguageEnglish => 'English';
@@ -718,6 +727,27 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get notificationsChannelSocialDesc =>
       'Activity from people you follow';
+
+  @override
+  String get notificationsChannelStreaks => 'Streaks';
+
+  @override
+  String get notificationsChannelStreaksDesc =>
+      'Notifications when you maintain or lose a streak';
+
+  @override
+  String get notificationsChannelBilan => 'Weekly review';
+
+  @override
+  String get notificationsChannelBilanDesc =>
+      'Receive your weekly review every Sunday';
+
+  @override
+  String get notificationsChannelGeneral => 'General';
+
+  @override
+  String get notificationsChannelGeneralDesc =>
+      'General updates and information';
 
   @override
   String get domainsTitle => 'Life Domains';

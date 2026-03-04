@@ -9,7 +9,9 @@ import 'core/config/app_config.dart';
 import 'core/config/env/environment.dart';
 import 'services/analytics/analytics_service.dart';
 import 'services/connectivity/connectivity_service.dart';
+import 'services/local_notification/local_notification_scheduler.dart';
 import 'services/push_notification/push_notification_service.dart';
+import 'services/settings/app_settings_service.dart';
 import 'services/storage/local_storage_service.dart';
 import 'services/supabase/supabase_auth_service.dart';
 import 'services/supabase/supabase_service.dart';
@@ -71,11 +73,18 @@ Future<void> _initializeServices() async {
     debugPrint('[Firebase] No config found — push notifications disabled: $e');
   }
 
+  // App-wide reactive settings (theme, locale)
+  locator<AppSettingsService>().init();
+
   // Analytics & error tracking (PostHog)
   await locator<AnalyticsService>().init();
 
   // Push notifications (FCM) — gracefully skips if no Firebase config
   await locator<PushNotificationService>().init();
+
+  // Local notification scheduler (habit reminders, bilan)
+  await locator<LocalNotificationScheduler>().init();
+  await locator<LocalNotificationScheduler>().scheduleWeeklyBilan();
 }
 
 /// Logs startup information in debug mode.

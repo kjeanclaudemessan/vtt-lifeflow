@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -7,7 +9,9 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../app/app.locator.dart';
 import '../../../app/app.router.dart';
 import '../../../domain/repositories/i_auth_repository.dart';
+import '../../../services/settings/app_settings_service.dart';
 import '../../../services/storage/local_storage_service.dart';
+import '../../../services/local_notification/local_notification_scheduler.dart';
 import '../config/settings_config.dart';
 
 /// ViewModel for the Settings view.
@@ -18,6 +22,7 @@ class SettingsViewModel extends BaseViewModel {
   final DialogService _dialogService = locator<DialogService>();
   final IAuthRepository _authRepository = locator<IAuthRepository>();
   final LocalStorageService _localStorage = locator<LocalStorageService>();
+  final AppSettingsService _appSettings = locator<AppSettingsService>();
 
   /// Settings configuration.
   final SettingsConfig config;
@@ -67,9 +72,9 @@ class SettingsViewModel extends BaseViewModel {
   /// Get theme mode display name.
   String getThemeModeLabel(ThemeMode mode) {
     return switch (mode) {
-      ThemeMode.system => 'System',
-      ThemeMode.light => 'Light',
-      ThemeMode.dark => 'Dark',
+      ThemeMode.system => 'Système',
+      ThemeMode.light => 'Clair',
+      ThemeMode.dark => 'Sombre',
     };
   }
 
@@ -137,10 +142,8 @@ class SettingsViewModel extends BaseViewModel {
   /// Set the theme mode.
   Future<void> setThemeMode(ThemeMode mode) async {
     _themeMode = mode;
-    await _localStorage.setInt('theme_mode', mode.index);
+    await _appSettings.setThemeMode(mode);
     rebuildUi();
-    // Note: The actual theme change should be handled by the app's
-    // theme provider which listens to this setting.
   }
 
   /// Show theme picker bottom sheet.
@@ -156,10 +159,8 @@ class SettingsViewModel extends BaseViewModel {
   /// Set the locale.
   Future<void> setLocale(Locale newLocale) async {
     _locale = newLocale;
-    await _localStorage.setString('locale', newLocale.languageCode);
+    await _appSettings.setLocale(newLocale);
     rebuildUi();
-    // Note: The actual locale change should be handled by the app's
-    // localization provider which listens to this setting.
   }
 
   /// Show language picker bottom sheet.
@@ -176,6 +177,16 @@ class SettingsViewModel extends BaseViewModel {
   Future<void> togglePushNotifications(bool value) async {
     _pushNotificationsEnabled = value;
     await _localStorage.setBool('push_notifications', value);
+
+    // Enable/disable local notification scheduler
+    final scheduler = locator<LocalNotificationScheduler>();
+    if (!value) {
+      // Cancel all scheduled local notifications when disabled
+      await scheduler.rescheduleAll([]);
+    }
+    // Note: FCM push cannot be toggled at runtime without Firebase config.
+    // The local scheduler handles habit reminders and weekly bilan.
+
     rebuildUi();
   }
 
@@ -255,10 +266,10 @@ class SettingsViewModel extends BaseViewModel {
   /// Logout the user.
   Future<void> logout() async {
     final confirmed = await _dialogService.showConfirmationDialog(
-      title: 'Logout',
-      description: 'Are you sure you want to logout?',
-      confirmationTitle: 'Logout',
-      cancelTitle: 'Cancel',
+      title: 'Se déconnecter',
+      description: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+      confirmationTitle: 'Se déconnecter',
+      cancelTitle: 'Annuler',
     );
 
     if (confirmed?.confirmed != true) return;
@@ -277,11 +288,11 @@ class SettingsViewModel extends BaseViewModel {
   /// Delete the user's account.
   Future<void> deleteAccount() async {
     final confirmed = await _dialogService.showConfirmationDialog(
-      title: 'Delete Account',
+      title: 'Supprimer le compte',
       description:
-          'Are you sure you want to delete your account? This action cannot be undone.',
-      confirmationTitle: 'Delete',
-      cancelTitle: 'Cancel',
+          'Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.',
+      confirmationTitle: 'Supprimer',
+      cancelTitle: 'Annuler',
     );
 
     if (confirmed?.confirmed != true) return;
@@ -303,16 +314,23 @@ class SettingsViewModel extends BaseViewModel {
 
   /// Rate the app.
   Future<void> rateApp() async {
-    // Determine which store URL to use based on platform
-    // For now, just show a placeholder
-    // In production, use in_app_review package
+    // Android Play Store URL (update with actual listing when published)
+    const playStoreUrl =
+        'https://play.google.com/store/apps/details?id=com.vitatech.lifeflow';
+    // iOS App Store URL (update with actual listing when published)
+    const appStoreUrl = 'https://apps.apple.com/app/lifeflow/id000000000';
+
+    final url = defaultTargetPlatform == TargetPlatform.iOS
+        ? appStoreUrl
+        : playStoreUrl;
+    await _launchUrl(url);
   }
 
   /// Share the app.
   Future<void> shareApp() async {
-    // Use share_plus package to share the app
-    // const text = 'Check out this awesome app!';
-    // await Share.share(text);
+    const text =
+        'D\u00e9couvre LifeFlow, l\u2019app pour construire tes habitudes et suivre ton temps ! \ud83d\ude80\nhttps://vttlife.com';
+    await Share.share(text);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -341,6 +359,12 @@ class SettingsViewModel extends BaseViewModel {
         await logout();
       case 'delete_account':
         await deleteAccount();
+
+      // Profile
+      case 'profile':
+        _navigationService.navigateTo(Routes.profileView);
+      case 'notification_channels':
+        _navigationService.navigateTo(Routes.notificationsView);
 
       // About
       case 'rate':

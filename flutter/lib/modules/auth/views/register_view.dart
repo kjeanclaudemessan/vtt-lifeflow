@@ -49,9 +49,9 @@ class RegisterView extends StackedView<RegisterViewModel> {
                   showGoogle: config.enableGoogle,
                   showApple: config.enableApple,
                   showGithub: config.enableGithub,
-                  onGoogleTap: () {}, // TODO: Implement social register
-                  onAppleTap: () {},
-                  onGithubTap: () {},
+                  onGoogleTap: viewModel.registerWithGoogle,
+                  onAppleTap: viewModel.registerWithApple,
+                  onGithubTap: viewModel.registerWithGithub,
                 ),
                 OrDivider(text: l10n.or),
               ],

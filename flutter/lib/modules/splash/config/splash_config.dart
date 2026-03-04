@@ -32,7 +32,7 @@ class SplashConfig {
     this.checkVersion = false,
     this.versionCheckUrl,
     this.preloadUserData = true,
-    this.logoAsset,
+    this.logoAsset = 'assets/icon/app_icon.png',
     this.backgroundColor,
     this.onComplete,
   });

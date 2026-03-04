@@ -34,8 +34,9 @@ class HabitsView extends StackedView<HabitsViewModel> {
       floatingActionButton: AppFab(
         icon: Icons.add,
         onPressed: () async {
-          await locator<NavigationService>().navigateToHabitFormView();
-          viewModel.refresh();
+          final result =
+              await locator<NavigationService>().navigateToHabitFormView();
+          if (result == true) await viewModel.refresh();
         },
       ),
     );
@@ -56,8 +57,9 @@ class HabitsView extends StackedView<HabitsViewModel> {
         description: l10n.habitsEmptyDescription,
         actionLabel: l10n.habitAdd,
         onAction: () async {
-          await locator<NavigationService>().navigateToHabitFormView();
-          viewModel.refresh();
+          final result =
+              await locator<NavigationService>().navigateToHabitFormView();
+          if (result == true) await viewModel.refresh();
         },
       );
     }
@@ -159,9 +161,12 @@ class HabitsView extends StackedView<HabitsViewModel> {
                   streak: viewModel.streakFor(habit.id),
                   onToggle: () => viewModel.toggleHabit(habit.id),
                   onTap: () async {
-                    await locator<NavigationService>()
-                        .navigateToHabitFormView();
-                    viewModel.refresh();
+                    final result =
+                        await locator<NavigationService>().navigateTo(
+                      Routes.habitFormView,
+                      arguments: HabitFormViewArguments(habit: habit),
+                    );
+                    if (result == true) await viewModel.refresh();
                   },
                 ),
               );

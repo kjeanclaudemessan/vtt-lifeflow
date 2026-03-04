@@ -2,23 +2,32 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../../../app/app.locator.dart';
+import '../../../domain/entities/notification_entity.dart';
+import '../../../domain/repositories/i_notification_repository.dart';
+import '../../../services/storage/local_storage_service.dart';
 import '../config/notifications_config.dart';
 
 /// ViewModel for the Notifications view.
+///
+/// Loads notifications from Supabase via [INotificationRepository],
+/// converts [NotificationEntity] → [NotificationItem] for the UI,
+/// and persists channel preferences in local storage.
 class NotificationsViewModel extends BaseViewModel {
   /// Notifications configuration.
   final NotificationsConfig? _inputConfig;
 
   NotificationsViewModel({NotificationsConfig? config}) : _inputConfig = config;
 
-  /// Navigation service.
+  /// Services & repositories.
   final _navigationService = locator<NavigationService>();
+  final _repository = locator<INotificationRepository>();
+  final _localStorage = locator<LocalStorageService>();
 
   /// Current configuration.
   NotificationsConfig get config =>
       _inputConfig ?? NotificationsConfig.defaultConfig;
 
-  /// List of notifications.
+  /// List of notifications (UI model).
   List<NotificationItem> _notifications = [];
   List<NotificationItem> get notifications => _notifications;
 
@@ -48,23 +57,58 @@ class NotificationsViewModel extends BaseViewModel {
   Future<void> init() async {
     setBusy(true);
     await _loadNotifications();
-    await _loadChannelPreferences();
+    _loadChannelPreferences();
     setBusy(false);
   }
 
-  /// Load notifications from the data source.
+  /// Load notifications from Supabase.
   Future<void> _loadNotifications() async {
-    // TODO: Load from repository
-    // For now, use mock data
-    _notifications = _getMockNotifications();
-    notifyListeners();
+    final result = await _repository.getNotifications();
+
+    result.fold(
+      (failure) {
+        setError(failure.message);
+      },
+      (entities) {
+        _notifications = entities.map(_toNotificationItem).toList();
+        notifyListeners();
+      },
+    );
   }
 
-  /// Load channel preferences.
-  Future<void> _loadChannelPreferences() async {
-    // TODO: Load from storage
+  /// Convert domain entity to UI model.
+  NotificationItem _toNotificationItem(NotificationEntity entity) {
+    return NotificationItem(
+      id: entity.id,
+      title: entity.title,
+      body: entity.body,
+      type: _mapType(entity.type),
+      isRead: entity.isRead,
+      actionUrl: entity.actionUrl,
+      createdAt: entity.createdAt,
+      metadata: entity.metadata,
+    );
+  }
+
+  /// Map domain [NotifType] to UI [NotificationType].
+  NotificationType _mapType(NotifType type) {
+    return switch (type) {
+      NotifType.general => NotificationType.general,
+      NotifType.reminder => NotificationType.reminder,
+      NotifType.alert => NotificationType.alert,
+      NotifType.success => NotificationType.success,
+      NotifType.streak => NotificationType.success,
+      NotifType.bilan => NotificationType.general,
+    };
+  }
+
+  /// Load channel preferences from local storage.
+  void _loadChannelPreferences() {
     for (final channel in config.channels) {
-      _channelPreferences[channel.id] = channel.enabledByDefault;
+      _channelPreferences[channel.id] = _localStorage.getBoolOrDefault(
+        'notif_channel_${channel.id}',
+        defaultValue: channel.enabledByDefault,
+      );
     }
   }
 
@@ -87,44 +131,93 @@ class NotificationsViewModel extends BaseViewModel {
 
   /// Mark a notification as read.
   Future<void> markAsRead(String notificationId) async {
+    // Optimistic UI update
     final index = _notifications.indexWhere((n) => n.id == notificationId);
     if (index != -1) {
       _notifications[index] = _notifications[index].copyWith(isRead: true);
-      // TODO: Update in repository
       notifyListeners();
     }
+
+    // Persist to Supabase
+    final result = await _repository.markAsRead(notificationId);
+    result.fold(
+      (failure) {
+        // Revert on error
+        if (index != -1) {
+          _notifications[index] = _notifications[index].copyWith(isRead: false);
+          notifyListeners();
+        }
+      },
+      (_) {},
+    );
   }
 
   /// Mark all notifications as read.
   Future<void> markAllAsRead() async {
+    // Optimistic UI update
+    final oldNotifications = List<NotificationItem>.from(_notifications);
     _notifications =
         _notifications.map((n) => n.copyWith(isRead: true)).toList();
-    // TODO: Update in repository
     notifyListeners();
+
+    // Persist to Supabase
+    final result = await _repository.markAllAsRead();
+    result.fold(
+      (failure) {
+        // Revert on error
+        _notifications = oldNotifications;
+        notifyListeners();
+      },
+      (_) {},
+    );
   }
 
   /// Delete a notification.
   Future<void> deleteNotification(String notificationId) async {
+    // Optimistic UI update
+    final removed =
+        _notifications.where((n) => n.id == notificationId).firstOrNull;
+    final removedIndex =
+        _notifications.indexWhere((n) => n.id == notificationId);
     _notifications.removeWhere((n) => n.id == notificationId);
-    // TODO: Delete from repository
     notifyListeners();
+
+    // Persist to Supabase
+    final result = await _repository.deleteNotification(notificationId);
+    result.fold(
+      (failure) {
+        // Revert on error
+        if (removed != null && removedIndex >= 0) {
+          _notifications.insert(removedIndex, removed);
+          notifyListeners();
+        }
+      },
+      (_) {},
+    );
   }
 
   /// Clear all notifications.
   Future<void> clearAll() async {
+    final oldNotifications = List<NotificationItem>.from(_notifications);
     _notifications.clear();
-    // TODO: Clear in repository
     notifyListeners();
+
+    final result = await _repository.clearAll();
+    result.fold(
+      (failure) {
+        _notifications = oldNotifications;
+        notifyListeners();
+      },
+      (_) {},
+    );
   }
 
   /// Handle notification tap.
   void onNotificationTap(NotificationItem notification) {
-    // Mark as read
     markAsRead(notification.id);
 
-    // Navigate if action URL is present
     if (notification.actionUrl != null) {
-      // TODO: Handle deep linking
+      // Deep link navigation — handled by router
     }
   }
 
@@ -136,7 +229,7 @@ class NotificationsViewModel extends BaseViewModel {
   /// Set channel preference.
   void setChannelEnabled(String channelId, bool enabled) {
     _channelPreferences[channelId] = enabled;
-    // TODO: Save to storage
+    _localStorage.setBool('notif_channel_$channelId', enabled);
     notifyListeners();
   }
 
@@ -148,13 +241,13 @@ class NotificationsViewModel extends BaseViewModel {
   /// Get notification type label.
   String getTypeLabel(NotificationType type) {
     return switch (type) {
-      NotificationType.general => 'General',
+      NotificationType.general => 'Général',
       NotificationType.marketing => 'Marketing',
-      NotificationType.order => 'Orders',
+      NotificationType.order => 'Transactions',
       NotificationType.social => 'Social',
-      NotificationType.reminder => 'Reminders',
-      NotificationType.alert => 'Alerts',
-      NotificationType.success => 'Success',
+      NotificationType.reminder => 'Rappels',
+      NotificationType.alert => 'Alertes',
+      NotificationType.success => 'Succès',
     };
   }
 
@@ -170,48 +263,5 @@ class NotificationsViewModel extends BaseViewModel {
       grouped.putIfAbsent(date, () => []).add(notification);
     }
     return grouped;
-  }
-
-  /// Mock notifications for development.
-  List<NotificationItem> _getMockNotifications() {
-    final now = DateTime.now();
-    return [
-      NotificationItem(
-        id: '1',
-        title: 'Welcome!',
-        body: 'Thank you for joining us. Start exploring the app!',
-        type: NotificationType.general,
-        createdAt: now.subtract(const Duration(minutes: 5)),
-      ),
-      NotificationItem(
-        id: '2',
-        title: 'Special Offer',
-        body: 'Get 20% off on your first order. Limited time only!',
-        type: NotificationType.marketing,
-        createdAt: now.subtract(const Duration(hours: 2)),
-      ),
-      NotificationItem(
-        id: '3',
-        title: 'Order Confirmed',
-        body: 'Your order #12345 has been confirmed.',
-        type: NotificationType.order,
-        isRead: true,
-        createdAt: now.subtract(const Duration(days: 1)),
-      ),
-      NotificationItem(
-        id: '4',
-        title: 'New Follower',
-        body: 'John Doe started following you.',
-        type: NotificationType.social,
-        createdAt: now.subtract(const Duration(days: 2)),
-      ),
-      NotificationItem(
-        id: '5',
-        title: 'Reminder',
-        body: 'Don\'t forget to complete your profile.',
-        type: NotificationType.reminder,
-        createdAt: now.subtract(const Duration(days: 3)),
-      ),
-    ];
   }
 }

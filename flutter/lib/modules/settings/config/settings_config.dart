@@ -35,6 +35,8 @@ class SettingsConfig {
 
   /// Default configuration with all sections.
   static SettingsConfig get defaultConfig => SettingsConfig(
+        termsUrl: 'https://vttlife.com/terms',
+        privacyUrl: 'https://vttlife.com/privacy',
         sections: [
           SettingsSection.appearance(),
           SettingsSection.habits(),
@@ -94,6 +96,7 @@ class SettingsSection {
         items: [
           SettingsItem.pushNotifications(),
           SettingsItem.emailNotifications(),
+          SettingsItem.notificationChannels(),
         ],
       );
 
@@ -118,12 +121,13 @@ class SettingsSection {
         ],
       );
 
-  /// Account section (logout, delete).
+  /// Account section (profile, logout, delete).
   factory SettingsSection.account() => const SettingsSection(
         id: 'account',
         titleKey: 'settingsAccount',
         icon: Icons.person_outlined,
         items: [
+          SettingsItem.profile(),
           SettingsItem.changePassword(),
           SettingsItem.logout(),
           SettingsItem.deleteAccount(),
@@ -226,6 +230,15 @@ class SettingsItem {
           icon: Icons.email_outlined,
         );
 
+  /// Notification channels — navigate to notifications preferences.
+  const SettingsItem.notificationChannels()
+      : this(
+          id: 'notification_channels',
+          titleKey: 'notificationPreferences',
+          type: SettingsItemType.navigation,
+          icon: Icons.tune_outlined,
+        );
+
   // ═══════════════════════════════════════════════════════════════════════════
   // HABITS
   // ═══════════════════════════════════════════════════════════════════════════
@@ -273,6 +286,15 @@ class SettingsItem {
           titleKey: 'settingsChangePassword',
           type: SettingsItemType.navigation,
           icon: Icons.lock_outlined,
+        );
+
+  /// Profile item — navigate to profile view.
+  const SettingsItem.profile()
+      : this(
+          id: 'profile',
+          titleKey: 'profile',
+          type: SettingsItemType.navigation,
+          icon: Icons.person_outlined,
         );
 
   /// Logout item.

@@ -1,14 +1,18 @@
 import 'package:lifeflow/services/analytics/analytics_service.dart';
+import 'package:lifeflow/services/local_notification/local_notification_scheduler.dart';
 import 'package:lifeflow/services/moneroo/moneroo_service.dart';
 import 'package:lifeflow/services/push_notification/push_notification_service.dart';
+import 'package:lifeflow/services/settings/app_settings_service.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:lifeflow/data/repositories/auth_repository_impl.dart';
 import 'package:lifeflow/data/repositories/domain_repository_impl.dart';
 import 'package:lifeflow/data/repositories/habit_repository_impl.dart';
+import 'package:lifeflow/data/repositories/notification_repository_impl.dart';
 import 'package:lifeflow/domain/repositories/i_auth_repository.dart';
 import 'package:lifeflow/domain/repositories/i_domain_repository.dart';
 import 'package:lifeflow/domain/repositories/i_habit_repository.dart';
+import 'package:lifeflow/domain/repositories/i_notification_repository.dart';
 import 'package:lifeflow/modules/auth/views/forgot_password_view.dart';
 import 'package:lifeflow/modules/auth/views/login_view.dart';
 import 'package:lifeflow/modules/auth/views/register_view.dart';
@@ -133,11 +137,13 @@ import 'package:lifeflow/ui/views/startup/startup_view.dart';
     // ANALYTICS & ERROR REPORTING (PostHog)
     // ═══════════════════════════════════════════════════════════════════════
     LazySingleton(classType: AnalyticsService),
+    Singleton(classType: AppSettingsService),
 
     // ═══════════════════════════════════════════════════════════════════════
     // PUSH NOTIFICATIONS (FCM)
     // ═══════════════════════════════════════════════════════════════════════
     LazySingleton(classType: PushNotificationService),
+    LazySingleton(classType: LocalNotificationScheduler),
 
     // ═══════════════════════════════════════════════════════════════════════
     // REPOSITORIES
@@ -145,6 +151,8 @@ import 'package:lifeflow/ui/views/startup/startup_view.dart';
     LazySingleton(classType: AuthRepositoryImpl, asType: IAuthRepository),
     LazySingleton(classType: DomainRepositoryImpl, asType: IDomainRepository),
     LazySingleton(classType: HabitRepositoryImpl, asType: IHabitRepository),
+    LazySingleton(
+        classType: NotificationRepositoryImpl, asType: INotificationRepository),
 
     // ═══════════════════════════════════════════════════════════════════════
     // FEATURE SERVICES (Phase 1)

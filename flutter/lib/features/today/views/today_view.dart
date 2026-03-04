@@ -9,6 +9,7 @@ import '../../../core/enums/lifeflow_enums.dart';
 import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 import '../../../domain/entities/habit_entity.dart';
+import '../../../modules/notifications/widgets/notification_badge.dart';
 import '../viewmodels/today_viewmodel.dart';
 import '../widgets/today_bilan_card.dart';
 import '../widgets/today_counter_summary.dart';
@@ -35,6 +36,16 @@ class TodayView extends StackedView<TodayViewModel> {
       appBar: AppBar(
         title: Text(l10n.today),
         actions: [
+          NotificationBadge(
+            count: viewModel.unreadNotificationCount,
+            onTap: () =>
+                locator<NavigationService>().navigateToNotificationsView(),
+          ),
+          IconButton(
+            icon: const Icon(Icons.person_outline),
+            onPressed: () =>
+                locator<NavigationService>().navigateToProfileView(),
+          ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () =>

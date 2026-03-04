@@ -1,3 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -5,6 +11,8 @@ import '../../../app/app.locator.dart';
 import '../../../app/app.router.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../domain/repositories/i_auth_repository.dart';
+import '../../../domain/repositories/i_domain_repository.dart';
+import '../../../domain/repositories/i_habit_repository.dart';
 import '../config/profile_config.dart';
 
 /// ViewModel for the Profile view.
@@ -169,11 +177,89 @@ class ProfileViewModel extends BaseViewModel {
 
   /// Delete account.
   Future<void> deleteAccount() async {
-    // TODO: Implement account deletion
+    final result = await runBusyFuture(
+      _authRepository.deleteAccount(),
+      busyObject: logoutBusyKey,
+    );
+
+    result.fold(
+      (failure) => setError(failure.message),
+      (_) => _navigationService.clearStackAndShow(Routes.loginView),
+    );
   }
 
   /// Export user data (GDPR).
+  ///
+  /// Gathers all user data (profile, domains, habits, logs) into JSON
+  /// and opens the system share sheet.
   Future<void> exportData() async {
-    // TODO: Implement data export
+    try {
+      setBusy(true);
+
+      final habitRepo = locator<IHabitRepository>();
+      final domainRepo = locator<IDomainRepository>();
+
+      // Gather data in parallel
+      final results = await Future.wait([
+        habitRepo.getHabits(),
+        domainRepo.getDomains(),
+      ]);
+
+      final habits = results[0].fold((_) => [], (h) => h);
+      final domains = results[1].fold((_) => [], (d) => d);
+
+      final exportPayload = {
+        'exported_at': DateTime.now().toIso8601String(),
+        'user': {
+          'display_name': _user?.displayName,
+          'email': _user?.email,
+          'first_name': _user?.firstName,
+          'last_name': _user?.lastName,
+          'created_at': _user?.createdAt.toIso8601String(),
+          'metadata': _user?.metadata,
+        },
+        'domains': domains
+            .map((d) => {
+                  'id': d.id,
+                  'name': d.name,
+                  'emoji': d.emoji,
+                  'color': d.color,
+                  'is_archived': d.isArchived,
+                })
+            .toList(),
+        'habits': habits
+            .map((h) => {
+                  'id': h.id,
+                  'name': h.name,
+                  'description': h.description,
+                  'frequency': h.frequency.name,
+                  'domain_id': h.domainId,
+                  'is_archived': h.isArchived,
+                  'current_streak': h.currentStreak,
+                  'best_streak': h.bestStreak,
+                  'created_at': h.createdAt?.toIso8601String(),
+                })
+            .toList(),
+      };
+
+      final jsonStr = const JsonEncoder.withIndent('  ').convert(exportPayload);
+
+      if (kIsWeb) {
+        // On web, just share text
+        await Share.share(jsonStr);
+      } else {
+        // On mobile/desktop, write to file and share
+        final dir = await getTemporaryDirectory();
+        final file = File(
+            '${dir.path}/lifeflow_export_${DateTime.now().millisecondsSinceEpoch}.json');
+        await file.writeAsString(jsonStr);
+        await Share.shareXFiles([XFile(file.path)],
+            text: 'LifeFlow — Export de données');
+      }
+    } catch (e) {
+      setError('Erreur lors de l\'export : $e');
+    } finally {
+      setBusy(false);
+    }
   }
 }

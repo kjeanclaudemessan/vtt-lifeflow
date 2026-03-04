@@ -3,16 +3,22 @@ import 'package:stacked/stacked.dart';
 import '../../../app/app.locator.dart';
 import '../../../domain/entities/domain_entity.dart';
 import '../../../domain/repositories/i_domain_repository.dart';
+import '../../../domain/repositories/i_habit_repository.dart';
 
 /// ViewModel for managing life domains.
 class DomainsViewModel extends BaseViewModel {
   final _domainRepo = locator<IDomainRepository>();
+  final _habitRepo = locator<IHabitRepository>();
 
   List<DomainEntity> _activeDomains = [];
   List<DomainEntity> _archivedDomains = [];
 
   List<DomainEntity> get activeDomains => _activeDomains;
   List<DomainEntity> get archivedDomains => _archivedDomains;
+
+  /// Habit count per domain ID.
+  Map<String, int> _habitCounts = {};
+  int getHabitCount(String domainId) => _habitCounts[domainId] ?? 0;
 
   bool _showArchived = false;
   bool get showArchived => _showArchived;
@@ -38,6 +44,22 @@ class DomainsViewModel extends BaseViewModel {
         _archivedDomains = domains.where((d) => d.isArchived).toList();
       },
     );
+
+    // Load habit counts per domain
+    final habitsResult = await _habitRepo.getHabits(isArchived: false);
+    habitsResult.fold(
+      (failure) {}, // Non-blocking — counts just stay 0
+      (habits) {
+        final counts = <String, int>{};
+        for (final habit in habits) {
+          if (habit.domainId != null) {
+            counts[habit.domainId!] = (counts[habit.domainId!] ?? 0) + 1;
+          }
+        }
+        _habitCounts = counts;
+      },
+    );
+
     rebuildUi();
   }
 

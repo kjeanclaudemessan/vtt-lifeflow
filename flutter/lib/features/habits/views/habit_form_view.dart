@@ -5,12 +5,15 @@ import '../../../core/enums/lifeflow_enums.dart';
 import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 import '../../../domain/entities/domain_entity.dart';
+import '../../../domain/entities/habit_entity.dart';
 import '../../domains/widgets/domain_picker_sheet.dart';
 import '../viewmodels/habit_form_viewmodel.dart';
 
 /// View for creating / editing a habit.
 class HabitFormView extends StackedView<HabitFormViewModel> {
-  const HabitFormView({Key? key}) : super(key: key);
+  final HabitEntity? habit;
+
+  const HabitFormView({Key? key, this.habit}) : super(key: key);
 
   @override
   Widget builder(
@@ -518,5 +521,6 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
       HabitFormViewModel();
 
   @override
-  void onViewModelReady(HabitFormViewModel viewModel) => viewModel.init();
+  void onViewModelReady(HabitFormViewModel viewModel) =>
+      viewModel.init(habit: habit);
 }

@@ -8,6 +8,7 @@
 import 'package:flutter/foundation.dart' as _i22;
 import 'package:flutter/material.dart' as _i20;
 import 'package:flutter/material.dart';
+import 'package:lifeflow/domain/entities/habit_entity.dart' as _i26;
 import 'package:lifeflow/features/bilan/views/bilan_view.dart' as _i19;
 import 'package:lifeflow/features/counter/views/counter_view.dart' as _i17;
 import 'package:lifeflow/features/domains/views/domains_view.dart' as _i14;
@@ -35,7 +36,7 @@ import 'package:lifeflow/ui/views/design_showcase/design_showcase_view.dart'
 import 'package:lifeflow/ui/views/home/home_view.dart' as _i11;
 import 'package:lifeflow/ui/views/startup/startup_view.dart' as _i12;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i26;
+import 'package:stacked_services/stacked_services.dart' as _i27;
 
 class Routes {
   static const splashView = '/';
@@ -278,8 +279,12 @@ class StackedRouter extends _i1.RouterBase {
       );
     },
     _i16.HabitFormView: (data) {
+      final args = data.getArgs<HabitFormViewArguments>(
+        orElse: () => const HabitFormViewArguments(),
+      );
       return _i20.MaterialPageRoute<dynamic>(
-        builder: (context) => const _i16.HabitFormView(),
+        builder: (context) =>
+            _i16.HabitFormView(key: args.key, habit: args.habit),
         settings: data,
       );
     },
@@ -445,7 +450,34 @@ class NotificationsViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i26.NavigationService {
+class HabitFormViewArguments {
+  const HabitFormViewArguments({
+    this.key,
+    this.habit,
+  });
+
+  final _i22.Key? key;
+
+  final _i26.HabitEntity? habit;
+
+  @override
+  String toString() {
+    return '{"key": "$key", "habit": "$habit"}';
+  }
+
+  @override
+  bool operator ==(covariant HabitFormViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.key == key && other.habit == habit;
+  }
+
+  @override
+  int get hashCode {
+    return key.hashCode ^ habit.hashCode;
+  }
+}
+
+extension NavigatorStateExtension on _i27.NavigationService {
   Future<dynamic> navigateToSplashView([
     int? routerId,
     bool preventDuplicates = true,
@@ -657,14 +689,17 @@ extension NavigatorStateExtension on _i26.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToHabitFormView([
+  Future<dynamic> navigateToHabitFormView({
+    _i22.Key? key,
+    _i26.HabitEntity? habit,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return navigateTo<dynamic>(Routes.habitFormView,
+        arguments: HabitFormViewArguments(key: key, habit: habit),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -924,14 +959,17 @@ extension NavigatorStateExtension on _i26.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> replaceWithHabitFormView([
+  Future<dynamic> replaceWithHabitFormView({
+    _i22.Key? key,
+    _i26.HabitEntity? habit,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return replaceWith<dynamic>(Routes.habitFormView,
+        arguments: HabitFormViewArguments(key: key, habit: habit),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

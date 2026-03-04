@@ -8,6 +8,8 @@ import '../../../domain/entities/domain_entity.dart';
 import '../../../domain/entities/habit_entity.dart';
 import '../../../domain/repositories/i_domain_repository.dart';
 import '../../../domain/repositories/i_habit_repository.dart';
+import '../../../services/analytics/analytics_service.dart';
+import '../../../services/local_notification/local_notification_scheduler.dart';
 
 /// ViewModel for the habit create/edit form.
 class HabitFormViewModel extends BaseViewModel {
@@ -197,9 +199,22 @@ class HabitFormViewModel extends BaseViewModel {
         setError(failure.message);
         setBusy(false);
       },
-      (_) {
+      (savedHabit) {
+        locator<AnalyticsService>().capture(
+          isEditMode ? 'habit_updated' : 'habit_created',
+          properties: {
+            'domain': _selectedDomain?.name ?? '',
+            'type': _type.name,
+            'frequency': _frequency.name,
+            'has_time_slot': _startTime != null,
+          },
+        );
+
+        // Schedule/update local notification reminder
+        locator<LocalNotificationScheduler>().scheduleHabitReminder(savedHabit);
+
         setBusy(false);
-        _navigationService.back();
+        _navigationService.back(result: true);
       },
     );
   }

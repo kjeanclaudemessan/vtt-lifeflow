@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -8,6 +10,7 @@ import '../../../core/core.dart';
 import '../../../core/enums/auth_enums.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../domain/repositories/i_auth_repository.dart';
+import '../../../services/supabase/supabase_auth_service.dart';
 import '../config/auth_config.dart';
 
 /// ViewModel for the Login screen.
@@ -16,6 +19,29 @@ import '../config/auth_config.dart';
 class LoginViewModel extends BaseViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final IAuthRepository _authRepository = locator<IAuthRepository>();
+  final SupabaseAuthService _authService = locator<SupabaseAuthService>();
+
+  StreamSubscription? _authSubscription;
+  bool _isWaitingForOAuth = false;
+  bool get isWaitingForOAuth => _isWaitingForOAuth;
+
+  /// Start listening for OAuth completion (auth state change).
+  void _listenForOAuthCompletion() {
+    _authSubscription?.cancel();
+    _authSubscription = _authService.authStateChanges.listen((user) {
+      if (user != null && _isWaitingForOAuth) {
+        _isWaitingForOAuth = false;
+        _authSubscription?.cancel();
+        _navigationService.clearStackAndShow(Routes.homeView);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    super.dispose();
+  }
 
   /// Configuration for the auth module.
   AuthConfig get config => const AuthConfig();
@@ -164,10 +190,18 @@ class LoginViewModel extends BaseViewModel {
 
   void _handleOAuthResult(Either<Failure, bool> result) {
     result.fold(
-      (failure) => setError(failure.message),
+      (failure) {
+        _isWaitingForOAuth = false;
+        setError(failure.message);
+      },
       (success) {
         if (success) {
-          _navigationService.clearStackAndShow(Routes.homeView);
+          // Don't navigate here — the browser just opened.
+          // Navigation happens in _listenForOAuthCompletion when
+          // onAuthStateChange fires with a valid session.
+          _isWaitingForOAuth = true;
+          _listenForOAuthCompletion();
+          rebuildUi();
         }
       },
     );

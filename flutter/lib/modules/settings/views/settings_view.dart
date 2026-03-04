@@ -123,7 +123,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
                 bottom: AppSpacing.sm,
               ),
               child: Text(
-                _getSectionTitle(section.titleKey),
+                _getSectionTitle(context, section.titleKey),
                 style: AppTypography.labelLarge.copyWith(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w600,
@@ -160,7 +160,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
     if (item.type == SettingsItemType.toggle) {
       return AppSwitchListTile(
         icon: item.icon,
-        title: _getItemTitle(item.titleKey),
+        title: _getItemTitle(context, item.titleKey),
         value: viewModel.getToggleValue(item.id),
         onChanged: (value) => viewModel.setToggleValue(item.id, value),
       );
@@ -170,7 +170,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
     if (item.destructive) {
       return AppIconListTile(
         icon: item.icon ?? Icons.warning_outlined,
-        title: _getItemTitle(item.titleKey),
+        title: _getItemTitle(context, item.titleKey),
         isDestructive: true,
         showChevron: item.type == SettingsItemType.navigation ||
             item.type == SettingsItemType.link,
@@ -182,7 +182,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
     // For other items
     return AppIconListTile(
       icon: item.icon ?? Icons.settings_outlined,
-      title: _getItemTitle(item.titleKey),
+      title: _getItemTitle(context, item.titleKey),
       showChevron: false,
       trailing: _buildTrailing(context, viewModel, item),
       onTap: () => _handleItemTap(context, viewModel, item),
@@ -220,7 +220,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
               ],
               Expanded(
                 child: Text(
-                  _getItemTitle(item.titleKey),
+                  _getItemTitle(context, item.titleKey),
                   style: AppTypography.bodyMedium.copyWith(
                     color: item.destructive
                         ? AppColors.error
@@ -252,7 +252,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              viewModel.getThemeModeLabel(viewModel.themeMode),
+              _getThemeModeLabel(context, viewModel.themeMode),
               style: AppTypography.bodyMedium.copyWith(
                 color: AppColors.neutral500,
               ),
@@ -315,7 +315,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
   void _showThemePicker(BuildContext context, SettingsViewModel viewModel) {
     AppBottomSheet.show(
       context: context,
-      title: 'Theme',
+      title: context.l10n.settingsSelectTheme,
       child: ThemePickerSheet(
         currentTheme: viewModel.themeMode,
         onThemeSelected: viewModel.setThemeMode,
@@ -326,7 +326,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
   void _showLanguagePicker(BuildContext context, SettingsViewModel viewModel) {
     AppBottomSheet.show(
       context: context,
-      title: 'Language',
+      title: context.l10n.settingsSelectLanguage,
       child: LanguagePickerSheet(
         currentLocale: viewModel.locale,
         onLocaleSelected: viewModel.setLocale,
@@ -334,32 +334,47 @@ class SettingsView extends StackedView<SettingsViewModel> {
     );
   }
 
-  String _getSectionTitle(String key) {
+  String _getSectionTitle(BuildContext context, String key) {
+    final l10n = context.l10n;
     return switch (key) {
-      'settingsAppearance' => 'Appearance',
-      'settingsNotifications' => 'Notifications',
-      'settingsLegal' => 'Legal',
-      'settingsAccount' => 'Account',
-      'settingsAbout' => 'About',
+      'settingsAppearance' => l10n.settingsAppearance,
+      'settingsNotifications' => l10n.settingsNotifications,
+      'settingsLegal' => l10n.settingsLegal,
+      'settingsAccount' => l10n.settingsAccount,
+      'settingsAbout' => l10n.settingsAbout,
+      'habitsTitle' => l10n.habitsTitle,
       _ => key,
     };
   }
 
-  String _getItemTitle(String key) {
+  String _getItemTitle(BuildContext context, String key) {
+    final l10n = context.l10n;
     return switch (key) {
-      'settingsTheme' => 'Theme',
-      'settingsLanguage' => 'Language',
-      'settingsPushNotifications' => 'Push Notifications',
-      'settingsEmailNotifications' => 'Email Notifications',
-      'settingsTerms' => 'Terms of Service',
-      'settingsPrivacy' => 'Privacy Policy',
-      'settingsChangePassword' => 'Change Password',
-      'settingsLogout' => 'Logout',
-      'settingsDeleteAccount' => 'Delete Account',
-      'settingsVersion' => 'Version',
-      'settingsRateApp' => 'Rate App',
-      'settingsShareApp' => 'Share App',
+      'settingsTheme' => l10n.settingsTheme,
+      'settingsLanguage' => l10n.settingsLanguage,
+      'settingsPushNotifications' => l10n.settingsPushNotifications,
+      'settingsEmailNotifications' => l10n.settingsEmailNotifications,
+      'notificationPreferences' => l10n.notificationPreferences,
+      'settingsTerms' => l10n.settingsTerms,
+      'settingsPrivacy' => l10n.settingsPrivacy,
+      'profile' => l10n.profile,
+      'settingsChangePassword' => l10n.settingsChangePassword,
+      'settingsLogout' => l10n.settingsLogout,
+      'settingsDeleteAccount' => l10n.settingsDeleteAccount,
+      'settingsVersion' => l10n.settingsVersion,
+      'settingsRateApp' => l10n.settingsRateApp,
+      'settingsShareApp' => l10n.settingsShareApp,
+      'streakFreeze' => l10n.streakFreeze,
       _ => key,
+    };
+  }
+
+  String _getThemeModeLabel(BuildContext context, ThemeMode mode) {
+    final l10n = context.l10n;
+    return switch (mode) {
+      ThemeMode.system => l10n.settingsThemeSystem,
+      ThemeMode.light => l10n.settingsThemeLight,
+      ThemeMode.dark => l10n.settingsThemeDark,
     };
   }
 

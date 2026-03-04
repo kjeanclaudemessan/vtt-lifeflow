@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:image_picker/image_picker.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../app/app.locator.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../domain/repositories/i_auth_repository.dart';
+import '../../../services/storage/storage_service.dart';
 import '../config/profile_config.dart';
 
 /// ViewModel for the Edit Profile view.
@@ -14,6 +17,8 @@ import '../config/profile_config.dart';
 class EditProfileViewModel extends BaseViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final IAuthRepository _authRepository = locator<IAuthRepository>();
+  final StorageService _storageService = locator<StorageService>();
+  final ImagePicker _imagePicker = ImagePicker();
 
   /// Profile configuration.
   final ProfileConfig config;
@@ -207,16 +212,27 @@ class EditProfileViewModel extends BaseViewModel {
   // AVATAR
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /// Pick a new avatar image.
+  /// Pick a new avatar image from gallery.
   Future<void> pickAvatar() async {
-    // TODO: Implement image picker
-    // final picker = ImagePicker();
-    // final image = await picker.pickImage(source: ImageSource.gallery);
-    // if (image != null) {
-    //   _avatarFile = File(image.path);
-    //   rebuildUi();
-    // }
+    try {
+      final image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 80,
+      );
+      if (image != null) {
+        _avatarFile = File(image.path);
+        _avatarXFile = image;
+        rebuildUi();
+      }
+    } catch (e) {
+      setError('Impossible de charger l\'image');
+    }
   }
+
+  /// The XFile for upload.
+  XFile? _avatarXFile;
 
   /// Remove the avatar.
   void removeAvatar() {
@@ -271,11 +287,21 @@ class EditProfileViewModel extends BaseViewModel {
       };
     }
 
-    // TODO: Handle avatar upload if changed
-    // if (_avatarFile != null) {
-    //   final avatarUrl = await _uploadAvatar();
-    //   updateData['avatar_url'] = avatarUrl;
-    // }
+    // Handle avatar upload if changed
+    if (_avatarXFile != null) {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId != null) {
+        final uploadResult = await runBusyFuture(
+          _storageService.uploadAvatar(userId: userId, file: _avatarXFile!),
+          busyObject: uploadingBusyKey,
+        );
+        uploadResult.fold(
+          (failure) => setError(failure.message),
+          (url) => updateData['avatar_url'] = url,
+        );
+        if (hasError) return;
+      }
+    }
 
     final metadata = updateData['metadata'] as Map<String, dynamic>?;
 

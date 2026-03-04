@@ -59,10 +59,11 @@ class _NotificationPreferencesSheetState
   }
 
   Widget _buildChannelTile(NotificationChannel channel, bool isEnabled) {
+    final l10n = context.l10n;
     return AppSwitchListTile(
       icon: channel.icon,
-      title: _getChannelName(channel.nameKey),
-      subtitle: _getChannelDescription(channel.descriptionKey),
+      title: _getChannelName(l10n, channel.nameKey),
+      subtitle: _getChannelDescription(l10n, channel.descriptionKey),
       value: isEnabled,
       onChanged: (value) {
         setState(() {
@@ -73,25 +74,32 @@ class _NotificationPreferencesSheetState
     );
   }
 
-  // TODO: Replace with actual l10n
-  String _getChannelName(String key) {
+  /// Resolve channel name via l10n.
+  String _getChannelName(AppLocalizations l10n, String key) {
     return switch (key) {
-      'notificationsChannelMarketing' => 'Promotions & Offers',
-      'notificationsChannelOrders' => 'Orders & Transactions',
-      'notificationsChannelReminders' => 'Reminders',
-      'notificationsChannelSocial' => 'Social Updates',
+      'notificationsChannelMarketing' => l10n.notificationsChannelMarketing,
+      'notificationsChannelOrders' => l10n.notificationsChannelOrders,
+      'notificationsChannelReminders' => l10n.notificationsChannelReminders,
+      'notificationsChannelSocial' => l10n.notificationsChannelSocial,
+      'notificationsChannelStreaks' => l10n.notificationsChannelStreaks,
+      'notificationsChannelBilan' => l10n.notificationsChannelBilan,
+      'notificationsChannelGeneral' => l10n.notificationsChannelGeneral,
       _ => key,
     };
   }
 
-  String _getChannelDescription(String key) {
+  /// Resolve channel description via l10n.
+  String _getChannelDescription(AppLocalizations l10n, String key) {
     return switch (key) {
       'notificationsChannelMarketingDesc' =>
-        'Receive special offers and promotions',
-      'notificationsChannelOrdersDesc' =>
-        'Updates about your orders and payments',
-      'notificationsChannelRemindersDesc' => 'Important reminders and alerts',
-      'notificationsChannelSocialDesc' => 'Activity from people you follow',
+        l10n.notificationsChannelMarketingDesc,
+      'notificationsChannelOrdersDesc' => l10n.notificationsChannelOrdersDesc,
+      'notificationsChannelRemindersDesc' =>
+        l10n.notificationsChannelRemindersDesc,
+      'notificationsChannelSocialDesc' => l10n.notificationsChannelSocialDesc,
+      'notificationsChannelStreaksDesc' => l10n.notificationsChannelStreaksDesc,
+      'notificationsChannelBilanDesc' => l10n.notificationsChannelBilanDesc,
+      'notificationsChannelGeneralDesc' => l10n.notificationsChannelGeneralDesc,
       _ => key,
     };
   }

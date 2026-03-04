@@ -1,10 +1,12 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:stacked/stacked.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../app/app.locator.dart';
 import '../../core/errors/error_handler.dart';
 import '../../core/errors/failures.dart';
+import '../analytics/analytics_service.dart';
 import 'supabase_service.dart';
 
 /// Authentication status.
@@ -90,6 +92,7 @@ class SupabaseAuthService with ListenableServiceMixin {
     if (user != null) {
       _currentUser.value = user;
       _authStatus.value = AuthStatus.authenticated;
+      _identifyUser(user);
     } else {
       _authStatus.value = AuthStatus.unauthenticated;
     }
@@ -106,9 +109,11 @@ class SupabaseAuthService with ListenableServiceMixin {
       case AuthChangeEvent.signedIn:
         _currentUser.value = session?.user;
         _authStatus.value = AuthStatus.authenticated;
+        if (session?.user != null) _identifyUser(session!.user);
       case AuthChangeEvent.signedOut:
         _currentUser.value = null;
         _authStatus.value = AuthStatus.unauthenticated;
+        locator<AnalyticsService>().reset();
       case AuthChangeEvent.tokenRefreshed:
         _currentUser.value = session?.user;
       case AuthChangeEvent.userUpdated:
@@ -116,6 +121,18 @@ class SupabaseAuthService with ListenableServiceMixin {
       default:
         break;
     }
+  }
+
+  /// Identify the user in analytics after authentication.
+  void _identifyUser(User user) {
+    locator<AnalyticsService>().identify(
+      userId: user.id,
+      properties: {
+        if (user.email != null) 'email': user.email!,
+        'provider': user.appMetadata['provider'] ?? 'email',
+        'created_at': user.createdAt,
+      },
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -176,9 +193,13 @@ class SupabaseAuthService with ListenableServiceMixin {
     String? redirectTo,
   }) async {
     try {
+      // Web: redirect back to current origin (e.g. http://localhost:3000)
+      // Mobile: use deep link scheme to reopen the app
+      final defaultRedirect =
+          kIsWeb ? Uri.base.origin : 'com.vitatech.lifeflow://login-callback/';
       final success = await _supabase.client.auth.signInWithOAuth(
         provider,
-        redirectTo: redirectTo ?? 'com.vitatech.lifeflow://login-callback/',
+        redirectTo: redirectTo ?? defaultRedirect,
       );
       return Right(success);
     } catch (e) {

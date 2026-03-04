@@ -101,7 +101,7 @@ class BilanService {
       // Count expected days this week
       for (int d = 0; d < 7; d++) {
         final date = weekStartDate.add(Duration(days: d));
-        final weekday = date.weekday % 7; // 0=Sun, 6=Sat
+        final weekday = date.weekday; // 1=Mon..7=Sun (matches frequencyDays)
 
         final isScheduled = switch (habit.frequency) {
           HabitFrequency.daily => true,
@@ -143,7 +143,7 @@ class BilanService {
 
       for (int d = 0; d < 7; d++) {
         final date = weekStartDate.add(Duration(days: d));
-        final weekday = date.weekday % 7;
+        final weekday = date.weekday; // 1=Mon..7=Sun (matches frequencyDays)
 
         final isScheduled = switch (habit.frequency) {
           HabitFrequency.daily => true,

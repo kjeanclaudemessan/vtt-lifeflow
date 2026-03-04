@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="180" fill="#00B894" opacity="0.06"/>
+  <circle cx="200" cy="200" r="140" fill="#00B894" opacity="0.08"/>
+
+  <!-- Clock face -->
+  <circle cx="200" cy="175" r="85" fill="white" stroke="#00B894" stroke-width="4"/>
+  <circle cx="200" cy="175" r="78" fill="none" stroke="#00B894" stroke-width="1" opacity="0.2"/>
+
+  <!-- Hour markers -->
+  <line x1="200" y1="96" x2="200" y2="106" stroke="#2D3436" stroke-width="3" stroke-linecap="round"/>
+  <line x1="200" y1="244" x2="200" y2="254" stroke="#2D3436" stroke-width="3" stroke-linecap="round"/>
+  <line x1="121" y1="175" x2="131" y2="175" stroke="#2D3436" stroke-width="3" stroke-linecap="round"/>
+  <line x1="269" y1="175" x2="279" y2="175" stroke="#2D3436" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Small markers -->
+  <circle cx="237" cy="107" r="2.5" fill="#636E72"/>
+  <circle cx="268" cy="138" r="2.5" fill="#636E72"/>
+  <circle cx="268" cy="212" r="2.5" fill="#636E72"/>
+  <circle cx="237" cy="243" r="2.5" fill="#636E72"/>
+  <circle cx="163" cy="243" r="2.5" fill="#636E72"/>
+  <circle cx="132" cy="212" r="2.5" fill="#636E72"/>
+  <circle cx="132" cy="138" r="2.5" fill="#636E72"/>
+  <circle cx="163" cy="107" r="2.5" fill="#636E72"/>
+
+  <!-- Clock hands -->
+  <line x1="200" y1="175" x2="200" y2="120" stroke="#2D3436" stroke-width="4" stroke-linecap="round"/>
+  <line x1="200" y1="175" x2="240" y2="155" stroke="#00B894" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Center dot -->
+  <circle cx="200" cy="175" r="5" fill="#00B894"/>
+
+  <!-- Domain time segments around clock (arc sectors) -->
+  <!-- Spiritual - purple arc -->
+  <path d="M200 68 A107 107 0 0 1 285 115" stroke="#6C5CE7" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <!-- Health - green arc -->
+  <path d="M290 125 A107 107 0 0 1 295 210" stroke="#00B894" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <!-- Work - blue arc -->
+  <path d="M290 220 A107 107 0 0 1 225 280" stroke="#0984E3" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <!-- Family - orange arc -->
+  <path d="M175 280 A107 107 0 0 1 110 220" stroke="#FDCB6E" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.7"/>
+
+  <!-- Domain labels -->
+  <g font-size="10" font-weight="600" text-anchor="middle">
+    <text x="255" y="82" fill="#6C5CE7">⛪</text>
+    <text x="310" y="170" fill="#00B894">💪</text>
+    <text x="268" y="285" fill="#0984E3">💼</text>
+    <text x="130" y="285" fill="#FDCB6E">👨‍👩‍👧</text>
+  </g>
+
+  <!-- Bottom bar chart -->
+  <g transform="translate(105, 310)">
+    <rect x="0" y="25" width="30" height="45" rx="4" fill="#6C5CE7" opacity="0.8"/>
+    <rect x="40" y="15" width="30" height="55" rx="4" fill="#00B894" opacity="0.8"/>
+    <rect x="80" y="5" width="30" height="65" rx="4" fill="#0984E3" opacity="0.8"/>
+    <rect x="120" y="30" width="30" height="40" rx="4" fill="#FDCB6E" opacity="0.8"/>
+    <rect x="160" y="40" width="30" height="30" rx="4" fill="#FD79A8" opacity="0.8"/>
+
+    <!-- Hours labels -->
+    <text x="15" y="80" fill="#636E72" font-size="9" text-anchor="middle" font-weight="500">5h</text>
+    <text x="55" y="80" fill="#636E72" font-size="9" text-anchor="middle" font-weight="500">7h</text>
+    <text x="95" y="80" fill="#636E72" font-size="9" text-anchor="middle" font-weight="500">8h</text>
+    <text x="135" y="80" fill="#636E72" font-size="9" text-anchor="middle" font-weight="500">4h</text>
+    <text x="175" y="80" fill="#636E72" font-size="9" text-anchor="middle" font-weight="500">3h</text>
+  </g>
+
+  <!-- Floating elements -->
+  <circle cx="70" cy="110" r="6" fill="#00B894" opacity="0.3"/>
+  <circle cx="330" cy="90" r="5" fill="#0984E3" opacity="0.3"/>
+  <circle cx="60" cy="250" r="4" fill="#FDCB6E" opacity="0.4"/>
+</svg>

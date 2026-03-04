@@ -69,7 +69,7 @@ class DomainsView extends StackedView<DomainsViewModel> {
                     return DomainTile(
                       key: ValueKey(domain.id),
                       domain: domain,
-                      habitCount: 0, // TODO: wire habit counts
+                      habitCount: viewModel.getHabitCount(domain.id),
                       onTap: () => _showEditDomainDialog(
                         context,
                         viewModel,

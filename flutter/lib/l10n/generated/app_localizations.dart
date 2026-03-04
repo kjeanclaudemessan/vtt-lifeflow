@@ -1097,37 +1097,37 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingSlide1Title.
   ///
   /// In en, this message translates to:
-  /// **'Welcome'**
+  /// **'Build your habits'**
   String get onboardingSlide1Title;
 
   /// No description provided for @onboardingSlide1Description.
   ///
   /// In en, this message translates to:
-  /// **'Discover all the features of our app designed to make your life easier.'**
+  /// **'Create daily habits, organize them by life domain and track your progress every day.'**
   String get onboardingSlide1Description;
 
   /// No description provided for @onboardingSlide2Title.
   ///
   /// In en, this message translates to:
-  /// **'Stay Connected'**
+  /// **'Track your time'**
   String get onboardingSlide2Title;
 
   /// No description provided for @onboardingSlide2Description.
   ///
   /// In en, this message translates to:
-  /// **'Get real-time updates and notifications to never miss anything important.'**
+  /// **'Visualize the time invested in each domain with the automatic counter. Every checked habit counts.'**
   String get onboardingSlide2Description;
 
   /// No description provided for @onboardingSlide3Title.
   ///
   /// In en, this message translates to:
-  /// **'Get Started'**
+  /// **'Progress every week'**
   String get onboardingSlide3Title;
 
   /// No description provided for @onboardingSlide3Description.
   ///
   /// In en, this message translates to:
-  /// **'Create your account and start your journey with us today.'**
+  /// **'Receive your weekly review, maintain your streaks and become the best version of yourself.'**
   String get onboardingSlide3Description;
 
   /// No description provided for @onboardingDomainsTitle.
@@ -1310,17 +1310,35 @@ abstract class AppLocalizations {
   /// **'System'**
   String get settingsThemeSystem;
 
+  /// No description provided for @settingsThemeSystemDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow device settings'**
+  String get settingsThemeSystemDesc;
+
   /// No description provided for @settingsThemeLight.
   ///
   /// In en, this message translates to:
   /// **'Light'**
   String get settingsThemeLight;
 
+  /// No description provided for @settingsThemeLightDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Always use light theme'**
+  String get settingsThemeLightDesc;
+
   /// No description provided for @settingsThemeDark.
   ///
   /// In en, this message translates to:
   /// **'Dark'**
   String get settingsThemeDark;
+
+  /// No description provided for @settingsThemeDarkDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Always use dark theme'**
+  String get settingsThemeDarkDesc;
 
   /// No description provided for @settingsLanguageEnglish.
   ///
@@ -1417,6 +1435,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Activity from people you follow'**
   String get notificationsChannelSocialDesc;
+
+  /// No description provided for @notificationsChannelStreaks.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaks'**
+  String get notificationsChannelStreaks;
+
+  /// No description provided for @notificationsChannelStreaksDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications when you maintain or lose a streak'**
+  String get notificationsChannelStreaksDesc;
+
+  /// No description provided for @notificationsChannelBilan.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly review'**
+  String get notificationsChannelBilan;
+
+  /// No description provided for @notificationsChannelBilanDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive your weekly review every Sunday'**
+  String get notificationsChannelBilanDesc;
+
+  /// No description provided for @notificationsChannelGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get notificationsChannelGeneral;
+
+  /// No description provided for @notificationsChannelGeneralDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'General updates and information'**
+  String get notificationsChannelGeneralDesc;
 
   /// No description provided for @domainsTitle.
   ///
