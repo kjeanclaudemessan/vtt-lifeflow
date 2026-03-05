@@ -26,6 +26,7 @@ import '../services/api/api_service.dart';
 import '../services/bilan_service.dart';
 import '../services/connectivity/connectivity_service.dart';
 import '../services/dialog/dialog_helper.dart';
+import '../services/habit_event_service.dart';
 import '../services/local_notification/local_notification_scheduler.dart';
 import '../services/moneroo/moneroo_service.dart';
 import '../services/push_notification/push_notification_service.dart';
@@ -70,6 +71,7 @@ Future<void> setupLocator({
   locator.registerLazySingleton<IHabitRepository>(() => HabitRepositoryImpl());
   locator.registerLazySingleton<INotificationRepository>(
       () => NotificationRepositoryImpl());
+  locator.registerLazySingleton(() => HabitEventService());
   locator.registerLazySingleton(() => TimeCounterService());
   locator.registerLazySingleton(() => BilanService());
   locator.registerLazySingleton(() => PaymentService());

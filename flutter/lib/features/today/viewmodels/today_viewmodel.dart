@@ -10,6 +10,7 @@ import '../../../domain/repositories/i_domain_repository.dart';
 import '../../../domain/repositories/i_habit_repository.dart';
 import '../../../domain/repositories/i_notification_repository.dart';
 import '../../../services/analytics/analytics_service.dart';
+import '../../../services/habit_event_service.dart';
 import '../../../services/time_counter_service.dart';
 
 /// ViewModel for the today dashboard.
@@ -20,6 +21,7 @@ class TodayViewModel extends BaseViewModel {
   final _domainRepo = locator<IDomainRepository>();
   final _counterService = locator<TimeCounterService>();
   final _notifRepo = locator<INotificationRepository>();
+  final _habitEvents = locator<HabitEventService>();
 
   List<HabitEntity> _todayHabits = [];
   List<DomainEntity> _domains = [];
@@ -99,9 +101,20 @@ class TodayViewModel extends BaseViewModel {
   }
 
   Future<void> init() async {
+    _habitEvents.addListener(_onHabitDataChanged);
     setBusy(true);
     await _loadData();
     setBusy(false);
+  }
+
+  void _onHabitDataChanged() {
+    _loadData();
+  }
+
+  @override
+  void dispose() {
+    _habitEvents.removeListener(_onHabitDataChanged);
+    super.dispose();
   }
 
   Future<void> _loadData() async {
@@ -231,6 +244,9 @@ class TodayViewModel extends BaseViewModel {
         rebuildUi();
       },
     );
+
+    // Notify other views (Habits, Counter) about the toggle
+    _habitEvents.notifyHabitChanged();
   }
 
   /// Refresh all data.

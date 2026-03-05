@@ -1,4 +1,5 @@
 import 'package:lifeflow/services/analytics/analytics_service.dart';
+import 'package:lifeflow/services/habit_event_service.dart';
 import 'package:lifeflow/services/local_notification/local_notification_scheduler.dart';
 import 'package:lifeflow/services/moneroo/moneroo_service.dart';
 import 'package:lifeflow/services/push_notification/push_notification_service.dart';
@@ -157,6 +158,7 @@ import 'package:lifeflow/ui/views/startup/startup_view.dart';
     // ═══════════════════════════════════════════════════════════════════════
     // FEATURE SERVICES (Phase 1)
     // ═══════════════════════════════════════════════════════════════════════
+    LazySingleton(classType: HabitEventService),
     LazySingleton(classType: TimeCounterService),
     LazySingleton(classType: BilanService),
 

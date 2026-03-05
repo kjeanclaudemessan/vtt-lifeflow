@@ -7,6 +7,7 @@ import '../../../domain/entities/habit_log_entity.dart';
 import '../../../domain/entities/time_counter.dart';
 import '../../../domain/repositories/i_domain_repository.dart';
 import '../../../domain/repositories/i_habit_repository.dart';
+import '../../../services/habit_event_service.dart';
 import '../../../services/time_counter_service.dart';
 
 /// ViewModel for the weekly time counter view.
@@ -16,6 +17,7 @@ class CounterViewModel extends BaseViewModel {
   final _habitRepo = locator<IHabitRepository>();
   final _domainRepo = locator<IDomainRepository>();
   final _counterService = locator<TimeCounterService>();
+  final _habitEvents = locator<HabitEventService>();
 
   List<TimeCounter> _counters = [];
   List<TimeCounter> get counters => _counters;
@@ -71,9 +73,20 @@ class CounterViewModel extends BaseViewModel {
   }
 
   Future<void> init() async {
+    _habitEvents.addListener(_onHabitDataChanged);
     setBusy(true);
     await _loadData();
     setBusy(false);
+  }
+
+  void _onHabitDataChanged() {
+    _loadData();
+  }
+
+  @override
+  void dispose() {
+    _habitEvents.removeListener(_onHabitDataChanged);
+    super.dispose();
   }
 
   Future<void> _loadData() async {

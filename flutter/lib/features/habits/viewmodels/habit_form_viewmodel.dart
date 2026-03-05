@@ -9,6 +9,7 @@ import '../../../domain/entities/habit_entity.dart';
 import '../../../domain/repositories/i_domain_repository.dart';
 import '../../../domain/repositories/i_habit_repository.dart';
 import '../../../services/analytics/analytics_service.dart';
+import '../../../services/habit_event_service.dart';
 import '../../../services/local_notification/local_notification_scheduler.dart';
 
 /// ViewModel for the habit create/edit form.
@@ -212,6 +213,9 @@ class HabitFormViewModel extends BaseViewModel {
 
         // Schedule/update local notification reminder
         locator<LocalNotificationScheduler>().scheduleHabitReminder(savedHabit);
+
+        // Notify all listening views (Today, Habits, Counter) to refresh
+        locator<HabitEventService>().notifyHabitChanged();
 
         setBusy(false);
         _navigationService.back(result: true);

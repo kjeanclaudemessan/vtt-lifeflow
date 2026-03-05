@@ -8,6 +8,7 @@ import '../../../domain/entities/habit_log_entity.dart';
 import '../../../domain/entities/streak_info.dart';
 import '../../../domain/repositories/i_domain_repository.dart';
 import '../../../domain/repositories/i_habit_repository.dart';
+import '../../../services/habit_event_service.dart';
 
 /// ViewModel for the habits list view.
 ///
@@ -15,6 +16,7 @@ import '../../../domain/repositories/i_habit_repository.dart';
 class HabitsViewModel extends BaseViewModel {
   final _habitRepo = locator<IHabitRepository>();
   final _domainRepo = locator<IDomainRepository>();
+  final _habitEvents = locator<HabitEventService>();
 
   List<HabitEntity> _allHabits = [];
   List<DomainEntity> _domains = [];
@@ -74,9 +76,20 @@ class HabitsViewModel extends BaseViewModel {
   HabitLogEntity? todayLogFor(String habitId) => _todayLogs[habitId];
 
   Future<void> init() async {
+    _habitEvents.addListener(_onHabitDataChanged);
     setBusy(true);
     await _loadData();
     setBusy(false);
+  }
+
+  void _onHabitDataChanged() {
+    _loadData();
+  }
+
+  @override
+  void dispose() {
+    _habitEvents.removeListener(_onHabitDataChanged);
+    super.dispose();
   }
 
   Future<void> _loadData() async {
@@ -180,6 +193,9 @@ class HabitsViewModel extends BaseViewModel {
         rebuildUi();
       },
     );
+
+    // Notify other views (Today, Counter) about the toggle
+    _habitEvents.notifyHabitChanged();
   }
 
   /// Archives a habit.
@@ -189,7 +205,9 @@ class HabitsViewModel extends BaseViewModel {
       (failure) => setError(failure.message),
       (_) {},
     );
-    if (result.isRight()) await _loadData();
+    if (result.isRight()) {
+      _habitEvents.notifyHabitChanged();
+    }
   }
 
   /// Refreshes data.
