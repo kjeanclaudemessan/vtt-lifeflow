@@ -45,12 +45,14 @@ class RegisterViewModel extends BaseViewModel {
   String _email = AppConfig.isDevelopment ? 'messanjeanclaude@gmail.com' : '';
   String get email => _email;
 
-  String _password =
-      AppConfig.isDevelopment ? 'messanjeanclaude@gmail.com' : '';
+  String _password = AppConfig.isDevelopment
+      ? 'messanjeanclaude@gmail.com'
+      : '';
   String get password => _password;
 
-  String _confirmPassword =
-      AppConfig.isDevelopment ? 'messanjeanclaude@gmail.com' : '';
+  String _confirmPassword = AppConfig.isDevelopment
+      ? 'messanjeanclaude@gmail.com'
+      : '';
   String get confirmPassword => _confirmPassword;
 
   bool _acceptedTerms = false;
@@ -110,7 +112,8 @@ class RegisterViewModel extends BaseViewModel {
 
   bool get canSubmit {
     final hasRequiredFields = _email.isNotEmpty && _password.isNotEmpty;
-    final hasNoErrors = _emailError == null &&
+    final hasNoErrors =
+        _emailError == null &&
         _passwordError == null &&
         _confirmPasswordError == null;
     final termsOk = !config.showTermsCheckbox || _acceptedTerms;
@@ -228,29 +231,24 @@ class RegisterViewModel extends BaseViewModel {
   }
 
   void _handleAuthResult(Either<Failure, UserEntity> result) {
-    result.fold(
-      (failure) => setError(failure),
-      (user) {
-        _analytics.identify(
-          userId: user.id,
-          properties: {
-            'email': user.email,
-            'signup_method': 'email',
-          },
-        );
-        _analytics.capture('user_signed_up', properties: {
-          'method': 'email',
-        });
-        locator<PushNotificationService>().saveTokenToSupabase();
+    result.fold((failure) => setError(failure), (user) {
+      _analytics.identify(
+        userId: user.id,
+        properties: {
+          if (user.email != null) 'email': user.email!,
+          'signup_method': 'email',
+        },
+      );
+      _analytics.capture('user_signed_up', properties: {'method': 'email'});
+      locator<PushNotificationService>().saveTokenToSupabase();
 
-        if (config.requireEmailVerification) {
-          // TODO: Navigate to email verification view
-          _navigationService.clearStackAndShow(Routes.homeView);
-        } else {
-          _navigationService.clearStackAndShow(Routes.homeView);
-        }
-      },
-    );
+      if (config.requireEmailVerification) {
+        // TODO: Navigate to email verification view
+        _navigationService.clearStackAndShow(Routes.homeView);
+      } else {
+        _navigationService.clearStackAndShow(Routes.homeView);
+      }
+    });
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -307,9 +305,7 @@ class RegisterViewModel extends BaseViewModel {
             'signup_method': 'oauth',
           },
         );
-        _analytics.capture('user_signed_up', properties: {
-          'method': 'oauth',
-        });
+        _analytics.capture('user_signed_up', properties: {'method': 'oauth'});
         locator<PushNotificationService>().saveTokenToSupabase();
         _navigationService.clearStackAndShow(Routes.homeView);
       }
@@ -340,9 +336,4 @@ class RegisterViewModel extends BaseViewModel {
 }
 
 /// Password strength levels.
-enum PasswordStrength {
-  none,
-  weak,
-  medium,
-  strong,
-}
+enum PasswordStrength { none, weak, medium, strong }

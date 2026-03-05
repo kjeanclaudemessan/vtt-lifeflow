@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:flutter/foundation.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
+
+import 'connection/connection.dart' as conn
+    if (dart.library.ffi) 'connection/native.dart'
+    if (dart.library.js_interop) 'connection/web.dart'
+    if (dart.library.html) 'connection/web.dart';
 
 part 'app_database.g.dart';
 
@@ -97,7 +96,7 @@ class SyncQueue extends Table {
 
 @DriftDatabase(tables: [LocalDomains, LocalHabits, LocalHabitLogs, SyncQueue])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+  AppDatabase() : super(conn.connect());
 
   /// For testing — accepts a custom [QueryExecutor].
   AppDatabase.forTesting(super.executor);
@@ -178,14 +177,4 @@ class AppDatabase extends _$AppDatabase {
     await delete(localHabitLogs).go();
     await delete(syncQueue).go();
   }
-}
-
-/// Opens the SQLite database connection.
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'lifeflow.sqlite'));
-    debugPrint('[DB] Opening database at: ${file.path}');
-    return NativeDatabase.createInBackground(file, logStatements: false);
-  });
 }

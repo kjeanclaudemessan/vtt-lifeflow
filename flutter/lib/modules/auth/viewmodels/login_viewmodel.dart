@@ -42,9 +42,7 @@ class LoginViewModel extends BaseViewModel {
             'login_method': 'oauth',
           },
         );
-        _analytics.capture('user_logged_in', properties: {
-          'method': 'oauth',
-        });
+        _analytics.capture('user_logged_in', properties: {'method': 'oauth'});
         locator<PushNotificationService>().saveTokenToSupabase();
         _navigationService.clearStackAndShow(Routes.homeView);
       }
@@ -68,8 +66,9 @@ class LoginViewModel extends BaseViewModel {
   String _email = AppConfig.isDevelopment ? 'messanjeanclaude@gmail.com' : '';
   String get email => _email;
 
-  String _password =
-      AppConfig.isDevelopment ? 'messanjeanclaude@gmail.com' : '';
+  String _password = AppConfig.isDevelopment
+      ? 'messanjeanclaude@gmail.com'
+      : '';
   String get password => _password;
 
   bool _rememberMe = false;
@@ -196,23 +195,18 @@ class LoginViewModel extends BaseViewModel {
   }
 
   void _handleAuthResult(Either<Failure, UserEntity> result) {
-    result.fold(
-      (failure) => setError(failure),
-      (user) {
-        _analytics.identify(
-          userId: user.id,
-          properties: {
-            'email': user.email,
-            'login_method': 'email',
-          },
-        );
-        _analytics.capture('user_logged_in', properties: {
-          'method': 'email',
-        });
-        locator<PushNotificationService>().saveTokenToSupabase();
-        _navigationService.clearStackAndShow(Routes.homeView);
-      },
-    );
+    result.fold((failure) => setError(failure), (user) {
+      _analytics.identify(
+        userId: user.id,
+        properties: {
+          if (user.email != null) 'email': user.email!,
+          'login_method': 'email',
+        },
+      );
+      _analytics.capture('user_logged_in', properties: {'method': 'email'});
+      locator<PushNotificationService>().saveTokenToSupabase();
+      _navigationService.clearStackAndShow(Routes.homeView);
+    });
   }
 
   void _handleOAuthResult(Either<Failure, bool> result) {

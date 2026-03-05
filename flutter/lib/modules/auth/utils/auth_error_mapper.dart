@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/errors/failures.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 /// Maps [Failure] error codes to i18n messages.
 ///
