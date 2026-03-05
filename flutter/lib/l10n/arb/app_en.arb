@@ -504,5 +504,107 @@
         "type": "String"
       }
     }
+  },
+
+  "@_I18N_PHASE23": {},
+  "bilanViewSummary": "View summary →",
+  "bilanHighlights": "Highlights",
+  "bilanTotalTime": "Total time",
+  "bilanNoDataThisWeek": "No data this week.",
+  "bilanWeeklyReady": "Your weekly summary is ready!",
+  "habitNameHint": "E.g.: Meditate",
+  "habitDescriptionHint": "Optional description...",
+  "minuteShort": "min",
+  "domainsReorderHint": "Drag to reorder, tap to edit",
+  "domainEdit": "Edit Domain",
+  "domainArchiveConfirmTitle": "Archive \"{name}\"?",
+  "@domainArchiveConfirmTitle": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "domainArchiveConfirmMessage": "This domain will be hidden but not deleted. You can restore it.",
+  "streakConsecutiveDays": "{count} consecutive days",
+  "@streakConsecutiveDays": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "streakFreezeUsedCount": "Freeze used {count} times",
+  "@streakFreezeUsedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "streakFreezeRule": "Rule: 1 freeze max per 7-day period",
+  "errorExportData": "Error during export: {error}",
+  "@errorExportData": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "errorLoadingImage": "Unable to load image",
+  "avatarTakePhoto": "Take Photo",
+  "avatarChooseFromGallery": "Choose from Gallery",
+  "avatarRemovePhoto": "Remove Photo",
+  "passwordResetSentMessage": "We sent an email to {email} with instructions to reset your password.",
+  "@passwordResetSentMessage": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+  "semanticsCompleted": "completed",
+  "semanticsNotCompleted": "not completed",
+  "archivedCount": "Archived ({count})",
+  "@archivedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "domainFormIcon": "Icon",
+  "domainFormName": "Name",
+  "domainFormNameHint": "E.g.: Health",
+  "create": "Create",
+  "todayDaySummary": "📊 Today",
+  "total": "Total",
+  "agreeToTermsPrefix": "I agree to the ",
+  "defaultDomainHealth": "Health",
+  "defaultDomainWork": "Work",
+  "defaultDomainRelationships": "Relationships",
+  "defaultDomainFinances": "Finances",
+  "defaultDomainPersonalDev": "Personal Development",
+  "emailHint": "Enter your email",
+  "passwordHint": "Enter your password",
+  "timeAgoJustNow": "Just now",
+  "timeAgoMinutes": "{count}m ago",
+  "@timeAgoMinutes": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "timeAgoHours": "{count}h ago",
+  "@timeAgoHours": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "timeAgoDays": "{count}d ago",
+  "@timeAgoDays": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "dialogDeleteAccountTitle": "Delete Account",
+  "dialogDeleteAccountMessage": "Are you sure you want to delete your account? This action cannot be undone.",
+  "dialogDeleteAccountConfirm": "Delete",
+  "passwordStrengthWeak": "Weak",
+  "passwordStrengthMedium": "Medium",
+  "passwordStrengthStrong": "Strong",
+  "restore": "Restore",
+  "archivedLabel": "{name} (archived)",
+  "@archivedLabel": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
   }
 }

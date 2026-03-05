@@ -1059,4 +1059,176 @@ class AppLocalizationsEn extends AppLocalizations {
   String counterDeltaVsLastWeek(String delta) {
     return '$delta vs last week';
   }
+
+  @override
+  String get bilanViewSummary => 'View summary →';
+
+  @override
+  String get bilanHighlights => 'Highlights';
+
+  @override
+  String get bilanTotalTime => 'Total time';
+
+  @override
+  String get bilanNoDataThisWeek => 'No data this week.';
+
+  @override
+  String get bilanWeeklyReady => 'Your weekly summary is ready!';
+
+  @override
+  String get habitNameHint => 'E.g.: Meditate';
+
+  @override
+  String get habitDescriptionHint => 'Optional description...';
+
+  @override
+  String get minuteShort => 'min';
+
+  @override
+  String get domainsReorderHint => 'Drag to reorder, tap to edit';
+
+  @override
+  String get domainEdit => 'Edit Domain';
+
+  @override
+  String domainArchiveConfirmTitle(String name) {
+    return 'Archive \"$name\"?';
+  }
+
+  @override
+  String get domainArchiveConfirmMessage =>
+      'This domain will be hidden but not deleted. You can restore it.';
+
+  @override
+  String streakConsecutiveDays(int count) {
+    return '$count consecutive days';
+  }
+
+  @override
+  String streakFreezeUsedCount(int count) {
+    return 'Freeze used $count times';
+  }
+
+  @override
+  String get streakFreezeRule => 'Rule: 1 freeze max per 7-day period';
+
+  @override
+  String errorExportData(String error) {
+    return 'Error during export: $error';
+  }
+
+  @override
+  String get errorLoadingImage => 'Unable to load image';
+
+  @override
+  String get avatarTakePhoto => 'Take Photo';
+
+  @override
+  String get avatarChooseFromGallery => 'Choose from Gallery';
+
+  @override
+  String get avatarRemovePhoto => 'Remove Photo';
+
+  @override
+  String passwordResetSentMessage(String email) {
+    return 'We sent an email to $email with instructions to reset your password.';
+  }
+
+  @override
+  String get semanticsCompleted => 'completed';
+
+  @override
+  String get semanticsNotCompleted => 'not completed';
+
+  @override
+  String archivedCount(int count) {
+    return 'Archived ($count)';
+  }
+
+  @override
+  String get domainFormIcon => 'Icon';
+
+  @override
+  String get domainFormName => 'Name';
+
+  @override
+  String get domainFormNameHint => 'E.g.: Health';
+
+  @override
+  String get create => 'Create';
+
+  @override
+  String get todayDaySummary => '📊 Today';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get agreeToTermsPrefix => 'I agree to the ';
+
+  @override
+  String get defaultDomainHealth => 'Health';
+
+  @override
+  String get defaultDomainWork => 'Work';
+
+  @override
+  String get defaultDomainRelationships => 'Relationships';
+
+  @override
+  String get defaultDomainFinances => 'Finances';
+
+  @override
+  String get defaultDomainPersonalDev => 'Personal Development';
+
+  @override
+  String get emailHint => 'Enter your email';
+
+  @override
+  String get passwordHint => 'Enter your password';
+
+  @override
+  String get timeAgoJustNow => 'Just now';
+
+  @override
+  String timeAgoMinutes(int count) {
+    return '${count}m ago';
+  }
+
+  @override
+  String timeAgoHours(int count) {
+    return '${count}h ago';
+  }
+
+  @override
+  String timeAgoDays(int count) {
+    return '${count}d ago';
+  }
+
+  @override
+  String get dialogDeleteAccountTitle => 'Delete Account';
+
+  @override
+  String get dialogDeleteAccountMessage =>
+      'Are you sure you want to delete your account? This action cannot be undone.';
+
+  @override
+  String get dialogDeleteAccountConfirm => 'Delete';
+
+  @override
+  String get passwordStrengthWeak => 'Weak';
+
+  @override
+  String get passwordStrengthMedium => 'Medium';
+
+  @override
+  String get passwordStrengthStrong => 'Strong';
+
+  @override
+  String get restore => 'Restore';
+
+  @override
+  String archivedLabel(String name) {
+    return '$name (archived)';
+  }
 }

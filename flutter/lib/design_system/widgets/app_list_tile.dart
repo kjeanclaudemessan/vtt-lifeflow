@@ -5,6 +5,7 @@ import '../tokens/app_colors.dart';
 import '../tokens/app_radius.dart';
 import '../tokens/app_spacing.dart';
 import '../tokens/app_typography.dart';
+import 'app_form_controls.dart';
 
 /// A styled list tile following Porsche Design System.
 ///
@@ -371,8 +372,8 @@ class AppSwitchListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return SwitchListTile(
-      secondary: icon != null
+    return AppListTile(
+      leading: icon != null
           ? Container(
               width: 40.w,
               height: 40.w,
@@ -399,23 +400,15 @@ class AppSwitchListTile extends StatelessWidget {
                   : AppColors.contrastMediumLight),
         ),
       ),
-      subtitle: subtitle != null
-          ? Text(
-              subtitle!,
-              style: AppTypography.bodySmall.copyWith(
-                color: isDark
-                    ? AppColors.contrastMediumDark
-                    : AppColors.contrastMediumLight,
-              ),
-            )
-          : null,
-      value: value,
-      onChanged: isEnabled ? onChanged : null,
-      activeThumbColor: AppColors.primary,
-      contentPadding: contentPadding ?? EdgeInsets.symmetric(horizontal: 16.w),
-      shape: RoundedRectangleBorder(
-        borderRadius: AppRadius.card,
+      subtitle: subtitle,
+      trailing: AppSwitch(
+        value: value,
+        onChanged: isEnabled ? onChanged : null,
+        isDisabled: !isEnabled,
       ),
+      onTap: isEnabled ? () => onChanged?.call(!value) : null,
+      isEnabled: isEnabled,
+      contentPadding: contentPadding,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 import '../../../domain/entities/domain_entity.dart';
 
@@ -46,23 +47,14 @@ class DomainTile extends StatelessWidget {
   Widget _buildActiveTile(BuildContext context) {
     final brightness = Theme.of(context).brightness;
 
-    return Dismissible(
-      key: ValueKey(domain.id),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        alignment: Alignment.centerRight,
-        padding: EdgeInsets.only(right: AppSpacing.lg),
-        color: AppColors.warning,
-        child: Icon(
-          Icons.archive_outlined,
-          color: Colors.white,
-          size: 24,
-        ),
-      ),
-      confirmDismiss: (_) async {
+    return AppSwipeToAction(
+      itemKey: ValueKey(domain.id),
+      onAction: () async {
         onArchive?.call();
         return false; // Let the viewmodel handle the removal
       },
+      backgroundColor: AppColors.warning,
+      iconColor: Colors.white,
       child: AppListTile(
         leading: Text(
           domain.icon,
@@ -75,7 +67,7 @@ class DomainTile extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          '$habitCount habitude${habitCount > 1 ? 's' : ''}',
+          context.l10n.domainHabitCount(habitCount),
           style: AppTypography.textSmall.copyWith(
             color: AppColors.textSecondary(brightness),
           ),
@@ -101,7 +93,7 @@ class DomainTile extends StatelessWidget {
         ),
       ),
       title: Text(
-        '${domain.name} (archivé)',
+        context.l10n.archivedLabel(domain.name),
         style: AppTypography.titleMedium.copyWith(
           color: AppColors.textSecondary(brightness),
         ),
@@ -109,7 +101,7 @@ class DomainTile extends StatelessWidget {
       trailing: TextButton(
         onPressed: onRestore,
         child: Text(
-          'Restaurer',
+          context.l10n.restore,
           style: AppTypography.labelMedium.copyWith(
             color: AppColors.primary,
           ),

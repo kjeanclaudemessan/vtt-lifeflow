@@ -103,7 +103,7 @@ class DomainsViewModel extends BaseViewModel {
   Future<bool> archiveDomain(String id) async {
     // Cannot archive last active domain
     if (_activeDomains.length <= 1) {
-      setError('Vous devez garder au moins un domaine actif.');
+      setError('You must keep at least one active domain.');
       return false;
     }
 

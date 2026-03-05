@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 
 /// Social login buttons widget.
@@ -73,7 +74,7 @@ class SocialLoginButtons extends StatelessWidget {
     if (showGoogle) {
       buttons.add(_SocialButton(
         icon: Icons.g_mobiledata_rounded,
-        label: 'Continue with Google',
+        label: context.l10n.loginWithGoogle,
         onTap: onGoogleTap,
         isLoading: isGoogleLoading,
         backgroundColor: Colors.white,
@@ -85,7 +86,7 @@ class SocialLoginButtons extends StatelessWidget {
     if (showApple) {
       buttons.add(_SocialButton(
         icon: Icons.apple_rounded,
-        label: 'Continue with Apple',
+        label: context.l10n.loginWithApple,
         onTap: onAppleTap,
         isLoading: isAppleLoading,
         backgroundColor: Colors.black,
@@ -96,7 +97,7 @@ class SocialLoginButtons extends StatelessWidget {
     if (showGithub) {
       buttons.add(_SocialButton(
         icon: Icons.code_rounded,
-        label: 'Continue with GitHub',
+        label: context.l10n.loginWithGithub,
         onTap: onGithubTap,
         isLoading: isGithubLoading,
         backgroundColor: const Color(0xFF24292E),

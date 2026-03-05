@@ -62,7 +62,7 @@ class CounterView extends StackedView<CounterViewModel> {
           SizedBox(height: AppSpacing.lg),
 
           // Total card
-          _buildTotalCard(viewModel, brightness),
+          _buildTotalCard(context, viewModel, brightness),
           SizedBox(height: AppSpacing.lg),
 
           // Domain bars
@@ -98,7 +98,8 @@ class CounterView extends StackedView<CounterViewModel> {
     CounterViewModel viewModel,
     Brightness brightness,
   ) {
-    final dateFormat = DateFormat('d MMM', 'fr_FR');
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('d MMM', locale);
     final weekLabel =
         '${dateFormat.format(viewModel.weekStart)} – ${dateFormat.format(viewModel.weekEnd)}';
 
@@ -132,9 +133,11 @@ class CounterView extends StackedView<CounterViewModel> {
   }
 
   Widget _buildTotalCard(
+    BuildContext context,
     CounterViewModel viewModel,
     Brightness brightness,
   ) {
+    final l10n = context.l10n;
     return AppCard.elevated(
       padding: EdgeInsets.all(AppSpacing.lg),
       child: Column(

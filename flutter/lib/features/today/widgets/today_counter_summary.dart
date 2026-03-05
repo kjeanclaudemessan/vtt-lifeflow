@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 import '../../../domain/entities/domain_entity.dart';
 
@@ -47,7 +48,7 @@ class TodayCounterSummary extends StatelessWidget {
               Text('⏱️', style: TextStyle(fontSize: 18)),
               SizedBox(width: AppSpacing.xs),
               Text(
-                'Cette semaine',
+                context.l10n.counterThisWeek,
                 style: AppTypography.titleSmall.copyWith(
                   color: AppColors.textPrimary(brightness),
                 ),

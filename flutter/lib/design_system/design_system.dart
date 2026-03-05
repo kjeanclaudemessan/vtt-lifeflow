@@ -44,6 +44,8 @@ export 'widgets/app_navigation.dart';
 export 'widgets/app_progress.dart';
 export 'widgets/app_slider.dart';
 export 'widgets/app_snackbar.dart';
+export 'widgets/app_staggered_fade_in.dart';
+export 'widgets/app_swipe_to_action.dart';
 export 'widgets/app_tooltip.dart';
 // Widgets - Charts
 export 'widgets/charts/app_bar_chart.dart';

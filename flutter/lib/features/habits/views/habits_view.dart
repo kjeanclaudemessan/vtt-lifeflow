@@ -103,7 +103,7 @@ class HabitsView extends StackedView<HabitsViewModel> {
       child: Row(
         children: [
           AppChip.filter(
-            label: 'Tous',
+            label: context.l10n.all,
             isSelected: viewModel.selectedDomainId == null,
             onTap: () => viewModel.filterByDomain(null),
           ),
@@ -147,7 +147,7 @@ class HabitsView extends StackedView<HabitsViewModel> {
             if (sectionIndex > 0) SizedBox(height: AppSpacing.md),
             // Section header
             Text(
-              slot.label,
+              slot.localizedLabel(context.l10n),
               style: AppTypography.labelLarge.copyWith(
                 color: AppColors.textSecondary(brightness),
               ),
@@ -157,22 +157,9 @@ class HabitsView extends StackedView<HabitsViewModel> {
             ...habits.map((habit) {
               return Padding(
                 padding: EdgeInsets.only(bottom: AppSpacing.xs),
-                child: Dismissible(
-                  key: ValueKey(habit.id),
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.only(right: AppSpacing.lg),
-                    decoration: BoxDecoration(
-                      color: AppColors.warning.withValues(alpha: 0.15),
-                      borderRadius: AppRadius.md,
-                    ),
-                    child: Icon(
-                      Icons.archive_outlined,
-                      color: AppColors.warning,
-                    ),
-                  ),
-                  confirmDismiss: (_) async {
+                child: AppSwipeToAction(
+                  itemKey: ValueKey(habit.id),
+                  onAction: () async {
                     await viewModel.archiveHabit(habit.id);
                     return false; // Don't remove from list — let refresh handle
                   },

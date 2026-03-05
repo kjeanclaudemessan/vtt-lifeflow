@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 import '../../../domain/entities/streak_info.dart';
 
@@ -53,14 +54,14 @@ class HabitStreakBadge extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '${streak.currentStreak} jours consécutifs',
+              context.l10n.streakConsecutiveDays(streak.currentStreak),
               style: AppTypography.headingSmall.copyWith(
                 color: AppColors.textPrimary(brightness),
               ),
             ),
             SizedBox(height: AppSpacing.xs),
             Text(
-              'Record: ${streak.bestStreak} jours',
+              context.l10n.streakBest(streak.bestStreak),
               style: AppTypography.textMedium.copyWith(
                 color: AppColors.textSecondary(brightness),
               ),
@@ -68,14 +69,15 @@ class HabitStreakBadge extends StatelessWidget {
             SizedBox(height: AppSpacing.lg),
             if (streak.freezeUsedDates.isNotEmpty) ...[
               Text(
-                'Freeze utilisé ${streak.freezeUsedDates.length} fois',
+                context.l10n
+                    .streakFreezeUsedCount(streak.freezeUsedDates.length),
                 style: AppTypography.textSmall.copyWith(
                   color: AppColors.info,
                 ),
               ),
               SizedBox(height: AppSpacing.xs),
               Text(
-                'Règle: 1 freeze max par période de 7 jours',
+                context.l10n.streakFreezeRule,
                 style: AppTypography.caption.copyWith(
                   color: AppColors.textSecondary(brightness),
                 ),

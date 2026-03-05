@@ -130,7 +130,8 @@ class TodayView extends StackedView<TodayViewModel> {
   ) {
     final l10n = context.l10n;
     final now = DateTime.now();
-    final dateLabel = DateFormat('EEEE d MMMM', 'fr_FR').format(now);
+    final locale = Localizations.localeOf(context).toString();
+    final dateLabel = DateFormat('EEEE d MMMM', locale).format(now);
 
     switch (viewModel.mode) {
       case TodayMode.morning:
@@ -264,7 +265,7 @@ class TodayView extends StackedView<TodayViewModel> {
           key: const ValueKey('mode-bilan'),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildDaySummary(viewModel, brightness),
+            _buildDaySummary(context, viewModel, brightness),
             SizedBox(height: AppSpacing.lg),
             // Still show habits for toggling
             TodayHabitsSection(
@@ -322,9 +323,11 @@ class TodayView extends StackedView<TodayViewModel> {
   }
 
   Widget _buildDaySummary(
+    BuildContext context,
     TodayViewModel viewModel,
     Brightness brightness,
   ) {
+    final l10n = context.l10n;
     final domainMinutes = viewModel.todayDomainMinutes;
 
     return AppCard.elevated(
@@ -333,7 +336,7 @@ class TodayView extends StackedView<TodayViewModel> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '📊 Aujourd\'hui',
+            l10n.todayDaySummary,
             style: AppTypography.titleMedium.copyWith(
               color: AppColors.textPrimary(brightness),
             ),
@@ -375,7 +378,7 @@ class TodayView extends StackedView<TodayViewModel> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Total',
+                l10n.total,
                 style: AppTypography.titleSmall.copyWith(
                   color: AppColors.textPrimary(brightness),
                 ),

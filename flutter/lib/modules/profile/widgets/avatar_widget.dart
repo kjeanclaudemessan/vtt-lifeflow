@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/core.dart';
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 
 /// Avatar widget with edit functionality.
@@ -194,20 +195,20 @@ class AvatarPickerOptions extends StatelessWidget {
         _buildOption(
           context,
           icon: Icons.camera_alt_rounded,
-          label: 'Take Photo',
+          label: context.l10n.avatarTakePhoto,
           onTap: onCamera,
         ),
         _buildOption(
           context,
           icon: Icons.photo_library_rounded,
-          label: 'Choose from Gallery',
+          label: context.l10n.avatarChooseFromGallery,
           onTap: onGallery,
         ),
         if (canRemove)
           _buildOption(
             context,
             icon: Icons.delete_rounded,
-            label: 'Remove Photo',
+            label: context.l10n.avatarRemovePhoto,
             onTap: onRemove,
             isDestructive: true,
           ),

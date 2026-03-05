@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 
 /// Card prompting the user to view their weekly bilan.
@@ -29,7 +30,7 @@ class TodayBilanCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Ton bilan de la semaine est prêt !',
+                  context.l10n.bilanWeeklyReady,
                   style: AppTypography.titleSmall.copyWith(
                     color: AppColors.primary,
                     fontWeight: FontWeight.bold,
@@ -37,7 +38,7 @@ class TodayBilanCard extends StatelessWidget {
                 ),
                 SizedBox(height: AppSpacing.xxs),
                 Text(
-                  'Voir le bilan →',
+                  context.l10n.bilanViewSummary,
                   style: AppTypography.textSmall.copyWith(
                     color: AppColors.primary,
                   ),

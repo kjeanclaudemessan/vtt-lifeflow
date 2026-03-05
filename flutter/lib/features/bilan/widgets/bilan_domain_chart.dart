@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 import '../../../domain/entities/time_counter.dart';
 
@@ -31,7 +32,7 @@ class BilanDomainChart extends StatelessWidget {
 
     if (counters.isEmpty) {
       return Text(
-        'Aucune donnée pour cette semaine.',
+        context.l10n.bilanNoDataThisWeek,
         style: AppTypography.textSmall.copyWith(
           color: AppColors.textSecondary(brightness),
         ),

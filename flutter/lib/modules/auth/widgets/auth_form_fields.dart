@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 import '../viewmodels/register_viewmodel.dart';
 
@@ -51,8 +52,8 @@ class _AuthEmailFieldState extends State<AuthEmailField> {
   @override
   Widget build(BuildContext context) {
     return AppTextField(
-      label: 'Email',
-      hint: widget.hintText ?? 'Enter your email',
+      label: context.l10n.email,
+      hint: widget.hintText ?? context.l10n.emailHint,
       controller: _controller,
       onChanged: widget.onChanged,
       errorText: widget.errorText,
@@ -121,8 +122,8 @@ class _AuthPasswordFieldState extends State<AuthPasswordField> {
   @override
   Widget build(BuildContext context) {
     return AppTextField(
-      label: widget.label ?? 'Password',
-      hint: widget.hintText ?? 'Enter your password',
+      label: widget.label ?? context.l10n.password,
+      hint: widget.hintText ?? context.l10n.passwordHint,
       controller: _controller,
       onChanged: widget.onChanged,
       errorText: widget.errorText,
@@ -162,9 +163,21 @@ class PasswordStrengthIndicator extends StatelessWidget {
 
     final (color, label, progress) = switch (strength) {
       PasswordStrength.none => (Colors.transparent, '', 0.0),
-      PasswordStrength.weak => (AppColors.error, 'Weak', 0.33),
-      PasswordStrength.medium => (AppColors.warning, 'Medium', 0.66),
-      PasswordStrength.strong => (AppColors.success, 'Strong', 1.0),
+      PasswordStrength.weak => (
+          AppColors.error,
+          context.l10n.passwordStrengthWeak,
+          0.33
+        ),
+      PasswordStrength.medium => (
+          AppColors.warning,
+          context.l10n.passwordStrengthMedium,
+          0.66
+        ),
+      PasswordStrength.strong => (
+          AppColors.success,
+          context.l10n.passwordStrengthStrong,
+          1.0
+        ),
     };
 
     return Padding(
@@ -233,7 +246,7 @@ class TermsCheckbox extends StatelessWidget {
             onTap: () => onChanged?.call(!value),
             child: Text.rich(
               TextSpan(
-                text: termsText ?? 'I agree to the ',
+                text: termsText ?? context.l10n.agreeToTermsPrefix,
                 style: AppTypography.bodySmall.copyWith(
                   color: AppColors.textSecondary(Theme.of(context).brightness),
                 ),
@@ -242,7 +255,7 @@ class TermsCheckbox extends StatelessWidget {
                     child: GestureDetector(
                       onTap: onTermsTap,
                       child: Text(
-                        'Terms of Service',
+                        context.l10n.termsAndConditions,
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.primary,
                           decoration: TextDecoration.underline,
@@ -250,12 +263,12 @@ class TermsCheckbox extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const TextSpan(text: ' and '),
+                  const TextSpan(text: ' & '),
                   WidgetSpan(
                     child: GestureDetector(
                       onTap: onPrivacyTap,
                       child: Text(
-                        'Privacy Policy',
+                        context.l10n.privacyPolicy,
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.primary,
                           decoration: TextDecoration.underline,
@@ -306,7 +319,7 @@ class RememberMeCheckbox extends StatelessWidget {
         GestureDetector(
           onTap: () => onChanged?.call(!value),
           child: Text(
-            label ?? 'Remember me',
+            label ?? context.l10n.rememberMe,
             style: AppTypography.bodySmall.copyWith(
               color: AppColors.textSecondary(Theme.of(context).brightness),
             ),

@@ -357,6 +357,7 @@ class ProfileView extends StackedView<ProfileViewModel> {
 
   Widget _buildProfileCompletion(
       BuildContext context, ProfileViewModel viewModel) {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

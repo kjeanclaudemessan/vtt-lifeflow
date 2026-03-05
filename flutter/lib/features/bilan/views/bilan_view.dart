@@ -50,7 +50,8 @@ class BilanView extends StackedView<BilanViewModel> {
     }
 
     final bilan = viewModel.bilan;
-    final weekLabel = _weekLabel(viewModel.weekStart, viewModel.weekEnd);
+    final weekLabel =
+        _weekLabel(context, viewModel.weekStart, viewModel.weekEnd);
 
     return Scaffold(
       appBar: AppBar(
@@ -217,8 +218,9 @@ class BilanView extends StackedView<BilanViewModel> {
   void onViewModelReady(BilanViewModel viewModel) => viewModel.init();
 
   /// Format "12 jan – 18 jan 2025".
-  String _weekLabel(DateTime start, DateTime end) {
-    final df = DateFormat('d MMM', 'fr_FR');
+  String _weekLabel(BuildContext context, DateTime start, DateTime end) {
+    final locale = Localizations.localeOf(context).toString();
+    final df = DateFormat('d MMM', locale);
     final yearFmt = DateFormat('yyyy');
     return '${df.format(start)} – ${df.format(end)} ${yearFmt.format(end)}';
   }

@@ -1999,6 +1999,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{delta} vs last week'**
   String counterDeltaVsLastWeek(String delta);
+
+  /// No description provided for @bilanViewSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'View summary →'**
+  String get bilanViewSummary;
+
+  /// No description provided for @bilanHighlights.
+  ///
+  /// In en, this message translates to:
+  /// **'Highlights'**
+  String get bilanHighlights;
+
+  /// No description provided for @bilanTotalTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Total time'**
+  String get bilanTotalTime;
+
+  /// No description provided for @bilanNoDataThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'No data this week.'**
+  String get bilanNoDataThisWeek;
+
+  /// No description provided for @bilanWeeklyReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Your weekly summary is ready!'**
+  String get bilanWeeklyReady;
+
+  /// No description provided for @habitNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'E.g.: Meditate'**
+  String get habitNameHint;
+
+  /// No description provided for @habitDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional description...'**
+  String get habitDescriptionHint;
+
+  /// No description provided for @minuteShort.
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get minuteShort;
+
+  /// No description provided for @domainsReorderHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to reorder, tap to edit'**
+  String get domainsReorderHint;
+
+  /// No description provided for @domainEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Domain'**
+  String get domainEdit;
+
+  /// No description provided for @domainArchiveConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive \"{name}\"?'**
+  String domainArchiveConfirmTitle(String name);
+
+  /// No description provided for @domainArchiveConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This domain will be hidden but not deleted. You can restore it.'**
+  String get domainArchiveConfirmMessage;
+
+  /// No description provided for @streakConsecutiveDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} consecutive days'**
+  String streakConsecutiveDays(int count);
+
+  /// No description provided for @streakFreezeUsedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Freeze used {count} times'**
+  String streakFreezeUsedCount(int count);
+
+  /// No description provided for @streakFreezeRule.
+  ///
+  /// In en, this message translates to:
+  /// **'Rule: 1 freeze max per 7-day period'**
+  String get streakFreezeRule;
+
+  /// No description provided for @errorExportData.
+  ///
+  /// In en, this message translates to:
+  /// **'Error during export: {error}'**
+  String errorExportData(String error);
+
+  /// No description provided for @errorLoadingImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load image'**
+  String get errorLoadingImage;
+
+  /// No description provided for @avatarTakePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get avatarTakePhoto;
+
+  /// No description provided for @avatarChooseFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get avatarChooseFromGallery;
+
+  /// No description provided for @avatarRemovePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Photo'**
+  String get avatarRemovePhoto;
+
+  /// No description provided for @passwordResetSentMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent an email to {email} with instructions to reset your password.'**
+  String passwordResetSentMessage(String email);
+
+  /// No description provided for @semanticsCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'completed'**
+  String get semanticsCompleted;
+
+  /// No description provided for @semanticsNotCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'not completed'**
+  String get semanticsNotCompleted;
+
+  /// No description provided for @archivedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived ({count})'**
+  String archivedCount(int count);
+
+  /// No description provided for @domainFormIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get domainFormIcon;
+
+  /// No description provided for @domainFormName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get domainFormName;
+
+  /// No description provided for @domainFormNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'E.g.: Health'**
+  String get domainFormNameHint;
+
+  /// No description provided for @create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
+  /// No description provided for @todayDaySummary.
+  ///
+  /// In en, this message translates to:
+  /// **'📊 Today'**
+  String get todayDaySummary;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @agreeToTermsPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree to the '**
+  String get agreeToTermsPrefix;
+
+  /// No description provided for @defaultDomainHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get defaultDomainHealth;
+
+  /// No description provided for @defaultDomainWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get defaultDomainWork;
+
+  /// No description provided for @defaultDomainRelationships.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationships'**
+  String get defaultDomainRelationships;
+
+  /// No description provided for @defaultDomainFinances.
+  ///
+  /// In en, this message translates to:
+  /// **'Finances'**
+  String get defaultDomainFinances;
+
+  /// No description provided for @defaultDomainPersonalDev.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Development'**
+  String get defaultDomainPersonalDev;
+
+  /// No description provided for @emailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get emailHint;
+
+  /// No description provided for @passwordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get passwordHint;
+
+  /// No description provided for @timeAgoJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get timeAgoJustNow;
+
+  /// No description provided for @timeAgoMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m ago'**
+  String timeAgoMinutes(int count);
+
+  /// No description provided for @timeAgoHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h ago'**
+  String timeAgoHours(int count);
+
+  /// No description provided for @timeAgoDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}d ago'**
+  String timeAgoDays(int count);
+
+  /// No description provided for @dialogDeleteAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get dialogDeleteAccountTitle;
+
+  /// No description provided for @dialogDeleteAccountMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your account? This action cannot be undone.'**
+  String get dialogDeleteAccountMessage;
+
+  /// No description provided for @dialogDeleteAccountConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get dialogDeleteAccountConfirm;
+
+  /// No description provided for @passwordStrengthWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get passwordStrengthWeak;
+
+  /// No description provided for @passwordStrengthMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get passwordStrengthMedium;
+
+  /// No description provided for @passwordStrengthStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong'**
+  String get passwordStrengthStrong;
+
+  /// No description provided for @restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restore;
+
+  /// No description provided for @archivedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} (archived)'**
+  String archivedLabel(String name);
 }
 
 class _AppLocalizationsDelegate

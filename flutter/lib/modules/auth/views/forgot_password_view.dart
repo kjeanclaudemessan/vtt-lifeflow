@@ -159,7 +159,7 @@ class ForgotPasswordView extends StackedView<ForgotPasswordViewModel> {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           child: Text(
-            'We sent an email to ${viewModel.email} with instructions to reset your password.',
+            l10n.passwordResetSentMessage(viewModel.email),
             style: AppTypography.bodyMedium.copyWith(
               color: AppColors.textSecondary(Theme.of(context).brightness),
             ),

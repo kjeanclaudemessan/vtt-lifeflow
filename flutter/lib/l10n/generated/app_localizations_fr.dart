@@ -1062,4 +1062,177 @@ class AppLocalizationsFr extends AppLocalizations {
   String counterDeltaVsLastWeek(String delta) {
     return '$delta vs sem. dernière';
   }
+
+  @override
+  String get bilanViewSummary => 'Voir le bilan →';
+
+  @override
+  String get bilanHighlights => 'Points forts';
+
+  @override
+  String get bilanTotalTime => 'Temps total';
+
+  @override
+  String get bilanNoDataThisWeek => 'Aucune donnée pour cette semaine.';
+
+  @override
+  String get bilanWeeklyReady => 'Ton bilan de la semaine est prêt !';
+
+  @override
+  String get habitNameHint => 'Ex : Méditer';
+
+  @override
+  String get habitDescriptionHint => 'Description optionnelle...';
+
+  @override
+  String get minuteShort => 'min';
+
+  @override
+  String get domainsReorderHint =>
+      'Glissez pour réordonner, appuyez pour modifier';
+
+  @override
+  String get domainEdit => 'Modifier le domaine';
+
+  @override
+  String domainArchiveConfirmTitle(String name) {
+    return 'Archiver \"$name\" ?';
+  }
+
+  @override
+  String get domainArchiveConfirmMessage =>
+      'Ce domaine sera masqué mais pas supprimé. Vous pourrez le restaurer.';
+
+  @override
+  String streakConsecutiveDays(int count) {
+    return '$count jours consécutifs';
+  }
+
+  @override
+  String streakFreezeUsedCount(int count) {
+    return 'Freeze utilisé $count fois';
+  }
+
+  @override
+  String get streakFreezeRule => 'Règle : 1 freeze max par période de 7 jours';
+
+  @override
+  String errorExportData(String error) {
+    return 'Erreur lors de l\'export : $error';
+  }
+
+  @override
+  String get errorLoadingImage => 'Impossible de charger l\'image';
+
+  @override
+  String get avatarTakePhoto => 'Prendre une photo';
+
+  @override
+  String get avatarChooseFromGallery => 'Choisir dans la galerie';
+
+  @override
+  String get avatarRemovePhoto => 'Supprimer la photo';
+
+  @override
+  String passwordResetSentMessage(String email) {
+    return 'Nous avons envoyé un email à $email avec les instructions pour réinitialiser votre mot de passe.';
+  }
+
+  @override
+  String get semanticsCompleted => 'complété';
+
+  @override
+  String get semanticsNotCompleted => 'non complété';
+
+  @override
+  String archivedCount(int count) {
+    return 'Archivés ($count)';
+  }
+
+  @override
+  String get domainFormIcon => 'Icône';
+
+  @override
+  String get domainFormName => 'Nom';
+
+  @override
+  String get domainFormNameHint => 'Ex : Santé';
+
+  @override
+  String get create => 'Créer';
+
+  @override
+  String get todayDaySummary => '📊 Aujourd\'hui';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get agreeToTermsPrefix => 'J\'accepte les ';
+
+  @override
+  String get defaultDomainHealth => 'Santé';
+
+  @override
+  String get defaultDomainWork => 'Travail';
+
+  @override
+  String get defaultDomainRelationships => 'Relations';
+
+  @override
+  String get defaultDomainFinances => 'Finances';
+
+  @override
+  String get defaultDomainPersonalDev => 'Développement personnel';
+
+  @override
+  String get emailHint => 'Entrez votre email';
+
+  @override
+  String get passwordHint => 'Entrez votre mot de passe';
+
+  @override
+  String get timeAgoJustNow => 'À l\'instant';
+
+  @override
+  String timeAgoMinutes(int count) {
+    return 'il y a $count min';
+  }
+
+  @override
+  String timeAgoHours(int count) {
+    return 'il y a ${count}h';
+  }
+
+  @override
+  String timeAgoDays(int count) {
+    return 'il y a ${count}j';
+  }
+
+  @override
+  String get dialogDeleteAccountTitle => 'Supprimer le compte';
+
+  @override
+  String get dialogDeleteAccountMessage =>
+      'Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.';
+
+  @override
+  String get dialogDeleteAccountConfirm => 'Supprimer';
+
+  @override
+  String get passwordStrengthWeak => 'Faible';
+
+  @override
+  String get passwordStrengthMedium => 'Moyen';
+
+  @override
+  String get passwordStrengthStrong => 'Fort';
+
+  @override
+  String get restore => 'Restaurer';
+
+  @override
+  String archivedLabel(String name) {
+    return '$name (archivé)';
+  }
 }

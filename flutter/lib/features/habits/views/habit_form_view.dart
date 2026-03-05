@@ -46,7 +46,7 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
                   // Name field
                   AppTextField(
                     label: l10n.habitName,
-                    hint: 'Ex: Méditer',
+                    hint: l10n.habitNameHint,
                     controller: viewModel.nameController,
                     errorText: viewModel.nameError,
                     autofocus: !viewModel.isEditMode,
@@ -56,7 +56,7 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
                   // Description field
                   AppTextField(
                     label: l10n.habitDescription,
-                    hint: 'Description optionnelle...',
+                    hint: l10n.habitDescriptionHint,
                     controller: viewModel.descriptionController,
                     maxLines: 3,
                   ),
@@ -239,7 +239,7 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
         Expanded(
           child: AppTextField(
             label: l10n.habitUnit,
-            hint: 'min',
+            hint: l10n.minuteShort,
             controller: viewModel.unitController,
           ),
         ),
@@ -463,7 +463,7 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
 
     final result = await AppDialog.show<DomainEntity>(
       context: context,
-      title: 'Nouveau domaine',
+      title: context.l10n.domainAdd,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -472,7 +472,7 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
               SizedBox(
                 width: 56,
                 child: AppTextField(
-                  label: 'Icône',
+                  label: context.l10n.domainFormIcon,
                   controller: iconController,
                   maxLength: 2,
                 ),
@@ -480,8 +480,8 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
               SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: AppTextField(
-                  label: 'Nom',
-                  hint: 'Ex: Santé',
+                  label: context.l10n.domainFormName,
+                  hint: context.l10n.domainFormNameHint,
                   controller: nameController,
                   autofocus: true,
                 ),
@@ -491,7 +491,7 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
         ],
       ),
       primaryAction: AppDialogAction(
-        label: 'Créer',
+        label: context.l10n.create,
         onPressed: () {
           final name = nameController.text.trim();
           if (name.isEmpty) return;
@@ -505,7 +505,7 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
         },
       ),
       secondaryAction: AppDialogAction(
-        label: 'Annuler',
+        label: context.l10n.cancel,
         isSecondary: true,
         onPressed: () => Navigator.of(context).pop(),
       ),

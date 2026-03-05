@@ -93,7 +93,7 @@ class DomainsView extends StackedView<DomainsViewModel> {
         Padding(
           padding: EdgeInsets.all(AppSpacing.md),
           child: Text(
-            'Glissez pour réordonner, appuyez pour modifier',
+            context.l10n.domainsReorderHint,
             style: AppTypography.caption.copyWith(
               color: AppColors.textSecondary(brightness),
             ),
@@ -118,7 +118,7 @@ class DomainsView extends StackedView<DomainsViewModel> {
             color: AppColors.textSecondary(brightness),
           ),
           title: Text(
-            'Archivés (${viewModel.archivedDomains.length})',
+            '${context.l10n.archivedCount(viewModel.archivedDomains.length)}',
             style: AppTypography.titleSmall.copyWith(
               color: AppColors.textSecondary(brightness),
             ),
@@ -168,7 +168,7 @@ class DomainsView extends StackedView<DomainsViewModel> {
 
     return AppDialog.show<DomainEntity>(
       context: context,
-      title: isEdit ? 'Modifier le domaine' : 'Nouveau domaine',
+      title: isEdit ? context.l10n.domainEdit : context.l10n.domainAdd,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -177,7 +177,7 @@ class DomainsView extends StackedView<DomainsViewModel> {
               SizedBox(
                 width: 56,
                 child: AppTextField(
-                  label: 'Icône',
+                  label: context.l10n.domainFormIcon,
                   controller: iconController,
                   maxLength: 2,
                 ),
@@ -185,8 +185,8 @@ class DomainsView extends StackedView<DomainsViewModel> {
               SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: AppTextField(
-                  label: 'Nom',
-                  hint: 'Ex: Santé',
+                  label: context.l10n.domainFormName,
+                  hint: context.l10n.domainFormNameHint,
                   controller: nameController,
                   autofocus: true,
                 ),
@@ -196,7 +196,7 @@ class DomainsView extends StackedView<DomainsViewModel> {
         ],
       ),
       primaryAction: AppDialogAction(
-        label: isEdit ? 'Modifier' : 'Créer',
+        label: isEdit ? context.l10n.edit : context.l10n.create,
         onPressed: () {
           final name = nameController.text.trim();
           if (name.isEmpty) return;
@@ -210,7 +210,7 @@ class DomainsView extends StackedView<DomainsViewModel> {
         },
       ),
       secondaryAction: AppDialogAction(
-        label: 'Annuler',
+        label: context.l10n.cancel,
         isSecondary: true,
         onPressed: () => Navigator.of(context).pop(),
       ),
@@ -224,11 +224,10 @@ class DomainsView extends StackedView<DomainsViewModel> {
   ) async {
     final confirmed = await AppDialog.confirm(
       context: context,
-      title: 'Archiver "${domain.name}" ?',
-      message:
-          'Ce domaine sera masqué mais pas supprimé. Vous pourrez le restaurer.',
-      confirmLabel: 'Archiver',
-      cancelLabel: 'Annuler',
+      title: context.l10n.domainArchiveConfirmTitle(domain.name),
+      message: context.l10n.domainArchiveConfirmMessage,
+      confirmLabel: context.l10n.domainArchive,
+      cancelLabel: context.l10n.cancel,
     );
     if (confirmed == true) {
       await viewModel.archiveDomain(domain.id);

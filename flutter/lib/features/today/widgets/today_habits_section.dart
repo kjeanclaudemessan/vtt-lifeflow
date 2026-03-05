@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/enums/lifeflow_enums.dart';
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 import '../../../domain/entities/domain_entity.dart';
 import '../../../domain/entities/habit_entity.dart';
@@ -56,7 +57,7 @@ class TodayHabitsSection extends StatelessWidget {
                 bottom: AppSpacing.xs,
               ),
               child: Text(
-                slot.label,
+                slot.localizedLabel(context.l10n),
                 style: AppTypography.labelLarge.copyWith(
                   color: AppColors.textSecondary(brightness),
                 ),
@@ -66,21 +67,9 @@ class TodayHabitsSection extends StatelessWidget {
             ...habits.asMap().entries.map((habitEntry) {
               final index = habitEntry.key;
               final habit = habitEntry.value;
-              return TweenAnimationBuilder<double>(
+              return AppStaggeredFadeIn(
                 key: ValueKey(habit.id),
-                tween: Tween(begin: 0.0, end: 1.0),
-                duration:
-                    AppAnimations.medium + AppAnimations.staggeredDelay(index),
-                curve: AppAnimations.easeOut,
-                builder: (context, value, child) {
-                  return Opacity(
-                    opacity: value,
-                    child: Transform.translate(
-                      offset: Offset(0, 12 * (1 - value)),
-                      child: child,
-                    ),
-                  );
-                },
+                index: index,
                 child: Padding(
                   padding: EdgeInsets.only(bottom: AppSpacing.xs),
                   child: HabitCheckTile(

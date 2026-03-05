@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 import '../../../domain/entities/domain_entity.dart';
 import '../../../domain/entities/habit_entity.dart';
@@ -51,7 +52,8 @@ class HabitCheckTile extends StatelessWidget {
     final brightness = Theme.of(context).brightness;
 
     return Semantics(
-      label: '${habit.name}, ${_isCompleted ? 'completed' : 'not completed'}',
+      label:
+          '${habit.name}, ${_isCompleted ? context.l10n.semanticsCompleted : context.l10n.semanticsNotCompleted}',
       button: true,
       child: AppCard.outlined(
         onTap: onTap,

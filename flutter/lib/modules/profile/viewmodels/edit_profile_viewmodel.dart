@@ -227,7 +227,7 @@ class EditProfileViewModel extends BaseViewModel {
         rebuildUi();
       }
     } catch (e) {
-      setError('Impossible de charger l\'image');
+      setError('Unable to load image');
     }
   }
 

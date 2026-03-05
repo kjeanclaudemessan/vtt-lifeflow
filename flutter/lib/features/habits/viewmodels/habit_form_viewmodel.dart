@@ -153,12 +153,12 @@ class HabitFormViewModel extends BaseViewModel {
 
     final name = nameController.text.trim();
     if (name.isEmpty) {
-      _nameError = 'Le nom est requis';
+      _nameError = 'Name is required';
       rebuildUi();
       return;
     }
     if (_selectedDomain == null) {
-      _domainError = 'Choisissez un domaine';
+      _domainError = 'Select a domain';
       rebuildUi();
       return;
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 import '../config/notifications_config.dart';
 
@@ -98,7 +99,7 @@ class NotificationCard extends StatelessWidget {
                         ),
                         SizedBox(width: AppSpacing.sm),
                         Text(
-                          _formatTime(notification.createdAt),
+                          _formatTime(context, notification.createdAt),
                           style: AppTypography.labelSmall.copyWith(
                             color: AppColors.neutral500,
                           ),
@@ -199,18 +200,19 @@ class NotificationCard extends StatelessWidget {
     };
   }
 
-  String _formatTime(DateTime dateTime) {
+  String _formatTime(BuildContext context, DateTime dateTime) {
+    final l10n = context.l10n;
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
     if (difference.inMinutes < 1) {
-      return 'À l\'instant';
+      return l10n.timeAgoJustNow;
     } else if (difference.inMinutes < 60) {
-      return 'il y a ${difference.inMinutes} min';
+      return l10n.timeAgoMinutes(difference.inMinutes);
     } else if (difference.inHours < 24) {
-      return 'il y a ${difference.inHours}h';
+      return l10n.timeAgoHours(difference.inHours);
     } else if (difference.inDays < 7) {
-      return 'il y a ${difference.inDays}j';
+      return l10n.timeAgoDays(difference.inDays);
     } else {
       return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 import '../../../domain/entities/domain_entity.dart';
 
@@ -33,7 +34,7 @@ class DomainPickerSheet extends StatelessWidget {
   }) {
     return AppBottomSheet.show<DomainEntity>(
       context: context,
-      title: 'Choisir un domaine',
+      title: context.l10n.habitSelectDomain,
       child: DomainPickerSheet(
         domains: domains,
         selectedDomainId: selectedDomainId,

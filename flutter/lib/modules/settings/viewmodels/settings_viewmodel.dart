@@ -266,10 +266,10 @@ class SettingsViewModel extends BaseViewModel {
   /// Logout the user.
   Future<void> logout() async {
     final confirmed = await _dialogService.showConfirmationDialog(
-      title: 'Se déconnecter',
-      description: 'Êtes-vous sûr de vouloir vous déconnecter ?',
-      confirmationTitle: 'Se déconnecter',
-      cancelTitle: 'Annuler',
+      title: 'Log out',
+      description: 'Are you sure you want to log out?',
+      confirmationTitle: 'Log out',
+      cancelTitle: 'Cancel',
     );
 
     if (confirmed?.confirmed != true) return;
@@ -288,11 +288,11 @@ class SettingsViewModel extends BaseViewModel {
   /// Delete the user's account.
   Future<void> deleteAccount() async {
     final confirmed = await _dialogService.showConfirmationDialog(
-      title: 'Supprimer le compte',
+      title: 'Delete Account',
       description:
-          'Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.',
-      confirmationTitle: 'Supprimer',
-      cancelTitle: 'Annuler',
+          'Are you sure you want to delete your account? This action cannot be undone.',
+      confirmationTitle: 'Delete',
+      cancelTitle: 'Cancel',
     );
 
     if (confirmed?.confirmed != true) return;

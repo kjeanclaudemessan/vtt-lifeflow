@@ -38,14 +38,33 @@ class OnboardingDomainStep extends StatefulWidget {
 }
 
 class _OnboardingDomainStepState extends State<OnboardingDomainStep> {
-  final _domains = <_DefaultDomain>[
-    _DefaultDomain(name: 'Santé', icon: '💪', colorHex: '#4CAF50'),
-    _DefaultDomain(name: 'Travail', icon: '💼', colorHex: '#2196F3'),
-    _DefaultDomain(name: 'Relations', icon: '❤️', colorHex: '#E91E63'),
-    _DefaultDomain(name: 'Finances', icon: '💰', colorHex: '#FF9800'),
-    _DefaultDomain(
-        name: 'Développement personnel', icon: '🌱', colorHex: '#9C27B0'),
-  ];
+  late final List<_DefaultDomain> _domains;
+  bool _initialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      final l10n = context.l10n;
+      _domains = [
+        _DefaultDomain(
+            name: l10n.defaultDomainHealth, icon: '💪', colorHex: '#4CAF50'),
+        _DefaultDomain(
+            name: l10n.defaultDomainWork, icon: '💼', colorHex: '#2196F3'),
+        _DefaultDomain(
+            name: l10n.defaultDomainRelationships,
+            icon: '❤️',
+            colorHex: '#E91E63'),
+        _DefaultDomain(
+            name: l10n.defaultDomainFinances, icon: '💰', colorHex: '#FF9800'),
+        _DefaultDomain(
+            name: l10n.defaultDomainPersonalDev,
+            icon: '🌱',
+            colorHex: '#9C27B0'),
+      ];
+      _initialized = true;
+    }
+  }
 
   int get _selectedCount => _domains.where((d) => d.selected).length;
   bool get _isValid => _selectedCount >= 1;

@@ -2,6 +2,8 @@
 ///
 /// Shared enums used across features in Phase 1.
 
+import 'package:lifeflow/l10n/generated/app_localizations.dart';
+
 /// Time slot for grouping habits in TodayView.
 enum TimeSlot {
   /// Morning habits (before 12:00).
@@ -26,12 +28,14 @@ enum TimeSlot {
     return TimeSlot.evening;
   }
 
-  /// Human-readable label for this slot (used as section header).
-  String get label => switch (this) {
-        TimeSlot.morning => 'Matin',
-        TimeSlot.afternoon => 'Après-midi',
-        TimeSlot.evening => 'Soir',
-        TimeSlot.anytime => 'Sans horaire',
+  /// Localized label for this slot (used as section header).
+  ///
+  /// Requires [AppLocalizations] since enums cannot access BuildContext.
+  String localizedLabel(AppLocalizations l10n) => switch (this) {
+        TimeSlot.morning => l10n.todaySectionMorning,
+        TimeSlot.afternoon => l10n.todaySectionAfternoon,
+        TimeSlot.evening => l10n.todaySectionEvening,
+        TimeSlot.anytime => l10n.todaySectionAnytime,
       };
 
   /// Sort weight for ordering sections.

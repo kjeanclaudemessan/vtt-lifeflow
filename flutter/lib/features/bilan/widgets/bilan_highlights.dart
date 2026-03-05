@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 import '../../../domain/entities/weekly_bilan.dart';
 
@@ -27,7 +28,7 @@ class BilanHighlights extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Points forts',
+            context.l10n.bilanHighlights,
             style: AppTypography.titleMedium.copyWith(
               color: AppColors.textPrimary(brightness),
               fontWeight: FontWeight.w600,
@@ -37,27 +38,27 @@ class BilanHighlights extends StatelessWidget {
           if (bilan.topHabit != null)
             _HighlightRow(
               emoji: '🏆',
-              label: 'Habitude star',
+              label: context.l10n.bilanTopHabit,
               value: bilan.topHabit!.name,
             ),
           if (bilan.longestStreak != null) ...[
             SizedBox(height: AppSpacing.sm),
             _HighlightRow(
               emoji: '🔥',
-              label: 'Meilleure série',
+              label: context.l10n.bilanLongestStreak,
               value: '${bilan.longestStreak!.currentStreak}j',
             ),
           ],
           SizedBox(height: AppSpacing.sm),
           _HighlightRow(
             emoji: '📈',
-            label: 'Taux de complétion',
+            label: context.l10n.bilanCompletionRate,
             value: bilan.completionRateLabel,
           ),
           SizedBox(height: AppSpacing.sm),
           _HighlightRow(
             emoji: '⏱️',
-            label: 'Temps total',
+            label: context.l10n.bilanTotalTime,
             value: _formatHours(bilan.totalMinutes),
           ),
         ],
