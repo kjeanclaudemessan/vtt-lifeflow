@@ -221,9 +221,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
                   style: AppTypography.bodyMedium.copyWith(
                     color: item.destructive
                         ? AppColors.error
-                        : isDark
-                            ? AppColors.textPrimaryDark
-                            : AppColors.textPrimaryLight,
+                        : context.colorScheme.onSurface,
                   ),
                 ),
               ),

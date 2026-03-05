@@ -1040,4 +1040,26 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get navCounter => 'Compteur';
+
+  @override
+  String get todayDone => 'Faites';
+
+  @override
+  String get todayRemaining => 'Restantes';
+
+  @override
+  String get profileCompletion => 'Complétion du profil';
+
+  @override
+  String get exportData => 'Exporter les données';
+
+  @override
+  String counterTotalWithTime(String time) {
+    return 'Total : $time';
+  }
+
+  @override
+  String counterDeltaVsLastWeek(String delta) {
+    return '$delta vs sem. dernière';
+  }
 }

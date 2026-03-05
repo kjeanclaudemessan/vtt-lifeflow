@@ -207,17 +207,17 @@ class OrDivider extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
       child: Row(
         children: [
-          const Expanded(child: Divider(color: AppColors.borderLight)),
+          const Expanded(child: Divider()),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
             child: Text(
               text,
               style: AppTypography.bodySmall.copyWith(
-                color: AppColors.textSecondaryLight,
+                color: AppColors.textSecondary(Theme.of(context).brightness),
               ),
             ),
           ),
-          const Expanded(child: Divider(color: AppColors.borderLight)),
+          const Expanded(child: Divider()),
         ],
       ),
     );

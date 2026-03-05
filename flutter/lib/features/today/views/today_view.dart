@@ -87,7 +87,12 @@ class TodayView extends StackedView<TodayViewModel> {
       padding: EdgeInsets.all(AppSpacing.md),
       children: [
         // Greeting / status header
-        _buildHeader(context, viewModel, brightness),
+        AnimatedSwitcher(
+          duration: AppAnimations.medium,
+          switchInCurve: AppAnimations.easeOut,
+          switchOutCurve: AppAnimations.easeIn,
+          child: _buildHeader(context, viewModel, brightness),
+        ),
         SizedBox(height: AppSpacing.md),
 
         // Counter summary
@@ -108,7 +113,12 @@ class TodayView extends StackedView<TodayViewModel> {
         ],
 
         // Content based on mode
-        _buildModeContent(context, viewModel, brightness),
+        AnimatedSwitcher(
+          duration: AppAnimations.medium,
+          switchInCurve: AppAnimations.easeOut,
+          switchOutCurve: AppAnimations.easeIn,
+          child: _buildModeContent(context, viewModel, brightness),
+        ),
       ],
     );
   }
@@ -125,6 +135,7 @@ class TodayView extends StackedView<TodayViewModel> {
     switch (viewModel.mode) {
       case TodayMode.morning:
         return Column(
+          key: const ValueKey('header-morning'),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -145,6 +156,7 @@ class TodayView extends StackedView<TodayViewModel> {
         final completed = viewModel.completedHabits.length;
         final total = viewModel.todayHabits.length;
         return Column(
+          key: const ValueKey('header-progress'),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -162,6 +174,7 @@ class TodayView extends StackedView<TodayViewModel> {
         );
       case TodayMode.bilan:
         return Column(
+          key: const ValueKey('header-bilan'),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -189,10 +202,12 @@ class TodayView extends StackedView<TodayViewModel> {
     TodayViewModel viewModel,
     Brightness brightness,
   ) {
+    final l10n = context.l10n;
     switch (viewModel.mode) {
       case TodayMode.morning:
         // All habits grouped by time slot
         return TodayHabitsSection(
+          key: const ValueKey('mode-morning'),
           habitsBySlot: viewModel.habitsByTimeSlot,
           domainResolver: viewModel.domainFor,
           logResolver: viewModel.todayLogFor,
@@ -203,12 +218,13 @@ class TodayView extends StackedView<TodayViewModel> {
       case TodayMode.progress:
         // Done (collapsed) + Remaining (expanded)
         return Column(
+          key: const ValueKey('mode-progress'),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Completed section
             if (viewModel.completedHabits.isNotEmpty) ...[
               Text(
-                '✅ Faites',
+                l10n.todayDone,
                 style: AppTypography.labelLarge.copyWith(
                   color: AppColors.textSecondary(brightness),
                 ),
@@ -225,7 +241,7 @@ class TodayView extends StackedView<TodayViewModel> {
             // Remaining section
             if (viewModel.remainingHabits.isNotEmpty) ...[
               Text(
-                '⏳ Restantes',
+                l10n.todayRemaining,
                 style: AppTypography.labelLarge.copyWith(
                   color: AppColors.textSecondary(brightness),
                 ),
@@ -245,6 +261,7 @@ class TodayView extends StackedView<TodayViewModel> {
       case TodayMode.bilan:
         // Day summary with domain breakdown
         return Column(
+          key: const ValueKey('mode-bilan'),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildDaySummary(viewModel, brightness),
@@ -269,33 +286,37 @@ class TodayView extends StackedView<TodayViewModel> {
   ) {
     final streak = viewModel.streakFor(habit.id);
 
-    return AppCard.filled(
-      backgroundColor: AppColors.success.withValues(alpha: 0.05),
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.check_circle, color: AppColors.success, size: 20),
-          SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Text(
-              habit.name,
-              style: AppTypography.textMedium.copyWith(
-                color: AppColors.textSecondary(brightness),
-                decoration: TextDecoration.lineThrough,
+    return AnimatedOpacity(
+      opacity: 1.0,
+      duration: AppAnimations.medium,
+      child: AppCard.filled(
+        backgroundColor: AppColors.success.withValues(alpha: 0.05),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.check_circle, color: AppColors.success, size: 20),
+            SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                habit.name,
+                style: AppTypography.textMedium.copyWith(
+                  color: AppColors.textSecondary(brightness),
+                  decoration: TextDecoration.lineThrough,
+                ),
               ),
             ),
-          ),
-          if (streak.currentStreak > 0)
-            Text(
-              '🔥 ${streak.currentStreak}j',
-              style: AppTypography.caption.copyWith(
-                color: AppColors.textSecondary(brightness),
+            if (streak.currentStreak > 0)
+              Text(
+                '🔥 ${streak.currentStreak}j',
+                style: AppTypography.caption.copyWith(
+                  color: AppColors.textSecondary(brightness),
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

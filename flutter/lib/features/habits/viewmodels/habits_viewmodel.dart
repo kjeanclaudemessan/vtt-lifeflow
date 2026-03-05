@@ -8,6 +8,7 @@ import '../../../domain/entities/habit_log_entity.dart';
 import '../../../domain/entities/streak_info.dart';
 import '../../../domain/repositories/i_domain_repository.dart';
 import '../../../domain/repositories/i_habit_repository.dart';
+import '../../../services/haptic_service.dart';
 import '../../../services/habit_event_service.dart';
 
 /// ViewModel for the habits list view.
@@ -17,6 +18,7 @@ class HabitsViewModel extends BaseViewModel {
   final _habitRepo = locator<IHabitRepository>();
   final _domainRepo = locator<IDomainRepository>();
   final _habitEvents = locator<HabitEventService>();
+  final _haptic = locator<HapticService>();
 
   List<HabitEntity> _allHabits = [];
   List<DomainEntity> _domains = [];
@@ -163,6 +165,7 @@ class HabitsViewModel extends BaseViewModel {
       result.fold(
         (failure) => setError(failure.message),
         (_) {
+          _haptic.light();
           _todayLogs.remove(habitId);
           rebuildUi();
         },
@@ -178,6 +181,7 @@ class HabitsViewModel extends BaseViewModel {
       result.fold(
         (failure) => setError(failure.message),
         (log) {
+          _haptic.success();
           _todayLogs[habitId] = log;
           rebuildUi();
         },
@@ -200,10 +204,11 @@ class HabitsViewModel extends BaseViewModel {
 
   /// Archives a habit.
   Future<void> archiveHabit(String habitId) async {
+    _haptic.warning();
     final result = await _habitRepo.archiveHabit(habitId);
     result.fold(
       (failure) => setError(failure.message),
-      (_) {},
+      (_) => _haptic.success(),
     );
     if (result.isRight()) {
       _habitEvents.notifyHabitChanged();

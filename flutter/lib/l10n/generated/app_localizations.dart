@@ -1963,6 +1963,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Counter'**
   String get navCounter;
+
+  /// No description provided for @todayDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get todayDone;
+
+  /// No description provided for @todayRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get todayRemaining;
+
+  /// No description provided for @profileCompletion.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Completion'**
+  String get profileCompletion;
+
+  /// No description provided for @exportData.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Data'**
+  String get exportData;
+
+  /// No description provided for @counterTotalWithTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Total: {time}'**
+  String counterTotalWithTime(String time);
+
+  /// No description provided for @counterDeltaVsLastWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'{delta} vs last week'**
+  String counterDeltaVsLastWeek(String delta);
 }
 
 class _AppLocalizationsDelegate

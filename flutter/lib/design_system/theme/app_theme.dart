@@ -8,16 +8,16 @@ import '../tokens/app_spacing.dart';
 
 /// ============================================================================
 /// VTT DESIGN SYSTEM - THEME
-/// Inspired by Porsche Design System
-/// Premium • Bold • High Contrast • Monochromatic
+/// LifeFlow Design System
+/// Premium • Calm • High Contrast • Monochromatic + Teal
 /// ============================================================================
 
-/// App theme configuration inspired by Porsche Design System.
+/// App theme configuration for LifeFlow.
 ///
 /// Design principles:
 /// - Light theme as primary choice
 /// - High contrast for accessibility
-/// - Monochromatic base with bold red accent
+/// - Monochromatic base with calming teal accent
 /// - Clean, refined components
 abstract final class AppTheme {
   // ═══════════════════════════════════════════════════════════════════════════

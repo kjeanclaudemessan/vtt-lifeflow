@@ -155,7 +155,8 @@ class LoginView extends StackedView<LoginViewModel> {
                   Text(
                     l10n.dontHaveAccount,
                     style: AppTypography.bodyMedium.copyWith(
-                      color: AppColors.textSecondaryLight,
+                      color:
+                          AppColors.textSecondary(Theme.of(context).brightness),
                     ),
                   ),
                   TextButton(

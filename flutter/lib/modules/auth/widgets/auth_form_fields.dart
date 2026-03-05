@@ -135,7 +135,7 @@ class _AuthPasswordFieldState extends State<AuthPasswordField> {
           widget.obscureText
               ? Icons.visibility_outlined
               : Icons.visibility_off_outlined,
-          color: AppColors.textTertiaryLight,
+          color: AppColors.textTertiary(Theme.of(context).brightness),
         ),
         onPressed: widget.onToggleVisibility,
       ),
@@ -235,7 +235,7 @@ class TermsCheckbox extends StatelessWidget {
               TextSpan(
                 text: termsText ?? 'I agree to the ',
                 style: AppTypography.bodySmall.copyWith(
-                  color: AppColors.textSecondaryLight,
+                  color: AppColors.textSecondary(Theme.of(context).brightness),
                 ),
                 children: [
                   WidgetSpan(
@@ -308,7 +308,7 @@ class RememberMeCheckbox extends StatelessWidget {
           child: Text(
             label ?? 'Remember me',
             style: AppTypography.bodySmall.copyWith(
-              color: AppColors.textSecondaryLight,
+              color: AppColors.textSecondary(Theme.of(context).brightness),
             ),
           ),
         ),

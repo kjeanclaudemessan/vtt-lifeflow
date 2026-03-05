@@ -60,7 +60,7 @@ class OnboardingSlideWidget extends StatelessWidget {
           Text(
             _getLocalizedText(l10n, slide.descriptionKey),
             style: AppTypography.bodyMedium.copyWith(
-              color: AppColors.textSecondaryLight,
+              color: AppColors.textSecondary(Theme.of(context).brightness),
             ),
             textAlign: TextAlign.center,
           ),
@@ -188,7 +188,7 @@ class OnboardingSlideWidget extends StatelessWidget {
           Text(
             _getLocalizedText(l10n, slide.descriptionKey),
             style: AppTypography.bodyMedium.copyWith(
-              color: AppColors.textSecondaryLight,
+              color: AppColors.textSecondary(Theme.of(context).brightness),
               height: 1.5,
             ),
             textAlign: TextAlign.center,

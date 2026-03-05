@@ -63,15 +63,33 @@ class TodayHabitsSection extends StatelessWidget {
               ),
             ),
             // Habit tiles
-            ...habits.map((habit) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: AppSpacing.xs),
-                child: HabitCheckTile(
-                  habit: habit,
-                  domain: domainResolver(habit.domainId),
-                  log: logResolver(habit.id),
-                  streak: streakResolver(habit.id),
-                  onToggle: () => onToggle(habit.id),
+            ...habits.asMap().entries.map((habitEntry) {
+              final index = habitEntry.key;
+              final habit = habitEntry.value;
+              return TweenAnimationBuilder<double>(
+                key: ValueKey(habit.id),
+                tween: Tween(begin: 0.0, end: 1.0),
+                duration:
+                    AppAnimations.medium + AppAnimations.staggeredDelay(index),
+                curve: AppAnimations.easeOut,
+                builder: (context, value, child) {
+                  return Opacity(
+                    opacity: value,
+                    child: Transform.translate(
+                      offset: Offset(0, 12 * (1 - value)),
+                      child: child,
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: AppSpacing.xs),
+                  child: HabitCheckTile(
+                    habit: habit,
+                    domain: domainResolver(habit.domainId),
+                    log: logResolver(habit.id),
+                    streak: streakResolver(habit.id),
+                    onToggle: () => onToggle(habit.id),
+                  ),
                 ),
               );
             }),

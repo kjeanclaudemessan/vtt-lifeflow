@@ -484,5 +484,25 @@
   "@_NAVIGATION": {},
   "navToday": "Today",
   "navHabits": "Habits",
-  "navCounter": "Counter"
+  "navCounter": "Counter",
+  "todayDone": "Done",
+  "todayRemaining": "Remaining",
+  "profileCompletion": "Profile Completion",
+  "exportData": "Export Data",
+  "counterTotalWithTime": "Total: {time}",
+  "@counterTotalWithTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "counterDeltaVsLastWeek": "{delta} vs last week",
+  "@counterDeltaVsLastWeek": {
+    "placeholders": {
+      "delta": {
+        "type": "String"
+      }
+    }
+  }
 }

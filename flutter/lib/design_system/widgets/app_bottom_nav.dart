@@ -97,67 +97,78 @@ class AppBottomNav extends StatelessWidget {
   Widget _buildNavItem(int index, AppBottomNavItem item, bool isDark) {
     final isSelected = currentIndex == index;
 
-    return GestureDetector(
-      onTap: () => onTap(index),
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
+    return Semantics(
+      label: item.label,
+      button: true,
+      selected: isSelected,
+      child: Tooltip(
+        message: item.label,
+        child: GestureDetector(
+          onTap: () => onTap(index),
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  isSelected ? (item.selectedIcon ?? item.icon) : item.icon,
-                  color: isSelected
-                      ? AppColors.primary
-                      : (isDark
-                          ? AppColors.textTertiaryDark
-                          : AppColors.textTertiaryLight),
-                  size: 24.sp,
-                ),
-                if (item.badgeCount != null && item.badgeCount! > 0)
-                  Positioned(
-                    top: -4.h,
-                    right: -8.w,
-                    child: Container(
-                      constraints:
-                          BoxConstraints(minWidth: 16.w, minHeight: 16.w),
-                      padding: EdgeInsets.symmetric(horizontal: 4.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.error,
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Center(
-                        child: Text(
-                          item.badgeCount! > 99 ? '99+' : '${item.badgeCount}',
-                          style: TextStyle(
-                            color: AppColors.white,
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w600,
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Icon(
+                      isSelected ? (item.selectedIcon ?? item.icon) : item.icon,
+                      color: isSelected
+                          ? AppColors.primary
+                          : (isDark
+                              ? AppColors.textTertiaryDark
+                              : AppColors.textTertiaryLight),
+                      size: 24.sp,
+                    ),
+                    if (item.badgeCount != null && item.badgeCount! > 0)
+                      Positioned(
+                        top: -4.h,
+                        right: -8.w,
+                        child: Container(
+                          constraints:
+                              BoxConstraints(minWidth: 16.w, minHeight: 16.w),
+                          padding: EdgeInsets.symmetric(horizontal: 4.w),
+                          decoration: BoxDecoration(
+                            color: AppColors.error,
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Center(
+                            child: Text(
+                              item.badgeCount! > 99
+                                  ? '99+'
+                                  : '${item.badgeCount}',
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ),
                       ),
+                  ],
+                ),
+                if (showLabels) ...[
+                  SizedBox(height: 4.h),
+                  Text(
+                    item.label,
+                    style: AppTypography.caption.copyWith(
+                      color: isSelected
+                          ? AppColors.primary
+                          : (isDark
+                              ? AppColors.textTertiaryDark
+                              : AppColors.textTertiaryLight),
+                      fontWeight:
+                          isSelected ? FontWeight.w600 : FontWeight.w400,
                     ),
                   ),
+                ],
               ],
             ),
-            if (showLabels) ...[
-              SizedBox(height: 4.h),
-              Text(
-                item.label,
-                style: AppTypography.caption.copyWith(
-                  color: isSelected
-                      ? AppColors.primary
-                      : (isDark
-                          ? AppColors.textTertiaryDark
-                          : AppColors.textTertiaryLight),
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                ),
-              ),
-            ],
-          ],
+          ),
         ),
       ),
     );

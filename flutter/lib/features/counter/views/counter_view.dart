@@ -140,7 +140,7 @@ class CounterView extends StackedView<CounterViewModel> {
       child: Column(
         children: [
           Text(
-            'Total: ${viewModel.totalHoursLabel}',
+            l10n.counterTotalWithTime(viewModel.totalHoursLabel),
             style: AppTypography.headingMedium.copyWith(
               color: AppColors.textPrimary(brightness),
             ),
@@ -148,7 +148,7 @@ class CounterView extends StackedView<CounterViewModel> {
           if (viewModel.deltaMinutes != 0) ...[
             SizedBox(height: AppSpacing.xxs),
             Text(
-              '${viewModel.deltaLabel} vs sem. dernière',
+              l10n.counterDeltaVsLastWeek(viewModel.deltaLabel),
               style: AppTypography.textSmall.copyWith(
                 color: viewModel.isPositiveDelta
                     ? AppColors.success

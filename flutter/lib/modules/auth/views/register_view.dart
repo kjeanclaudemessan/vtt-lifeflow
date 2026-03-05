@@ -183,7 +183,8 @@ class RegisterView extends StackedView<RegisterViewModel> {
                   Text(
                     l10n.alreadyHaveAccount,
                     style: AppTypography.bodyMedium.copyWith(
-                      color: AppColors.textSecondaryLight,
+                      color:
+                          AppColors.textSecondary(Theme.of(context).brightness),
                     ),
                   ),
                   TextButton(

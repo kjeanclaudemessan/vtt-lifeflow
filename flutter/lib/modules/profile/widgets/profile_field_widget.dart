@@ -171,7 +171,7 @@ class _ProfileFieldWidgetState extends State<ProfileFieldWidget> {
         Text(
           label,
           style: AppTypography.labelMedium.copyWith(
-            color: AppColors.textSecondaryLight,
+            color: AppColors.textSecondary(Theme.of(context).brightness),
           ),
         ),
         SizedBox(height: AppSpacing.xs),
@@ -312,7 +312,8 @@ class ProfileFieldDisplay extends StatelessWidget {
                   Text(
                     label,
                     style: AppTypography.bodySmall.copyWith(
-                      color: AppColors.textSecondaryLight,
+                      color:
+                          AppColors.textSecondary(Theme.of(context).brightness),
                     ),
                   ),
                   SizedBox(height: 2.h),

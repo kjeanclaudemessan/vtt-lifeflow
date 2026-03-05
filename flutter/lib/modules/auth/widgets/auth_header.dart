@@ -69,7 +69,7 @@ class AuthHeader extends StatelessWidget {
           Text(
             subtitle!,
             style: AppTypography.bodyMedium.copyWith(
-              color: AppColors.textSecondaryLight,
+              color: AppColors.textSecondary(Theme.of(context).brightness),
             ),
             textAlign: alignment == CrossAxisAlignment.center
                 ? TextAlign.center

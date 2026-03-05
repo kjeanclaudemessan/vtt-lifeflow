@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 /// ============================================================================
 /// VTT DESIGN SYSTEM - COLORS
-/// Inspired by Porsche Design System
-/// Premium • Bold • Distinctive • High Contrast
+/// LifeFlow Design System
+/// Premium • Calm • Distinctive • High Contrast
 /// ============================================================================
 
-/// Porsche-inspired color palette with monochromatic base and bold accent.
+/// LifeFlow color palette with monochromatic base and calming accent.
 ///
 /// Design principles:
 /// - Monochromatic base (deep black / pure white)
-/// - Bold accent color (Porsche Red)
+/// - Calming accent color (Teal) — wellness & flow
 /// - High contrast for accessibility
 /// - Limited color set for consistency
 /// - Frosted glass effects for premium feel
@@ -19,15 +19,15 @@ abstract final class AppColors {
   // BRAND COLORS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /// Primary brand color - Porsche Red
+  /// Primary brand color - Teal
   /// Used for CTAs, highlights, and brand moments
-  static const Color primary = Color(0xFFD5001C);
+  static const Color primary = Color(0xFF0D9488);
 
   /// Primary color variants
-  static const Color primaryLight = Color(0xFFFF2D46);
-  static const Color primaryDark = Color(0xFFA30015);
-  static const Color primaryContainer = Color(0xFFFDE6E9);
-  static const Color primaryContainerDark = Color(0xFF3D0008);
+  static const Color primaryLight = Color(0xFF14B8A6);
+  static const Color primaryDark = Color(0xFF0F766E);
+  static const Color primaryContainer = Color(0xFFE6F7F5);
+  static const Color primaryContainerDark = Color(0xFF042F2E);
 
   /// On primary (text/icons on primary backgrounds)
   static const Color onPrimary = Color(0xFFFFFFFF);
@@ -371,4 +371,36 @@ abstract final class AppColors {
       brightness == Brightness.light
           ? surfaceSecondaryLight
           : surfaceSecondaryDark;
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // DOMAIN COLORS — Habit categories
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Health & Wellness
+  static const Color domainHealth = Color(0xFF10B981);
+
+  /// Fitness & Sport
+  static const Color domainFitness = Color(0xFFF59E0B);
+
+  /// Mindfulness & Meditation
+  static const Color domainMindfulness = Color(0xFF8B5CF6);
+
+  /// Work & Productivity
+  static const Color domainWork = Color(0xFF3B82F6);
+
+  /// Social & Relationships
+  static const Color domainSocial = Color(0xFFEC4899);
+
+  /// Creativity & Learning
+  static const Color domainCreativity = Color(0xFFF97316);
+
+  /// All domain colors indexed by name
+  static const Map<String, Color> domainColors = {
+    'health': domainHealth,
+    'fitness': domainFitness,
+    'mindfulness': domainMindfulness,
+    'work': domainWork,
+    'social': domainSocial,
+    'creativity': domainCreativity,
+  };
 }

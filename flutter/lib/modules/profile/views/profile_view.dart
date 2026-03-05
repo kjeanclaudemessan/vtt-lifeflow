@@ -91,7 +91,8 @@ class ProfileView extends StackedView<ProfileViewModel> {
                       Text(
                         viewModel.email,
                         style: AppTypography.bodyMedium.copyWith(
-                          color: AppColors.textSecondaryLight,
+                          color: AppColors.textSecondary(
+                              Theme.of(context).brightness),
                         ),
                       ),
                     ],
@@ -138,7 +139,7 @@ class ProfileView extends StackedView<ProfileViewModel> {
                 if (viewModel.config.enableDataExport)
                   ProfileActionButton(
                     icon: Icons.download_outlined,
-                    label: 'Export Data',
+                    label: l10n.exportData,
                     onTap: viewModel.exportData,
                   ),
                 ProfileActionButton(
@@ -203,7 +204,8 @@ class ProfileView extends StackedView<ProfileViewModel> {
                       Text(
                         viewModel.email,
                         style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.textSecondaryLight,
+                          color: AppColors.textSecondary(
+                              Theme.of(context).brightness),
                         ),
                       ),
                     ],
@@ -362,7 +364,7 @@ class ProfileView extends StackedView<ProfileViewModel> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Profile Completion',
+              l10n.profileCompletion,
               style: AppTypography.labelMedium,
             ),
             Text(

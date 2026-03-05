@@ -402,5 +402,11 @@
   "@_NAVIGATION": {},
   "navToday": "Aujourd'hui",
   "navHabits": "Habitudes",
-  "navCounter": "Compteur"
+  "navCounter": "Compteur",
+  "todayDone": "Faites",
+  "todayRemaining": "Restantes",
+  "profileCompletion": "Complétion du profil",
+  "exportData": "Exporter les données",
+  "counterTotalWithTime": "Total : {time}",
+  "counterDeltaVsLastWeek": "{delta} vs sem. dernière"
 }

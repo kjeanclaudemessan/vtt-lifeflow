@@ -39,6 +39,7 @@ import 'package:lifeflow/services/storage/secure_storage_service.dart';
 import 'package:lifeflow/services/storage/storage_service.dart';
 import 'package:lifeflow/services/supabase/supabase_auth_service.dart';
 import 'package:lifeflow/services/supabase/supabase_service.dart';
+import 'package:lifeflow/services/haptic_service.dart';
 import 'package:lifeflow/services/time_counter_service.dart';
 import 'package:lifeflow/ui/bottom_sheets/notice/notice_sheet.dart';
 import 'package:lifeflow/ui/dialogs/info_alert/info_alert_dialog.dart';
@@ -126,6 +127,7 @@ import 'package:lifeflow/ui/views/startup/startup_view.dart';
     // ═══════════════════════════════════════════════════════════════════════
     // DEVICE SERVICES
     // ═══════════════════════════════════════════════════════════════════════
+    LazySingleton(classType: HapticService),
 
     // ═══════════════════════════════════════════════════════════════════════
     // FIREBASE SERVICES

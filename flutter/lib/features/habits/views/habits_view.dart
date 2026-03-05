@@ -80,7 +80,10 @@ class HabitsView extends StackedView<HabitsViewModel> {
                     ),
                   ),
                 )
-              : _buildHabitsList(context, viewModel, brightness),
+              : RefreshIndicator(
+                  onRefresh: viewModel.refresh,
+                  child: _buildHabitsList(context, viewModel, brightness),
+                ),
         ),
       ],
     );
@@ -154,20 +157,40 @@ class HabitsView extends StackedView<HabitsViewModel> {
             ...habits.map((habit) {
               return Padding(
                 padding: EdgeInsets.only(bottom: AppSpacing.xs),
-                child: HabitCheckTile(
-                  habit: habit,
-                  domain: viewModel.domainFor(habit.domainId),
-                  log: viewModel.todayLogFor(habit.id),
-                  streak: viewModel.streakFor(habit.id),
-                  onToggle: () => viewModel.toggleHabit(habit.id),
-                  onTap: () async {
-                    final result =
-                        await locator<NavigationService>().navigateTo(
-                      Routes.habitFormView,
-                      arguments: HabitFormViewArguments(habit: habit),
-                    );
-                    if (result == true) await viewModel.refresh();
+                child: Dismissible(
+                  key: ValueKey(habit.id),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.only(right: AppSpacing.lg),
+                    decoration: BoxDecoration(
+                      color: AppColors.warning.withValues(alpha: 0.15),
+                      borderRadius: AppRadius.md,
+                    ),
+                    child: Icon(
+                      Icons.archive_outlined,
+                      color: AppColors.warning,
+                    ),
+                  ),
+                  confirmDismiss: (_) async {
+                    await viewModel.archiveHabit(habit.id);
+                    return false; // Don't remove from list — let refresh handle
                   },
+                  child: HabitCheckTile(
+                    habit: habit,
+                    domain: viewModel.domainFor(habit.domainId),
+                    log: viewModel.todayLogFor(habit.id),
+                    streak: viewModel.streakFor(habit.id),
+                    onToggle: () => viewModel.toggleHabit(habit.id),
+                    onTap: () async {
+                      final result =
+                          await locator<NavigationService>().navigateTo(
+                        Routes.habitFormView,
+                        arguments: HabitFormViewArguments(habit: habit),
+                      );
+                      if (result == true) await viewModel.refresh();
+                    },
+                  ),
                 ),
               );
             }),

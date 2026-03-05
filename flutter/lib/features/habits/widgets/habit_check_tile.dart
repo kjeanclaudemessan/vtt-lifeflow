@@ -50,41 +50,45 @@ class HabitCheckTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
 
-    return AppCard.outlined(
-      onTap: onTap,
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
-      ),
-      child: Row(
-        children: [
-          // Check / input area
-          _buildCheckArea(context, brightness),
-          SizedBox(width: AppSpacing.sm),
-          // Content
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Name row
-                Text(
-                  _buildDisplayName(),
-                  style: AppTypography.titleMedium.copyWith(
-                    color: _isCompleted
-                        ? AppColors.textSecondary(brightness)
-                        : AppColors.textPrimary(brightness),
-                    decoration:
-                        _isCompleted ? TextDecoration.lineThrough : null,
+    return Semantics(
+      label: '${habit.name}, ${_isCompleted ? 'completed' : 'not completed'}',
+      button: true,
+      child: AppCard.outlined(
+        onTap: onTap,
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        child: Row(
+          children: [
+            // Check / input area
+            _buildCheckArea(context, brightness),
+            SizedBox(width: AppSpacing.sm),
+            // Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Name row
+                  Text(
+                    _buildDisplayName(),
+                    style: AppTypography.titleMedium.copyWith(
+                      color: _isCompleted
+                          ? AppColors.textSecondary(brightness)
+                          : AppColors.textPrimary(brightness),
+                      decoration:
+                          _isCompleted ? TextDecoration.lineThrough : null,
+                    ),
                   ),
-                ),
-                SizedBox(height: AppSpacing.xxs),
-                // Info row: domain chip + streak + duration
-                _buildInfoRow(context, brightness),
-              ],
+                  SizedBox(height: AppSpacing.xxs),
+                  // Info row: domain chip + streak + duration
+                  _buildInfoRow(context, brightness),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -93,10 +97,15 @@ class HabitCheckTile extends StatelessWidget {
     if (habit.isQuantitative) {
       return _buildQuantitativeCheck(context, brightness);
     }
-    return Checkbox(
-      value: _isCompleted,
-      activeColor: AppColors.primary,
-      onChanged: (_) => onToggle?.call(),
+    return AnimatedScale(
+      scale: _isCompleted ? 1.0 : 0.95,
+      duration: AppAnimations.fast,
+      curve: AppAnimations.easeOut,
+      child: Checkbox(
+        value: _isCompleted,
+        activeColor: AppColors.primary,
+        onChanged: (_) => onToggle?.call(),
+      ),
     );
   }
 

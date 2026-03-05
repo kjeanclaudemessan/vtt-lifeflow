@@ -9,6 +9,7 @@ import '../../../domain/entities/habit_entity.dart';
 import '../../../domain/repositories/i_domain_repository.dart';
 import '../../../domain/repositories/i_habit_repository.dart';
 import '../../../services/analytics/analytics_service.dart';
+import '../../../services/haptic_service.dart';
 import '../../../services/habit_event_service.dart';
 import '../../../services/local_notification/local_notification_scheduler.dart';
 
@@ -17,6 +18,7 @@ class HabitFormViewModel extends BaseViewModel {
   final _habitRepo = locator<IHabitRepository>();
   final _domainRepo = locator<IDomainRepository>();
   final _navigationService = locator<NavigationService>();
+  final _haptic = locator<HapticService>();
 
   /// The habit being edited (null for create mode).
   HabitEntity? _editingHabit;
@@ -197,10 +199,12 @@ class HabitFormViewModel extends BaseViewModel {
 
     result.fold(
       (failure) {
+        _haptic.error();
         setError(failure.message);
         setBusy(false);
       },
       (savedHabit) {
+        _haptic.success();
         locator<AnalyticsService>().capture(
           isEditMode ? 'habit_updated' : 'habit_created',
           properties: {

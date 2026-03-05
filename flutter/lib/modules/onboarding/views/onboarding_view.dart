@@ -52,7 +52,8 @@ class OnboardingView extends StackedView<OnboardingViewModel> {
                     child: Text(
                       context.l10n.skip,
                       style: AppTypography.labelMedium.copyWith(
-                        color: AppColors.textSecondaryLight,
+                        color: AppColors.textSecondary(
+                            Theme.of(context).brightness),
                       ),
                     ),
                   ),

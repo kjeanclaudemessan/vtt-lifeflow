@@ -10,6 +10,7 @@ import '../../../domain/repositories/i_domain_repository.dart';
 import '../../../domain/repositories/i_habit_repository.dart';
 import '../../../domain/repositories/i_notification_repository.dart';
 import '../../../services/analytics/analytics_service.dart';
+import '../../../services/haptic_service.dart';
 import '../../../services/habit_event_service.dart';
 import '../../../services/time_counter_service.dart';
 
@@ -22,6 +23,7 @@ class TodayViewModel extends BaseViewModel {
   final _counterService = locator<TimeCounterService>();
   final _notifRepo = locator<INotificationRepository>();
   final _habitEvents = locator<HabitEventService>();
+  final _haptic = locator<HapticService>();
 
   List<HabitEntity> _todayHabits = [];
   List<DomainEntity> _domains = [];
@@ -208,6 +210,7 @@ class TodayViewModel extends BaseViewModel {
       result.fold(
         (f) => setError(f.message),
         (_) {
+          _haptic.light();
           _todayLogs.remove(habitId);
           locator<AnalyticsService>().capture('habit_uncompleted', properties: {
             'habit_id': habitId,
@@ -225,6 +228,7 @@ class TodayViewModel extends BaseViewModel {
       result.fold(
         (f) => setError(f.message),
         (log) {
+          _haptic.success();
           _todayLogs[habitId] = log;
           locator<AnalyticsService>().capture('habit_completed', properties: {
             'habit_id': habitId,

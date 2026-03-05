@@ -47,7 +47,7 @@ class OnboardingNavigation extends StatelessWidget {
               child: Text(
                 l10n.skip,
                 style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.textSecondaryLight,
+                  color: AppColors.textSecondary(Theme.of(context).brightness),
                 ),
               ),
             )
@@ -121,7 +121,7 @@ class OnboardingNavigationFull extends StatelessWidget {
               child: Text(
                 l10n.skip,
                 style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.textSecondaryLight,
+                  color: AppColors.textSecondary(Theme.of(context).brightness),
                 ),
               ),
             ),
