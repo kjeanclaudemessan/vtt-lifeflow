@@ -366,3 +366,64 @@ await bootstrap(environment: Environment.development);
 6. **Modules are self-contained** — a module should not import from another module directly.
 7. **Optional modules live under `modules/optional/`** and are toggled via `vtt.yaml`.
 8. **Flutter talks directly to Supabase** for most operations — no FastAPI needed for CRUD.
+
+---
+
+## UX Quality Rules
+
+> These rules are **mandatory** for every view, widget, and viewmodel.
+> They complement the architecture rules above with user-experience quality standards.
+> Detailed instructions live in `instructions/` — this section indexes them.
+
+### File-Pattern Instructions (auto-applied)
+
+| Instruction File | Applies To | Summary |
+|---|---|---|
+| `dark-mode.instructions.md` | `**/*.dart` | Never use `*Light`/`*Dark` color variants directly. Use `AppColors.textSecondary(brightness)` helpers. Ban `Colors.white`/`Colors.black`. |
+| `animation.instructions.md` | `**/*_view.dart` | Every visible state change must be animated. Use `AppAnimations` tokens. `AnimatedSwitcher` on content switches, `AnimatedScale` on toggles, `TweenAnimationBuilder` on counters. |
+| `haptic.instructions.md` | `**/*_viewmodel.dart` | Every user action triggers haptic feedback. `mediumImpact` on success, `heavyImpact` on error, `selectionClick` on selection, `lightImpact` on toggle. |
+| `accessibility.instructions.md` | `**/*.dart` | All interactive elements need `Semantics`. All icons need `semanticLabel`. Touch targets ≥ 48dp. Decorative elements get `ExcludeSemantics`. |
+| `i18n-strict.instructions.md` | `**/*_view.dart,**/*_dialog.dart` | Zero hardcoded user-facing strings. No emoji-prefixed labels. Use `context.l10n` exclusively. |
+| `sizing.instructions.md` | `**/*.dart` | No magic numbers for sizes. Use `AppSizing` tokens for icons, avatars, touch targets, progress indicators. |
+| `gestures.instructions.md` | `**/*_view.dart` | Data lists need `RefreshIndicator`. List items need `Slidable` or `Dismissible`. Long-press for quick actions. |
+| `loading-states.instructions.md` | `**/*_view.dart,**/*_viewmodel.dart` | Initial load = skeleton (not spinner). Submit = button loading. Refresh = pull-to-refresh. Pagination = inline loader. |
+| `error-states.instructions.md` | `**/*_view.dart,**/*_viewmodel.dart` | Load error = AppEmptyState + retry. Action error = SnackBar. Full state machine: error → busy → empty → content. |
+| `nav-transitions.instructions.md` | `**/*_viewmodel.dart,**/app.dart` | Push = slide, modal = bottom slide, replace = cross-fade. Hero animations. No raw `Navigator.push`. |
+| `color-consistency.instructions.md` | `**/*_view.dart,**/*.dart` | All Scaffold backgrounds from `context.colorScheme`. Never hardcode `AppColors.*Light`/`*Dark` for surfaces. |
+| `reactivity.instructions.md` | `**/*_viewmodel.dart,**/*_service.dart` | Every entity needs an EventService. Every mutation calls `notifyChanged()`. Every consumer subscribes + unsubscribes. No stale UI. |
+
+### Task Prompts
+
+| Prompt | Purpose |
+|---|---|
+| `fix-dark-mode.prompt.md` | Scan and fix all dark mode violations in a file/folder |
+| `add-animations.prompt.md` | Add micro-interactions to a view |
+| `add-haptics.prompt.md` | Add haptic feedback to a ViewModel |
+| `add-accessibility.prompt.md` | Add Semantics + labels to a view/widget |
+| `add-gestures.prompt.md` | Add swipe/refresh/long-press to a view |
+| `audit-ux.prompt.md` | Run a full UX audit with /10 scores |
+
+### Specialized Agents
+
+| Agent | Role |
+|---|---|
+| `ux-auditor.md` | Comprehensive UX audit — 8 dimensions scored /10 with actionable fixes |
+| `dark-mode-fixer.md` | Auto-scan and fix all dark mode violations across `lib/` |
+| `polish-agent.md` | Add animations + haptic + accessibility in one pass to a feature |
+
+### Quick Reference — The 12 UX Quality Checks
+
+Every PR / code review must verify:
+
+1. **Dark Mode** — `grep textSecondaryLight` returns 0 matches outside `design_system/`
+2. **Animations** — No `if/else` content swap without `AnimatedSwitcher`
+3. **Haptic** — Every public ViewModel action has `HapticFeedback`
+4. **Accessibility** — Every `Icon` has `semanticLabel`, every tappable has `Semantics`
+5. **i18n** — `grep "Text('" lib/features/ lib/modules/` returns 0 matches
+6. **Sizing** — No magic numbers (`size: 20`, `width: 44`) — use `AppSizing`
+7. **Gestures** — Every `ListView` has `RefreshIndicator`
+8. **Loading** — Initial data loads show skeleton, never bare `AppLoader()`/`CircularProgressIndicator()`
+9. **Errors** — View builder checks `hasError` before `isBusy` before `isEmpty` before content
+10. **Transitions** — No raw `Navigator.push`, modal forms slide from bottom
+11. **Color Consistency** — All Scaffold `backgroundColor` uses `context.colorScheme.*`, no `AppColors.*Light`/`*Dark`
+12. **Reactivity** — Every data mutation calls `EventService.notifyChanged()`, every consumer subscribes

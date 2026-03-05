@@ -46,11 +46,8 @@ class SettingsView extends StackedView<SettingsViewModel> {
     SettingsViewModel viewModel,
     AppLocalizations l10n,
   ) {
-    final isDark = context.isDarkMode;
-
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.backgroundDark : AppColors.surfaceSecondaryLight,
+      backgroundColor: context.colorScheme.surfaceContainerHighest,
       appBar: AppAppBar(
         title: l10n.settings,
         leading: AppBackButton(onPressed: viewModel.goBack),

@@ -446,3 +446,157 @@ String _email = '';
 // ❌ Don't use StatefulWidget
 class MyView extends StatefulWidget { }
 ```
+
+---
+
+## Animation Requirements
+
+> Ref: `animation.instructions.md`
+
+Every visible state change in a view MUST be animated.
+
+### Content Switching
+
+When the view displays different content based on state:
+
+```dart
+// ✅ REQUIRED
+AnimatedSwitcher(
+  duration: AppAnimations.normal,
+  switchInCurve: AppAnimations.emphasizedDecelerate,
+  switchOutCurve: AppAnimations.emphasizedAccelerate,
+  transitionBuilder: AppAnimations.fadeScale,
+  child: KeyedSubtree(
+    key: ValueKey(viewModel.currentState),
+    child: _buildForState(viewModel.currentState),
+  ),
+)
+
+// ❌ FORBIDDEN
+viewModel.isLoading
+    ? const CircularProgressIndicator()
+    : _buildContent(viewModel)
+```
+
+### Loading → Content Transition
+
+```dart
+// ✅ REQUIRED
+AnimatedSwitcher(
+  duration: AppAnimations.normal,
+  child: viewModel.isBusy
+      ? const Center(key: ValueKey('loading'), child: CircularProgressIndicator())
+      : KeyedSubtree(key: ValueKey('content'), child: _buildContent(context, viewModel)),
+)
+```
+
+### Progress Values
+
+```dart
+// ✅ REQUIRED — animate changing values
+TweenAnimationBuilder<double>(
+  tween: Tween(begin: 0, end: viewModel.progress),
+  duration: AppAnimations.normal,
+  curve: AppAnimations.emphasizedDecelerate,
+  builder: (context, value, child) {
+    return LinearProgressIndicator(value: value);
+  },
+)
+```
+
+---
+
+## Accessibility Requirements
+
+> Ref: `accessibility.instructions.md`
+
+### Icons Must Have Labels
+
+```dart
+// ✅ REQUIRED
+Icon(Icons.check, semanticLabel: context.l10n.completed)
+Icon(Icons.settings, semanticLabel: context.l10n.settings)
+
+// ❌ FORBIDDEN
+Icon(Icons.check)
+```
+
+### Interactive Elements Must Have Semantics
+
+```dart
+// ✅ REQUIRED
+Semantics(
+  button: true,
+  label: context.l10n.editProfile,
+  child: InkWell(onTap: viewModel.editProfile, child: ...),
+)
+```
+
+---
+
+## Gesture Requirements
+
+> Ref: `gestures.instructions.md`
+
+### Data Lists Must Have Pull-to-Refresh
+
+```dart
+// ✅ REQUIRED
+RefreshIndicator(
+  onRefresh: viewModel.refreshData,
+  color: AppColors.primary,
+  child: ListView.builder(
+    physics: const AlwaysScrollableScrollPhysics(),
+    itemCount: viewModel.items.length,
+    itemBuilder: (context, index) => _buildItem(viewModel.items[index]),
+  ),
+)
+```
+
+### List Items Should Support Contextual Gestures
+
+```dart
+// ✅ RECOMMENDED — swipe actions via flutter_slidable
+Slidable(
+  key: ValueKey(item.id),
+  endActionPane: ActionPane(
+    motion: const BehindMotion(),
+    children: [
+      SlidableAction(
+        onPressed: (_) => viewModel.archiveItem(item.id),
+        backgroundColor: AppColors.warning,
+        foregroundColor: AppColors.white,
+        icon: Icons.archive,
+        label: context.l10n.archive,
+      ),
+    ],
+  ),
+  child: _buildItemTile(item),
+)
+```
+
+---
+
+## Dark Mode Requirements
+
+> Ref: `dark-mode.instructions.md`
+
+### Extract Brightness
+
+```dart
+@override
+Widget builder(BuildContext context, MyViewModel viewModel, Widget? child) {
+  final brightness = Theme.of(context).brightness;
+  // Use brightness in all color references
+}
+```
+
+### Never Use Light/Dark Directly
+
+```dart
+// ✅ CORRECT
+color: AppColors.textSecondary(brightness)
+
+// ❌ FORBIDDEN
+color: AppColors.textSecondaryLight
+```

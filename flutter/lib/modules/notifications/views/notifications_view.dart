@@ -47,11 +47,8 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
     NotificationsViewModel viewModel,
     AppLocalizations l10n,
   ) {
-    final isDark = context.isDarkMode;
-
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: context.colorScheme.surface,
       appBar: _buildAppBar(context, viewModel, l10n),
       body: viewModel.isBusy
           ? const Center(child: AppLoader())
@@ -101,7 +98,7 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
     final isDark = context.isDarkMode;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+      backgroundColor: context.colorScheme.surface,
       appBar: _buildAppBar(context, viewModel, l10n),
       body: viewModel.isBusy
           ? const Center(child: AppLoader())
@@ -137,8 +134,7 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
     final grouped = viewModel.groupedNotifications;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: context.colorScheme.surface,
       appBar: _buildAppBar(context, viewModel, l10n),
       body: viewModel.isBusy
           ? const Center(child: AppLoader())
