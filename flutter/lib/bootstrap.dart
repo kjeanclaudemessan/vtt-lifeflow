@@ -16,6 +16,7 @@ import 'services/settings/app_settings_service.dart';
 import 'services/storage/local_storage_service.dart';
 import 'services/supabase/supabase_auth_service.dart';
 import 'services/supabase/supabase_service.dart';
+import 'services/sync/sync_engine.dart';
 
 /// Bootstraps the application.
 ///
@@ -93,6 +94,9 @@ Future<void> _initializeServices() async {
   final notifRouter = locator<NotificationRouter>();
   pushService.onNotificationTapped = notifRouter.handlePushTap;
   localScheduler.onNotificationTapped = notifRouter.handleLocalTap;
+
+  // Start offline sync engine
+  locator<SyncEngine>().start();
 }
 
 /// Logs startup information in debug mode.
@@ -103,9 +107,11 @@ void _logStartupInfo() {
   debugPrint('╠════════════════════════════════════════════════════════════╣');
   debugPrint('║  Environment: ${AppConfig.environment.name.padRight(42)} ║');
   debugPrint(
-      '║  API Base: ${config.apiBaseUrl.padRight(45).substring(0, 45)} ║');
+    '║  API Base: ${config.apiBaseUrl.padRight(45).substring(0, 45)} ║',
+  );
   debugPrint(
-      '║  Logging: ${config.enableLogging ? 'Enabled' : 'Disabled'}${' '.padRight(45)} ║'
-          .substring(0, 65));
+    '║  Logging: ${config.enableLogging ? 'Enabled' : 'Disabled'}${' '.padRight(45)} ║'
+        .substring(0, 65),
+  );
   debugPrint('╚════════════════════════════════════════════════════════════╝');
 }

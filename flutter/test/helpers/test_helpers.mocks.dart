@@ -31,40 +31,42 @@ import 'package:stacked_services/stacked_services.dart' as _i2;
 /// See the documentation for Mockito's code generation for more information.
 class MockNavigationService extends _i1.Mock implements _i2.NavigationService {
   @override
-  String get previousRoute => (super.noSuchMethod(
-        Invocation.getter(#previousRoute),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#previousRoute),
-        ),
-        returnValueForMissingStub: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#previousRoute),
-        ),
-      ) as String);
+  String get previousRoute =>
+      (super.noSuchMethod(
+            Invocation.getter(#previousRoute),
+            returnValue: _i3.dummyValue<String>(
+              this,
+              Invocation.getter(#previousRoute),
+            ),
+            returnValueForMissingStub: _i3.dummyValue<String>(
+              this,
+              Invocation.getter(#previousRoute),
+            ),
+          )
+          as String);
 
   @override
-  String get currentRoute => (super.noSuchMethod(
-        Invocation.getter(#currentRoute),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#currentRoute),
-        ),
-        returnValueForMissingStub: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#currentRoute),
-        ),
-      ) as String);
+  String get currentRoute =>
+      (super.noSuchMethod(
+            Invocation.getter(#currentRoute),
+            returnValue: _i3.dummyValue<String>(
+              this,
+              Invocation.getter(#currentRoute),
+            ),
+            returnValueForMissingStub: _i3.dummyValue<String>(
+              this,
+              Invocation.getter(#currentRoute),
+            ),
+          )
+          as String);
 
   @override
   _i4.GlobalKey<_i4.NavigatorState>? nestedNavigationKey(int? index) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #nestedNavigationKey,
-          [index],
-        ),
-        returnValueForMissingStub: null,
-      ) as _i4.GlobalKey<_i4.NavigatorState>?);
+            Invocation.method(#nestedNavigationKey, [index]),
+            returnValueForMissingStub: null,
+          )
+          as _i4.GlobalKey<_i4.NavigatorState>?);
 
   @override
   void config({
@@ -75,23 +77,18 @@ class MockNavigationService extends _i1.Mock implements _i2.NavigationService {
     bool? defaultGlobalState,
     _i2.Transition? defaultTransitionStyle,
     String? defaultTransition,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #config,
-          [],
-          {
-            #enableLog: enableLog,
-            #defaultPopGesture: defaultPopGesture,
-            #defaultOpaqueRoute: defaultOpaqueRoute,
-            #defaultDurationTransition: defaultDurationTransition,
-            #defaultGlobalState: defaultGlobalState,
-            #defaultTransitionStyle: defaultTransitionStyle,
-            #defaultTransition: defaultTransition,
-          },
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#config, [], {
+      #enableLog: enableLog,
+      #defaultPopGesture: defaultPopGesture,
+      #defaultOpaqueRoute: defaultOpaqueRoute,
+      #defaultDurationTransition: defaultDurationTransition,
+      #defaultGlobalState: defaultGlobalState,
+      #defaultTransitionStyle: defaultTransitionStyle,
+      #defaultTransition: defaultTransition,
+    }),
+    returnValueForMissingStub: null,
+  );
 
   @override
   _i5.Future<T?>? navigateWithTransition<T>(
@@ -109,25 +106,26 @@ class MockNavigationService extends _i1.Mock implements _i2.NavigationService {
     String? routeName,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #navigateWithTransition,
-          [page],
-          {
-            #opaque: opaque,
-            #transition: transition,
-            #duration: duration,
-            #popGesture: popGesture,
-            #id: id,
-            #curve: curve,
-            #fullscreenDialog: fullscreenDialog,
-            #preventDuplicates: preventDuplicates,
-            #transitionClass: transitionClass,
-            #transitionStyle: transitionStyle,
-            #routeName: routeName,
-          },
-        ),
-        returnValueForMissingStub: null,
-      ) as _i5.Future<T?>?);
+            Invocation.method(
+              #navigateWithTransition,
+              [page],
+              {
+                #opaque: opaque,
+                #transition: transition,
+                #duration: duration,
+                #popGesture: popGesture,
+                #id: id,
+                #curve: curve,
+                #fullscreenDialog: fullscreenDialog,
+                #preventDuplicates: preventDuplicates,
+                #transitionClass: transitionClass,
+                #transitionStyle: transitionStyle,
+                #routeName: routeName,
+              },
+            ),
+            returnValueForMissingStub: null,
+          )
+          as _i5.Future<T?>?);
 
   @override
   _i5.Future<T?>? replaceWithTransition<T>(
@@ -145,66 +143,47 @@ class MockNavigationService extends _i1.Mock implements _i2.NavigationService {
     String? routeName,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #replaceWithTransition,
-          [page],
-          {
-            #opaque: opaque,
-            #transition: transition,
-            #duration: duration,
-            #popGesture: popGesture,
-            #id: id,
-            #curve: curve,
-            #fullscreenDialog: fullscreenDialog,
-            #preventDuplicates: preventDuplicates,
-            #transitionClass: transitionClass,
-            #transitionStyle: transitionStyle,
-            #routeName: routeName,
-          },
-        ),
-        returnValueForMissingStub: null,
-      ) as _i5.Future<T?>?);
+            Invocation.method(
+              #replaceWithTransition,
+              [page],
+              {
+                #opaque: opaque,
+                #transition: transition,
+                #duration: duration,
+                #popGesture: popGesture,
+                #id: id,
+                #curve: curve,
+                #fullscreenDialog: fullscreenDialog,
+                #preventDuplicates: preventDuplicates,
+                #transitionClass: transitionClass,
+                #transitionStyle: transitionStyle,
+                #routeName: routeName,
+              },
+            ),
+            returnValueForMissingStub: null,
+          )
+          as _i5.Future<T?>?);
 
   @override
-  bool back<T>({
-    dynamic result,
-    int? id,
-  }) =>
+  bool back<T>({dynamic result, int? id}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #back,
-          [],
-          {
-            #result: result,
-            #id: id,
-          },
-        ),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+            Invocation.method(#back, [], {#result: result, #id: id}),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
-  void popUntil(
-    _i4.RoutePredicate? predicate, {
-    int? id,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #popUntil,
-          [predicate],
-          {#id: id},
-        ),
-        returnValueForMissingStub: null,
-      );
+  void popUntil(_i4.RoutePredicate? predicate, {int? id}) => super.noSuchMethod(
+    Invocation.method(#popUntil, [predicate], {#id: id}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void popRepeated(int? popTimes) => super.noSuchMethod(
-        Invocation.method(
-          #popRepeated,
-          [popTimes],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#popRepeated, [popTimes]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   _i5.Future<T?>? navigateTo<T>(
@@ -216,19 +195,20 @@ class MockNavigationService extends _i1.Mock implements _i2.NavigationService {
     _i4.RouteTransitionsBuilder? transition,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #navigateTo,
-          [routeName],
-          {
-            #arguments: arguments,
-            #id: id,
-            #preventDuplicates: preventDuplicates,
-            #parameters: parameters,
-            #transition: transition,
-          },
-        ),
-        returnValueForMissingStub: null,
-      ) as _i5.Future<T?>?);
+            Invocation.method(
+              #navigateTo,
+              [routeName],
+              {
+                #arguments: arguments,
+                #id: id,
+                #preventDuplicates: preventDuplicates,
+                #parameters: parameters,
+                #transition: transition,
+              },
+            ),
+            returnValueForMissingStub: null,
+          )
+          as _i5.Future<T?>?);
 
   @override
   _i5.Future<T?>? navigateToView<T>(
@@ -245,24 +225,25 @@ class MockNavigationService extends _i1.Mock implements _i2.NavigationService {
     _i2.Transition? transitionStyle,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #navigateToView,
-          [view],
-          {
-            #arguments: arguments,
-            #id: id,
-            #opaque: opaque,
-            #curve: curve,
-            #duration: duration,
-            #fullscreenDialog: fullscreenDialog,
-            #popGesture: popGesture,
-            #preventDuplicates: preventDuplicates,
-            #transition: transition,
-            #transitionStyle: transitionStyle,
-          },
-        ),
-        returnValueForMissingStub: null,
-      ) as _i5.Future<T?>?);
+            Invocation.method(
+              #navigateToView,
+              [view],
+              {
+                #arguments: arguments,
+                #id: id,
+                #opaque: opaque,
+                #curve: curve,
+                #duration: duration,
+                #fullscreenDialog: fullscreenDialog,
+                #popGesture: popGesture,
+                #preventDuplicates: preventDuplicates,
+                #transition: transition,
+                #transitionStyle: transitionStyle,
+              },
+            ),
+            returnValueForMissingStub: null,
+          )
+          as _i5.Future<T?>?);
 
   @override
   _i5.Future<T?>? replaceWith<T>(
@@ -274,19 +255,20 @@ class MockNavigationService extends _i1.Mock implements _i2.NavigationService {
     _i4.RouteTransitionsBuilder? transition,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #replaceWith,
-          [routeName],
-          {
-            #arguments: arguments,
-            #id: id,
-            #preventDuplicates: preventDuplicates,
-            #parameters: parameters,
-            #transition: transition,
-          },
-        ),
-        returnValueForMissingStub: null,
-      ) as _i5.Future<T?>?);
+            Invocation.method(
+              #replaceWith,
+              [routeName],
+              {
+                #arguments: arguments,
+                #id: id,
+                #preventDuplicates: preventDuplicates,
+                #parameters: parameters,
+                #transition: transition,
+              },
+            ),
+            returnValueForMissingStub: null,
+          )
+          as _i5.Future<T?>?);
 
   @override
   _i5.Future<T?>? clearStackAndShow<T>(
@@ -296,17 +278,14 @@ class MockNavigationService extends _i1.Mock implements _i2.NavigationService {
     Map<String, String>? parameters,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #clearStackAndShow,
-          [routeName],
-          {
-            #arguments: arguments,
-            #id: id,
-            #parameters: parameters,
-          },
-        ),
-        returnValueForMissingStub: null,
-      ) as _i5.Future<T?>?);
+            Invocation.method(
+              #clearStackAndShow,
+              [routeName],
+              {#arguments: arguments, #id: id, #parameters: parameters},
+            ),
+            returnValueForMissingStub: null,
+          )
+          as _i5.Future<T?>?);
 
   @override
   _i5.Future<T?>? clearStackAndShowView<T>(
@@ -315,16 +294,14 @@ class MockNavigationService extends _i1.Mock implements _i2.NavigationService {
     int? id,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #clearStackAndShowView,
-          [view],
-          {
-            #arguments: arguments,
-            #id: id,
-          },
-        ),
-        returnValueForMissingStub: null,
-      ) as _i5.Future<T?>?);
+            Invocation.method(
+              #clearStackAndShowView,
+              [view],
+              {#arguments: arguments, #id: id},
+            ),
+            returnValueForMissingStub: null,
+          )
+          as _i5.Future<T?>?);
 
   @override
   _i5.Future<T?>? clearTillFirstAndShow<T>(
@@ -335,18 +312,19 @@ class MockNavigationService extends _i1.Mock implements _i2.NavigationService {
     Map<String, String>? parameters,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #clearTillFirstAndShow,
-          [routeName],
-          {
-            #arguments: arguments,
-            #id: id,
-            #preventDuplicates: preventDuplicates,
-            #parameters: parameters,
-          },
-        ),
-        returnValueForMissingStub: null,
-      ) as _i5.Future<T?>?);
+            Invocation.method(
+              #clearTillFirstAndShow,
+              [routeName],
+              {
+                #arguments: arguments,
+                #id: id,
+                #preventDuplicates: preventDuplicates,
+                #parameters: parameters,
+              },
+            ),
+            returnValueForMissingStub: null,
+          )
+          as _i5.Future<T?>?);
 
   @override
   _i5.Future<T?>? clearTillFirstAndShowView<T>(
@@ -355,16 +333,14 @@ class MockNavigationService extends _i1.Mock implements _i2.NavigationService {
     int? id,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #clearTillFirstAndShowView,
-          [view],
-          {
-            #arguments: arguments,
-            #id: id,
-          },
-        ),
-        returnValueForMissingStub: null,
-      ) as _i5.Future<T?>?);
+            Invocation.method(
+              #clearTillFirstAndShowView,
+              [view],
+              {#arguments: arguments, #id: id},
+            ),
+            returnValueForMissingStub: null,
+          )
+          as _i5.Future<T?>?);
 
   @override
   _i5.Future<T?>? pushNamedAndRemoveUntil<T>(
@@ -374,17 +350,14 @@ class MockNavigationService extends _i1.Mock implements _i2.NavigationService {
     int? id,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #pushNamedAndRemoveUntil,
-          [routeName],
-          {
-            #predicate: predicate,
-            #arguments: arguments,
-            #id: id,
-          },
-        ),
-        returnValueForMissingStub: null,
-      ) as _i5.Future<T?>?);
+            Invocation.method(
+              #pushNamedAndRemoveUntil,
+              [routeName],
+              {#predicate: predicate, #arguments: arguments, #id: id},
+            ),
+            returnValueForMissingStub: null,
+          )
+          as _i5.Future<T?>?);
 }
 
 /// A class which mocks [BottomSheetService].
@@ -395,10 +368,7 @@ class MockBottomSheetService extends _i1.Mock
   @override
   void setCustomSheetBuilders(Map<dynamic, _i2.SheetBuilder>? builders) =>
       super.noSuchMethod(
-        Invocation.method(
-          #setCustomSheetBuilders,
-          [builders],
-        ),
+        Invocation.method(#setCustomSheetBuilders, [builders]),
         returnValueForMissingStub: null,
       );
 
@@ -418,28 +388,25 @@ class MockBottomSheetService extends _i1.Mock
     double? elevation = 1.0,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #showBottomSheet,
-          [],
-          {
-            #title: title,
-            #description: description,
-            #confirmButtonTitle: confirmButtonTitle,
-            #cancelButtonTitle: cancelButtonTitle,
-            #enableDrag: enableDrag,
-            #barrierDismissible: barrierDismissible,
-            #isScrollControlled: isScrollControlled,
-            #exitBottomSheetDuration: exitBottomSheetDuration,
-            #enterBottomSheetDuration: enterBottomSheetDuration,
-            #ignoreSafeArea: ignoreSafeArea,
-            #useRootNavigator: useRootNavigator,
-            #elevation: elevation,
-          },
-        ),
-        returnValue: _i5.Future<_i2.SheetResponse<dynamic>?>.value(),
-        returnValueForMissingStub:
-            _i5.Future<_i2.SheetResponse<dynamic>?>.value(),
-      ) as _i5.Future<_i2.SheetResponse<dynamic>?>);
+            Invocation.method(#showBottomSheet, [], {
+              #title: title,
+              #description: description,
+              #confirmButtonTitle: confirmButtonTitle,
+              #cancelButtonTitle: cancelButtonTitle,
+              #enableDrag: enableDrag,
+              #barrierDismissible: barrierDismissible,
+              #isScrollControlled: isScrollControlled,
+              #exitBottomSheetDuration: exitBottomSheetDuration,
+              #enterBottomSheetDuration: enterBottomSheetDuration,
+              #ignoreSafeArea: ignoreSafeArea,
+              #useRootNavigator: useRootNavigator,
+              #elevation: elevation,
+            }),
+            returnValue: _i5.Future<_i2.SheetResponse<dynamic>?>.value(),
+            returnValueForMissingStub:
+                _i5.Future<_i2.SheetResponse<dynamic>?>.value(),
+          )
+          as _i5.Future<_i2.SheetResponse<dynamic>?>);
 
   @override
   _i5.Future<_i2.SheetResponse<T>?> showCustomSheet<T, R>({
@@ -469,47 +436,42 @@ class MockBottomSheetService extends _i1.Mock
     bool? useRootNavigator = false,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #showCustomSheet,
-          [],
-          {
-            #variant: variant,
-            #title: title,
-            #description: description,
-            #hasImage: hasImage,
-            #imageUrl: imageUrl,
-            #showIconInMainButton: showIconInMainButton,
-            #mainButtonTitle: mainButtonTitle,
-            #showIconInSecondaryButton: showIconInSecondaryButton,
-            #secondaryButtonTitle: secondaryButtonTitle,
-            #showIconInAdditionalButton: showIconInAdditionalButton,
-            #additionalButtonTitle: additionalButtonTitle,
-            #takesInput: takesInput,
-            #barrierColor: barrierColor,
-            #elevation: elevation,
-            #barrierDismissible: barrierDismissible,
-            #isScrollControlled: isScrollControlled,
-            #barrierLabel: barrierLabel,
-            #customData: customData,
-            #data: data,
-            #enableDrag: enableDrag,
-            #exitBottomSheetDuration: exitBottomSheetDuration,
-            #enterBottomSheetDuration: enterBottomSheetDuration,
-            #ignoreSafeArea: ignoreSafeArea,
-            #useRootNavigator: useRootNavigator,
-          },
-        ),
-        returnValue: _i5.Future<_i2.SheetResponse<T>?>.value(),
-        returnValueForMissingStub: _i5.Future<_i2.SheetResponse<T>?>.value(),
-      ) as _i5.Future<_i2.SheetResponse<T>?>);
+            Invocation.method(#showCustomSheet, [], {
+              #variant: variant,
+              #title: title,
+              #description: description,
+              #hasImage: hasImage,
+              #imageUrl: imageUrl,
+              #showIconInMainButton: showIconInMainButton,
+              #mainButtonTitle: mainButtonTitle,
+              #showIconInSecondaryButton: showIconInSecondaryButton,
+              #secondaryButtonTitle: secondaryButtonTitle,
+              #showIconInAdditionalButton: showIconInAdditionalButton,
+              #additionalButtonTitle: additionalButtonTitle,
+              #takesInput: takesInput,
+              #barrierColor: barrierColor,
+              #elevation: elevation,
+              #barrierDismissible: barrierDismissible,
+              #isScrollControlled: isScrollControlled,
+              #barrierLabel: barrierLabel,
+              #customData: customData,
+              #data: data,
+              #enableDrag: enableDrag,
+              #exitBottomSheetDuration: exitBottomSheetDuration,
+              #enterBottomSheetDuration: enterBottomSheetDuration,
+              #ignoreSafeArea: ignoreSafeArea,
+              #useRootNavigator: useRootNavigator,
+            }),
+            returnValue: _i5.Future<_i2.SheetResponse<T>?>.value(),
+            returnValueForMissingStub:
+                _i5.Future<_i2.SheetResponse<T>?>.value(),
+          )
+          as _i5.Future<_i2.SheetResponse<T>?>);
 
   @override
   void completeSheet(_i2.SheetResponse<dynamic>? response) =>
       super.noSuchMethod(
-        Invocation.method(
-          #completeSheet,
-          [response],
-        ),
+        Invocation.method(#completeSheet, [response]),
         returnValueForMissingStub: null,
       );
 }
@@ -520,14 +482,11 @@ class MockBottomSheetService extends _i1.Mock
 class MockDialogService extends _i1.Mock implements _i2.DialogService {
   @override
   void registerCustomDialogBuilders(
-          Map<dynamic, _i2.DialogBuilder>? builders) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #registerCustomDialogBuilders,
-          [builders],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Map<dynamic, _i2.DialogBuilder>? builders,
+  ) => super.noSuchMethod(
+    Invocation.method(#registerCustomDialogBuilders, [builders]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void registerCustomDialogBuilder({
@@ -536,19 +495,15 @@ class MockDialogService extends _i1.Mock implements _i2.DialogService {
       _i4.BuildContext,
       _i2.DialogRequest<dynamic>,
       dynamic Function(_i2.DialogResponse<dynamic>),
-    )? builder,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #registerCustomDialogBuilder,
-          [],
-          {
-            #variant: variant,
-            #builder: builder,
-          },
-        ),
-        returnValueForMissingStub: null,
-      );
+    )?
+    builder,
+  }) => super.noSuchMethod(
+    Invocation.method(#registerCustomDialogBuilder, [], {
+      #variant: variant,
+      #builder: builder,
+    }),
+    returnValueForMissingStub: null,
+  );
 
   @override
   _i5.Future<_i2.DialogResponse<dynamic>?> showDialog({
@@ -564,26 +519,23 @@ class MockDialogService extends _i1.Mock implements _i2.DialogService {
     _i2.DialogPlatform? dialogPlatform,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #showDialog,
-          [],
-          {
-            #title: title,
-            #description: description,
-            #cancelTitle: cancelTitle,
-            #cancelTitleColor: cancelTitleColor,
-            #buttonTitle: buttonTitle,
-            #buttonTitleColor: buttonTitleColor,
-            #barrierDismissible: barrierDismissible,
-            #routeSettings: routeSettings,
-            #navigatorKey: navigatorKey,
-            #dialogPlatform: dialogPlatform,
-          },
-        ),
-        returnValue: _i5.Future<_i2.DialogResponse<dynamic>?>.value(),
-        returnValueForMissingStub:
-            _i5.Future<_i2.DialogResponse<dynamic>?>.value(),
-      ) as _i5.Future<_i2.DialogResponse<dynamic>?>);
+            Invocation.method(#showDialog, [], {
+              #title: title,
+              #description: description,
+              #cancelTitle: cancelTitle,
+              #cancelTitleColor: cancelTitleColor,
+              #buttonTitle: buttonTitle,
+              #buttonTitleColor: buttonTitleColor,
+              #barrierDismissible: barrierDismissible,
+              #routeSettings: routeSettings,
+              #navigatorKey: navigatorKey,
+              #dialogPlatform: dialogPlatform,
+            }),
+            returnValue: _i5.Future<_i2.DialogResponse<dynamic>?>.value(),
+            returnValueForMissingStub:
+                _i5.Future<_i2.DialogResponse<dynamic>?>.value(),
+          )
+          as _i5.Future<_i2.DialogResponse<dynamic>?>);
 
   @override
   _i5.Future<_i2.DialogResponse<T>?> showCustomDialog<T, R>({
@@ -610,36 +562,34 @@ class MockDialogService extends _i1.Mock implements _i2.DialogService {
     R? data,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #showCustomDialog,
-          [],
-          {
-            #variant: variant,
-            #title: title,
-            #description: description,
-            #hasImage: hasImage,
-            #imageUrl: imageUrl,
-            #showIconInMainButton: showIconInMainButton,
-            #mainButtonTitle: mainButtonTitle,
-            #showIconInSecondaryButton: showIconInSecondaryButton,
-            #secondaryButtonTitle: secondaryButtonTitle,
-            #showIconInAdditionalButton: showIconInAdditionalButton,
-            #additionalButtonTitle: additionalButtonTitle,
-            #takesInput: takesInput,
-            #barrierColor: barrierColor,
-            #barrierDismissible: barrierDismissible,
-            #barrierLabel: barrierLabel,
-            #useSafeArea: useSafeArea,
-            #routeSettings: routeSettings,
-            #navigatorKey: navigatorKey,
-            #transitionBuilder: transitionBuilder,
-            #customData: customData,
-            #data: data,
-          },
-        ),
-        returnValue: _i5.Future<_i2.DialogResponse<T>?>.value(),
-        returnValueForMissingStub: _i5.Future<_i2.DialogResponse<T>?>.value(),
-      ) as _i5.Future<_i2.DialogResponse<T>?>);
+            Invocation.method(#showCustomDialog, [], {
+              #variant: variant,
+              #title: title,
+              #description: description,
+              #hasImage: hasImage,
+              #imageUrl: imageUrl,
+              #showIconInMainButton: showIconInMainButton,
+              #mainButtonTitle: mainButtonTitle,
+              #showIconInSecondaryButton: showIconInSecondaryButton,
+              #secondaryButtonTitle: secondaryButtonTitle,
+              #showIconInAdditionalButton: showIconInAdditionalButton,
+              #additionalButtonTitle: additionalButtonTitle,
+              #takesInput: takesInput,
+              #barrierColor: barrierColor,
+              #barrierDismissible: barrierDismissible,
+              #barrierLabel: barrierLabel,
+              #useSafeArea: useSafeArea,
+              #routeSettings: routeSettings,
+              #navigatorKey: navigatorKey,
+              #transitionBuilder: transitionBuilder,
+              #customData: customData,
+              #data: data,
+            }),
+            returnValue: _i5.Future<_i2.DialogResponse<T>?>.value(),
+            returnValueForMissingStub:
+                _i5.Future<_i2.DialogResponse<T>?>.value(),
+          )
+          as _i5.Future<_i2.DialogResponse<T>?>);
 
   @override
   _i5.Future<_i2.DialogResponse<dynamic>?> showConfirmationDialog({
@@ -654,33 +604,27 @@ class MockDialogService extends _i1.Mock implements _i2.DialogService {
     _i2.DialogPlatform? dialogPlatform,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #showConfirmationDialog,
-          [],
-          {
-            #title: title,
-            #description: description,
-            #cancelTitle: cancelTitle,
-            #cancelTitleColor: cancelTitleColor,
-            #confirmationTitle: confirmationTitle,
-            #confirmationTitleColor: confirmationTitleColor,
-            #barrierDismissible: barrierDismissible,
-            #routeSettings: routeSettings,
-            #dialogPlatform: dialogPlatform,
-          },
-        ),
-        returnValue: _i5.Future<_i2.DialogResponse<dynamic>?>.value(),
-        returnValueForMissingStub:
-            _i5.Future<_i2.DialogResponse<dynamic>?>.value(),
-      ) as _i5.Future<_i2.DialogResponse<dynamic>?>);
+            Invocation.method(#showConfirmationDialog, [], {
+              #title: title,
+              #description: description,
+              #cancelTitle: cancelTitle,
+              #cancelTitleColor: cancelTitleColor,
+              #confirmationTitle: confirmationTitle,
+              #confirmationTitleColor: confirmationTitleColor,
+              #barrierDismissible: barrierDismissible,
+              #routeSettings: routeSettings,
+              #dialogPlatform: dialogPlatform,
+            }),
+            returnValue: _i5.Future<_i2.DialogResponse<dynamic>?>.value(),
+            returnValueForMissingStub:
+                _i5.Future<_i2.DialogResponse<dynamic>?>.value(),
+          )
+          as _i5.Future<_i2.DialogResponse<dynamic>?>);
 
   @override
   void completeDialog(_i2.DialogResponse<dynamic>? response) =>
       super.noSuchMethod(
-        Invocation.method(
-          #completeDialog,
-          [response],
-        ),
+        Invocation.method(#completeDialog, [response]),
         returnValueForMissingStub: null,
       );
 }

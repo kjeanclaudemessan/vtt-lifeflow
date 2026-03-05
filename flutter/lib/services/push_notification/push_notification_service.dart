@@ -280,8 +280,7 @@ class PushNotificationService {
   }
 
   void _handleNotificationTap(RemoteMessage message) {
-    debugPrint(
-        '[Push] Notification tapped: ${message.notification?.title}');
+    debugPrint('[Push] Notification tapped: ${message.notification?.title}');
     onNotificationTapped?.call(message.data);
   }
 }

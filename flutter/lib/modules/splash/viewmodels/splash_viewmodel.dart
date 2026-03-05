@@ -147,7 +147,8 @@ class SplashViewModel extends BaseViewModel {
       SplashResult.goToHome => Routes.homeView,
       SplashResult.goToOnboarding => Routes.onboardingView,
       SplashResult.goToLogin => Routes.loginView,
-      SplashResult.goToForceUpdate => Routes.homeView, // TODO: force update route
+      SplashResult.goToForceUpdate =>
+        Routes.homeView, // TODO: force update route
       SplashResult.error || null => null,
     };
 

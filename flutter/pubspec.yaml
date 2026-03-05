@@ -4,7 +4,7 @@ publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: ">=3.0.3 <4.0.0"
+  sdk: ">=3.8.0 <4.0.0"
 
 dependencies:
   connectivity_plus: ^7.0.0
@@ -28,6 +28,7 @@ dependencies:
   json_annotation: ^4.9.0
   moneroo_flutter_sdk: ^0.3.4
   package_info_plus: ^9.0.0
+  path: ^1.9.0
   path_provider: ^2.1.5
   share_plus: ^10.1.4
   shared_preferences: ^2.5.4

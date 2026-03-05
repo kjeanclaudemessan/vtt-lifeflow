@@ -10,6 +10,7 @@ import '../../../app/app.locator.dart';
 import '../../../app/app.router.dart';
 import '../../../domain/repositories/i_auth_repository.dart';
 import '../../../services/analytics/analytics_service.dart';
+import '../../../services/database/app_database.dart';
 import '../../../services/push_notification/push_notification_service.dart';
 import '../../../services/settings/app_settings_service.dart';
 import '../../../services/storage/local_storage_service.dart';
@@ -31,7 +32,7 @@ class SettingsViewModel extends BaseViewModel {
 
   /// Creates the ViewModel with optional config.
   SettingsViewModel({SettingsConfig? config})
-      : config = config ?? SettingsConfig.defaultConfig;
+    : config = config ?? SettingsConfig.defaultConfig;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // STATE
@@ -281,15 +282,13 @@ class SettingsViewModel extends BaseViewModel {
       busyObject: logoutBusyKey,
     );
 
-    result.fold(
-      (failure) => setError(failure.message),
-      (_) {
-        locator<PushNotificationService>().removeTokenFromSupabase();
-        locator<AnalyticsService>().capture('user_logged_out');
-        locator<AnalyticsService>().reset();
-        _navigationService.clearStackAndShow(Routes.loginView);
-      },
-    );
+    result.fold((failure) => setError(failure.message), (_) {
+      locator<PushNotificationService>().removeTokenFromSupabase();
+      locator<AppDatabase>().clearAll();
+      locator<AnalyticsService>().capture('user_logged_out');
+      locator<AnalyticsService>().reset();
+      _navigationService.clearStackAndShow(Routes.loginView);
+    });
   }
 
   /// Delete the user's account.

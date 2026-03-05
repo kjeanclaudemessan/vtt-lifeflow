@@ -12,82 +12,121 @@ class $LocalDomainsTable extends LocalDomains
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
-      'user_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _iconMeta = const VerificationMeta('icon');
   @override
   late final GeneratedColumn<String> icon = GeneratedColumn<String>(
-      'icon', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('🎯'));
+    'icon',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('🎯'),
+  );
   static const VerificationMeta _colorMeta = const VerificationMeta('color');
   @override
   late final GeneratedColumn<String> color = GeneratedColumn<String>(
-      'color', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('#6200EE'));
-  static const VerificationMeta _sortOrderMeta =
-      const VerificationMeta('sortOrder');
+    'color',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('#6200EE'),
+  );
+  static const VerificationMeta _sortOrderMeta = const VerificationMeta(
+    'sortOrder',
+  );
   @override
   late final GeneratedColumn<int> sortOrder = GeneratedColumn<int>(
-      'sort_order', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultValue: const Constant(0));
-  static const VerificationMeta _isArchivedMeta =
-      const VerificationMeta('isArchived');
+    'sort_order',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _isArchivedMeta = const VerificationMeta(
+    'isArchived',
+  );
   @override
   late final GeneratedColumn<bool> isArchived = GeneratedColumn<bool>(
-      'is_archived', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("is_archived" IN (0, 1))'),
-      defaultValue: const Constant(false));
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+    'is_archived',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_archived" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
-        id,
-        userId,
-        name,
-        icon,
-        color,
-        sortOrder,
-        isArchived,
-        createdAt,
-        updatedAt
-      ];
+    id,
+    userId,
+    name,
+    icon,
+    color,
+    sortOrder,
+    isArchived,
+    createdAt,
+    updatedAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'local_domains';
   @override
-  VerificationContext validateIntegrity(Insertable<LocalDomain> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<LocalDomain> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -96,44 +135,58 @@ class $LocalDomainsTable extends LocalDomains
       context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
-      context.handle(_userIdMeta,
-          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
     if (data.containsKey('name')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (data.containsKey('icon')) {
       context.handle(
-          _iconMeta, icon.isAcceptableOrUnknown(data['icon']!, _iconMeta));
+        _iconMeta,
+        icon.isAcceptableOrUnknown(data['icon']!, _iconMeta),
+      );
     }
     if (data.containsKey('color')) {
       context.handle(
-          _colorMeta, color.isAcceptableOrUnknown(data['color']!, _colorMeta));
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
+      );
     }
     if (data.containsKey('sort_order')) {
-      context.handle(_sortOrderMeta,
-          sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta));
+      context.handle(
+        _sortOrderMeta,
+        sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta),
+      );
     }
     if (data.containsKey('is_archived')) {
       context.handle(
-          _isArchivedMeta,
-          isArchived.isAcceptableOrUnknown(
-              data['is_archived']!, _isArchivedMeta));
+        _isArchivedMeta,
+        isArchived.isAcceptableOrUnknown(data['is_archived']!, _isArchivedMeta),
+      );
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
     }
@@ -146,24 +199,42 @@ class $LocalDomainsTable extends LocalDomains
   LocalDomain map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return LocalDomain(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      userId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}user_id'])!,
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      icon: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}icon'])!,
-      color: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}color'])!,
-      sortOrder: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}sort_order'])!,
-      isArchived: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_archived'])!,
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      updatedAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      icon: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon'],
+      )!,
+      color: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}color'],
+      )!,
+      sortOrder: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sort_order'],
+      )!,
+      isArchived: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_archived'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
     );
   }
 
@@ -183,16 +254,17 @@ class LocalDomain extends DataClass implements Insertable<LocalDomain> {
   final bool isArchived;
   final DateTime createdAt;
   final DateTime updatedAt;
-  const LocalDomain(
-      {required this.id,
-      required this.userId,
-      required this.name,
-      required this.icon,
-      required this.color,
-      required this.sortOrder,
-      required this.isArchived,
-      required this.createdAt,
-      required this.updatedAt});
+  const LocalDomain({
+    required this.id,
+    required this.userId,
+    required this.name,
+    required this.icon,
+    required this.color,
+    required this.sortOrder,
+    required this.isArchived,
+    required this.createdAt,
+    required this.updatedAt,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -222,8 +294,10 @@ class LocalDomain extends DataClass implements Insertable<LocalDomain> {
     );
   }
 
-  factory LocalDomain.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory LocalDomain.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LocalDomain(
       id: serializer.fromJson<String>(json['id']),
@@ -253,27 +327,27 @@ class LocalDomain extends DataClass implements Insertable<LocalDomain> {
     };
   }
 
-  LocalDomain copyWith(
-          {String? id,
-          String? userId,
-          String? name,
-          String? icon,
-          String? color,
-          int? sortOrder,
-          bool? isArchived,
-          DateTime? createdAt,
-          DateTime? updatedAt}) =>
-      LocalDomain(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        name: name ?? this.name,
-        icon: icon ?? this.icon,
-        color: color ?? this.color,
-        sortOrder: sortOrder ?? this.sortOrder,
-        isArchived: isArchived ?? this.isArchived,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  LocalDomain copyWith({
+    String? id,
+    String? userId,
+    String? name,
+    String? icon,
+    String? color,
+    int? sortOrder,
+    bool? isArchived,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => LocalDomain(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    name: name ?? this.name,
+    icon: icon ?? this.icon,
+    color: color ?? this.color,
+    sortOrder: sortOrder ?? this.sortOrder,
+    isArchived: isArchived ?? this.isArchived,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
   LocalDomain copyWithCompanion(LocalDomainsCompanion data) {
     return LocalDomain(
       id: data.id.present ? data.id.value : this.id,
@@ -282,8 +356,9 @@ class LocalDomain extends DataClass implements Insertable<LocalDomain> {
       icon: data.icon.present ? data.icon.value : this.icon,
       color: data.color.present ? data.color.value : this.color,
       sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
-      isArchived:
-          data.isArchived.present ? data.isArchived.value : this.isArchived,
+      isArchived: data.isArchived.present
+          ? data.isArchived.value
+          : this.isArchived,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -306,8 +381,17 @@ class LocalDomain extends DataClass implements Insertable<LocalDomain> {
   }
 
   @override
-  int get hashCode => Object.hash(id, userId, name, icon, color, sortOrder,
-      isArchived, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    name,
+    icon,
+    color,
+    sortOrder,
+    isArchived,
+    createdAt,
+    updatedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -357,11 +441,11 @@ class LocalDomainsCompanion extends UpdateCompanion<LocalDomain> {
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
-  })  : id = Value(id),
-        userId = Value(userId),
-        name = Value(name),
-        createdAt = Value(createdAt),
-        updatedAt = Value(updatedAt);
+  }) : id = Value(id),
+       userId = Value(userId),
+       name = Value(name),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
   static Insertable<LocalDomain> custom({
     Expression<String>? id,
     Expression<String>? userId,
@@ -388,17 +472,18 @@ class LocalDomainsCompanion extends UpdateCompanion<LocalDomain> {
     });
   }
 
-  LocalDomainsCompanion copyWith(
-      {Value<String>? id,
-      Value<String>? userId,
-      Value<String>? name,
-      Value<String>? icon,
-      Value<String>? color,
-      Value<int>? sortOrder,
-      Value<bool>? isArchived,
-      Value<DateTime>? createdAt,
-      Value<DateTime>? updatedAt,
-      Value<int>? rowid}) {
+  LocalDomainsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? name,
+    Value<String>? icon,
+    Value<String>? color,
+    Value<int>? sortOrder,
+    Value<bool>? isArchived,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
     return LocalDomainsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
@@ -476,133 +561,206 @@ class $LocalHabitsTable extends LocalHabits
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
-      'user_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _domainIdMeta =
-      const VerificationMeta('domainId');
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _domainIdMeta = const VerificationMeta(
+    'domainId',
+  );
   @override
   late final GeneratedColumn<String> domainId = GeneratedColumn<String>(
-      'domain_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+    'domain_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _descriptionMeta =
-      const VerificationMeta('description');
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
   @override
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
-      'description', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
   late final GeneratedColumn<String> type = GeneratedColumn<String>(
-      'type', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('binary'));
-  static const VerificationMeta _targetValueMeta =
-      const VerificationMeta('targetValue');
+    'type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('binary'),
+  );
+  static const VerificationMeta _targetValueMeta = const VerificationMeta(
+    'targetValue',
+  );
   @override
   late final GeneratedColumn<double> targetValue = GeneratedColumn<double>(
-      'target_value', aliasedName, true,
-      type: DriftSqlType.double, requiredDuringInsert: false);
+    'target_value',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _unitMeta = const VerificationMeta('unit');
   @override
   late final GeneratedColumn<String> unit = GeneratedColumn<String>(
-      'unit', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+    'unit',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _estimatedDurationMinutesMeta =
       const VerificationMeta('estimatedDurationMinutes');
   @override
   late final GeneratedColumn<int> estimatedDurationMinutes =
-      GeneratedColumn<int>('estimated_duration_minutes', aliasedName, false,
-          type: DriftSqlType.int,
-          requiredDuringInsert: false,
-          defaultValue: const Constant(15));
-  static const VerificationMeta _startTimeMeta =
-      const VerificationMeta('startTime');
+      GeneratedColumn<int>(
+        'estimated_duration_minutes',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(15),
+      );
+  static const VerificationMeta _startTimeMeta = const VerificationMeta(
+    'startTime',
+  );
   @override
   late final GeneratedColumn<String> startTime = GeneratedColumn<String>(
-      'start_time', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _endTimeMeta =
-      const VerificationMeta('endTime');
+    'start_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _endTimeMeta = const VerificationMeta(
+    'endTime',
+  );
   @override
   late final GeneratedColumn<String> endTime = GeneratedColumn<String>(
-      'end_time', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _frequencyMeta =
-      const VerificationMeta('frequency');
+    'end_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _frequencyMeta = const VerificationMeta(
+    'frequency',
+  );
   @override
   late final GeneratedColumn<String> frequency = GeneratedColumn<String>(
-      'frequency', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('daily'));
-  static const VerificationMeta _frequencyDaysMeta =
-      const VerificationMeta('frequencyDays');
+    'frequency',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('daily'),
+  );
+  static const VerificationMeta _frequencyDaysMeta = const VerificationMeta(
+    'frequencyDays',
+  );
   @override
   late final GeneratedColumn<String> frequencyDays = GeneratedColumn<String>(
-      'frequency_days', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('[]'));
-  static const VerificationMeta _isArchivedMeta =
-      const VerificationMeta('isArchived');
+    'frequency_days',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('[]'),
+  );
+  static const VerificationMeta _isArchivedMeta = const VerificationMeta(
+    'isArchived',
+  );
   @override
   late final GeneratedColumn<bool> isArchived = GeneratedColumn<bool>(
-      'is_archived', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("is_archived" IN (0, 1))'),
-      defaultValue: const Constant(false));
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+    'is_archived',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_archived" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta =
-      const VerificationMeta('updatedAt');
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
   @override
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
-        id,
-        userId,
-        domainId,
-        name,
-        description,
-        type,
-        targetValue,
-        unit,
-        estimatedDurationMinutes,
-        startTime,
-        endTime,
-        frequency,
-        frequencyDays,
-        isArchived,
-        createdAt,
-        updatedAt
-      ];
+    id,
+    userId,
+    domainId,
+    name,
+    description,
+    type,
+    targetValue,
+    unit,
+    estimatedDurationMinutes,
+    startTime,
+    endTime,
+    frequency,
+    frequencyDays,
+    isArchived,
+    createdAt,
+    updatedAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'local_habits';
   @override
-  VerificationContext validateIntegrity(Insertable<LocalHabit> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<LocalHabit> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -611,81 +769,112 @@ class $LocalHabitsTable extends LocalHabits
       context.missing(_idMeta);
     }
     if (data.containsKey('user_id')) {
-      context.handle(_userIdMeta,
-          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
     if (data.containsKey('domain_id')) {
-      context.handle(_domainIdMeta,
-          domainId.isAcceptableOrUnknown(data['domain_id']!, _domainIdMeta));
+      context.handle(
+        _domainIdMeta,
+        domainId.isAcceptableOrUnknown(data['domain_id']!, _domainIdMeta),
+      );
     }
     if (data.containsKey('name')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (data.containsKey('description')) {
       context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
           _descriptionMeta,
-          description.isAcceptableOrUnknown(
-              data['description']!, _descriptionMeta));
+        ),
+      );
     }
     if (data.containsKey('type')) {
       context.handle(
-          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
     }
     if (data.containsKey('target_value')) {
       context.handle(
+        _targetValueMeta,
+        targetValue.isAcceptableOrUnknown(
+          data['target_value']!,
           _targetValueMeta,
-          targetValue.isAcceptableOrUnknown(
-              data['target_value']!, _targetValueMeta));
+        ),
+      );
     }
     if (data.containsKey('unit')) {
       context.handle(
-          _unitMeta, unit.isAcceptableOrUnknown(data['unit']!, _unitMeta));
+        _unitMeta,
+        unit.isAcceptableOrUnknown(data['unit']!, _unitMeta),
+      );
     }
     if (data.containsKey('estimated_duration_minutes')) {
       context.handle(
+        _estimatedDurationMinutesMeta,
+        estimatedDurationMinutes.isAcceptableOrUnknown(
+          data['estimated_duration_minutes']!,
           _estimatedDurationMinutesMeta,
-          estimatedDurationMinutes.isAcceptableOrUnknown(
-              data['estimated_duration_minutes']!,
-              _estimatedDurationMinutesMeta));
+        ),
+      );
     }
     if (data.containsKey('start_time')) {
-      context.handle(_startTimeMeta,
-          startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta));
+      context.handle(
+        _startTimeMeta,
+        startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta),
+      );
     }
     if (data.containsKey('end_time')) {
-      context.handle(_endTimeMeta,
-          endTime.isAcceptableOrUnknown(data['end_time']!, _endTimeMeta));
+      context.handle(
+        _endTimeMeta,
+        endTime.isAcceptableOrUnknown(data['end_time']!, _endTimeMeta),
+      );
     }
     if (data.containsKey('frequency')) {
-      context.handle(_frequencyMeta,
-          frequency.isAcceptableOrUnknown(data['frequency']!, _frequencyMeta));
+      context.handle(
+        _frequencyMeta,
+        frequency.isAcceptableOrUnknown(data['frequency']!, _frequencyMeta),
+      );
     }
     if (data.containsKey('frequency_days')) {
       context.handle(
+        _frequencyDaysMeta,
+        frequencyDays.isAcceptableOrUnknown(
+          data['frequency_days']!,
           _frequencyDaysMeta,
-          frequencyDays.isAcceptableOrUnknown(
-              data['frequency_days']!, _frequencyDaysMeta));
+        ),
+      );
     }
     if (data.containsKey('is_archived')) {
       context.handle(
-          _isArchivedMeta,
-          isArchived.isAcceptableOrUnknown(
-              data['is_archived']!, _isArchivedMeta));
+        _isArchivedMeta,
+        isArchived.isAcceptableOrUnknown(data['is_archived']!, _isArchivedMeta),
+      );
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
     }
@@ -698,39 +887,70 @@ class $LocalHabitsTable extends LocalHabits
   LocalHabit map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return LocalHabit(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      userId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}user_id'])!,
-      domainId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}domain_id']),
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      description: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}description']),
-      type: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
-      targetValue: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}target_value']),
-      unit: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}unit']),
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      domainId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}domain_id'],
+      ),
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      )!,
+      targetValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}target_value'],
+      ),
+      unit: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}unit'],
+      ),
       estimatedDurationMinutes: attachedDatabase.typeMapping.read(
-          DriftSqlType.int,
-          data['${effectivePrefix}estimated_duration_minutes'])!,
-      startTime: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}start_time']),
-      endTime: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}end_time']),
-      frequency: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}frequency'])!,
-      frequencyDays: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}frequency_days'])!,
-      isArchived: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_archived'])!,
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      updatedAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+        DriftSqlType.int,
+        data['${effectivePrefix}estimated_duration_minutes'],
+      )!,
+      startTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}start_time'],
+      ),
+      endTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}end_time'],
+      ),
+      frequency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}frequency'],
+      )!,
+      frequencyDays: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}frequency_days'],
+      )!,
+      isArchived: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_archived'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
     );
   }
 
@@ -757,23 +977,24 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
   final bool isArchived;
   final DateTime createdAt;
   final DateTime updatedAt;
-  const LocalHabit(
-      {required this.id,
-      required this.userId,
-      this.domainId,
-      required this.name,
-      this.description,
-      required this.type,
-      this.targetValue,
-      this.unit,
-      required this.estimatedDurationMinutes,
-      this.startTime,
-      this.endTime,
-      required this.frequency,
-      required this.frequencyDays,
-      required this.isArchived,
-      required this.createdAt,
-      required this.updatedAt});
+  const LocalHabit({
+    required this.id,
+    required this.userId,
+    this.domainId,
+    required this.name,
+    this.description,
+    required this.type,
+    this.targetValue,
+    this.unit,
+    required this.estimatedDurationMinutes,
+    this.startTime,
+    this.endTime,
+    required this.frequency,
+    required this.frequencyDays,
+    required this.isArchived,
+    required this.createdAt,
+    required this.updatedAt,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -839,8 +1060,10 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
     );
   }
 
-  factory LocalHabit.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory LocalHabit.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LocalHabit(
       id: serializer.fromJson<String>(json['id']),
@@ -851,8 +1074,9 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
       type: serializer.fromJson<String>(json['type']),
       targetValue: serializer.fromJson<double?>(json['targetValue']),
       unit: serializer.fromJson<String?>(json['unit']),
-      estimatedDurationMinutes:
-          serializer.fromJson<int>(json['estimatedDurationMinutes']),
+      estimatedDurationMinutes: serializer.fromJson<int>(
+        json['estimatedDurationMinutes'],
+      ),
       startTime: serializer.fromJson<String?>(json['startTime']),
       endTime: serializer.fromJson<String?>(json['endTime']),
       frequency: serializer.fromJson<String>(json['frequency']),
@@ -874,8 +1098,9 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
       'type': serializer.toJson<String>(type),
       'targetValue': serializer.toJson<double?>(targetValue),
       'unit': serializer.toJson<String?>(unit),
-      'estimatedDurationMinutes':
-          serializer.toJson<int>(estimatedDurationMinutes),
+      'estimatedDurationMinutes': serializer.toJson<int>(
+        estimatedDurationMinutes,
+      ),
       'startTime': serializer.toJson<String?>(startTime),
       'endTime': serializer.toJson<String?>(endTime),
       'frequency': serializer.toJson<String>(frequency),
@@ -886,53 +1111,55 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
     };
   }
 
-  LocalHabit copyWith(
-          {String? id,
-          String? userId,
-          Value<String?> domainId = const Value.absent(),
-          String? name,
-          Value<String?> description = const Value.absent(),
-          String? type,
-          Value<double?> targetValue = const Value.absent(),
-          Value<String?> unit = const Value.absent(),
-          int? estimatedDurationMinutes,
-          Value<String?> startTime = const Value.absent(),
-          Value<String?> endTime = const Value.absent(),
-          String? frequency,
-          String? frequencyDays,
-          bool? isArchived,
-          DateTime? createdAt,
-          DateTime? updatedAt}) =>
-      LocalHabit(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        domainId: domainId.present ? domainId.value : this.domainId,
-        name: name ?? this.name,
-        description: description.present ? description.value : this.description,
-        type: type ?? this.type,
-        targetValue: targetValue.present ? targetValue.value : this.targetValue,
-        unit: unit.present ? unit.value : this.unit,
-        estimatedDurationMinutes:
-            estimatedDurationMinutes ?? this.estimatedDurationMinutes,
-        startTime: startTime.present ? startTime.value : this.startTime,
-        endTime: endTime.present ? endTime.value : this.endTime,
-        frequency: frequency ?? this.frequency,
-        frequencyDays: frequencyDays ?? this.frequencyDays,
-        isArchived: isArchived ?? this.isArchived,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  LocalHabit copyWith({
+    String? id,
+    String? userId,
+    Value<String?> domainId = const Value.absent(),
+    String? name,
+    Value<String?> description = const Value.absent(),
+    String? type,
+    Value<double?> targetValue = const Value.absent(),
+    Value<String?> unit = const Value.absent(),
+    int? estimatedDurationMinutes,
+    Value<String?> startTime = const Value.absent(),
+    Value<String?> endTime = const Value.absent(),
+    String? frequency,
+    String? frequencyDays,
+    bool? isArchived,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => LocalHabit(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    domainId: domainId.present ? domainId.value : this.domainId,
+    name: name ?? this.name,
+    description: description.present ? description.value : this.description,
+    type: type ?? this.type,
+    targetValue: targetValue.present ? targetValue.value : this.targetValue,
+    unit: unit.present ? unit.value : this.unit,
+    estimatedDurationMinutes:
+        estimatedDurationMinutes ?? this.estimatedDurationMinutes,
+    startTime: startTime.present ? startTime.value : this.startTime,
+    endTime: endTime.present ? endTime.value : this.endTime,
+    frequency: frequency ?? this.frequency,
+    frequencyDays: frequencyDays ?? this.frequencyDays,
+    isArchived: isArchived ?? this.isArchived,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
   LocalHabit copyWithCompanion(LocalHabitsCompanion data) {
     return LocalHabit(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       domainId: data.domainId.present ? data.domainId.value : this.domainId,
       name: data.name.present ? data.name.value : this.name,
-      description:
-          data.description.present ? data.description.value : this.description,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
       type: data.type.present ? data.type.value : this.type,
-      targetValue:
-          data.targetValue.present ? data.targetValue.value : this.targetValue,
+      targetValue: data.targetValue.present
+          ? data.targetValue.value
+          : this.targetValue,
       unit: data.unit.present ? data.unit.value : this.unit,
       estimatedDurationMinutes: data.estimatedDurationMinutes.present
           ? data.estimatedDurationMinutes.value
@@ -943,8 +1170,9 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
       frequencyDays: data.frequencyDays.present
           ? data.frequencyDays.value
           : this.frequencyDays,
-      isArchived:
-          data.isArchived.present ? data.isArchived.value : this.isArchived,
+      isArchived: data.isArchived.present
+          ? data.isArchived.value
+          : this.isArchived,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -975,22 +1203,23 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
 
   @override
   int get hashCode => Object.hash(
-      id,
-      userId,
-      domainId,
-      name,
-      description,
-      type,
-      targetValue,
-      unit,
-      estimatedDurationMinutes,
-      startTime,
-      endTime,
-      frequency,
-      frequencyDays,
-      isArchived,
-      createdAt,
-      updatedAt);
+    id,
+    userId,
+    domainId,
+    name,
+    description,
+    type,
+    targetValue,
+    unit,
+    estimatedDurationMinutes,
+    startTime,
+    endTime,
+    frequency,
+    frequencyDays,
+    isArchived,
+    createdAt,
+    updatedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1068,11 +1297,11 @@ class LocalHabitsCompanion extends UpdateCompanion<LocalHabit> {
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
-  })  : id = Value(id),
-        userId = Value(userId),
-        name = Value(name),
-        createdAt = Value(createdAt),
-        updatedAt = Value(updatedAt);
+  }) : id = Value(id),
+       userId = Value(userId),
+       name = Value(name),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
   static Insertable<LocalHabit> custom({
     Expression<String>? id,
     Expression<String>? userId,
@@ -1114,24 +1343,25 @@ class LocalHabitsCompanion extends UpdateCompanion<LocalHabit> {
     });
   }
 
-  LocalHabitsCompanion copyWith(
-      {Value<String>? id,
-      Value<String>? userId,
-      Value<String?>? domainId,
-      Value<String>? name,
-      Value<String?>? description,
-      Value<String>? type,
-      Value<double?>? targetValue,
-      Value<String?>? unit,
-      Value<int>? estimatedDurationMinutes,
-      Value<String?>? startTime,
-      Value<String?>? endTime,
-      Value<String>? frequency,
-      Value<String>? frequencyDays,
-      Value<bool>? isArchived,
-      Value<DateTime>? createdAt,
-      Value<DateTime>? updatedAt,
-      Value<int>? rowid}) {
+  LocalHabitsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String?>? domainId,
+    Value<String>? name,
+    Value<String?>? description,
+    Value<String>? type,
+    Value<double?>? targetValue,
+    Value<String?>? unit,
+    Value<int>? estimatedDurationMinutes,
+    Value<String?>? startTime,
+    Value<String?>? endTime,
+    Value<String>? frequency,
+    Value<String>? frequencyDays,
+    Value<bool>? isArchived,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
     return LocalHabitsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
@@ -1182,8 +1412,9 @@ class LocalHabitsCompanion extends UpdateCompanion<LocalHabit> {
       map['unit'] = Variable<String>(unit.value);
     }
     if (estimatedDurationMinutes.present) {
-      map['estimated_duration_minutes'] =
-          Variable<int>(estimatedDurationMinutes.value);
+      map['estimated_duration_minutes'] = Variable<int>(
+        estimatedDurationMinutes.value,
+      );
     }
     if (startTime.present) {
       map['start_time'] = Variable<String>(startTime.value);
@@ -1246,52 +1477,88 @@ class $LocalHabitLogsTable extends LocalHabitLogs
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _habitIdMeta =
-      const VerificationMeta('habitId');
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _habitIdMeta = const VerificationMeta(
+    'habitId',
+  );
   @override
   late final GeneratedColumn<String> habitId = GeneratedColumn<String>(
-      'habit_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _logDateMeta =
-      const VerificationMeta('logDate');
+    'habit_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _logDateMeta = const VerificationMeta(
+    'logDate',
+  );
   @override
   late final GeneratedColumn<DateTime> logDate = GeneratedColumn<DateTime>(
-      'log_date', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _completedMeta =
-      const VerificationMeta('completed');
+    'log_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _completedMeta = const VerificationMeta(
+    'completed',
+  );
   @override
   late final GeneratedColumn<bool> completed = GeneratedColumn<bool>(
-      'completed', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("completed" IN (0, 1))'),
-      defaultValue: const Constant(false));
+    'completed',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("completed" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _valueMeta = const VerificationMeta('value');
   @override
   late final GeneratedColumn<double> value = GeneratedColumn<double>(
-      'value', aliasedName, true,
-      type: DriftSqlType.double, requiredDuringInsert: false);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+    'value',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, habitId, logDate, completed, value, createdAt];
+  List<GeneratedColumn> get $columns => [
+    id,
+    habitId,
+    logDate,
+    completed,
+    value,
+    createdAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'local_habit_logs';
   @override
-  VerificationContext validateIntegrity(Insertable<LocalHabitLog> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<LocalHabitLog> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -1300,28 +1567,38 @@ class $LocalHabitLogsTable extends LocalHabitLogs
       context.missing(_idMeta);
     }
     if (data.containsKey('habit_id')) {
-      context.handle(_habitIdMeta,
-          habitId.isAcceptableOrUnknown(data['habit_id']!, _habitIdMeta));
+      context.handle(
+        _habitIdMeta,
+        habitId.isAcceptableOrUnknown(data['habit_id']!, _habitIdMeta),
+      );
     } else if (isInserting) {
       context.missing(_habitIdMeta);
     }
     if (data.containsKey('log_date')) {
-      context.handle(_logDateMeta,
-          logDate.isAcceptableOrUnknown(data['log_date']!, _logDateMeta));
+      context.handle(
+        _logDateMeta,
+        logDate.isAcceptableOrUnknown(data['log_date']!, _logDateMeta),
+      );
     } else if (isInserting) {
       context.missing(_logDateMeta);
     }
     if (data.containsKey('completed')) {
-      context.handle(_completedMeta,
-          completed.isAcceptableOrUnknown(data['completed']!, _completedMeta));
+      context.handle(
+        _completedMeta,
+        completed.isAcceptableOrUnknown(data['completed']!, _completedMeta),
+      );
     }
     if (data.containsKey('value')) {
       context.handle(
-          _valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));
+        _valueMeta,
+        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
+      );
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
@@ -1334,18 +1611,30 @@ class $LocalHabitLogsTable extends LocalHabitLogs
   LocalHabitLog map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return LocalHabitLog(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      habitId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}habit_id'])!,
-      logDate: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}log_date'])!,
-      completed: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}completed'])!,
-      value: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}value']),
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      habitId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}habit_id'],
+      )!,
+      logDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}log_date'],
+      )!,
+      completed: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}completed'],
+      )!,
+      value: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}value'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
     );
   }
 
@@ -1362,13 +1651,14 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
   final bool completed;
   final double? value;
   final DateTime createdAt;
-  const LocalHabitLog(
-      {required this.id,
-      required this.habitId,
-      required this.logDate,
-      required this.completed,
-      this.value,
-      required this.createdAt});
+  const LocalHabitLog({
+    required this.id,
+    required this.habitId,
+    required this.logDate,
+    required this.completed,
+    this.value,
+    required this.createdAt,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1389,14 +1679,17 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
       habitId: Value(habitId),
       logDate: Value(logDate),
       completed: Value(completed),
-      value:
-          value == null && nullToAbsent ? const Value.absent() : Value(value),
+      value: value == null && nullToAbsent
+          ? const Value.absent()
+          : Value(value),
       createdAt: Value(createdAt),
     );
   }
 
-  factory LocalHabitLog.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory LocalHabitLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LocalHabitLog(
       id: serializer.fromJson<String>(json['id']),
@@ -1420,21 +1713,21 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
     };
   }
 
-  LocalHabitLog copyWith(
-          {String? id,
-          String? habitId,
-          DateTime? logDate,
-          bool? completed,
-          Value<double?> value = const Value.absent(),
-          DateTime? createdAt}) =>
-      LocalHabitLog(
-        id: id ?? this.id,
-        habitId: habitId ?? this.habitId,
-        logDate: logDate ?? this.logDate,
-        completed: completed ?? this.completed,
-        value: value.present ? value.value : this.value,
-        createdAt: createdAt ?? this.createdAt,
-      );
+  LocalHabitLog copyWith({
+    String? id,
+    String? habitId,
+    DateTime? logDate,
+    bool? completed,
+    Value<double?> value = const Value.absent(),
+    DateTime? createdAt,
+  }) => LocalHabitLog(
+    id: id ?? this.id,
+    habitId: habitId ?? this.habitId,
+    logDate: logDate ?? this.logDate,
+    completed: completed ?? this.completed,
+    value: value.present ? value.value : this.value,
+    createdAt: createdAt ?? this.createdAt,
+  );
   LocalHabitLog copyWithCompanion(LocalHabitLogsCompanion data) {
     return LocalHabitLog(
       id: data.id.present ? data.id.value : this.id,
@@ -1499,10 +1792,10 @@ class LocalHabitLogsCompanion extends UpdateCompanion<LocalHabitLog> {
     this.value = const Value.absent(),
     required DateTime createdAt,
     this.rowid = const Value.absent(),
-  })  : id = Value(id),
-        habitId = Value(habitId),
-        logDate = Value(logDate),
-        createdAt = Value(createdAt);
+  }) : id = Value(id),
+       habitId = Value(habitId),
+       logDate = Value(logDate),
+       createdAt = Value(createdAt);
   static Insertable<LocalHabitLog> custom({
     Expression<String>? id,
     Expression<String>? habitId,
@@ -1523,14 +1816,15 @@ class LocalHabitLogsCompanion extends UpdateCompanion<LocalHabitLog> {
     });
   }
 
-  LocalHabitLogsCompanion copyWith(
-      {Value<String>? id,
-      Value<String>? habitId,
-      Value<DateTime>? logDate,
-      Value<bool>? completed,
-      Value<double?>? value,
-      Value<DateTime>? createdAt,
-      Value<int>? rowid}) {
+  LocalHabitLogsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? habitId,
+    Value<DateTime>? logDate,
+    Value<bool>? completed,
+    Value<double?>? value,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
     return LocalHabitLogsCompanion(
       id: id ?? this.id,
       habitId: habitId ?? this.habitId,
@@ -1593,101 +1887,156 @@ class $SyncQueueTable extends SyncQueue
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _tableNameMeta =
-      const VerificationMeta('tableName');
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _targetTableMeta = const VerificationMeta(
+    'targetTable',
+  );
   @override
-  late final GeneratedColumn<String> tableName = GeneratedColumn<String>(
-      'table_name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _recordIdMeta =
-      const VerificationMeta('recordId');
+  late final GeneratedColumn<String> targetTable = GeneratedColumn<String>(
+    'target_table',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recordIdMeta = const VerificationMeta(
+    'recordId',
+  );
   @override
   late final GeneratedColumn<String> recordId = GeneratedColumn<String>(
-      'record_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _operationMeta =
-      const VerificationMeta('operation');
+    'record_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _operationMeta = const VerificationMeta(
+    'operation',
+  );
   @override
   late final GeneratedColumn<String> operation = GeneratedColumn<String>(
-      'operation', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _payloadMeta =
-      const VerificationMeta('payload');
+    'operation',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _payloadMeta = const VerificationMeta(
+    'payload',
+  );
   @override
   late final GeneratedColumn<String> payload = GeneratedColumn<String>(
-      'payload', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+    'payload',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _retryCountMeta =
-      const VerificationMeta('retryCount');
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _retryCountMeta = const VerificationMeta(
+    'retryCount',
+  );
   @override
   late final GeneratedColumn<int> retryCount = GeneratedColumn<int>(
-      'retry_count', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultValue: const Constant(0));
+    'retry_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, tableName, recordId, operation, payload, createdAt, retryCount];
+  List<GeneratedColumn> get $columns => [
+    id,
+    targetTable,
+    recordId,
+    operation,
+    payload,
+    createdAt,
+    retryCount,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'sync_queue';
   @override
-  VerificationContext validateIntegrity(Insertable<SyncQueueData> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<SyncQueueData> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('table_name')) {
-      context.handle(_tableNameMeta,
-          tableName.isAcceptableOrUnknown(data['table_name']!, _tableNameMeta));
+    if (data.containsKey('target_table')) {
+      context.handle(
+        _targetTableMeta,
+        targetTable.isAcceptableOrUnknown(
+          data['target_table']!,
+          _targetTableMeta,
+        ),
+      );
     } else if (isInserting) {
-      context.missing(_tableNameMeta);
+      context.missing(_targetTableMeta);
     }
     if (data.containsKey('record_id')) {
-      context.handle(_recordIdMeta,
-          recordId.isAcceptableOrUnknown(data['record_id']!, _recordIdMeta));
+      context.handle(
+        _recordIdMeta,
+        recordId.isAcceptableOrUnknown(data['record_id']!, _recordIdMeta),
+      );
     } else if (isInserting) {
       context.missing(_recordIdMeta);
     }
     if (data.containsKey('operation')) {
-      context.handle(_operationMeta,
-          operation.isAcceptableOrUnknown(data['operation']!, _operationMeta));
+      context.handle(
+        _operationMeta,
+        operation.isAcceptableOrUnknown(data['operation']!, _operationMeta),
+      );
     } else if (isInserting) {
       context.missing(_operationMeta);
     }
     if (data.containsKey('payload')) {
-      context.handle(_payloadMeta,
-          payload.isAcceptableOrUnknown(data['payload']!, _payloadMeta));
+      context.handle(
+        _payloadMeta,
+        payload.isAcceptableOrUnknown(data['payload']!, _payloadMeta),
+      );
     } else if (isInserting) {
       context.missing(_payloadMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
     if (data.containsKey('retry_count')) {
       context.handle(
-          _retryCountMeta,
-          retryCount.isAcceptableOrUnknown(
-              data['retry_count']!, _retryCountMeta));
+        _retryCountMeta,
+        retryCount.isAcceptableOrUnknown(data['retry_count']!, _retryCountMeta),
+      );
     }
     return context;
   }
@@ -1698,20 +2047,34 @@ class $SyncQueueTable extends SyncQueue
   SyncQueueData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return SyncQueueData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      tableName: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}table_name'])!,
-      recordId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}record_id'])!,
-      operation: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}operation'])!,
-      payload: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}payload'])!,
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      retryCount: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}retry_count'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      targetTable: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}target_table'],
+      )!,
+      recordId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}record_id'],
+      )!,
+      operation: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}operation'],
+      )!,
+      payload: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payload'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      retryCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}retry_count'],
+      )!,
     );
   }
 
@@ -1725,7 +2088,7 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
   final int id;
 
   /// The Supabase table name (e.g., 'habits', 'habit_logs', 'domains').
-  final String tableName;
+  final String targetTable;
 
   /// The record ID in the target table.
   final String recordId;
@@ -1741,19 +2104,20 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
 
   /// Number of retry attempts.
   final int retryCount;
-  const SyncQueueData(
-      {required this.id,
-      required this.tableName,
-      required this.recordId,
-      required this.operation,
-      required this.payload,
-      required this.createdAt,
-      required this.retryCount});
+  const SyncQueueData({
+    required this.id,
+    required this.targetTable,
+    required this.recordId,
+    required this.operation,
+    required this.payload,
+    required this.createdAt,
+    required this.retryCount,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['table_name'] = Variable<String>(tableName);
+    map['target_table'] = Variable<String>(targetTable);
     map['record_id'] = Variable<String>(recordId);
     map['operation'] = Variable<String>(operation);
     map['payload'] = Variable<String>(payload);
@@ -1765,7 +2129,7 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
   SyncQueueCompanion toCompanion(bool nullToAbsent) {
     return SyncQueueCompanion(
       id: Value(id),
-      tableName: Value(tableName),
+      targetTable: Value(targetTable),
       recordId: Value(recordId),
       operation: Value(operation),
       payload: Value(payload),
@@ -1774,12 +2138,14 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
     );
   }
 
-  factory SyncQueueData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory SyncQueueData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SyncQueueData(
       id: serializer.fromJson<int>(json['id']),
-      tableName: serializer.fromJson<String>(json['tableName']),
+      targetTable: serializer.fromJson<String>(json['targetTable']),
       recordId: serializer.fromJson<String>(json['recordId']),
       operation: serializer.fromJson<String>(json['operation']),
       payload: serializer.fromJson<String>(json['payload']),
@@ -1792,7 +2158,7 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'tableName': serializer.toJson<String>(tableName),
+      'targetTable': serializer.toJson<String>(targetTable),
       'recordId': serializer.toJson<String>(recordId),
       'operation': serializer.toJson<String>(operation),
       'payload': serializer.toJson<String>(payload),
@@ -1801,33 +2167,36 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
     };
   }
 
-  SyncQueueData copyWith(
-          {int? id,
-          String? tableName,
-          String? recordId,
-          String? operation,
-          String? payload,
-          DateTime? createdAt,
-          int? retryCount}) =>
-      SyncQueueData(
-        id: id ?? this.id,
-        tableName: tableName ?? this.tableName,
-        recordId: recordId ?? this.recordId,
-        operation: operation ?? this.operation,
-        payload: payload ?? this.payload,
-        createdAt: createdAt ?? this.createdAt,
-        retryCount: retryCount ?? this.retryCount,
-      );
+  SyncQueueData copyWith({
+    int? id,
+    String? targetTable,
+    String? recordId,
+    String? operation,
+    String? payload,
+    DateTime? createdAt,
+    int? retryCount,
+  }) => SyncQueueData(
+    id: id ?? this.id,
+    targetTable: targetTable ?? this.targetTable,
+    recordId: recordId ?? this.recordId,
+    operation: operation ?? this.operation,
+    payload: payload ?? this.payload,
+    createdAt: createdAt ?? this.createdAt,
+    retryCount: retryCount ?? this.retryCount,
+  );
   SyncQueueData copyWithCompanion(SyncQueueCompanion data) {
     return SyncQueueData(
       id: data.id.present ? data.id.value : this.id,
-      tableName: data.tableName.present ? data.tableName.value : this.tableName,
+      targetTable: data.targetTable.present
+          ? data.targetTable.value
+          : this.targetTable,
       recordId: data.recordId.present ? data.recordId.value : this.recordId,
       operation: data.operation.present ? data.operation.value : this.operation,
       payload: data.payload.present ? data.payload.value : this.payload,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      retryCount:
-          data.retryCount.present ? data.retryCount.value : this.retryCount,
+      retryCount: data.retryCount.present
+          ? data.retryCount.value
+          : this.retryCount,
     );
   }
 
@@ -1835,7 +2204,7 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
   String toString() {
     return (StringBuffer('SyncQueueData(')
           ..write('id: $id, ')
-          ..write('tableName: $tableName, ')
+          ..write('targetTable: $targetTable, ')
           ..write('recordId: $recordId, ')
           ..write('operation: $operation, ')
           ..write('payload: $payload, ')
@@ -1847,13 +2216,20 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
 
   @override
   int get hashCode => Object.hash(
-      id, tableName, recordId, operation, payload, createdAt, retryCount);
+    id,
+    targetTable,
+    recordId,
+    operation,
+    payload,
+    createdAt,
+    retryCount,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SyncQueueData &&
           other.id == this.id &&
-          other.tableName == this.tableName &&
+          other.targetTable == this.targetTable &&
           other.recordId == this.recordId &&
           other.operation == this.operation &&
           other.payload == this.payload &&
@@ -1863,7 +2239,7 @@ class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
 
 class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
   final Value<int> id;
-  final Value<String> tableName;
+  final Value<String> targetTable;
   final Value<String> recordId;
   final Value<String> operation;
   final Value<String> payload;
@@ -1871,7 +2247,7 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
   final Value<int> retryCount;
   const SyncQueueCompanion({
     this.id = const Value.absent(),
-    this.tableName = const Value.absent(),
+    this.targetTable = const Value.absent(),
     this.recordId = const Value.absent(),
     this.operation = const Value.absent(),
     this.payload = const Value.absent(),
@@ -1880,20 +2256,20 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
   });
   SyncQueueCompanion.insert({
     this.id = const Value.absent(),
-    required String tableName,
+    required String targetTable,
     required String recordId,
     required String operation,
     required String payload,
     required DateTime createdAt,
     this.retryCount = const Value.absent(),
-  })  : tableName = Value(tableName),
-        recordId = Value(recordId),
-        operation = Value(operation),
-        payload = Value(payload),
-        createdAt = Value(createdAt);
+  }) : targetTable = Value(targetTable),
+       recordId = Value(recordId),
+       operation = Value(operation),
+       payload = Value(payload),
+       createdAt = Value(createdAt);
   static Insertable<SyncQueueData> custom({
     Expression<int>? id,
-    Expression<String>? tableName,
+    Expression<String>? targetTable,
     Expression<String>? recordId,
     Expression<String>? operation,
     Expression<String>? payload,
@@ -1902,7 +2278,7 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (tableName != null) 'table_name': tableName,
+      if (targetTable != null) 'target_table': targetTable,
       if (recordId != null) 'record_id': recordId,
       if (operation != null) 'operation': operation,
       if (payload != null) 'payload': payload,
@@ -1911,17 +2287,18 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
     });
   }
 
-  SyncQueueCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? tableName,
-      Value<String>? recordId,
-      Value<String>? operation,
-      Value<String>? payload,
-      Value<DateTime>? createdAt,
-      Value<int>? retryCount}) {
+  SyncQueueCompanion copyWith({
+    Value<int>? id,
+    Value<String>? targetTable,
+    Value<String>? recordId,
+    Value<String>? operation,
+    Value<String>? payload,
+    Value<DateTime>? createdAt,
+    Value<int>? retryCount,
+  }) {
     return SyncQueueCompanion(
       id: id ?? this.id,
-      tableName: tableName ?? this.tableName,
+      targetTable: targetTable ?? this.targetTable,
       recordId: recordId ?? this.recordId,
       operation: operation ?? this.operation,
       payload: payload ?? this.payload,
@@ -1936,8 +2313,8 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (tableName.present) {
-      map['table_name'] = Variable<String>(tableName.value);
+    if (targetTable.present) {
+      map['target_table'] = Variable<String>(targetTable.value);
     }
     if (recordId.present) {
       map['record_id'] = Variable<String>(recordId.value);
@@ -1961,7 +2338,7 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
   String toString() {
     return (StringBuffer('SyncQueueCompanion(')
           ..write('id: $id, ')
-          ..write('tableName: $tableName, ')
+          ..write('targetTable: $targetTable, ')
           ..write('recordId: $recordId, ')
           ..write('operation: $operation, ')
           ..write('payload: $payload, ')
@@ -1983,36 +2360,40 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [localDomains, localHabits, localHabitLogs, syncQueue];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    localDomains,
+    localHabits,
+    localHabitLogs,
+    syncQueue,
+  ];
 }
 
-typedef $$LocalDomainsTableCreateCompanionBuilder = LocalDomainsCompanion
-    Function({
-  required String id,
-  required String userId,
-  required String name,
-  Value<String> icon,
-  Value<String> color,
-  Value<int> sortOrder,
-  Value<bool> isArchived,
-  required DateTime createdAt,
-  required DateTime updatedAt,
-  Value<int> rowid,
-});
-typedef $$LocalDomainsTableUpdateCompanionBuilder = LocalDomainsCompanion
-    Function({
-  Value<String> id,
-  Value<String> userId,
-  Value<String> name,
-  Value<String> icon,
-  Value<String> color,
-  Value<int> sortOrder,
-  Value<bool> isArchived,
-  Value<DateTime> createdAt,
-  Value<DateTime> updatedAt,
-  Value<int> rowid,
-});
+typedef $$LocalDomainsTableCreateCompanionBuilder =
+    LocalDomainsCompanion Function({
+      required String id,
+      required String userId,
+      required String name,
+      Value<String> icon,
+      Value<String> color,
+      Value<int> sortOrder,
+      Value<bool> isArchived,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$LocalDomainsTableUpdateCompanionBuilder =
+    LocalDomainsCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<String> name,
+      Value<String> icon,
+      Value<String> color,
+      Value<int> sortOrder,
+      Value<bool> isArchived,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
 
 class $$LocalDomainsTableFilterComposer
     extends Composer<_$AppDatabase, $LocalDomainsTable> {
@@ -2024,31 +2405,49 @@ class $$LocalDomainsTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<String> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get userId => $composableBuilder(
-      column: $table.userId, builder: (column) => ColumnFilters(column));
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnFilters(column));
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get icon => $composableBuilder(
-      column: $table.icon, builder: (column) => ColumnFilters(column));
+    column: $table.icon,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get color => $composableBuilder(
-      column: $table.color, builder: (column) => ColumnFilters(column));
+    column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get sortOrder => $composableBuilder(
-      column: $table.sortOrder, builder: (column) => ColumnFilters(column));
+    column: $table.sortOrder,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get isArchived => $composableBuilder(
-      column: $table.isArchived, builder: (column) => ColumnFilters(column));
+    column: $table.isArchived,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
-      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$LocalDomainsTableOrderingComposer
@@ -2061,31 +2460,49 @@ class $$LocalDomainsTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<String> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get userId => $composableBuilder(
-      column: $table.userId, builder: (column) => ColumnOrderings(column));
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnOrderings(column));
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get icon => $composableBuilder(
-      column: $table.icon, builder: (column) => ColumnOrderings(column));
+    column: $table.icon,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get color => $composableBuilder(
-      column: $table.color, builder: (column) => ColumnOrderings(column));
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get sortOrder => $composableBuilder(
-      column: $table.sortOrder, builder: (column) => ColumnOrderings(column));
+    column: $table.sortOrder,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get isArchived => $composableBuilder(
-      column: $table.isArchived, builder: (column) => ColumnOrderings(column));
+    column: $table.isArchived,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
-      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$LocalDomainsTableAnnotationComposer
@@ -2116,7 +2533,9 @@ class $$LocalDomainsTableAnnotationComposer
       $composableBuilder(column: $table.sortOrder, builder: (column) => column);
 
   GeneratedColumn<bool> get isArchived => $composableBuilder(
-      column: $table.isArchived, builder: (column) => column);
+    column: $table.isArchived,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -2125,23 +2544,27 @@ class $$LocalDomainsTableAnnotationComposer
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
-class $$LocalDomainsTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $LocalDomainsTable,
-    LocalDomain,
-    $$LocalDomainsTableFilterComposer,
-    $$LocalDomainsTableOrderingComposer,
-    $$LocalDomainsTableAnnotationComposer,
-    $$LocalDomainsTableCreateCompanionBuilder,
-    $$LocalDomainsTableUpdateCompanionBuilder,
-    (
-      LocalDomain,
-      BaseReferences<_$AppDatabase, $LocalDomainsTable, LocalDomain>
-    ),
-    LocalDomain,
-    PrefetchHooks Function()> {
+class $$LocalDomainsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalDomainsTable,
+          LocalDomain,
+          $$LocalDomainsTableFilterComposer,
+          $$LocalDomainsTableOrderingComposer,
+          $$LocalDomainsTableAnnotationComposer,
+          $$LocalDomainsTableCreateCompanionBuilder,
+          $$LocalDomainsTableUpdateCompanionBuilder,
+          (
+            LocalDomain,
+            BaseReferences<_$AppDatabase, $LocalDomainsTable, LocalDomain>,
+          ),
+          LocalDomain,
+          PrefetchHooks Function()
+        > {
   $$LocalDomainsTableTableManager(_$AppDatabase db, $LocalDomainsTable table)
-      : super(TableManagerState(
+    : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -2150,116 +2573,119 @@ class $$LocalDomainsTableTableManager extends RootTableManager<
               $$LocalDomainsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$LocalDomainsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<String> id = const Value.absent(),
-            Value<String> userId = const Value.absent(),
-            Value<String> name = const Value.absent(),
-            Value<String> icon = const Value.absent(),
-            Value<String> color = const Value.absent(),
-            Value<int> sortOrder = const Value.absent(),
-            Value<bool> isArchived = const Value.absent(),
-            Value<DateTime> createdAt = const Value.absent(),
-            Value<DateTime> updatedAt = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              LocalDomainsCompanion(
-            id: id,
-            userId: userId,
-            name: name,
-            icon: icon,
-            color: color,
-            sortOrder: sortOrder,
-            isArchived: isArchived,
-            createdAt: createdAt,
-            updatedAt: updatedAt,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String id,
-            required String userId,
-            required String name,
-            Value<String> icon = const Value.absent(),
-            Value<String> color = const Value.absent(),
-            Value<int> sortOrder = const Value.absent(),
-            Value<bool> isArchived = const Value.absent(),
-            required DateTime createdAt,
-            required DateTime updatedAt,
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              LocalDomainsCompanion.insert(
-            id: id,
-            userId: userId,
-            name: name,
-            icon: icon,
-            color: color,
-            sortOrder: sortOrder,
-            isArchived: isArchived,
-            createdAt: createdAt,
-            updatedAt: updatedAt,
-            rowid: rowid,
-          ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> icon = const Value.absent(),
+                Value<String> color = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalDomainsCompanion(
+                id: id,
+                userId: userId,
+                name: name,
+                icon: icon,
+                color: color,
+                sortOrder: sortOrder,
+                isArchived: isArchived,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                required String name,
+                Value<String> icon = const Value.absent(),
+                Value<String> color = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LocalDomainsCompanion.insert(
+                id: id,
+                userId: userId,
+                name: name,
+                icon: icon,
+                color: color,
+                sortOrder: sortOrder,
+                isArchived: isArchived,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$LocalDomainsTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $LocalDomainsTable,
-    LocalDomain,
-    $$LocalDomainsTableFilterComposer,
-    $$LocalDomainsTableOrderingComposer,
-    $$LocalDomainsTableAnnotationComposer,
-    $$LocalDomainsTableCreateCompanionBuilder,
-    $$LocalDomainsTableUpdateCompanionBuilder,
-    (
+typedef $$LocalDomainsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalDomainsTable,
       LocalDomain,
-      BaseReferences<_$AppDatabase, $LocalDomainsTable, LocalDomain>
-    ),
-    LocalDomain,
-    PrefetchHooks Function()>;
-typedef $$LocalHabitsTableCreateCompanionBuilder = LocalHabitsCompanion
-    Function({
-  required String id,
-  required String userId,
-  Value<String?> domainId,
-  required String name,
-  Value<String?> description,
-  Value<String> type,
-  Value<double?> targetValue,
-  Value<String?> unit,
-  Value<int> estimatedDurationMinutes,
-  Value<String?> startTime,
-  Value<String?> endTime,
-  Value<String> frequency,
-  Value<String> frequencyDays,
-  Value<bool> isArchived,
-  required DateTime createdAt,
-  required DateTime updatedAt,
-  Value<int> rowid,
-});
-typedef $$LocalHabitsTableUpdateCompanionBuilder = LocalHabitsCompanion
-    Function({
-  Value<String> id,
-  Value<String> userId,
-  Value<String?> domainId,
-  Value<String> name,
-  Value<String?> description,
-  Value<String> type,
-  Value<double?> targetValue,
-  Value<String?> unit,
-  Value<int> estimatedDurationMinutes,
-  Value<String?> startTime,
-  Value<String?> endTime,
-  Value<String> frequency,
-  Value<String> frequencyDays,
-  Value<bool> isArchived,
-  Value<DateTime> createdAt,
-  Value<DateTime> updatedAt,
-  Value<int> rowid,
-});
+      $$LocalDomainsTableFilterComposer,
+      $$LocalDomainsTableOrderingComposer,
+      $$LocalDomainsTableAnnotationComposer,
+      $$LocalDomainsTableCreateCompanionBuilder,
+      $$LocalDomainsTableUpdateCompanionBuilder,
+      (
+        LocalDomain,
+        BaseReferences<_$AppDatabase, $LocalDomainsTable, LocalDomain>,
+      ),
+      LocalDomain,
+      PrefetchHooks Function()
+    >;
+typedef $$LocalHabitsTableCreateCompanionBuilder =
+    LocalHabitsCompanion Function({
+      required String id,
+      required String userId,
+      Value<String?> domainId,
+      required String name,
+      Value<String?> description,
+      Value<String> type,
+      Value<double?> targetValue,
+      Value<String?> unit,
+      Value<int> estimatedDurationMinutes,
+      Value<String?> startTime,
+      Value<String?> endTime,
+      Value<String> frequency,
+      Value<String> frequencyDays,
+      Value<bool> isArchived,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$LocalHabitsTableUpdateCompanionBuilder =
+    LocalHabitsCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<String?> domainId,
+      Value<String> name,
+      Value<String?> description,
+      Value<String> type,
+      Value<double?> targetValue,
+      Value<String?> unit,
+      Value<int> estimatedDurationMinutes,
+      Value<String?> startTime,
+      Value<String?> endTime,
+      Value<String> frequency,
+      Value<String> frequencyDays,
+      Value<bool> isArchived,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
 
 class $$LocalHabitsTableFilterComposer
     extends Composer<_$AppDatabase, $LocalHabitsTable> {
@@ -2271,53 +2697,84 @@ class $$LocalHabitsTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<String> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get userId => $composableBuilder(
-      column: $table.userId, builder: (column) => ColumnFilters(column));
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get domainId => $composableBuilder(
-      column: $table.domainId, builder: (column) => ColumnFilters(column));
+    column: $table.domainId,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnFilters(column));
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => ColumnFilters(column));
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get type => $composableBuilder(
-      column: $table.type, builder: (column) => ColumnFilters(column));
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<double> get targetValue => $composableBuilder(
-      column: $table.targetValue, builder: (column) => ColumnFilters(column));
+    column: $table.targetValue,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get unit => $composableBuilder(
-      column: $table.unit, builder: (column) => ColumnFilters(column));
+    column: $table.unit,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get estimatedDurationMinutes => $composableBuilder(
-      column: $table.estimatedDurationMinutes,
-      builder: (column) => ColumnFilters(column));
+    column: $table.estimatedDurationMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get startTime => $composableBuilder(
-      column: $table.startTime, builder: (column) => ColumnFilters(column));
+    column: $table.startTime,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get endTime => $composableBuilder(
-      column: $table.endTime, builder: (column) => ColumnFilters(column));
+    column: $table.endTime,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get frequency => $composableBuilder(
-      column: $table.frequency, builder: (column) => ColumnFilters(column));
+    column: $table.frequency,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get frequencyDays => $composableBuilder(
-      column: $table.frequencyDays, builder: (column) => ColumnFilters(column));
+    column: $table.frequencyDays,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get isArchived => $composableBuilder(
-      column: $table.isArchived, builder: (column) => ColumnFilters(column));
+    column: $table.isArchived,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
-      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$LocalHabitsTableOrderingComposer
@@ -2330,54 +2787,84 @@ class $$LocalHabitsTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<String> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get userId => $composableBuilder(
-      column: $table.userId, builder: (column) => ColumnOrderings(column));
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get domainId => $composableBuilder(
-      column: $table.domainId, builder: (column) => ColumnOrderings(column));
+    column: $table.domainId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnOrderings(column));
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => ColumnOrderings(column));
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get type => $composableBuilder(
-      column: $table.type, builder: (column) => ColumnOrderings(column));
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<double> get targetValue => $composableBuilder(
-      column: $table.targetValue, builder: (column) => ColumnOrderings(column));
+    column: $table.targetValue,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get unit => $composableBuilder(
-      column: $table.unit, builder: (column) => ColumnOrderings(column));
+    column: $table.unit,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get estimatedDurationMinutes => $composableBuilder(
-      column: $table.estimatedDurationMinutes,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.estimatedDurationMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get startTime => $composableBuilder(
-      column: $table.startTime, builder: (column) => ColumnOrderings(column));
+    column: $table.startTime,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get endTime => $composableBuilder(
-      column: $table.endTime, builder: (column) => ColumnOrderings(column));
+    column: $table.endTime,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get frequency => $composableBuilder(
-      column: $table.frequency, builder: (column) => ColumnOrderings(column));
+    column: $table.frequency,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get frequencyDays => $composableBuilder(
-      column: $table.frequencyDays,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.frequencyDays,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get isArchived => $composableBuilder(
-      column: $table.isArchived, builder: (column) => ColumnOrderings(column));
+    column: $table.isArchived,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
-      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$LocalHabitsTableAnnotationComposer
@@ -2402,19 +2889,25 @@ class $$LocalHabitsTableAnnotationComposer
       $composableBuilder(column: $table.name, builder: (column) => column);
 
   GeneratedColumn<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => column);
+    column: $table.description,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
 
   GeneratedColumn<double> get targetValue => $composableBuilder(
-      column: $table.targetValue, builder: (column) => column);
+    column: $table.targetValue,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get unit =>
       $composableBuilder(column: $table.unit, builder: (column) => column);
 
   GeneratedColumn<int> get estimatedDurationMinutes => $composableBuilder(
-      column: $table.estimatedDurationMinutes, builder: (column) => column);
+    column: $table.estimatedDurationMinutes,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get startTime =>
       $composableBuilder(column: $table.startTime, builder: (column) => column);
@@ -2426,10 +2919,14 @@ class $$LocalHabitsTableAnnotationComposer
       $composableBuilder(column: $table.frequency, builder: (column) => column);
 
   GeneratedColumn<String> get frequencyDays => $composableBuilder(
-      column: $table.frequencyDays, builder: (column) => column);
+    column: $table.frequencyDays,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get isArchived => $composableBuilder(
-      column: $table.isArchived, builder: (column) => column);
+    column: $table.isArchived,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -2438,20 +2935,27 @@ class $$LocalHabitsTableAnnotationComposer
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
-class $$LocalHabitsTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $LocalHabitsTable,
-    LocalHabit,
-    $$LocalHabitsTableFilterComposer,
-    $$LocalHabitsTableOrderingComposer,
-    $$LocalHabitsTableAnnotationComposer,
-    $$LocalHabitsTableCreateCompanionBuilder,
-    $$LocalHabitsTableUpdateCompanionBuilder,
-    (LocalHabit, BaseReferences<_$AppDatabase, $LocalHabitsTable, LocalHabit>),
-    LocalHabit,
-    PrefetchHooks Function()> {
+class $$LocalHabitsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalHabitsTable,
+          LocalHabit,
+          $$LocalHabitsTableFilterComposer,
+          $$LocalHabitsTableOrderingComposer,
+          $$LocalHabitsTableAnnotationComposer,
+          $$LocalHabitsTableCreateCompanionBuilder,
+          $$LocalHabitsTableUpdateCompanionBuilder,
+          (
+            LocalHabit,
+            BaseReferences<_$AppDatabase, $LocalHabitsTable, LocalHabit>,
+          ),
+          LocalHabit,
+          PrefetchHooks Function()
+        > {
   $$LocalHabitsTableTableManager(_$AppDatabase db, $LocalHabitsTable table)
-      : super(TableManagerState(
+    : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -2460,121 +2964,127 @@ class $$LocalHabitsTableTableManager extends RootTableManager<
               $$LocalHabitsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$LocalHabitsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<String> id = const Value.absent(),
-            Value<String> userId = const Value.absent(),
-            Value<String?> domainId = const Value.absent(),
-            Value<String> name = const Value.absent(),
-            Value<String?> description = const Value.absent(),
-            Value<String> type = const Value.absent(),
-            Value<double?> targetValue = const Value.absent(),
-            Value<String?> unit = const Value.absent(),
-            Value<int> estimatedDurationMinutes = const Value.absent(),
-            Value<String?> startTime = const Value.absent(),
-            Value<String?> endTime = const Value.absent(),
-            Value<String> frequency = const Value.absent(),
-            Value<String> frequencyDays = const Value.absent(),
-            Value<bool> isArchived = const Value.absent(),
-            Value<DateTime> createdAt = const Value.absent(),
-            Value<DateTime> updatedAt = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              LocalHabitsCompanion(
-            id: id,
-            userId: userId,
-            domainId: domainId,
-            name: name,
-            description: description,
-            type: type,
-            targetValue: targetValue,
-            unit: unit,
-            estimatedDurationMinutes: estimatedDurationMinutes,
-            startTime: startTime,
-            endTime: endTime,
-            frequency: frequency,
-            frequencyDays: frequencyDays,
-            isArchived: isArchived,
-            createdAt: createdAt,
-            updatedAt: updatedAt,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String id,
-            required String userId,
-            Value<String?> domainId = const Value.absent(),
-            required String name,
-            Value<String?> description = const Value.absent(),
-            Value<String> type = const Value.absent(),
-            Value<double?> targetValue = const Value.absent(),
-            Value<String?> unit = const Value.absent(),
-            Value<int> estimatedDurationMinutes = const Value.absent(),
-            Value<String?> startTime = const Value.absent(),
-            Value<String?> endTime = const Value.absent(),
-            Value<String> frequency = const Value.absent(),
-            Value<String> frequencyDays = const Value.absent(),
-            Value<bool> isArchived = const Value.absent(),
-            required DateTime createdAt,
-            required DateTime updatedAt,
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              LocalHabitsCompanion.insert(
-            id: id,
-            userId: userId,
-            domainId: domainId,
-            name: name,
-            description: description,
-            type: type,
-            targetValue: targetValue,
-            unit: unit,
-            estimatedDurationMinutes: estimatedDurationMinutes,
-            startTime: startTime,
-            endTime: endTime,
-            frequency: frequency,
-            frequencyDays: frequencyDays,
-            isArchived: isArchived,
-            createdAt: createdAt,
-            updatedAt: updatedAt,
-            rowid: rowid,
-          ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String?> domainId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String> type = const Value.absent(),
+                Value<double?> targetValue = const Value.absent(),
+                Value<String?> unit = const Value.absent(),
+                Value<int> estimatedDurationMinutes = const Value.absent(),
+                Value<String?> startTime = const Value.absent(),
+                Value<String?> endTime = const Value.absent(),
+                Value<String> frequency = const Value.absent(),
+                Value<String> frequencyDays = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalHabitsCompanion(
+                id: id,
+                userId: userId,
+                domainId: domainId,
+                name: name,
+                description: description,
+                type: type,
+                targetValue: targetValue,
+                unit: unit,
+                estimatedDurationMinutes: estimatedDurationMinutes,
+                startTime: startTime,
+                endTime: endTime,
+                frequency: frequency,
+                frequencyDays: frequencyDays,
+                isArchived: isArchived,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                Value<String?> domainId = const Value.absent(),
+                required String name,
+                Value<String?> description = const Value.absent(),
+                Value<String> type = const Value.absent(),
+                Value<double?> targetValue = const Value.absent(),
+                Value<String?> unit = const Value.absent(),
+                Value<int> estimatedDurationMinutes = const Value.absent(),
+                Value<String?> startTime = const Value.absent(),
+                Value<String?> endTime = const Value.absent(),
+                Value<String> frequency = const Value.absent(),
+                Value<String> frequencyDays = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LocalHabitsCompanion.insert(
+                id: id,
+                userId: userId,
+                domainId: domainId,
+                name: name,
+                description: description,
+                type: type,
+                targetValue: targetValue,
+                unit: unit,
+                estimatedDurationMinutes: estimatedDurationMinutes,
+                startTime: startTime,
+                endTime: endTime,
+                frequency: frequency,
+                frequencyDays: frequencyDays,
+                isArchived: isArchived,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$LocalHabitsTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $LocalHabitsTable,
-    LocalHabit,
-    $$LocalHabitsTableFilterComposer,
-    $$LocalHabitsTableOrderingComposer,
-    $$LocalHabitsTableAnnotationComposer,
-    $$LocalHabitsTableCreateCompanionBuilder,
-    $$LocalHabitsTableUpdateCompanionBuilder,
-    (LocalHabit, BaseReferences<_$AppDatabase, $LocalHabitsTable, LocalHabit>),
-    LocalHabit,
-    PrefetchHooks Function()>;
-typedef $$LocalHabitLogsTableCreateCompanionBuilder = LocalHabitLogsCompanion
-    Function({
-  required String id,
-  required String habitId,
-  required DateTime logDate,
-  Value<bool> completed,
-  Value<double?> value,
-  required DateTime createdAt,
-  Value<int> rowid,
-});
-typedef $$LocalHabitLogsTableUpdateCompanionBuilder = LocalHabitLogsCompanion
-    Function({
-  Value<String> id,
-  Value<String> habitId,
-  Value<DateTime> logDate,
-  Value<bool> completed,
-  Value<double?> value,
-  Value<DateTime> createdAt,
-  Value<int> rowid,
-});
+typedef $$LocalHabitsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalHabitsTable,
+      LocalHabit,
+      $$LocalHabitsTableFilterComposer,
+      $$LocalHabitsTableOrderingComposer,
+      $$LocalHabitsTableAnnotationComposer,
+      $$LocalHabitsTableCreateCompanionBuilder,
+      $$LocalHabitsTableUpdateCompanionBuilder,
+      (
+        LocalHabit,
+        BaseReferences<_$AppDatabase, $LocalHabitsTable, LocalHabit>,
+      ),
+      LocalHabit,
+      PrefetchHooks Function()
+    >;
+typedef $$LocalHabitLogsTableCreateCompanionBuilder =
+    LocalHabitLogsCompanion Function({
+      required String id,
+      required String habitId,
+      required DateTime logDate,
+      Value<bool> completed,
+      Value<double?> value,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$LocalHabitLogsTableUpdateCompanionBuilder =
+    LocalHabitLogsCompanion Function({
+      Value<String> id,
+      Value<String> habitId,
+      Value<DateTime> logDate,
+      Value<bool> completed,
+      Value<double?> value,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
 
 class $$LocalHabitLogsTableFilterComposer
     extends Composer<_$AppDatabase, $LocalHabitLogsTable> {
@@ -2586,22 +3096,34 @@ class $$LocalHabitLogsTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<String> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get habitId => $composableBuilder(
-      column: $table.habitId, builder: (column) => ColumnFilters(column));
+    column: $table.habitId,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get logDate => $composableBuilder(
-      column: $table.logDate, builder: (column) => ColumnFilters(column));
+    column: $table.logDate,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get completed => $composableBuilder(
-      column: $table.completed, builder: (column) => ColumnFilters(column));
+    column: $table.completed,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<double> get value => $composableBuilder(
-      column: $table.value, builder: (column) => ColumnFilters(column));
+    column: $table.value,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$LocalHabitLogsTableOrderingComposer
@@ -2614,22 +3136,34 @@ class $$LocalHabitLogsTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<String> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get habitId => $composableBuilder(
-      column: $table.habitId, builder: (column) => ColumnOrderings(column));
+    column: $table.habitId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get logDate => $composableBuilder(
-      column: $table.logDate, builder: (column) => ColumnOrderings(column));
+    column: $table.logDate,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get completed => $composableBuilder(
-      column: $table.completed, builder: (column) => ColumnOrderings(column));
+    column: $table.completed,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<double> get value => $composableBuilder(
-      column: $table.value, builder: (column) => ColumnOrderings(column));
+    column: $table.value,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$LocalHabitLogsTableAnnotationComposer
@@ -2660,24 +3194,29 @@ class $$LocalHabitLogsTableAnnotationComposer
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
 
-class $$LocalHabitLogsTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $LocalHabitLogsTable,
-    LocalHabitLog,
-    $$LocalHabitLogsTableFilterComposer,
-    $$LocalHabitLogsTableOrderingComposer,
-    $$LocalHabitLogsTableAnnotationComposer,
-    $$LocalHabitLogsTableCreateCompanionBuilder,
-    $$LocalHabitLogsTableUpdateCompanionBuilder,
-    (
-      LocalHabitLog,
-      BaseReferences<_$AppDatabase, $LocalHabitLogsTable, LocalHabitLog>
-    ),
-    LocalHabitLog,
-    PrefetchHooks Function()> {
+class $$LocalHabitLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalHabitLogsTable,
+          LocalHabitLog,
+          $$LocalHabitLogsTableFilterComposer,
+          $$LocalHabitLogsTableOrderingComposer,
+          $$LocalHabitLogsTableAnnotationComposer,
+          $$LocalHabitLogsTableCreateCompanionBuilder,
+          $$LocalHabitLogsTableUpdateCompanionBuilder,
+          (
+            LocalHabitLog,
+            BaseReferences<_$AppDatabase, $LocalHabitLogsTable, LocalHabitLog>,
+          ),
+          LocalHabitLog,
+          PrefetchHooks Function()
+        > {
   $$LocalHabitLogsTableTableManager(
-      _$AppDatabase db, $LocalHabitLogsTable table)
-      : super(TableManagerState(
+    _$AppDatabase db,
+    $LocalHabitLogsTable table,
+  ) : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -2686,82 +3225,87 @@ class $$LocalHabitLogsTableTableManager extends RootTableManager<
               $$LocalHabitLogsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$LocalHabitLogsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<String> id = const Value.absent(),
-            Value<String> habitId = const Value.absent(),
-            Value<DateTime> logDate = const Value.absent(),
-            Value<bool> completed = const Value.absent(),
-            Value<double?> value = const Value.absent(),
-            Value<DateTime> createdAt = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              LocalHabitLogsCompanion(
-            id: id,
-            habitId: habitId,
-            logDate: logDate,
-            completed: completed,
-            value: value,
-            createdAt: createdAt,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String id,
-            required String habitId,
-            required DateTime logDate,
-            Value<bool> completed = const Value.absent(),
-            Value<double?> value = const Value.absent(),
-            required DateTime createdAt,
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              LocalHabitLogsCompanion.insert(
-            id: id,
-            habitId: habitId,
-            logDate: logDate,
-            completed: completed,
-            value: value,
-            createdAt: createdAt,
-            rowid: rowid,
-          ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> habitId = const Value.absent(),
+                Value<DateTime> logDate = const Value.absent(),
+                Value<bool> completed = const Value.absent(),
+                Value<double?> value = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalHabitLogsCompanion(
+                id: id,
+                habitId: habitId,
+                logDate: logDate,
+                completed: completed,
+                value: value,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String habitId,
+                required DateTime logDate,
+                Value<bool> completed = const Value.absent(),
+                Value<double?> value = const Value.absent(),
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LocalHabitLogsCompanion.insert(
+                id: id,
+                habitId: habitId,
+                logDate: logDate,
+                completed: completed,
+                value: value,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$LocalHabitLogsTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $LocalHabitLogsTable,
-    LocalHabitLog,
-    $$LocalHabitLogsTableFilterComposer,
-    $$LocalHabitLogsTableOrderingComposer,
-    $$LocalHabitLogsTableAnnotationComposer,
-    $$LocalHabitLogsTableCreateCompanionBuilder,
-    $$LocalHabitLogsTableUpdateCompanionBuilder,
-    (
+typedef $$LocalHabitLogsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalHabitLogsTable,
       LocalHabitLog,
-      BaseReferences<_$AppDatabase, $LocalHabitLogsTable, LocalHabitLog>
-    ),
-    LocalHabitLog,
-    PrefetchHooks Function()>;
-typedef $$SyncQueueTableCreateCompanionBuilder = SyncQueueCompanion Function({
-  Value<int> id,
-  required String tableName,
-  required String recordId,
-  required String operation,
-  required String payload,
-  required DateTime createdAt,
-  Value<int> retryCount,
-});
-typedef $$SyncQueueTableUpdateCompanionBuilder = SyncQueueCompanion Function({
-  Value<int> id,
-  Value<String> tableName,
-  Value<String> recordId,
-  Value<String> operation,
-  Value<String> payload,
-  Value<DateTime> createdAt,
-  Value<int> retryCount,
-});
+      $$LocalHabitLogsTableFilterComposer,
+      $$LocalHabitLogsTableOrderingComposer,
+      $$LocalHabitLogsTableAnnotationComposer,
+      $$LocalHabitLogsTableCreateCompanionBuilder,
+      $$LocalHabitLogsTableUpdateCompanionBuilder,
+      (
+        LocalHabitLog,
+        BaseReferences<_$AppDatabase, $LocalHabitLogsTable, LocalHabitLog>,
+      ),
+      LocalHabitLog,
+      PrefetchHooks Function()
+    >;
+typedef $$SyncQueueTableCreateCompanionBuilder =
+    SyncQueueCompanion Function({
+      Value<int> id,
+      required String targetTable,
+      required String recordId,
+      required String operation,
+      required String payload,
+      required DateTime createdAt,
+      Value<int> retryCount,
+    });
+typedef $$SyncQueueTableUpdateCompanionBuilder =
+    SyncQueueCompanion Function({
+      Value<int> id,
+      Value<String> targetTable,
+      Value<String> recordId,
+      Value<String> operation,
+      Value<String> payload,
+      Value<DateTime> createdAt,
+      Value<int> retryCount,
+    });
 
 class $$SyncQueueTableFilterComposer
     extends Composer<_$AppDatabase, $SyncQueueTable> {
@@ -2773,25 +3317,39 @@ class $$SyncQueueTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<String> get tableName => $composableBuilder(
-      column: $table.tableName, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get targetTable => $composableBuilder(
+    column: $table.targetTable,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get recordId => $composableBuilder(
-      column: $table.recordId, builder: (column) => ColumnFilters(column));
+    column: $table.recordId,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get operation => $composableBuilder(
-      column: $table.operation, builder: (column) => ColumnFilters(column));
+    column: $table.operation,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get payload => $composableBuilder(
-      column: $table.payload, builder: (column) => ColumnFilters(column));
+    column: $table.payload,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get retryCount => $composableBuilder(
-      column: $table.retryCount, builder: (column) => ColumnFilters(column));
+    column: $table.retryCount,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$SyncQueueTableOrderingComposer
@@ -2804,25 +3362,39 @@ class $$SyncQueueTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get tableName => $composableBuilder(
-      column: $table.tableName, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get targetTable => $composableBuilder(
+    column: $table.targetTable,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get recordId => $composableBuilder(
-      column: $table.recordId, builder: (column) => ColumnOrderings(column));
+    column: $table.recordId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get operation => $composableBuilder(
-      column: $table.operation, builder: (column) => ColumnOrderings(column));
+    column: $table.operation,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get payload => $composableBuilder(
-      column: $table.payload, builder: (column) => ColumnOrderings(column));
+    column: $table.payload,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get retryCount => $composableBuilder(
-      column: $table.retryCount, builder: (column) => ColumnOrderings(column));
+    column: $table.retryCount,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SyncQueueTableAnnotationComposer
@@ -2837,8 +3409,10 @@ class $$SyncQueueTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get tableName =>
-      $composableBuilder(column: $table.tableName, builder: (column) => column);
+  GeneratedColumn<String> get targetTable => $composableBuilder(
+    column: $table.targetTable,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get recordId =>
       $composableBuilder(column: $table.recordId, builder: (column) => column);
@@ -2853,26 +3427,32 @@ class $$SyncQueueTableAnnotationComposer
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<int> get retryCount => $composableBuilder(
-      column: $table.retryCount, builder: (column) => column);
+    column: $table.retryCount,
+    builder: (column) => column,
+  );
 }
 
-class $$SyncQueueTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $SyncQueueTable,
-    SyncQueueData,
-    $$SyncQueueTableFilterComposer,
-    $$SyncQueueTableOrderingComposer,
-    $$SyncQueueTableAnnotationComposer,
-    $$SyncQueueTableCreateCompanionBuilder,
-    $$SyncQueueTableUpdateCompanionBuilder,
-    (
-      SyncQueueData,
-      BaseReferences<_$AppDatabase, $SyncQueueTable, SyncQueueData>
-    ),
-    SyncQueueData,
-    PrefetchHooks Function()> {
+class $$SyncQueueTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SyncQueueTable,
+          SyncQueueData,
+          $$SyncQueueTableFilterComposer,
+          $$SyncQueueTableOrderingComposer,
+          $$SyncQueueTableAnnotationComposer,
+          $$SyncQueueTableCreateCompanionBuilder,
+          $$SyncQueueTableUpdateCompanionBuilder,
+          (
+            SyncQueueData,
+            BaseReferences<_$AppDatabase, $SyncQueueTable, SyncQueueData>,
+          ),
+          SyncQueueData,
+          PrefetchHooks Function()
+        > {
   $$SyncQueueTableTableManager(_$AppDatabase db, $SyncQueueTable table)
-      : super(TableManagerState(
+    : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -2881,64 +3461,67 @@ class $$SyncQueueTableTableManager extends RootTableManager<
               $$SyncQueueTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$SyncQueueTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String> tableName = const Value.absent(),
-            Value<String> recordId = const Value.absent(),
-            Value<String> operation = const Value.absent(),
-            Value<String> payload = const Value.absent(),
-            Value<DateTime> createdAt = const Value.absent(),
-            Value<int> retryCount = const Value.absent(),
-          }) =>
-              SyncQueueCompanion(
-            id: id,
-            tableName: tableName,
-            recordId: recordId,
-            operation: operation,
-            payload: payload,
-            createdAt: createdAt,
-            retryCount: retryCount,
-          ),
-          createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required String tableName,
-            required String recordId,
-            required String operation,
-            required String payload,
-            required DateTime createdAt,
-            Value<int> retryCount = const Value.absent(),
-          }) =>
-              SyncQueueCompanion.insert(
-            id: id,
-            tableName: tableName,
-            recordId: recordId,
-            operation: operation,
-            payload: payload,
-            createdAt: createdAt,
-            retryCount: retryCount,
-          ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> targetTable = const Value.absent(),
+                Value<String> recordId = const Value.absent(),
+                Value<String> operation = const Value.absent(),
+                Value<String> payload = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> retryCount = const Value.absent(),
+              }) => SyncQueueCompanion(
+                id: id,
+                targetTable: targetTable,
+                recordId: recordId,
+                operation: operation,
+                payload: payload,
+                createdAt: createdAt,
+                retryCount: retryCount,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String targetTable,
+                required String recordId,
+                required String operation,
+                required String payload,
+                required DateTime createdAt,
+                Value<int> retryCount = const Value.absent(),
+              }) => SyncQueueCompanion.insert(
+                id: id,
+                targetTable: targetTable,
+                recordId: recordId,
+                operation: operation,
+                payload: payload,
+                createdAt: createdAt,
+                retryCount: retryCount,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$SyncQueueTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $SyncQueueTable,
-    SyncQueueData,
-    $$SyncQueueTableFilterComposer,
-    $$SyncQueueTableOrderingComposer,
-    $$SyncQueueTableAnnotationComposer,
-    $$SyncQueueTableCreateCompanionBuilder,
-    $$SyncQueueTableUpdateCompanionBuilder,
-    (
+typedef $$SyncQueueTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SyncQueueTable,
       SyncQueueData,
-      BaseReferences<_$AppDatabase, $SyncQueueTable, SyncQueueData>
-    ),
-    SyncQueueData,
-    PrefetchHooks Function()>;
+      $$SyncQueueTableFilterComposer,
+      $$SyncQueueTableOrderingComposer,
+      $$SyncQueueTableAnnotationComposer,
+      $$SyncQueueTableCreateCompanionBuilder,
+      $$SyncQueueTableUpdateCompanionBuilder,
+      (
+        SyncQueueData,
+        BaseReferences<_$AppDatabase, $SyncQueueTable, SyncQueueData>,
+      ),
+      SyncQueueData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;

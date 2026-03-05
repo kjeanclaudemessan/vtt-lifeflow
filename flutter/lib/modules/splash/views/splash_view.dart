@@ -58,8 +58,7 @@ class SplashView extends StackedView<SplashViewModel> {
               Text(
                 l10n.splashTagline,
                 style: AppTypography.bodyMedium.copyWith(
-                  color: AppColors.textSecondary(
-                      Theme.of(context).brightness),
+                  color: AppColors.textSecondary(Theme.of(context).brightness),
                 ),
               ),
 

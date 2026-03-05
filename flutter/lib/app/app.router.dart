@@ -100,78 +100,24 @@ class Routes {
 
 class StackedRouter extends _i1.RouterBase {
   final _routes = <_i1.RouteDef>[
-    _i1.RouteDef(
-      Routes.splashView,
-      page: _i2.SplashView,
-    ),
-    _i1.RouteDef(
-      Routes.loginView,
-      page: _i3.LoginView,
-    ),
-    _i1.RouteDef(
-      Routes.registerView,
-      page: _i4.RegisterView,
-    ),
-    _i1.RouteDef(
-      Routes.forgotPasswordView,
-      page: _i5.ForgotPasswordView,
-    ),
-    _i1.RouteDef(
-      Routes.onboardingView,
-      page: _i6.OnboardingView,
-    ),
-    _i1.RouteDef(
-      Routes.profileView,
-      page: _i7.ProfileView,
-    ),
-    _i1.RouteDef(
-      Routes.editProfileView,
-      page: _i8.EditProfileView,
-    ),
-    _i1.RouteDef(
-      Routes.settingsView,
-      page: _i9.SettingsView,
-    ),
-    _i1.RouteDef(
-      Routes.notificationsView,
-      page: _i10.NotificationsView,
-    ),
-    _i1.RouteDef(
-      Routes.homeView,
-      page: _i11.HomeView,
-    ),
-    _i1.RouteDef(
-      Routes.startupView,
-      page: _i12.StartupView,
-    ),
-    _i1.RouteDef(
-      Routes.designShowcaseView,
-      page: _i13.DesignShowcaseView,
-    ),
-    _i1.RouteDef(
-      Routes.domainsView,
-      page: _i14.DomainsView,
-    ),
-    _i1.RouteDef(
-      Routes.habitsView,
-      page: _i15.HabitsView,
-    ),
-    _i1.RouteDef(
-      Routes.habitFormView,
-      page: _i16.HabitFormView,
-    ),
-    _i1.RouteDef(
-      Routes.counterView,
-      page: _i17.CounterView,
-    ),
-    _i1.RouteDef(
-      Routes.todayView,
-      page: _i18.TodayView,
-    ),
-    _i1.RouteDef(
-      Routes.bilanView,
-      page: _i19.BilanView,
-    ),
+    _i1.RouteDef(Routes.splashView, page: _i2.SplashView),
+    _i1.RouteDef(Routes.loginView, page: _i3.LoginView),
+    _i1.RouteDef(Routes.registerView, page: _i4.RegisterView),
+    _i1.RouteDef(Routes.forgotPasswordView, page: _i5.ForgotPasswordView),
+    _i1.RouteDef(Routes.onboardingView, page: _i6.OnboardingView),
+    _i1.RouteDef(Routes.profileView, page: _i7.ProfileView),
+    _i1.RouteDef(Routes.editProfileView, page: _i8.EditProfileView),
+    _i1.RouteDef(Routes.settingsView, page: _i9.SettingsView),
+    _i1.RouteDef(Routes.notificationsView, page: _i10.NotificationsView),
+    _i1.RouteDef(Routes.homeView, page: _i11.HomeView),
+    _i1.RouteDef(Routes.startupView, page: _i12.StartupView),
+    _i1.RouteDef(Routes.designShowcaseView, page: _i13.DesignShowcaseView),
+    _i1.RouteDef(Routes.domainsView, page: _i14.DomainsView),
+    _i1.RouteDef(Routes.habitsView, page: _i15.HabitsView),
+    _i1.RouteDef(Routes.habitFormView, page: _i16.HabitFormView),
+    _i1.RouteDef(Routes.counterView, page: _i17.CounterView),
+    _i1.RouteDef(Routes.todayView, page: _i18.TodayView),
+    _i1.RouteDef(Routes.bilanView, page: _i19.BilanView),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
@@ -441,10 +387,7 @@ class ForgotPasswordViewArguments {
 }
 
 class OnboardingViewArguments {
-  const OnboardingViewArguments({
-    this.config,
-    this.key,
-  });
+  const OnboardingViewArguments({this.config, this.key});
 
   final _i22.OnboardingConfig? config;
 
@@ -468,10 +411,7 @@ class OnboardingViewArguments {
 }
 
 class ProfileViewArguments {
-  const ProfileViewArguments({
-    this.config,
-    this.key,
-  });
+  const ProfileViewArguments({this.config, this.key});
 
   final _i23.ProfileConfig? config;
 
@@ -495,10 +435,7 @@ class ProfileViewArguments {
 }
 
 class EditProfileViewArguments {
-  const EditProfileViewArguments({
-    this.config,
-    this.key,
-  });
+  const EditProfileViewArguments({this.config, this.key});
 
   final _i23.ProfileConfig? config;
 
@@ -522,10 +459,7 @@ class EditProfileViewArguments {
 }
 
 class SettingsViewArguments {
-  const SettingsViewArguments({
-    this.config,
-    this.key,
-  });
+  const SettingsViewArguments({this.config, this.key});
 
   final _i24.SettingsConfig? config;
 
@@ -549,10 +483,7 @@ class SettingsViewArguments {
 }
 
 class NotificationsViewArguments {
-  const NotificationsViewArguments({
-    this.config,
-    this.key,
-  });
+  const NotificationsViewArguments({this.config, this.key});
 
   final _i25.NotificationsConfig? config;
 
@@ -686,10 +617,7 @@ class HabitsViewArguments {
 }
 
 class HabitFormViewArguments {
-  const HabitFormViewArguments({
-    this.key,
-    this.habit,
-  });
+  const HabitFormViewArguments({this.key, this.habit});
 
   final _i21.Key? key;
 
@@ -785,14 +713,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.splashView,
-        arguments: SplashViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.splashView,
+      arguments: SplashViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToLoginView({
@@ -801,14 +731,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.loginView,
-        arguments: LoginViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.loginView,
+      arguments: LoginViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToRegisterView({
@@ -817,14 +749,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.registerView,
-        arguments: RegisterViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.registerView,
+      arguments: RegisterViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToForgotPasswordView({
@@ -833,14 +767,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.forgotPasswordView,
-        arguments: ForgotPasswordViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.forgotPasswordView,
+      arguments: ForgotPasswordViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToOnboardingView({
@@ -850,14 +786,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.onboardingView,
-        arguments: OnboardingViewArguments(config: config, key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.onboardingView,
+      arguments: OnboardingViewArguments(config: config, key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToProfileView({
@@ -867,14 +805,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.profileView,
-        arguments: ProfileViewArguments(config: config, key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.profileView,
+      arguments: ProfileViewArguments(config: config, key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToEditProfileView({
@@ -884,14 +824,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.editProfileView,
-        arguments: EditProfileViewArguments(config: config, key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.editProfileView,
+      arguments: EditProfileViewArguments(config: config, key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToSettingsView({
@@ -901,14 +843,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.settingsView,
-        arguments: SettingsViewArguments(config: config, key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.settingsView,
+      arguments: SettingsViewArguments(config: config, key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToNotificationsView({
@@ -918,14 +862,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.notificationsView,
-        arguments: NotificationsViewArguments(config: config, key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.notificationsView,
+      arguments: NotificationsViewArguments(config: config, key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToHomeView({
@@ -934,14 +880,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.homeView,
-        arguments: HomeViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.homeView,
+      arguments: HomeViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToStartupView({
@@ -950,14 +898,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.startupView,
-        arguments: StartupViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.startupView,
+      arguments: StartupViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToDesignShowcaseView({
@@ -966,14 +916,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.designShowcaseView,
-        arguments: DesignShowcaseViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.designShowcaseView,
+      arguments: DesignShowcaseViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToDomainsView({
@@ -982,14 +934,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.domainsView,
-        arguments: DomainsViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.domainsView,
+      arguments: DomainsViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToHabitsView({
@@ -998,14 +952,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.habitsView,
-        arguments: HabitsViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.habitsView,
+      arguments: HabitsViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToHabitFormView({
@@ -1015,14 +971,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.habitFormView,
-        arguments: HabitFormViewArguments(key: key, habit: habit),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.habitFormView,
+      arguments: HabitFormViewArguments(key: key, habit: habit),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToCounterView({
@@ -1031,14 +989,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.counterView,
-        arguments: CounterViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.counterView,
+      arguments: CounterViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToTodayView({
@@ -1047,14 +1007,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.todayView,
-        arguments: TodayViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.todayView,
+      arguments: TodayViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> navigateToBilanView({
@@ -1063,14 +1025,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return navigateTo<dynamic>(Routes.bilanView,
-        arguments: BilanViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return navigateTo<dynamic>(
+      Routes.bilanView,
+      arguments: BilanViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithSplashView({
@@ -1079,14 +1043,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.splashView,
-        arguments: SplashViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.splashView,
+      arguments: SplashViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithLoginView({
@@ -1095,14 +1061,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.loginView,
-        arguments: LoginViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.loginView,
+      arguments: LoginViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithRegisterView({
@@ -1111,14 +1079,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.registerView,
-        arguments: RegisterViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.registerView,
+      arguments: RegisterViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithForgotPasswordView({
@@ -1127,14 +1097,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.forgotPasswordView,
-        arguments: ForgotPasswordViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.forgotPasswordView,
+      arguments: ForgotPasswordViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithOnboardingView({
@@ -1144,14 +1116,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.onboardingView,
-        arguments: OnboardingViewArguments(config: config, key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.onboardingView,
+      arguments: OnboardingViewArguments(config: config, key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithProfileView({
@@ -1161,14 +1135,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.profileView,
-        arguments: ProfileViewArguments(config: config, key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.profileView,
+      arguments: ProfileViewArguments(config: config, key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithEditProfileView({
@@ -1178,14 +1154,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.editProfileView,
-        arguments: EditProfileViewArguments(config: config, key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.editProfileView,
+      arguments: EditProfileViewArguments(config: config, key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithSettingsView({
@@ -1195,14 +1173,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.settingsView,
-        arguments: SettingsViewArguments(config: config, key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.settingsView,
+      arguments: SettingsViewArguments(config: config, key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithNotificationsView({
@@ -1212,14 +1192,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.notificationsView,
-        arguments: NotificationsViewArguments(config: config, key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.notificationsView,
+      arguments: NotificationsViewArguments(config: config, key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithHomeView({
@@ -1228,14 +1210,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.homeView,
-        arguments: HomeViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.homeView,
+      arguments: HomeViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithStartupView({
@@ -1244,14 +1228,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.startupView,
-        arguments: StartupViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.startupView,
+      arguments: StartupViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithDesignShowcaseView({
@@ -1260,14 +1246,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.designShowcaseView,
-        arguments: DesignShowcaseViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.designShowcaseView,
+      arguments: DesignShowcaseViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithDomainsView({
@@ -1276,14 +1264,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.domainsView,
-        arguments: DomainsViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.domainsView,
+      arguments: DomainsViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithHabitsView({
@@ -1292,14 +1282,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.habitsView,
-        arguments: HabitsViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.habitsView,
+      arguments: HabitsViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithHabitFormView({
@@ -1309,14 +1301,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.habitFormView,
-        arguments: HabitFormViewArguments(key: key, habit: habit),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.habitFormView,
+      arguments: HabitFormViewArguments(key: key, habit: habit),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithCounterView({
@@ -1325,14 +1319,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.counterView,
-        arguments: CounterViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.counterView,
+      arguments: CounterViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithTodayView({
@@ -1341,14 +1337,16 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.todayView,
-        arguments: TodayViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.todayView,
+      arguments: TodayViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 
   Future<dynamic> replaceWithBilanView({
@@ -1357,13 +1355,15 @@ extension NavigatorStateExtension on _i27.NavigationService {
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transition,
+    transition,
   }) async {
-    return replaceWith<dynamic>(Routes.bilanView,
-        arguments: BilanViewArguments(key: key),
-        id: routerId,
-        preventDuplicates: preventDuplicates,
-        parameters: parameters,
-        transition: transition);
+    return replaceWith<dynamic>(
+      Routes.bilanView,
+      arguments: BilanViewArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
   }
 }

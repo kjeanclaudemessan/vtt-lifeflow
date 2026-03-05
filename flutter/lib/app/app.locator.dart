@@ -26,6 +26,7 @@ import '../services/analytics/analytics_service.dart';
 import '../services/api/api_service.dart';
 import '../services/bilan_service.dart';
 import '../services/connectivity/connectivity_service.dart';
+import '../services/database/app_database.dart';
 import '../services/dialog/dialog_helper.dart';
 import '../services/habit_event_service.dart';
 import '../services/haptic_service.dart';
@@ -39,17 +40,22 @@ import '../services/storage/secure_storage_service.dart';
 import '../services/storage/storage_service.dart';
 import '../services/supabase/supabase_auth_service.dart';
 import '../services/supabase/supabase_service.dart';
+import '../services/sync/sync_engine.dart';
 import '../services/time_counter_service.dart';
 
 final locator = StackedLocator.instance;
 
-Future<void> setupLocator(
-    {String? environment, EnvironmentFilter? environmentFilter}) async {
-// Register environments
+Future<void> setupLocator({
+  String? environment,
+  EnvironmentFilter? environmentFilter,
+}) async {
+  // Register environments
   locator.registerEnvironment(
-      environment: environment, environmentFilter: environmentFilter);
+    environment: environment,
+    environmentFilter: environmentFilter,
+  );
 
-// Register dependencies
+  // Register dependencies
   locator.registerLazySingleton(() => BottomSheetService());
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => NavigationService());
@@ -59,6 +65,8 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => ApiService());
   locator.registerSingleton(ConnectivityService());
   locator.registerLazySingleton(() => DialogHelper());
+  locator.registerSingleton(AppDatabase());
+  locator.registerLazySingleton(() => SyncEngine());
   locator.registerLazySingleton(() => SupabaseService());
   locator.registerLazySingleton(() => SupabaseAuthService());
   locator.registerLazySingleton(() => StorageService());
@@ -69,11 +77,13 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => LocalNotificationScheduler());
   locator.registerLazySingleton(() => NotificationRouter());
   locator.registerLazySingleton<IAuthRepository>(() => AuthRepositoryImpl());
-  locator
-      .registerLazySingleton<IDomainRepository>(() => DomainRepositoryImpl());
+  locator.registerLazySingleton<IDomainRepository>(
+    () => DomainRepositoryImpl(),
+  );
   locator.registerLazySingleton<IHabitRepository>(() => HabitRepositoryImpl());
   locator.registerLazySingleton<INotificationRepository>(
-      () => NotificationRepositoryImpl());
+    () => NotificationRepositoryImpl(),
+  );
   locator.registerLazySingleton(() => HabitEventService());
   locator.registerLazySingleton(() => TimeCounterService());
   locator.registerLazySingleton(() => BilanService());

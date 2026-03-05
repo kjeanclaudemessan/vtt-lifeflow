@@ -7,16 +7,16 @@ part of 'domain_model.dart';
 // **************************************************************************
 
 DomainModel _$DomainModelFromJson(Map<String, dynamic> json) => DomainModel(
-      id: json['id'] as String,
-      userId: json['user_id'] as String,
-      name: json['name'] as String,
-      icon: json['icon'] as String? ?? '🎯',
-      color: json['color'] as String? ?? '#6200EE',
-      sortOrder: (json['sort_order'] as num?)?.toInt() ?? 0,
-      isArchived: json['is_archived'] as bool? ?? false,
-      createdAt: json['created_at'] as String,
-      updatedAt: json['updated_at'] as String,
-    );
+  id: json['id'] as String,
+  userId: json['user_id'] as String,
+  name: json['name'] as String,
+  icon: json['icon'] as String? ?? '🎯',
+  color: json['color'] as String? ?? '#6200EE',
+  sortOrder: (json['sort_order'] as num?)?.toInt() ?? 0,
+  isArchived: json['is_archived'] as bool? ?? false,
+  createdAt: json['created_at'] as String,
+  updatedAt: json['updated_at'] as String,
+);
 
 Map<String, dynamic> _$DomainModelToJson(DomainModel instance) =>
     <String, dynamic>{

@@ -73,7 +73,7 @@ class SyncQueue extends Table {
   IntColumn get id => integer().autoIncrement()();
 
   /// The Supabase table name (e.g., 'habits', 'habit_logs', 'domains').
-  TextColumn get tableName => text()();
+  TextColumn get targetTable => text()();
 
   /// The record ID in the target table.
   TextColumn get recordId => text()();
@@ -107,11 +107,11 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (m) => m.createAll(),
-        onUpgrade: (m, from, to) async {
-          // Future migrations go here
-        },
-      );
+    onCreate: (m) => m.createAll(),
+    onUpgrade: (m, from, to) async {
+      // Future migrations go here
+    },
+  );
 
   // ─────────────────────────────────────────────────────────────────
   // Sync Queue Operations
@@ -124,13 +124,15 @@ class AppDatabase extends _$AppDatabase {
     required String operation,
     required String payload,
   }) async {
-    await into(syncQueue).insert(SyncQueueCompanion.insert(
-      tableName: tableName,
-      recordId: recordId,
-      operation: operation,
-      payload: payload,
-      createdAt: DateTime.now().toUtc(),
-    ));
+    await into(syncQueue).insert(
+      SyncQueueCompanion.insert(
+        targetTable: tableName,
+        recordId: recordId,
+        operation: operation,
+        payload: payload,
+        createdAt: DateTime.now().toUtc(),
+      ),
+    );
   }
 
   /// Gets all pending sync operations, ordered by creation time.
