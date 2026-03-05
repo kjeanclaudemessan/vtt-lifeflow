@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
@@ -9,6 +6,7 @@ import 'package:stacked_services/stacked_services.dart';
 import '../../../app/app.locator.dart';
 import '../../../app/app.router.dart';
 import '../../../core/enums/lifeflow_enums.dart';
+import '../../../core/utils/time_format.dart';
 import '../../../core/extensions/context_extensions.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../design_system/design_system.dart';
@@ -67,14 +65,14 @@ class TodayView extends StackedView<TodayViewModel> {
                   ? AppErrorState.generic(onRetry: viewModel.init)
                   : viewModel.todayHabits.isEmpty
                       ? _buildEmptyState(context, l10n)
-                      : RefreshIndicator(
+                      : AppRefreshIndicator(
                           onRefresh: viewModel.refresh,
                           child: _buildContent(context, viewModel, brightness),
                         ),
           // Confetti celebration overlay
-          _CelebrationOverlay(
+          AppCelebrationOverlay(
             shouldCelebrate: viewModel.justCompletedAll,
-            onCelebrationComplete: viewModel.clearCelebration,
+            onComplete: viewModel.clearCelebration,
           ),
         ],
       ),
@@ -281,7 +279,22 @@ class TodayView extends StackedView<TodayViewModel> {
           key: const ValueKey('mode-bilan'),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildDaySummary(context, viewModel, brightness),
+            AppDomainBreakdown(
+              title: l10n.todayDaySummary,
+              items: viewModel.domains.map((domain) {
+                final minutes = viewModel.todayDomainMinutes[domain.id] ?? 0;
+                return AppBreakdownItem(
+                  icon: domain.icon,
+                  label: domain.name,
+                  value: minutes,
+                  formattedValue: formatMinutes(minutes),
+                );
+              }).toList(),
+              totalLabel: l10n.total,
+              totalFormattedValue: formatMinutes(
+                viewModel.todayDomainMinutes.values.fold(0, (a, b) => a + b),
+              ),
+            ),
             SizedBox(height: AppSpacing.lg),
             // Still show habits for toggling
             TodayHabitsSection(
@@ -342,83 +355,6 @@ class TodayView extends StackedView<TodayViewModel> {
     );
   }
 
-  Widget _buildDaySummary(
-    BuildContext context,
-    TodayViewModel viewModel,
-    Brightness brightness,
-  ) {
-    final l10n = context.l10n;
-    final domainMinutes = viewModel.todayDomainMinutes;
-
-    return AppCard.elevated(
-      padding: EdgeInsets.all(AppSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.todayDaySummary,
-            style: AppTypography.titleMedium.copyWith(
-              color: AppColors.textPrimary(brightness),
-            ),
-          ),
-          SizedBox(height: AppSpacing.sm),
-          ...viewModel.domains.map((domain) {
-            final minutes = domainMinutes[domain.id] ?? 0;
-            return Padding(
-              padding: EdgeInsets.only(bottom: AppSpacing.xxs),
-              child: Row(
-                children: [
-                  Text(domain.icon, style: TextStyle(fontSize: 16)),
-                  SizedBox(width: AppSpacing.xs),
-                  Expanded(
-                    child: Text(
-                      domain.name,
-                      style: AppTypography.textSmall.copyWith(
-                        color: minutes > 0
-                            ? AppColors.textPrimary(brightness)
-                            : AppColors.textSecondary(brightness),
-                      ),
-                    ),
-                  ),
-                  Text(
-                    _formatMinutes(minutes),
-                    style: AppTypography.textSmall.copyWith(
-                      color: minutes > 0
-                          ? AppColors.textPrimary(brightness)
-                          : AppColors.textSecondary(brightness),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }),
-          Divider(color: AppColors.border(brightness)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                l10n.total,
-                style: AppTypography.titleSmall.copyWith(
-                  color: AppColors.textPrimary(brightness),
-                ),
-              ),
-              Text(
-                _formatMinutes(
-                  domainMinutes.values.fold(0, (a, b) => a + b),
-                ),
-                style: AppTypography.titleSmall.copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   Map<TimeSlot, List<HabitEntity>> _groupBySlot(List<HabitEntity> habits) {
     final map = <TimeSlot, List<HabitEntity>>{};
     for (final habit in habits) {
@@ -431,106 +367,9 @@ class TodayView extends StackedView<TodayViewModel> {
     );
   }
 
-  String _formatMinutes(int minutes) {
-    if (minutes >= 60) {
-      final h = minutes ~/ 60;
-      final m = minutes % 60;
-      return m > 0 ? '${h}h${m.toString().padLeft(2, '0')}' : '${h}h';
-    }
-    return '${minutes}m';
-  }
-
   @override
   TodayViewModel viewModelBuilder(BuildContext context) => TodayViewModel();
 
   @override
   void onViewModelReady(TodayViewModel viewModel) => viewModel.init();
-}
-
-/// Confetti celebration overlay triggered when all habits are completed.
-class _CelebrationOverlay extends StatefulWidget {
-  final bool shouldCelebrate;
-  final VoidCallback onCelebrationComplete;
-
-  const _CelebrationOverlay({
-    required this.shouldCelebrate,
-    required this.onCelebrationComplete,
-  });
-
-  @override
-  State<_CelebrationOverlay> createState() => _CelebrationOverlayState();
-}
-
-class _CelebrationOverlayState extends State<_CelebrationOverlay> {
-  late final ConfettiController _confettiController;
-
-  @override
-  void initState() {
-    super.initState();
-    _confettiController =
-        ConfettiController(duration: const Duration(seconds: 3));
-  }
-
-  @override
-  void didUpdateWidget(covariant _CelebrationOverlay oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.shouldCelebrate && !oldWidget.shouldCelebrate) {
-      _confettiController.play();
-      Future.delayed(const Duration(seconds: 4), () {
-        if (mounted) widget.onCelebrationComplete();
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _confettiController.dispose();
-    super.dispose();
-  }
-
-  /// Custom star path for confetti particles.
-  Path _drawStar(Size size) {
-    double degToRad(double deg) => deg * (pi / 180.0);
-    const numberOfPoints = 5;
-    final halfWidth = size.width / 2;
-    final externalRadius = halfWidth;
-    final internalRadius = halfWidth / 2.5;
-    final degreesPerStep = degToRad(360 / numberOfPoints);
-    final halfDegreesPerStep = degreesPerStep / 2;
-    final path = Path();
-    final fullAngle = degToRad(360);
-    path.moveTo(size.width, halfWidth);
-    for (double step = 0; step < fullAngle; step += degreesPerStep) {
-      path.lineTo(halfWidth + externalRadius * cos(step),
-          halfWidth + externalRadius * sin(step));
-      path.lineTo(halfWidth + internalRadius * cos(step + halfDegreesPerStep),
-          halfWidth + internalRadius * sin(step + halfDegreesPerStep));
-    }
-    path.close();
-    return path;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: ConfettiWidget(
-        confettiController: _confettiController,
-        blastDirectionality: BlastDirectionality.explosive,
-        emissionFrequency: 0.05,
-        numberOfParticles: 20,
-        maxBlastForce: 30,
-        minBlastForce: 10,
-        gravity: 0.15,
-        colors: const [
-          AppColors.primary,
-          AppColors.success,
-          Color(0xFFFFD700), // Gold
-          Color(0xFFFF6B6B), // Coral
-          Color(0xFF4ECDC4), // Teal accent
-        ],
-        createParticlePath: _drawStar,
-      ),
-    );
-  }
 }

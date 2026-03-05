@@ -8,6 +8,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../core/extensions/context_extensions.dart';
+import '../../../core/utils/time_format.dart';
 import '../../../design_system/design_system.dart';
 import '../viewmodels/bilan_viewmodel.dart';
 import '../widgets/bilan_domain_chart.dart';
@@ -66,9 +67,9 @@ class BilanView extends StackedView<BilanViewModel> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // ── Week navigator ──
-                _WeekNavigator(
-                  weekLabel: weekLabel,
-                  isCurrentWeek: viewModel.isCurrentWeek,
+                AppWeekNavigator(
+                  label: weekLabel,
+                  isLast: viewModel.isCurrentWeek,
                   onPrevious: viewModel.previousWeek,
                   onNext: viewModel.nextWeek,
                 ),
@@ -87,7 +88,7 @@ class BilanView extends StackedView<BilanViewModel> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              _formatMinutes(bilan.totalMinutes),
+                              formatMinutes(bilan.totalMinutes),
                               style: AppTypography.headlineMedium.copyWith(
                                 color: AppColors.textPrimary(brightness),
                                 fontWeight: FontWeight.bold,
@@ -225,15 +226,6 @@ class BilanView extends StackedView<BilanViewModel> {
     return '${df.format(start)} – ${df.format(end)} ${yearFmt.format(end)}';
   }
 
-  /// Format minutes to readable string.
-  String _formatMinutes(int minutes) {
-    final h = minutes ~/ 60;
-    final m = minutes % 60;
-    if (h == 0) return '${m}min';
-    if (m == 0) return '${h}h';
-    return '${h}h${m.toString().padLeft(2, '0')}';
-  }
-
   /// Capture screenshot and share.
   Future<void> _shareBilan(
     BuildContext context,
@@ -250,49 +242,6 @@ class BilanView extends StackedView<BilanViewModel> {
     await Share.shareXFiles(
       [XFile(file.path)],
       text: '📊 Mon bilan LifeFlow — $weekLabel',
-    );
-  }
-}
-
-/// Week navigator with prev/next arrows.
-class _WeekNavigator extends StatelessWidget {
-  final String weekLabel;
-  final bool isCurrentWeek;
-  final VoidCallback onPrevious;
-  final VoidCallback onNext;
-
-  const _WeekNavigator({
-    required this.weekLabel,
-    required this.isCurrentWeek,
-    required this.onPrevious,
-    required this.onNext,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        IconButton(
-          icon: const Icon(Icons.chevron_left),
-          onPressed: onPrevious,
-        ),
-        Expanded(
-          child: Text(
-            weekLabel,
-            textAlign: TextAlign.center,
-            style: AppTypography.titleSmall.copyWith(
-              color: AppColors.textPrimary(brightness),
-            ),
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.chevron_right),
-          onPressed: isCurrentWeek ? null : onNext,
-        ),
-      ],
     );
   }
 }

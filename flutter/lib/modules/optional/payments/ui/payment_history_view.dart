@@ -109,7 +109,7 @@ class PaymentHistoryView extends StackedView<PaymentHistoryViewModel> {
     PaymentHistoryViewModel viewModel,
     AppLocalizations l10n,
   ) {
-    return RefreshIndicator(
+    return AppRefreshIndicator(
       onRefresh: viewModel.refresh,
       child: ListView.separated(
         padding: EdgeInsets.all(AppSpacing.md),

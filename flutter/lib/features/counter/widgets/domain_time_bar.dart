@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/time_format.dart';
 import '../../../design_system/design_system.dart';
 import '../../../domain/entities/time_counter.dart';
 
@@ -56,7 +57,7 @@ class DomainTimeBar extends StatelessWidget {
                 ),
               ),
               Text(
-                _formatMinutes(counter.totalMinutesThisWeek),
+                formatMinutes(counter.totalMinutesThisWeek),
                 style: AppTypography.titleSmall.copyWith(
                   color: AppColors.textPrimary(brightness),
                   fontWeight: FontWeight.bold,
@@ -114,7 +115,7 @@ class DomainTimeBar extends StatelessWidget {
           return Padding(
             padding: EdgeInsets.only(bottom: AppSpacing.xxs),
             child: Text(
-              '${entry.key.name}: ${_formatMinutes(entry.value)}',
+              '${entry.key.name}: ${formatMinutes(entry.value)}',
               style: AppTypography.textSmall.copyWith(
                 color: AppColors.textSecondary(brightness),
               ),
@@ -123,14 +124,5 @@ class DomainTimeBar extends StatelessWidget {
         }).toList(),
       ),
     );
-  }
-
-  String _formatMinutes(int minutes) {
-    if (minutes >= 60) {
-      final h = minutes ~/ 60;
-      final m = minutes % 60;
-      return m > 0 ? '${h}h${m.toString().padLeft(2, '0')}' : '${h}h';
-    }
-    return '${minutes}min';
   }
 }

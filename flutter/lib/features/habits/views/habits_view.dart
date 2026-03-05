@@ -68,16 +68,9 @@ class HabitsView extends StackedView<HabitsViewModel> {
     return Column(
       children: [
         // Search bar
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.xs,
-          ),
-          child: AppTextField(
-            hint: l10n.searchHabits,
-            prefixIcon: const Icon(Icons.search),
-            onChanged: viewModel.setSearchQuery,
-          ),
+        AppSearchBar(
+          hint: l10n.searchHabits,
+          onChanged: viewModel.setSearchQuery,
         ),
         // Domain filter chips
         if (viewModel.domains.isNotEmpty)
@@ -93,7 +86,7 @@ class HabitsView extends StackedView<HabitsViewModel> {
                     ),
                   ),
                 )
-              : RefreshIndicator(
+              : AppRefreshIndicator(
                   onRefresh: viewModel.refresh,
                   child: _buildHabitsList(context, viewModel, brightness),
                 ),
@@ -176,7 +169,7 @@ class HabitsView extends StackedView<HabitsViewModel> {
                     await viewModel.archiveHabit(habit.id);
                     return false; // Don't remove from list — let refresh handle
                   },
-                  child: GestureDetector(
+                  child: AppLongPressWrapper(
                     onLongPress: () => _showQuickActions(
                       context,
                       habit,
@@ -213,67 +206,28 @@ class HabitsView extends StackedView<HabitsViewModel> {
     HabitsViewModel viewModel,
   ) {
     final l10n = context.l10n;
-    final brightness = Theme.of(context).brightness;
 
-    showModalBottomSheet(
+    AppBottomSheet.showActions(
       context: context,
-      backgroundColor: brightness == Brightness.dark
-          ? AppColors.surfaceDark
-          : AppColors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (ctx) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle bar
-              Container(
-                margin: EdgeInsets.only(top: AppSpacing.sm),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.border(brightness),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(AppSpacing.md),
-                child: Text(
-                  habit.name,
-                  style: AppTypography.titleMedium.copyWith(
-                    color: AppColors.textPrimary(brightness),
-                  ),
-                ),
-              ),
-              AppListTile(
-                title: l10n.editHabit,
-                leading: Icon(Icons.edit_outlined,
-                    color: AppColors.primary, semanticLabel: l10n.editHabit),
-                onTap: () async {
-                  Navigator.of(ctx).pop();
-                  final result = await locator<NavigationService>().navigateTo(
-                    Routes.habitFormView,
-                    arguments: HabitFormViewArguments(habit: habit),
-                  );
-                  if (result == true) await viewModel.refresh();
-                },
-              ),
-              AppListTile(
-                title: l10n.archiveHabit,
-                leading: Icon(Icons.archive_outlined,
-                    color: AppColors.warning, semanticLabel: l10n.archiveHabit),
-                onTap: () {
-                  Navigator.of(ctx).pop();
-                  viewModel.archiveHabit(habit.id);
-                },
-              ),
-              SizedBox(height: AppSpacing.md),
-            ],
-          ),
-        );
-      },
+      title: habit.name,
+      actions: [
+        AppSheetAction(
+          label: l10n.editHabit,
+          icon: Icons.edit_outlined,
+          onTap: () async {
+            final result = await locator<NavigationService>().navigateTo(
+              Routes.habitFormView,
+              arguments: HabitFormViewArguments(habit: habit),
+            );
+            if (result == true) await viewModel.refresh();
+          },
+        ),
+        AppSheetAction(
+          label: l10n.archiveHabit,
+          icon: Icons.archive_outlined,
+          onTap: () => viewModel.archiveHabit(habit.id),
+        ),
+      ],
     );
   }
 

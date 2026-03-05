@@ -53,7 +53,7 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
       body: viewModel.isBusy
           ? const Center(child: AppLoader())
           : viewModel.hasNotifications
-              ? RefreshIndicator(
+              ? AppRefreshIndicator(
                   onRefresh: viewModel.refresh,
                   child: Column(
                     children: [
@@ -103,7 +103,7 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
       body: viewModel.isBusy
           ? const Center(child: AppLoader())
           : viewModel.hasNotifications
-              ? RefreshIndicator(
+              ? AppRefreshIndicator(
                   onRefresh: viewModel.refresh,
                   child: ListView.separated(
                     itemCount: viewModel.filteredNotifications.length,
@@ -139,7 +139,7 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
       body: viewModel.isBusy
           ? const Center(child: AppLoader())
           : viewModel.hasNotifications
-              ? RefreshIndicator(
+              ? AppRefreshIndicator(
                   onRefresh: viewModel.refresh,
                   child: ListView.builder(
                     padding: EdgeInsets.all(AppSpacing.md),

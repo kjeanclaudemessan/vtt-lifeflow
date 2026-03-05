@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/extensions/context_extensions.dart';
+import '../../../core/utils/time_format.dart';
 import '../../../design_system/design_system.dart';
 import '../../../domain/entities/domain_entity.dart';
 
@@ -74,7 +75,7 @@ class TodayCounterSummary extends StatelessWidget {
                 return const SizedBox.shrink();
               }
               return AppChip(
-                label: '${domain.icon} ${_formatMinutes(minutes)}',
+                label: '${domain.icon} ${formatMinutes(minutes)}',
                 backgroundColor: domain.displayColor.withValues(alpha: 0.15),
                 textColor: domain.displayColor,
               );
@@ -83,14 +84,5 @@ class TodayCounterSummary extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _formatMinutes(int minutes) {
-    if (minutes >= 60) {
-      final h = minutes ~/ 60;
-      final m = minutes % 60;
-      return m > 0 ? '${h}h${m.toString().padLeft(2, '0')}' : '${h}h';
-    }
-    return '${minutes}m';
   }
 }

@@ -104,34 +104,14 @@ class CounterView extends StackedView<CounterViewModel> {
     final weekLabel =
         '${dateFormat.format(viewModel.weekStart)} – ${dateFormat.format(viewModel.weekEnd)}';
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          icon: const Icon(Icons.chevron_left),
-          tooltip: l10n.counterPreviousWeek,
-          onPressed: viewModel.previousWeek,
-        ),
-        GestureDetector(
-          onTap: viewModel.isCurrentWeek ? null : viewModel.goToCurrentWeek,
-          child: Text(
-            weekLabel,
-            style: AppTypography.titleMedium.copyWith(
-              color: AppColors.textPrimary(brightness),
-            ),
-          ),
-        ),
-        IconButton(
-          icon: Icon(
-            Icons.chevron_right,
-            color: viewModel.isCurrentWeek
-                ? AppColors.textSecondary(brightness).withValues(alpha: 0.3)
-                : null,
-          ),
-          tooltip: l10n.counterNextWeek,
-          onPressed: viewModel.isCurrentWeek ? null : viewModel.nextWeek,
-        ),
-      ],
+    return AppWeekNavigator(
+      label: weekLabel,
+      isLast: viewModel.isCurrentWeek,
+      onPrevious: viewModel.previousWeek,
+      onNext: viewModel.nextWeek,
+      onLabelTap: viewModel.isCurrentWeek ? null : viewModel.goToCurrentWeek,
+      previousTooltip: l10n.counterPreviousWeek,
+      nextTooltip: l10n.counterNextWeek,
     );
   }
 
@@ -152,11 +132,10 @@ class CounterView extends StackedView<CounterViewModel> {
       child: Column(
         children: [
           // Animated progress ring with animated counter
-          TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0, end: progress),
+          AppAnimatedDouble(
+            value: progress,
             duration: const Duration(milliseconds: 1200),
-            curve: AppAnimations.easeOutCubic,
-            builder: (context, animatedProgress, _) {
+            builder: (animatedProgress) {
               return AppProgressRing.large(
                 value: animatedProgress,
                 label: viewModel.totalHoursLabel,
@@ -167,14 +146,10 @@ class CounterView extends StackedView<CounterViewModel> {
           ),
           SizedBox(height: AppSpacing.sm),
           // Animated total text
-          TweenAnimationBuilder<int>(
-            tween: IntTween(
-              begin: 0,
-              end: viewModel.totalMinutesThisWeek,
-            ),
+          AppAnimatedNumber(
+            value: viewModel.totalMinutesThisWeek,
             duration: const Duration(milliseconds: 1000),
-            curve: AppAnimations.easeOutCubic,
-            builder: (context, animatedMinutes, _) {
+            builder: (animatedMinutes) {
               final h = animatedMinutes ~/ 60;
               final m = animatedMinutes % 60;
               final label =
@@ -189,21 +164,22 @@ class CounterView extends StackedView<CounterViewModel> {
           ),
           if (viewModel.deltaMinutes != 0) ...[
             SizedBox(height: AppSpacing.xxs),
-            TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: 1),
+            AppAnimatedDouble(
+              value: 1,
               duration: AppAnimations.medium,
-              curve: AppAnimations.easeOut,
-              builder: (context, opacity, child) {
-                return Opacity(opacity: opacity, child: child);
+              builder: (opacity) {
+                return Opacity(
+                  opacity: opacity,
+                  child: Text(
+                    l10n.counterDeltaVsLastWeek(viewModel.deltaLabel),
+                    style: AppTypography.textSmall.copyWith(
+                      color: viewModel.isPositiveDelta
+                          ? AppColors.success
+                          : AppColors.error,
+                    ),
+                  ),
+                );
               },
-              child: Text(
-                l10n.counterDeltaVsLastWeek(viewModel.deltaLabel),
-                style: AppTypography.textSmall.copyWith(
-                  color: viewModel.isPositiveDelta
-                      ? AppColors.success
-                      : AppColors.error,
-                ),
-              ),
             ),
           ],
         ],
