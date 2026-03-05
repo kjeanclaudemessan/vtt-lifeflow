@@ -601,6 +601,12 @@
   "passwordStrengthMedium": "Medium",
   "passwordStrengthStrong": "Strong",
   "restore": "Restore",
+  "counterPreviousWeek": "Previous week",
+  "counterNextWeek": "Next week",
+  "searchHabits": "Search habits...",
+  "quickActionsTitle": "Quick actions",
+  "editHabit": "Edit",
+  "archiveHabit": "Archive",
   "archivedLabel": "{name} (archived)",
   "@archivedLabel": {
     "placeholders": {

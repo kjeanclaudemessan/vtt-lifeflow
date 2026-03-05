@@ -80,7 +80,7 @@ class BilanView extends StackedView<BilanViewModel> {
                   child: Row(
                     children: [
                       Icon(Icons.timer_outlined,
-                          size: 32, color: AppColors.primary),
+                          size: AppSizing.iconXl, color: AppColors.primary),
                       SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: Column(

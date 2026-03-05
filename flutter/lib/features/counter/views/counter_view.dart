@@ -98,6 +98,7 @@ class CounterView extends StackedView<CounterViewModel> {
     CounterViewModel viewModel,
     Brightness brightness,
   ) {
+    final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toString();
     final dateFormat = DateFormat('d MMM', locale);
     final weekLabel =
@@ -108,6 +109,7 @@ class CounterView extends StackedView<CounterViewModel> {
       children: [
         IconButton(
           icon: const Icon(Icons.chevron_left),
+          tooltip: l10n.counterPreviousWeek,
           onPressed: viewModel.previousWeek,
         ),
         GestureDetector(
@@ -126,6 +128,7 @@ class CounterView extends StackedView<CounterViewModel> {
                 ? AppColors.textSecondary(brightness).withValues(alpha: 0.3)
                 : null,
           ),
+          tooltip: l10n.counterNextWeek,
           onPressed: viewModel.isCurrentWeek ? null : viewModel.nextWeek,
         ),
       ],
@@ -138,24 +141,68 @@ class CounterView extends StackedView<CounterViewModel> {
     Brightness brightness,
   ) {
     final l10n = context.l10n;
+    // Calculate weekly goal (7 days × average habit count × average duration)
+    // Use a simple ratio: assume 2h/day goal = 14h/week = 840 min
+    final weeklyGoalMinutes = 840;
+    final progress =
+        (viewModel.totalMinutesThisWeek / weeklyGoalMinutes).clamp(0.0, 1.0);
+
     return AppCard.elevated(
       padding: EdgeInsets.all(AppSpacing.lg),
       child: Column(
         children: [
-          Text(
-            l10n.counterTotalWithTime(viewModel.totalHoursLabel),
-            style: AppTypography.headingMedium.copyWith(
-              color: AppColors.textPrimary(brightness),
+          // Animated progress ring with animated counter
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: progress),
+            duration: const Duration(milliseconds: 1200),
+            curve: AppAnimations.easeOutCubic,
+            builder: (context, animatedProgress, _) {
+              return AppProgressRing.large(
+                value: animatedProgress,
+                label: viewModel.totalHoursLabel,
+                sublabel: l10n.counterTitle,
+                color: AppColors.primary,
+              );
+            },
+          ),
+          SizedBox(height: AppSpacing.sm),
+          // Animated total text
+          TweenAnimationBuilder<int>(
+            tween: IntTween(
+              begin: 0,
+              end: viewModel.totalMinutesThisWeek,
             ),
+            duration: const Duration(milliseconds: 1000),
+            curve: AppAnimations.easeOutCubic,
+            builder: (context, animatedMinutes, _) {
+              final h = animatedMinutes ~/ 60;
+              final m = animatedMinutes % 60;
+              final label =
+                  m > 0 ? '${h}h${m.toString().padLeft(2, '0')}' : '${h}h';
+              return Text(
+                l10n.counterTotalWithTime(label),
+                style: AppTypography.headingMedium.copyWith(
+                  color: AppColors.textPrimary(brightness),
+                ),
+              );
+            },
           ),
           if (viewModel.deltaMinutes != 0) ...[
             SizedBox(height: AppSpacing.xxs),
-            Text(
-              l10n.counterDeltaVsLastWeek(viewModel.deltaLabel),
-              style: AppTypography.textSmall.copyWith(
-                color: viewModel.isPositiveDelta
-                    ? AppColors.success
-                    : AppColors.error,
+            TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: 1),
+              duration: AppAnimations.medium,
+              curve: AppAnimations.easeOut,
+              builder: (context, opacity, child) {
+                return Opacity(opacity: opacity, child: child);
+              },
+              child: Text(
+                l10n.counterDeltaVsLastWeek(viewModel.deltaLabel),
+                style: AppTypography.textSmall.copyWith(
+                  color: viewModel.isPositiveDelta
+                      ? AppColors.success
+                      : AppColors.error,
+                ),
               ),
             ),
           ],

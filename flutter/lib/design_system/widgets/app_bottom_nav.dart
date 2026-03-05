@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../tokens/app_colors.dart';
@@ -104,7 +105,10 @@ class AppBottomNav extends StatelessWidget {
       child: Tooltip(
         message: item.label,
         child: GestureDetector(
-          onTap: () => onTap(index),
+          onTap: () {
+            HapticFeedback.selectionClick();
+            onTap(index);
+          },
           behavior: HitTestBehavior.opaque,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
@@ -259,7 +263,10 @@ class AppBottomNavWithFab extends StatelessWidget {
     final isSelected = currentIndex == index;
 
     return GestureDetector(
-      onTap: () => onTap(index),
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onTap(index);
+      },
       behavior: HitTestBehavior.opaque,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
@@ -297,7 +304,10 @@ class AppBottomNavWithFab extends StatelessWidget {
 
   Widget _buildFab() {
     return GestureDetector(
-      onTap: onFabTap,
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onFabTap();
+      },
       child: Container(
         width: 52.w,
         height: 52.w,

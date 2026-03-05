@@ -38,68 +38,147 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
       ),
       body: viewModel.isBusy
           ? const AppLoadingState()
-          : SingleChildScrollView(
-              padding: EdgeInsets.all(AppSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Name field
-                  AppTextField(
-                    label: l10n.habitName,
-                    hint: l10n.habitNameHint,
-                    controller: viewModel.nameController,
-                    errorText: viewModel.nameError,
-                    autofocus: !viewModel.isEditMode,
-                  ),
-                  SizedBox(height: AppSpacing.md),
+          : _HabitFormBody(viewModel: viewModel, brightness: brightness),
+    );
+  }
 
-                  // Description field
-                  AppTextField(
-                    label: l10n.habitDescription,
-                    hint: l10n.habitDescriptionHint,
-                    controller: viewModel.descriptionController,
-                    maxLines: 3,
-                  ),
-                  SizedBox(height: AppSpacing.md),
+  @override
+  HabitFormViewModel viewModelBuilder(BuildContext context) =>
+      HabitFormViewModel();
 
-                  // Domain picker
-                  _buildDomainPicker(context, viewModel, brightness),
-                  SizedBox(height: AppSpacing.md),
+  @override
+  void onViewModelReady(HabitFormViewModel viewModel) =>
+      viewModel.init(habit: habit);
+}
 
-                  // Type toggle
-                  _buildTypeToggle(context, viewModel, brightness),
-                  SizedBox(height: AppSpacing.md),
+/// Stateful form body with scroll-to-error and shake animation support.
+class _HabitFormBody extends StatefulWidget {
+  final HabitFormViewModel viewModel;
+  final Brightness brightness;
 
-                  // Quantitative fields (conditional)
-                  if (viewModel.type == HabitType.quantitative) ...[
-                    _buildQuantitativeFields(context, viewModel),
-                    SizedBox(height: AppSpacing.md),
-                  ],
+  const _HabitFormBody({
+    required this.viewModel,
+    required this.brightness,
+  });
 
-                  // Estimated duration
-                  _buildDurationSelector(context, viewModel, brightness),
-                  SizedBox(height: AppSpacing.md),
+  @override
+  State<_HabitFormBody> createState() => _HabitFormBodyState();
+}
 
-                  // Time range
-                  _buildTimeRange(context, viewModel, brightness),
-                  SizedBox(height: AppSpacing.md),
+class _HabitFormBodyState extends State<_HabitFormBody> {
+  final _scrollController = ScrollController();
+  final _nameFieldKey = GlobalKey();
+  final _domainFieldKey = GlobalKey();
+  int _lastValidationAttempt = 0;
+  bool _shaking = false;
 
-                  // Frequency
-                  _buildFrequencySelector(context, viewModel, brightness),
-                  SizedBox(height: AppSpacing.xl),
+  HabitFormViewModel get viewModel => widget.viewModel;
+  Brightness get brightness => widget.brightness;
 
-                  // Save button
-                  AppButton.primary(
-                    label:
-                        viewModel.isEditMode ? l10n.habitEdit : l10n.habitAdd,
-                    onPressed: viewModel.save,
-                    isLoading: viewModel.isBusy,
-                    isFullWidth: true,
-                  ),
-                  SizedBox(height: AppSpacing.lg),
-                ],
-              ),
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _checkValidationShake() {
+    if (viewModel.validationAttempt > _lastValidationAttempt) {
+      _lastValidationAttempt = viewModel.validationAttempt;
+      setState(() => _shaking = true);
+      Future.delayed(AppAnimations.slow, () {
+        if (mounted) setState(() => _shaking = false);
+      });
+      // Scroll to first error field
+      final targetKey =
+          viewModel.nameError != null ? _nameFieldKey : _domainFieldKey;
+      final renderObject = targetKey.currentContext?.findRenderObject();
+      if (renderObject != null) {
+        _scrollController.animateTo(
+          0,
+          duration: AppAnimations.medium,
+          curve: AppAnimations.easeOut,
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    // Check for validation shake on each rebuild
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkValidationShake();
+    });
+
+    return SingleChildScrollView(
+      controller: _scrollController,
+      padding: EdgeInsets.all(AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Name field with shake
+          AppShakeAnimation(
+            key: _nameFieldKey,
+            shake: _shaking && viewModel.nameError != null,
+            child: AppTextField(
+              label: l10n.habitName,
+              hint: l10n.habitNameHint,
+              controller: viewModel.nameController,
+              errorText: viewModel.nameError,
+              autofocus: !viewModel.isEditMode,
             ),
+          ),
+          SizedBox(height: AppSpacing.md),
+
+          // Description field
+          AppTextField(
+            label: l10n.habitDescription,
+            hint: l10n.habitDescriptionHint,
+            controller: viewModel.descriptionController,
+            maxLines: 3,
+          ),
+          SizedBox(height: AppSpacing.md),
+
+          // Domain picker with shake
+          AppShakeAnimation(
+            key: _domainFieldKey,
+            shake: _shaking && viewModel.domainError != null,
+            child: _buildDomainPicker(context, viewModel, brightness),
+          ),
+          SizedBox(height: AppSpacing.md),
+
+          // Type toggle
+          _buildTypeToggle(context, viewModel, brightness),
+          SizedBox(height: AppSpacing.md),
+
+          // Quantitative fields (conditional)
+          if (viewModel.type == HabitType.quantitative) ...[
+            _buildQuantitativeFields(context, viewModel),
+            SizedBox(height: AppSpacing.md),
+          ],
+
+          // Estimated duration
+          _buildDurationSelector(context, viewModel, brightness),
+          SizedBox(height: AppSpacing.md),
+
+          // Time range
+          _buildTimeRange(context, viewModel, brightness),
+          SizedBox(height: AppSpacing.md),
+
+          // Frequency
+          _buildFrequencySelector(context, viewModel, brightness),
+          SizedBox(height: AppSpacing.xl),
+
+          // Save button
+          AppButton.primary(
+            label: viewModel.isEditMode ? l10n.habitEdit : l10n.habitAdd,
+            onPressed: viewModel.save,
+            isLoading: viewModel.isBusy,
+            isFullWidth: true,
+          ),
+          SizedBox(height: AppSpacing.lg),
+        ],
+      ),
     );
   }
 
@@ -337,7 +416,7 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
               child: Icon(
                 Icons.arrow_forward,
                 color: AppColors.textSecondary(brightness),
-                size: 20,
+                size: AppSizing.iconMd,
               ),
             ),
             Expanded(
@@ -431,8 +510,8 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
         return GestureDetector(
           onTap: () => viewModel.toggleFrequencyDay(dayNumber),
           child: Container(
-            width: 40,
-            height: 40,
+            width: AppSizing.touchTargetMin,
+            height: AppSizing.touchTargetMin,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isSelected
@@ -515,12 +594,4 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
       await viewModel.createDomainAndSelect(result);
     }
   }
-
-  @override
-  HabitFormViewModel viewModelBuilder(BuildContext context) =>
-      HabitFormViewModel();
-
-  @override
-  void onViewModelReady(HabitFormViewModel viewModel) =>
-      viewModel.init(habit: habit);
 }

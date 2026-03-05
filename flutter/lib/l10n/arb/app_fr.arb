@@ -460,6 +460,12 @@
   "passwordStrengthMedium": "Moyen",
   "passwordStrengthStrong": "Fort",
   "restore": "Restaurer",
+  "counterPreviousWeek": "Semaine précédente",
+  "counterNextWeek": "Semaine suivante",
+  "searchHabits": "Rechercher des habitudes...",
+  "quickActionsTitle": "Actions rapides",
+  "editHabit": "Modifier",
+  "archiveHabit": "Archiver",
   "archivedLabel": "{name} (archivé)",
   "@archivedLabel": {
     "placeholders": {

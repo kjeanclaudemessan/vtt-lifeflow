@@ -136,7 +136,10 @@ class HabitCheckTile extends StatelessWidget {
               ),
             ),
             if (_isCompleted)
-              Icon(Icons.check, color: AppColors.success, size: 18),
+              Icon(Icons.check,
+                  color: AppColors.success,
+                  size: AppSizing.iconSm,
+                  semanticLabel: context.l10n.semanticsCompleted),
           ],
         ),
       ),

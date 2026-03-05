@@ -29,6 +29,10 @@ class HabitsViewModel extends BaseViewModel {
   String? _selectedDomainId;
   String? get selectedDomainId => _selectedDomainId;
 
+  /// Search query for filtering habits by name.
+  String _searchQuery = '';
+  String get searchQuery => _searchQuery;
+
   /// Whether to show archived habits.
   bool _showArchived = false;
   bool get showArchived => _showArchived;
@@ -37,11 +41,16 @@ class HabitsViewModel extends BaseViewModel {
   List<DomainEntity> get domains =>
       _domains.where((d) => !d.isArchived).toList();
 
-  /// Filtered habits based on selected domain.
+  /// Filtered habits based on selected domain and search query.
   List<HabitEntity> get filteredHabits {
     var habits = _allHabits.where((h) => !h.isArchived).toList();
     if (_selectedDomainId != null) {
       habits = habits.where((h) => h.domainId == _selectedDomainId).toList();
+    }
+    if (_searchQuery.isNotEmpty) {
+      final query = _searchQuery.toLowerCase();
+      habits =
+          habits.where((h) => h.name.toLowerCase().contains(query)).toList();
     }
     return habits;
   }
@@ -147,6 +156,12 @@ class HabitsViewModel extends BaseViewModel {
     rebuildUi();
   }
 
+  /// Updates the search query for habit name filtering.
+  void setSearchQuery(String query) {
+    _searchQuery = query;
+    rebuildUi();
+  }
+
   void toggleShowArchived() {
     _showArchived = !_showArchived;
     rebuildUi();
@@ -217,6 +232,7 @@ class HabitsViewModel extends BaseViewModel {
 
   /// Refreshes data.
   Future<void> refresh() async {
+    _haptic.light();
     await _loadData();
   }
 }

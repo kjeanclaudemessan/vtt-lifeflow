@@ -1232,6 +1232,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String get restore => 'Restaurer';
 
   @override
+  String get counterPreviousWeek => 'Semaine précédente';
+
+  @override
+  String get counterNextWeek => 'Semaine suivante';
+
+  @override
+  String get searchHabits => 'Rechercher des habitudes...';
+
+  @override
+  String get quickActionsTitle => 'Actions rapides';
+
+  @override
+  String get editHabit => 'Modifier';
+
+  @override
+  String get archiveHabit => 'Archiver';
+
+  @override
   String archivedLabel(String name) {
     return '$name (archivé)';
   }

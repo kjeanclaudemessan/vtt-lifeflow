@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
@@ -7,6 +10,7 @@ import '../../../app/app.locator.dart';
 import '../../../app/app.router.dart';
 import '../../../core/enums/lifeflow_enums.dart';
 import '../../../core/extensions/context_extensions.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../design_system/design_system.dart';
 import '../../../domain/entities/habit_entity.dart';
 import '../../../modules/notifications/widgets/notification_badge.dart';
@@ -43,26 +47,37 @@ class TodayView extends StackedView<TodayViewModel> {
           ),
           IconButton(
             icon: const Icon(Icons.person_outline),
+            tooltip: l10n.profile,
             onPressed: () =>
                 locator<NavigationService>().navigateToProfileView(),
           ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
+            tooltip: l10n.settings,
             onPressed: () =>
                 locator<NavigationService>().navigateToSettingsView(),
           ),
         ],
       ),
-      body: viewModel.isBusy
-          ? const AppLoadingState()
-          : viewModel.hasError
-              ? AppErrorState.generic(onRetry: viewModel.init)
-              : viewModel.todayHabits.isEmpty
-                  ? _buildEmptyState(context, l10n)
-                  : RefreshIndicator(
-                      onRefresh: viewModel.refresh,
-                      child: _buildContent(context, viewModel, brightness),
-                    ),
+      body: Stack(
+        children: [
+          viewModel.isBusy
+              ? const AppLoadingState()
+              : viewModel.hasError
+                  ? AppErrorState.generic(onRetry: viewModel.init)
+                  : viewModel.todayHabits.isEmpty
+                      ? _buildEmptyState(context, l10n)
+                      : RefreshIndicator(
+                          onRefresh: viewModel.refresh,
+                          child: _buildContent(context, viewModel, brightness),
+                        ),
+          // Confetti celebration overlay
+          _CelebrationOverlay(
+            shouldCelebrate: viewModel.justCompletedAll,
+            onCelebrationComplete: viewModel.clearCelebration,
+          ),
+        ],
+      ),
     );
   }
 
@@ -234,7 +249,8 @@ class TodayView extends StackedView<TodayViewModel> {
               ...viewModel.completedHabits.map((habit) {
                 return Padding(
                   padding: EdgeInsets.only(bottom: AppSpacing.xs),
-                  child: _buildCompletedTile(habit, viewModel, brightness),
+                  child:
+                      _buildCompletedTile(habit, viewModel, brightness, l10n),
                 );
               }),
               SizedBox(height: AppSpacing.md),
@@ -284,6 +300,7 @@ class TodayView extends StackedView<TodayViewModel> {
     dynamic habit,
     TodayViewModel viewModel,
     Brightness brightness,
+    AppLocalizations l10n,
   ) {
     final streak = viewModel.streakFor(habit.id);
 
@@ -298,7 +315,10 @@ class TodayView extends StackedView<TodayViewModel> {
         ),
         child: Row(
           children: [
-            Icon(Icons.check_circle, color: AppColors.success, size: 20),
+            Icon(Icons.check_circle,
+                color: AppColors.success,
+                size: AppSizing.iconMd,
+                semanticLabel: l10n.semanticsCompleted),
             SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(
@@ -425,4 +445,92 @@ class TodayView extends StackedView<TodayViewModel> {
 
   @override
   void onViewModelReady(TodayViewModel viewModel) => viewModel.init();
+}
+
+/// Confetti celebration overlay triggered when all habits are completed.
+class _CelebrationOverlay extends StatefulWidget {
+  final bool shouldCelebrate;
+  final VoidCallback onCelebrationComplete;
+
+  const _CelebrationOverlay({
+    required this.shouldCelebrate,
+    required this.onCelebrationComplete,
+  });
+
+  @override
+  State<_CelebrationOverlay> createState() => _CelebrationOverlayState();
+}
+
+class _CelebrationOverlayState extends State<_CelebrationOverlay> {
+  late final ConfettiController _confettiController;
+
+  @override
+  void initState() {
+    super.initState();
+    _confettiController =
+        ConfettiController(duration: const Duration(seconds: 3));
+  }
+
+  @override
+  void didUpdateWidget(covariant _CelebrationOverlay oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.shouldCelebrate && !oldWidget.shouldCelebrate) {
+      _confettiController.play();
+      Future.delayed(const Duration(seconds: 4), () {
+        if (mounted) widget.onCelebrationComplete();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
+  }
+
+  /// Custom star path for confetti particles.
+  Path _drawStar(Size size) {
+    double degToRad(double deg) => deg * (pi / 180.0);
+    const numberOfPoints = 5;
+    final halfWidth = size.width / 2;
+    final externalRadius = halfWidth;
+    final internalRadius = halfWidth / 2.5;
+    final degreesPerStep = degToRad(360 / numberOfPoints);
+    final halfDegreesPerStep = degreesPerStep / 2;
+    final path = Path();
+    final fullAngle = degToRad(360);
+    path.moveTo(size.width, halfWidth);
+    for (double step = 0; step < fullAngle; step += degreesPerStep) {
+      path.lineTo(halfWidth + externalRadius * cos(step),
+          halfWidth + externalRadius * sin(step));
+      path.lineTo(halfWidth + internalRadius * cos(step + halfDegreesPerStep),
+          halfWidth + internalRadius * sin(step + halfDegreesPerStep));
+    }
+    path.close();
+    return path;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConfettiWidget(
+        confettiController: _confettiController,
+        blastDirectionality: BlastDirectionality.explosive,
+        emissionFrequency: 0.05,
+        numberOfParticles: 20,
+        maxBlastForce: 30,
+        minBlastForce: 10,
+        gravity: 0.15,
+        colors: const [
+          AppColors.primary,
+          AppColors.success,
+          Color(0xFFFFD700), // Gold
+          Color(0xFFFF6B6B), // Coral
+          Color(0xFF4ECDC4), // Teal accent
+        ],
+        createParticlePath: _drawStar,
+      ),
+    );
+  }
 }

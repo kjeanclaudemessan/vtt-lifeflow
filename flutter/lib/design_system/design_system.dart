@@ -42,6 +42,7 @@ export 'widgets/app_list_tile.dart';
 export 'widgets/app_loader.dart';
 export 'widgets/app_navigation.dart';
 export 'widgets/app_progress.dart';
+export 'widgets/app_shake_animation.dart';
 export 'widgets/app_slider.dart';
 export 'widgets/app_snackbar.dart';
 export 'widgets/app_staggered_fade_in.dart';

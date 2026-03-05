@@ -34,6 +34,16 @@ class TodayViewModel extends BaseViewModel {
   int _unreadNotificationCount = 0;
   int get unreadNotificationCount => _unreadNotificationCount;
 
+  /// Whether user just completed all habits (triggers celebration).
+  bool _justCompletedAll = false;
+  bool get justCompletedAll => _justCompletedAll;
+
+  /// Reset celebration flag after animation plays.
+  void clearCelebration() {
+    _justCompletedAll = false;
+    rebuildUi();
+  }
+
   /// Current mode based on hour.
   TodayMode get mode => TodayMode.fromHour(DateTime.now().hour);
 
@@ -234,6 +244,10 @@ class TodayViewModel extends BaseViewModel {
             'habit_id': habitId,
             'completion_rate': completionRate,
           });
+          // Trigger celebration when all habits are completed
+          if (completionRate == 1.0) {
+            _justCompletedAll = true;
+          }
           rebuildUi();
         },
       );
@@ -255,6 +269,7 @@ class TodayViewModel extends BaseViewModel {
 
   /// Refresh all data.
   Future<void> refresh() async {
+    _haptic.light();
     await _loadData();
   }
 }

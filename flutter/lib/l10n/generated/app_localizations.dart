@@ -2294,6 +2294,42 @@ abstract class AppLocalizations {
   /// **'Restore'**
   String get restore;
 
+  /// No description provided for @counterPreviousWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous week'**
+  String get counterPreviousWeek;
+
+  /// No description provided for @counterNextWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week'**
+  String get counterNextWeek;
+
+  /// No description provided for @searchHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'Search habits...'**
+  String get searchHabits;
+
+  /// No description provided for @quickActionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick actions'**
+  String get quickActionsTitle;
+
+  /// No description provided for @editHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editHabit;
+
+  /// No description provided for @archiveHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archiveHabit;
+
   /// No description provided for @archivedLabel.
   ///
   /// In en, this message translates to:

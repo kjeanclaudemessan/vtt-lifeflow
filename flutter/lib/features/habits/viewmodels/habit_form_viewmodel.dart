@@ -71,6 +71,10 @@ class HabitFormViewModel extends BaseViewModel {
   String? _domainError;
   String? get domainError => _domainError;
 
+  /// Incremented on each validation failure to trigger shake animation.
+  int _validationAttempt = 0;
+  int get validationAttempt => _validationAttempt;
+
   /// Initialize with optional habit for editing.
   Future<void> init({HabitEntity? habit}) async {
     setBusy(true);
@@ -154,11 +158,15 @@ class HabitFormViewModel extends BaseViewModel {
     final name = nameController.text.trim();
     if (name.isEmpty) {
       _nameError = 'Name is required';
+      _haptic.error();
+      _validationAttempt++;
       rebuildUi();
       return;
     }
     if (_selectedDomain == null) {
       _domainError = 'Select a domain';
+      _haptic.error();
+      _validationAttempt++;
       rebuildUi();
       return;
     }
