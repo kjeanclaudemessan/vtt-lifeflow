@@ -149,6 +149,9 @@
   "errorUserNotFound": "User not found",
   "errorTooManyRequests": "Too many requests. Please wait and try again.",
   "errorSessionExpired": "Your session has expired. Please log in again.",
+  "errorEmailNotConfirmed": "Please confirm your email before signing in",
+  "errorOtpExpired": "Verification code has expired",
+  "errorUserBanned": "This account has been suspended",
   "noInternetConnection": "No internet connection",
   "tryAgainLater": "Please try again later",
   "@_SUCCESS": {},
@@ -245,6 +248,10 @@
   "splashCheckingAuth": "Checking authentication...",
   "splashLoading": "Loading...",
   "splashReady": "Ready!",
+  "splashTagline": "Build better habits, every day",
+  "splashPreparingExperience": "Preparing your experience...",
+  "splashAlmostThere": "Almost there...",
+  "splashFinalTouches": "Final touches...",
   "@_ONBOARDING": {},
   "onboardingSlide1Title": "Build your habits",
   "onboardingSlide1Description": "Create daily habits, organize them by life domain and track your progress every day.",
@@ -612,5 +619,21 @@
     "placeholders": {
       "name": {"type": "String"}
     }
-  }
+  },
+  "@_NOTIFICATIONS_LOCAL": {},
+  "notifHabitReminderTitle": "⏰ {habitName}",
+  "@notifHabitReminderTitle": {
+    "placeholders": {
+      "habitName": {"type": "String"}
+    }
+  },
+  "notifHabitReminderBody": "Time for your habit!",
+  "notifWeeklyBilanTitle": "📊 Weekly review",
+  "notifWeeklyBilanBody": "It's Sunday! Review your week.",
+  "notifChannelReminders": "Habit reminders",
+  "notifChannelRemindersDesc": "Daily reminders for your habits",
+  "notifChannelStreaks": "Streaks",
+  "notifChannelStreaksDesc": "Streak and achievement notifications",
+  "notifChannelBilan": "Weekly review",
+  "notifChannelBilanDesc": "Weekly review reminder"
 }

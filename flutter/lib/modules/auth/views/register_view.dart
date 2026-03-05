@@ -4,6 +4,7 @@ import 'package:stacked/stacked.dart';
 
 import '../../../core/core.dart';
 import '../../../design_system/design_system.dart';
+import '../utils/auth_error_mapper.dart';
 import '../viewmodels/register_viewmodel.dart';
 import '../widgets/auth_form_fields.dart';
 import '../widgets/auth_header.dart';
@@ -42,19 +43,6 @@ class RegisterView extends StackedView<RegisterViewModel> {
               ),
 
               SizedBox(height: AppSpacing.xl),
-
-              // Social login buttons
-              if (config.hasSocialLogin) ...[
-                SocialLoginButtons(
-                  showGoogle: config.enableGoogle,
-                  showApple: config.enableApple,
-                  showGithub: config.enableGithub,
-                  onGoogleTap: viewModel.registerWithGoogle,
-                  onAppleTap: viewModel.registerWithApple,
-                  onGithubTap: viewModel.registerWithGithub,
-                ),
-                OrDivider(text: l10n.or),
-              ],
 
               // Name fields
               Row(
@@ -155,7 +143,8 @@ class RegisterView extends StackedView<RegisterViewModel> {
                       SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: Text(
-                          viewModel.modelError.toString(),
+                          AuthErrorMapper.message(
+                              context, viewModel.modelError),
                           style: AppTypography.bodySmall.copyWith(
                             color: AppColors.error,
                           ),
@@ -173,6 +162,19 @@ class RegisterView extends StackedView<RegisterViewModel> {
                 onPressed: viewModel.canSubmit ? viewModel.register : null,
                 isLoading: viewModel.busy(RegisterViewModel.registerBusyKey),
               ),
+
+              // Social login buttons
+              if (config.hasSocialLogin) ...[
+                OrDivider(text: l10n.or),
+                SocialLoginButtons(
+                  showGoogle: config.enableGoogle,
+                  showApple: config.enableApple,
+                  showGithub: config.enableGithub,
+                  onGoogleTap: viewModel.registerWithGoogle,
+                  onAppleTap: viewModel.registerWithApple,
+                  onGithubTap: viewModel.registerWithGithub,
+                ),
+              ],
 
               SizedBox(height: AppSpacing.xl),
 

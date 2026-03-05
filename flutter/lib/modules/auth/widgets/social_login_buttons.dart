@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
@@ -73,7 +74,7 @@ class SocialLoginButtons extends StatelessWidget {
 
     if (showGoogle) {
       buttons.add(_SocialButton(
-        icon: Icons.g_mobiledata_rounded,
+        svgAsset: 'assets/icons/google.svg',
         label: context.l10n.loginWithGoogle,
         onTap: onGoogleTap,
         isLoading: isGoogleLoading,
@@ -85,7 +86,7 @@ class SocialLoginButtons extends StatelessWidget {
 
     if (showApple) {
       buttons.add(_SocialButton(
-        icon: Icons.apple_rounded,
+        svgAsset: 'assets/icons/apple.svg',
         label: context.l10n.loginWithApple,
         onTap: onAppleTap,
         isLoading: isAppleLoading,
@@ -96,7 +97,7 @@ class SocialLoginButtons extends StatelessWidget {
 
     if (showGithub) {
       buttons.add(_SocialButton(
-        icon: Icons.code_rounded,
+        svgAsset: 'assets/icons/github.svg',
         label: context.l10n.loginWithGithub,
         onTap: onGithubTap,
         isLoading: isGithubLoading,
@@ -130,7 +131,7 @@ class SocialLoginButtons extends StatelessWidget {
 }
 
 class _SocialButton extends StatelessWidget {
-  final IconData icon;
+  final String svgAsset;
   final String label;
   final VoidCallback? onTap;
   final bool isLoading;
@@ -139,7 +140,7 @@ class _SocialButton extends StatelessWidget {
   final Color? borderColor;
 
   const _SocialButton({
-    required this.icon,
+    required this.svgAsset,
     required this.label,
     this.onTap,
     this.isLoading = false,
@@ -176,7 +177,14 @@ class _SocialButton extends StatelessWidget {
                   ),
                 )
               else ...[
-                Icon(icon, color: foregroundColor, size: 24.sp),
+                SvgPicture.asset(
+                  svgAsset,
+                  width: 20.sp,
+                  height: 20.sp,
+                  colorFilter: svgAsset.contains('google')
+                      ? null // Google logo keeps original colors
+                      : ColorFilter.mode(foregroundColor, BlendMode.srcIn),
+                ),
                 SizedBox(width: 12.w),
                 Text(
                   label,

@@ -1,4 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
 
 // **************************************************************************
 // StackedLocatorGenerator
@@ -30,6 +31,7 @@ import '../services/habit_event_service.dart';
 import '../services/haptic_service.dart';
 import '../services/local_notification/local_notification_scheduler.dart';
 import '../services/moneroo/moneroo_service.dart';
+import '../services/notification_router/notification_router.dart';
 import '../services/push_notification/push_notification_service.dart';
 import '../services/settings/app_settings_service.dart';
 import '../services/storage/local_storage_service.dart';
@@ -41,10 +43,8 @@ import '../services/time_counter_service.dart';
 
 final locator = StackedLocator.instance;
 
-Future<void> setupLocator({
-  String? environment,
-  EnvironmentFilter? environmentFilter,
-}) async {
+Future<void> setupLocator(
+    {String? environment, EnvironmentFilter? environmentFilter}) async {
 // Register environments
   locator.registerEnvironment(
       environment: environment, environmentFilter: environmentFilter);
@@ -67,6 +67,7 @@ Future<void> setupLocator({
   locator.registerSingleton(AppSettingsService());
   locator.registerLazySingleton(() => PushNotificationService());
   locator.registerLazySingleton(() => LocalNotificationScheduler());
+  locator.registerLazySingleton(() => NotificationRouter());
   locator.registerLazySingleton<IAuthRepository>(() => AuthRepositoryImpl());
   locator
       .registerLazySingleton<IDomainRepository>(() => DomainRepositoryImpl());

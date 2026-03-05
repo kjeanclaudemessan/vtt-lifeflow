@@ -188,23 +188,25 @@ class ErrorHandler {
   }
 
   /// Handles Supabase [AuthException] and converts to user-friendly [AuthFailure].
+  ///
+  /// Uses error codes for i18n mapping at the UI layer.
+  /// The [message] is a fallback — UI should use [Failure.code] to resolve l10n.
   static Failure _handleSupabaseAuthException(supabase.AuthException error) {
     final code = error.code ?? '';
     final message = switch (code) {
-      'invalid_credentials' => 'Email ou mot de passe incorrect.',
-      'user_not_found' => 'Aucun compte trouvé avec cet email.',
-      'email_not_confirmed' =>
-        'Veuillez confirmer votre email avant de vous connecter.',
+      'invalid_credentials' => 'Invalid email or password',
+      'user_not_found' => 'No account found with this email',
+      'email_not_confirmed' => 'Please confirm your email before signing in',
       'user_already_exists' ||
       'email_exists' =>
-        'Un compte avec cet email existe déjà.',
-      'weak_password' => 'Le mot de passe est trop faible.',
+        'An account with this email already exists',
+      'weak_password' => 'Password is too weak',
       'over_request_rate_limit' ||
       'rate_limit' =>
-        'Trop de tentatives. Réessayez dans quelques minutes.',
-      'otp_expired' => 'Le code de vérification a expiré.',
-      'session_not_found' => 'Session expirée. Veuillez vous reconnecter.',
-      'user_banned' => 'Ce compte a été suspendu.',
+        'Too many attempts. Please try again later.',
+      'otp_expired' => 'Verification code has expired',
+      'session_not_found' => 'Session expired. Please sign in again.',
+      'user_banned' => 'This account has been suspended',
       _ => error.message,
     };
 

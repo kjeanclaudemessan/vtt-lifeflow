@@ -9,6 +9,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../app/app.locator.dart';
 import '../../../app/app.router.dart';
 import '../../../domain/repositories/i_auth_repository.dart';
+import '../../../services/analytics/analytics_service.dart';
+import '../../../services/push_notification/push_notification_service.dart';
 import '../../../services/settings/app_settings_service.dart';
 import '../../../services/storage/local_storage_service.dart';
 import '../../../services/local_notification/local_notification_scheduler.dart';
@@ -281,7 +283,12 @@ class SettingsViewModel extends BaseViewModel {
 
     result.fold(
       (failure) => setError(failure.message),
-      (_) => _navigationService.clearStackAndShow(Routes.loginView),
+      (_) {
+        locator<PushNotificationService>().removeTokenFromSupabase();
+        locator<AnalyticsService>().capture('user_logged_out');
+        locator<AnalyticsService>().reset();
+        _navigationService.clearStackAndShow(Routes.loginView);
+      },
     );
   }
 

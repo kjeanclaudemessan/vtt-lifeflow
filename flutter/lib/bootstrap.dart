@@ -10,6 +10,7 @@ import 'core/config/env/environment.dart';
 import 'services/analytics/analytics_service.dart';
 import 'services/connectivity/connectivity_service.dart';
 import 'services/local_notification/local_notification_scheduler.dart';
+import 'services/notification_router/notification_router.dart';
 import 'services/push_notification/push_notification_service.dart';
 import 'services/settings/app_settings_service.dart';
 import 'services/storage/local_storage_service.dart';
@@ -80,11 +81,18 @@ Future<void> _initializeServices() async {
   await locator<AnalyticsService>().init();
 
   // Push notifications (FCM) — gracefully skips if no Firebase config
-  await locator<PushNotificationService>().init();
+  final pushService = locator<PushNotificationService>();
+  await pushService.init();
 
   // Local notification scheduler (habit reminders, bilan)
-  await locator<LocalNotificationScheduler>().init();
-  await locator<LocalNotificationScheduler>().scheduleWeeklyBilan();
+  final localScheduler = locator<LocalNotificationScheduler>();
+  await localScheduler.init();
+  await localScheduler.scheduleWeeklyBilan();
+
+  // Wire notification tap routing
+  final notifRouter = locator<NotificationRouter>();
+  pushService.onNotificationTapped = notifRouter.handlePushTap;
+  localScheduler.onNotificationTapped = notifRouter.handleLocalTap;
 }
 
 /// Logs startup information in debug mode.

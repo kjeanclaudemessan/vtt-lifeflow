@@ -728,6 +728,24 @@ abstract class AppLocalizations {
   /// **'Your session has expired. Please log in again.'**
   String get errorSessionExpired;
 
+  /// No description provided for @errorEmailNotConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your email before signing in'**
+  String get errorEmailNotConfirmed;
+
+  /// No description provided for @errorOtpExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code has expired'**
+  String get errorOtpExpired;
+
+  /// No description provided for @errorUserBanned.
+  ///
+  /// In en, this message translates to:
+  /// **'This account has been suspended'**
+  String get errorUserBanned;
+
   /// No description provided for @noInternetConnection.
   ///
   /// In en, this message translates to:
@@ -1093,6 +1111,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ready!'**
   String get splashReady;
+
+  /// No description provided for @splashTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Build better habits, every day'**
+  String get splashTagline;
+
+  /// No description provided for @splashPreparingExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing your experience...'**
+  String get splashPreparingExperience;
+
+  /// No description provided for @splashAlmostThere.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost there...'**
+  String get splashAlmostThere;
+
+  /// No description provided for @splashFinalTouches.
+  ///
+  /// In en, this message translates to:
+  /// **'Final touches...'**
+  String get splashFinalTouches;
 
   /// No description provided for @onboardingSlide1Title.
   ///
@@ -2335,6 +2377,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} (archived)'**
   String archivedLabel(String name);
+
+  /// No description provided for @notifHabitReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'⏰ {habitName}'**
+  String notifHabitReminderTitle(String habitName);
+
+  /// No description provided for @notifHabitReminderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Time for your habit!'**
+  String get notifHabitReminderBody;
+
+  /// No description provided for @notifWeeklyBilanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'📊 Weekly review'**
+  String get notifWeeklyBilanTitle;
+
+  /// No description provided for @notifWeeklyBilanBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s Sunday! Review your week.'**
+  String get notifWeeklyBilanBody;
+
+  /// No description provided for @notifChannelReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit reminders'**
+  String get notifChannelReminders;
+
+  /// No description provided for @notifChannelRemindersDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily reminders for your habits'**
+  String get notifChannelRemindersDesc;
+
+  /// No description provided for @notifChannelStreaks.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaks'**
+  String get notifChannelStreaks;
+
+  /// No description provided for @notifChannelStreaksDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak and achievement notifications'**
+  String get notifChannelStreaksDesc;
+
+  /// No description provided for @notifChannelBilan.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly review'**
+  String get notifChannelBilan;
+
+  /// No description provided for @notifChannelBilanDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly review reminder'**
+  String get notifChannelBilanDesc;
 }
 
 class _AppLocalizationsDelegate

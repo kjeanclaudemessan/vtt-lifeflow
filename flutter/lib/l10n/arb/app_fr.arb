@@ -106,12 +106,15 @@
   "errorUnauthorized": "Non autorisé. Veuillez vous reconnecter.",
   "errorForbidden": "Accès refusé",
   "errorNotFound": "Non trouvé",
-  "errorInvalidCredentials": "Email ou mot de passe invalide",
+  "errorInvalidCredentials": "Email ou mot de passe incorrect",
   "errorEmailAlreadyInUse": "Cet email est déjà utilisé",
   "errorWeakPassword": "Le mot de passe est trop faible",
   "errorUserNotFound": "Utilisateur non trouvé",
   "errorTooManyRequests": "Trop de requêtes. Veuillez patienter et réessayer.",
   "errorSessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
+  "errorEmailNotConfirmed": "Veuillez confirmer votre email avant de vous connecter",
+  "errorOtpExpired": "Le code de vérification a expiré",
+  "errorUserBanned": "Ce compte a été suspendu",
   "noInternetConnection": "Pas de connexion internet",
   "tryAgainLater": "Veuillez réessayer plus tard",
   "@_SUCCESS": {},
@@ -179,6 +182,10 @@
   "splashCheckingAuth": "Vérification de l'authentification...",
   "splashLoading": "Chargement...",
   "splashReady": "Prêt !",
+  "splashTagline": "Construis de meilleures habitudes, chaque jour",
+  "splashPreparingExperience": "Préparation de ton expérience...",
+  "splashAlmostThere": "Presque prêt...",
+  "splashFinalTouches": "Dernières retouches...",
   "@_ONBOARDING": {},
   "onboardingSlide1Title": "Construis tes habitudes",
   "onboardingSlide1Description": "Crée tes habitudes quotidiennes, organise-les par domaine de vie et suis ta progression chaque jour.",
@@ -471,5 +478,21 @@
     "placeholders": {
       "name": {"type": "String"}
     }
-  }
+  },
+  "@_NOTIFICATIONS_LOCAL": {},
+  "notifHabitReminderTitle": "⏰ {habitName}",
+  "@notifHabitReminderTitle": {
+    "placeholders": {
+      "habitName": {"type": "String"}
+    }
+  },
+  "notifHabitReminderBody": "C'est l'heure de ton habitude !",
+  "notifWeeklyBilanTitle": "📊 Bilan hebdomadaire",
+  "notifWeeklyBilanBody": "C'est dimanche ! Fais le point sur ta semaine.",
+  "notifChannelReminders": "Rappels d'habitudes",
+  "notifChannelRemindersDesc": "Rappels quotidiens pour tes habitudes",
+  "notifChannelStreaks": "Séries",
+  "notifChannelStreaksDesc": "Notifications de séries et accomplissements",
+  "notifChannelBilan": "Bilan hebdomadaire",
+  "notifChannelBilanDesc": "Rappel pour ton bilan de la semaine"
 }

@@ -334,6 +334,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your session has expired. Please log in again.';
 
   @override
+  String get errorEmailNotConfirmed =>
+      'Please confirm your email before signing in';
+
+  @override
+  String get errorOtpExpired => 'Verification code has expired';
+
+  @override
+  String get errorUserBanned => 'This account has been suspended';
+
+  @override
   String get noInternetConnection => 'No internet connection';
 
   @override
@@ -542,6 +552,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get splashReady => 'Ready!';
+
+  @override
+  String get splashTagline => 'Build better habits, every day';
+
+  @override
+  String get splashPreparingExperience => 'Preparing your experience...';
+
+  @override
+  String get splashAlmostThere => 'Almost there...';
+
+  @override
+  String get splashFinalTouches => 'Final touches...';
 
   @override
   String get onboardingSlide1Title => 'Build your habits';
@@ -1249,4 +1271,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String archivedLabel(String name) {
     return '$name (archived)';
   }
+
+  @override
+  String notifHabitReminderTitle(String habitName) {
+    return '⏰ $habitName';
+  }
+
+  @override
+  String get notifHabitReminderBody => 'Time for your habit!';
+
+  @override
+  String get notifWeeklyBilanTitle => '📊 Weekly review';
+
+  @override
+  String get notifWeeklyBilanBody => 'It\'s Sunday! Review your week.';
+
+  @override
+  String get notifChannelReminders => 'Habit reminders';
+
+  @override
+  String get notifChannelRemindersDesc => 'Daily reminders for your habits';
+
+  @override
+  String get notifChannelStreaks => 'Streaks';
+
+  @override
+  String get notifChannelStreaksDesc => 'Streak and achievement notifications';
+
+  @override
+  String get notifChannelBilan => 'Weekly review';
+
+  @override
+  String get notifChannelBilanDesc => 'Weekly review reminder';
 }

@@ -143,21 +143,17 @@ class SplashViewModel extends BaseViewModel {
 
   /// Navigates to the appropriate screen based on result.
   void _navigateToResult() {
-    switch (_result) {
-      case SplashResult.goToHome:
-        _navigationService.replaceWithHomeView();
-      case SplashResult.goToOnboarding:
-        _navigationService.replaceWithOnboardingView();
-      case SplashResult.goToLogin:
-        _navigationService.replaceWithLoginView();
-      case SplashResult.goToForceUpdate:
-        // TODO: Replace with force update route when available
-        _navigationService.replaceWithHomeView();
-      case SplashResult.error:
-      case null:
-        // Stay on splash, show error
-        break;
-    }
+    final route = switch (_result) {
+      SplashResult.goToHome => Routes.homeView,
+      SplashResult.goToOnboarding => Routes.onboardingView,
+      SplashResult.goToLogin => Routes.loginView,
+      SplashResult.goToForceUpdate => Routes.homeView, // TODO: force update route
+      SplashResult.error || null => null,
+    };
+
+    if (route == null) return; // Stay on splash, show error
+
+    _navigationService.clearStackAndShow(route);
   }
 
   /// Retries initialization after an error.

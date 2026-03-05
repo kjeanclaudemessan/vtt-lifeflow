@@ -5,6 +5,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../../app/app.locator.dart';
+import '../supabase/supabase_service.dart';
+
 /// Service for push notifications using Firebase Cloud Messaging (FCM)
 /// and flutter_local_notifications for foreground display.
 ///
@@ -98,6 +101,7 @@ class PushNotificationService {
       _messaging!.onTokenRefresh.listen((newToken) {
         _token = newToken;
         onTokenRefresh?.call(newToken);
+        saveTokenToSupabase();
         debugPrint('[Push] Token refreshed');
       });
 
@@ -139,6 +143,70 @@ class PushNotificationService {
     if (!_isInitialized) return;
     await _messaging?.unsubscribeFromTopic(topic);
     debugPrint('[Push] Unsubscribed from topic: $topic');
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // Token persistence (Supabase device_tokens)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// Saves the current FCM token to Supabase `device_tokens` table.
+  ///
+  /// Call this after login or when the user is authenticated.
+  /// Uses upsert to avoid duplicates (unique constraint on user_id + token).
+  Future<void> saveTokenToSupabase() async {
+    if (_token == null) return;
+
+    try {
+      final supabase = locator<SupabaseService>().client;
+      final userId = supabase.auth.currentUser?.id;
+      if (userId == null) {
+        debugPrint('[Push] No authenticated user — skipping token save');
+        return;
+      }
+
+      final platform = kIsWeb
+          ? 'web'
+          : Platform.isAndroid
+              ? 'android'
+              : 'ios';
+
+      await supabase.from('device_tokens').upsert(
+        {
+          'user_id': userId,
+          'token': _token,
+          'platform': platform,
+          'updated_at': DateTime.now().toUtc().toIso8601String(),
+        },
+        onConflict: 'user_id,token',
+      );
+
+      debugPrint('[Push] Token saved to Supabase');
+    } catch (e) {
+      debugPrint('[Push] Failed to save token: $e');
+    }
+  }
+
+  /// Removes the current device's FCM token from Supabase.
+  ///
+  /// Call this on logout to stop receiving push notifications on this device.
+  Future<void> removeTokenFromSupabase() async {
+    if (_token == null) return;
+
+    try {
+      final supabase = locator<SupabaseService>().client;
+      final userId = supabase.auth.currentUser?.id;
+      if (userId == null) return;
+
+      await supabase
+          .from('device_tokens')
+          .delete()
+          .eq('user_id', userId)
+          .eq('token', _token!);
+
+      debugPrint('[Push] Token removed from Supabase');
+    } catch (e) {
+      debugPrint('[Push] Failed to remove token: $e');
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════

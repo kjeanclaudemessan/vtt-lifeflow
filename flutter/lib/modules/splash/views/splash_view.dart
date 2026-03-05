@@ -32,15 +32,38 @@ class SplashView extends StackedView<SplashViewModel> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Spacer(flex: 3),
+
               // Logo with animation
-              Expanded(
-                child: Center(
-                  child: _AnimatedLogo(
-                    animation: config.animation,
-                    logoAsset: config.logoAsset,
-                  ),
+              _AnimatedLogo(
+                animation: config.animation,
+                logoAsset: config.logoAsset,
+              ),
+
+              SizedBox(height: AppSpacing.lg),
+
+              // App name
+              Text(
+                'LifeFlow',
+                style: AppTypography.headlineLarge.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.5,
                 ),
               ),
+
+              SizedBox(height: AppSpacing.xs),
+
+              // Tagline
+              Text(
+                l10n.splashTagline,
+                style: AppTypography.bodyMedium.copyWith(
+                  color: AppColors.textSecondary(
+                      Theme.of(context).brightness),
+                ),
+              ),
+
+              const Spacer(flex: 2),
 
               // Error state
               if (viewModel.hasError)
@@ -94,22 +117,32 @@ class SplashView extends StackedView<SplashViewModel> {
     AppLocalizations l10n,
   ) {
     return Padding(
-      padding: EdgeInsets.all(AppSpacing.xl),
-      child: SizedBox(
-        width: 200.w,
-        child: AppLinearProgress(
-          value: viewModel.progress,
-          label: _getProgressText(viewModel.progress, l10n),
-          showPercentage: true,
-        ),
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 200.w,
+            child: AppLinearProgress(
+              value: viewModel.progress,
+            ),
+          ),
+          SizedBox(height: AppSpacing.sm),
+          Text(
+            _getProgressText(viewModel.progress, l10n),
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.textSecondary(Theme.of(context).brightness),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   String _getProgressText(double progress, AppLocalizations l10n) {
-    if (progress < 0.3) return l10n.splashInitializing;
-    if (progress < 0.6) return l10n.splashCheckingAuth;
-    if (progress < 0.9) return l10n.splashLoading;
+    if (progress < 0.3) return l10n.splashPreparingExperience;
+    if (progress < 0.6) return l10n.splashAlmostThere;
+    if (progress < 0.9) return l10n.splashFinalTouches;
     return l10n.splashReady;
   }
 

@@ -5,6 +5,7 @@ import 'package:stacked/stacked.dart';
 import '../../../core/core.dart';
 import '../../../design_system/design_system.dart';
 import '../viewmodels/login_viewmodel.dart';
+import '../utils/auth_error_mapper.dart';
 import '../widgets/auth_form_fields.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/social_login_buttons.dart';
@@ -41,22 +42,6 @@ class LoginView extends StackedView<LoginViewModel> {
               ),
 
               SizedBox(height: AppSpacing.xxl),
-
-              // Social login buttons
-              if (config.hasSocialLogin) ...[
-                SocialLoginButtons(
-                  showGoogle: config.enableGoogle,
-                  showApple: config.enableApple,
-                  showGithub: config.enableGithub,
-                  onGoogleTap: viewModel.loginWithGoogle,
-                  onAppleTap: viewModel.loginWithApple,
-                  onGithubTap: viewModel.loginWithGithub,
-                  isGoogleLoading: viewModel.busy(LoginViewModel.googleBusyKey),
-                  isAppleLoading: viewModel.busy(LoginViewModel.appleBusyKey),
-                  isGithubLoading: viewModel.busy(LoginViewModel.githubBusyKey),
-                ),
-                OrDivider(text: l10n.or),
-              ],
 
               // Email field
               AuthEmailField(
@@ -126,7 +111,8 @@ class LoginView extends StackedView<LoginViewModel> {
                       SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: Text(
-                          viewModel.modelError.toString(),
+                          AuthErrorMapper.message(
+                              context, viewModel.modelError),
                           style: AppTypography.bodySmall.copyWith(
                             color: AppColors.error,
                           ),
@@ -145,6 +131,22 @@ class LoginView extends StackedView<LoginViewModel> {
                     viewModel.canSubmit ? viewModel.loginWithEmail : null,
                 isLoading: viewModel.busy(LoginViewModel.loginBusyKey),
               ),
+
+              // Social login buttons
+              if (config.hasSocialLogin) ...[
+                OrDivider(text: l10n.or),
+                SocialLoginButtons(
+                  showGoogle: config.enableGoogle,
+                  showApple: config.enableApple,
+                  showGithub: config.enableGithub,
+                  onGoogleTap: viewModel.loginWithGoogle,
+                  onAppleTap: viewModel.loginWithApple,
+                  onGithubTap: viewModel.loginWithGithub,
+                  isGoogleLoading: viewModel.busy(LoginViewModel.googleBusyKey),
+                  isAppleLoading: viewModel.busy(LoginViewModel.appleBusyKey),
+                  isGithubLoading: viewModel.busy(LoginViewModel.githubBusyKey),
+                ),
+              ],
 
               SizedBox(height: AppSpacing.xxl),
 

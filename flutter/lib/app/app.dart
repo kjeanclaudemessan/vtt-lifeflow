@@ -2,6 +2,7 @@ import 'package:lifeflow/services/analytics/analytics_service.dart';
 import 'package:lifeflow/services/habit_event_service.dart';
 import 'package:lifeflow/services/local_notification/local_notification_scheduler.dart';
 import 'package:lifeflow/services/moneroo/moneroo_service.dart';
+import 'package:lifeflow/services/notification_router/notification_router.dart';
 import 'package:lifeflow/services/push_notification/push_notification_service.dart';
 import 'package:lifeflow/services/settings/app_settings_service.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -147,6 +148,7 @@ import 'package:lifeflow/ui/views/startup/startup_view.dart';
     // ═══════════════════════════════════════════════════════════════════════
     LazySingleton(classType: PushNotificationService),
     LazySingleton(classType: LocalNotificationScheduler),
+    LazySingleton(classType: NotificationRouter),
 
     // ═══════════════════════════════════════════════════════════════════════
     // REPOSITORIES

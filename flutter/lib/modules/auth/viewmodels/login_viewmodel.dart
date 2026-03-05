@@ -10,6 +10,8 @@ import '../../../core/core.dart';
 import '../../../core/enums/auth_enums.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../domain/repositories/i_auth_repository.dart';
+import '../../../services/analytics/analytics_service.dart';
+import '../../../services/push_notification/push_notification_service.dart';
 import '../../../services/supabase/supabase_auth_service.dart';
 import '../config/auth_config.dart';
 
@@ -20,6 +22,7 @@ class LoginViewModel extends BaseViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final IAuthRepository _authRepository = locator<IAuthRepository>();
   final SupabaseAuthService _authService = locator<SupabaseAuthService>();
+  final AnalyticsService _analytics = locator<AnalyticsService>();
 
   StreamSubscription? _authSubscription;
   bool _isWaitingForOAuth = false;
@@ -32,6 +35,17 @@ class LoginViewModel extends BaseViewModel {
       if (user != null && _isWaitingForOAuth) {
         _isWaitingForOAuth = false;
         _authSubscription?.cancel();
+        _analytics.identify(
+          userId: user.id,
+          properties: {
+            if (user.email != null) 'email': user.email!,
+            'login_method': 'oauth',
+          },
+        );
+        _analytics.capture('user_logged_in', properties: {
+          'method': 'oauth',
+        });
+        locator<PushNotificationService>().saveTokenToSupabase();
         _navigationService.clearStackAndShow(Routes.homeView);
       }
     });
@@ -183,8 +197,21 @@ class LoginViewModel extends BaseViewModel {
 
   void _handleAuthResult(Either<Failure, UserEntity> result) {
     result.fold(
-      (failure) => setError(failure.message),
-      (_) => _navigationService.clearStackAndShow(Routes.homeView),
+      (failure) => setError(failure),
+      (user) {
+        _analytics.identify(
+          userId: user.id,
+          properties: {
+            'email': user.email,
+            'login_method': 'email',
+          },
+        );
+        _analytics.capture('user_logged_in', properties: {
+          'method': 'email',
+        });
+        locator<PushNotificationService>().saveTokenToSupabase();
+        _navigationService.clearStackAndShow(Routes.homeView);
+      },
     );
   }
 
@@ -192,7 +219,7 @@ class LoginViewModel extends BaseViewModel {
     result.fold(
       (failure) {
         _isWaitingForOAuth = false;
-        setError(failure.message);
+        setError(failure);
       },
       (success) {
         if (success) {

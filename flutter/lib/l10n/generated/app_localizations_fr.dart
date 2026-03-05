@@ -315,7 +315,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errorNotFound => 'Non trouvé';
 
   @override
-  String get errorInvalidCredentials => 'Email ou mot de passe invalide';
+  String get errorInvalidCredentials => 'Email ou mot de passe incorrect';
 
   @override
   String get errorEmailAlreadyInUse => 'Cet email est déjà utilisé';
@@ -333,6 +333,16 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get errorSessionExpired =>
       'Votre session a expiré. Veuillez vous reconnecter.';
+
+  @override
+  String get errorEmailNotConfirmed =>
+      'Veuillez confirmer votre email avant de vous connecter';
+
+  @override
+  String get errorOtpExpired => 'Le code de vérification a expiré';
+
+  @override
+  String get errorUserBanned => 'Ce compte a été suspendu';
 
   @override
   String get noInternetConnection => 'Pas de connexion internet';
@@ -544,6 +554,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get splashReady => 'Prêt !';
+
+  @override
+  String get splashTagline => 'Construis de meilleures habitudes, chaque jour';
+
+  @override
+  String get splashPreparingExperience => 'Préparation de ton expérience...';
+
+  @override
+  String get splashAlmostThere => 'Presque prêt...';
+
+  @override
+  String get splashFinalTouches => 'Dernières retouches...';
 
   @override
   String get onboardingSlide1Title => 'Construis tes habitudes';
@@ -1253,4 +1275,39 @@ class AppLocalizationsFr extends AppLocalizations {
   String archivedLabel(String name) {
     return '$name (archivé)';
   }
+
+  @override
+  String notifHabitReminderTitle(String habitName) {
+    return '⏰ $habitName';
+  }
+
+  @override
+  String get notifHabitReminderBody => 'C\'est l\'heure de ton habitude !';
+
+  @override
+  String get notifWeeklyBilanTitle => '📊 Bilan hebdomadaire';
+
+  @override
+  String get notifWeeklyBilanBody =>
+      'C\'est dimanche ! Fais le point sur ta semaine.';
+
+  @override
+  String get notifChannelReminders => 'Rappels d\'habitudes';
+
+  @override
+  String get notifChannelRemindersDesc =>
+      'Rappels quotidiens pour tes habitudes';
+
+  @override
+  String get notifChannelStreaks => 'Séries';
+
+  @override
+  String get notifChannelStreaksDesc =>
+      'Notifications de séries et accomplissements';
+
+  @override
+  String get notifChannelBilan => 'Bilan hebdomadaire';
+
+  @override
+  String get notifChannelBilanDesc => 'Rappel pour ton bilan de la semaine';
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -7,6 +8,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../../core/enums/lifeflow_enums.dart';
 import '../../domain/entities/habit_entity.dart';
+import '../notification_router/notification_router.dart';
 
 /// Service for scheduling local notifications (habit reminders, streaks, bilan).
 ///
@@ -26,30 +28,63 @@ class LocalNotificationScheduler {
   bool _isInitialized = false;
   bool get isInitialized => _isInitialized;
 
+  /// Callback for when a notification is tapped.
+  /// Receives the raw payload string (JSON-encoded).
+  void Function(String? payload)? onNotificationTapped;
+
   // ─────────────────────────────────────────────────────────────────
   // Notification channels
   // ─────────────────────────────────────────────────────────────────
 
   static const _reminderChannel = AndroidNotificationChannel(
     'lifeflow_reminders',
-    'Rappels d\'habitudes',
-    description: 'Rappels quotidiens pour tes habitudes',
+    'Habit reminders',
+    description: 'Daily reminders for your habits',
     importance: Importance.high,
   );
 
   static const _streakChannel = AndroidNotificationChannel(
     'lifeflow_streaks',
-    'Séries',
-    description: 'Notifications de séries et accomplissements',
+    'Streaks',
+    description: 'Streak and achievement notifications',
     importance: Importance.defaultImportance,
   );
 
   static const _bilanChannel = AndroidNotificationChannel(
     'lifeflow_bilan',
-    'Bilan hebdomadaire',
-    description: 'Rappel pour ton bilan de la semaine',
+    'Weekly review',
+    description: 'Weekly review reminder',
     importance: Importance.defaultImportance,
   );
+
+  // ─────────────────────────────────────────────────────────────────
+  // Notification message defaults
+  // (locale-aware messages can be set via setLocaleMessages)
+  // ─────────────────────────────────────────────────────────────────
+
+  String _habitReminderBody = 'Time for your habit!';
+  String _weeklyBilanTitle = '📊 Weekly review';
+  String _weeklyBilanBody = "It's Sunday! Review your week.";
+
+  /// Updates notification messages based on the current locale.
+  ///
+  /// Call this after the app locale is resolved:
+  /// ```dart
+  /// scheduler.setLocaleMessages(
+  ///   habitReminderBody: l10n.notifHabitReminderBody,
+  ///   weeklyBilanTitle: l10n.notifWeeklyBilanTitle,
+  ///   weeklyBilanBody: l10n.notifWeeklyBilanBody,
+  /// );
+  /// ```
+  void setLocaleMessages({
+    required String habitReminderBody,
+    required String weeklyBilanTitle,
+    required String weeklyBilanBody,
+  }) {
+    _habitReminderBody = habitReminderBody;
+    _weeklyBilanTitle = weeklyBilanTitle;
+    _weeklyBilanBody = weeklyBilanBody;
+  }
 
   // ─────────────────────────────────────────────────────────────────
   // Initialization
@@ -74,7 +109,14 @@ class LocalNotificationScheduler {
         iOS: darwinSettings,
       );
 
-      await _plugin.initialize(initSettings);
+      await _plugin.initialize(
+        initSettings,
+        onDidReceiveNotificationResponse: (NotificationResponse response) {
+          debugPrint(
+              '[LocalNotif] Notification tapped: payload=${response.payload}');
+          onNotificationTapped?.call(response.payload);
+        },
+      );
 
       // Create Android notification channels
       if (!kIsWeb && Platform.isAndroid) {
@@ -125,10 +167,16 @@ class LocalNotificationScheduler {
 
       final dayNotifId = notifId + day;
 
+      final payload = jsonEncode({
+        'type': NotificationType.habitReminder.name,
+        'habitId': habit.id,
+        'habitName': habit.name,
+      });
+
       await _plugin.zonedSchedule(
         dayNotifId,
         '⏰ ${habit.name}',
-        'C\'est l\'heure de ton habitude !',
+        _habitReminderBody,
         scheduledDate,
         NotificationDetails(
           android: AndroidNotificationDetails(
@@ -147,6 +195,7 @@ class LocalNotificationScheduler {
         ),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+        payload: payload,
       );
     }
 
@@ -197,10 +246,14 @@ class LocalNotificationScheduler {
 
     final nextSunday = _nextInstanceOfDay(DateTime.sunday, 20, 0);
 
+    final payload = jsonEncode({
+      'type': NotificationType.weeklyBilan.name,
+    });
+
     await _plugin.zonedSchedule(
       bilanNotifId,
-      '📊 Bilan hebdomadaire',
-      'C\'est dimanche ! Fais le point sur ta semaine.',
+      _weeklyBilanTitle,
+      _weeklyBilanBody,
       nextSunday,
       NotificationDetails(
         android: AndroidNotificationDetails(
@@ -219,6 +272,7 @@ class LocalNotificationScheduler {
       ),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      payload: payload,
     );
 
     debugPrint('[LocalNotif] Weekly bilan scheduled for Sunday 20:00');
