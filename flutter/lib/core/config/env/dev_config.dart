@@ -33,7 +33,7 @@ class DevConfig implements EnvConfig {
   @override
   String get posthogApiKey => const String.fromEnvironment(
         'POSTHOG_API_KEY',
-        defaultValue: '', // Disabled in dev by default
+        defaultValue: 'phc_fsT0dUEqJuzDX28AfyvclkiWUmyUcfsNdyS39DYkp6q',
       );
 
   @override
@@ -46,7 +46,7 @@ class DevConfig implements EnvConfig {
   bool get enableLogging => true;
 
   @override
-  bool get enableAnalytics => false;
+  bool get enableAnalytics => true;
 
   @override
   bool get enableCrashReporting => false;

@@ -84,7 +84,7 @@ class _HighlightRow extends StatelessWidget {
 
     return Row(
       children: [
-        Text(emoji, style: TextStyle(fontSize: 20)),
+        Text(emoji, style: AppTypography.headingSmall),
         SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Column(

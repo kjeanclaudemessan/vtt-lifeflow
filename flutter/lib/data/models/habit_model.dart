@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../core/enums/lifeflow_enums.dart';
+import '../../core/utils/time_parsing.dart';
 import '../../domain/entities/habit_entity.dart';
 
 part 'habit_model.g.dart';
@@ -90,23 +90,6 @@ class HabitModel {
   /// Converts this model to a JSON map.
   Map<String, dynamic> toJson() => _$HabitModelToJson(this);
 
-  /// Parses a TIME string (e.g., "06:30:00") into a [TimeOfDay].
-  static TimeOfDay? _parseTime(String? time) {
-    if (time == null || time.isEmpty) return null;
-    final parts = time.split(':');
-    if (parts.length < 2) return null;
-    return TimeOfDay(
-      hour: int.tryParse(parts[0]) ?? 0,
-      minute: int.tryParse(parts[1]) ?? 0,
-    );
-  }
-
-  /// Formats a [TimeOfDay] to a TIME string (e.g., "06:30:00").
-  static String? _formatTime(TimeOfDay? time) {
-    if (time == null) return null;
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}:00';
-  }
-
   /// Converts this model to a domain [HabitEntity].
   HabitEntity toEntity() {
     return HabitEntity(
@@ -119,7 +102,7 @@ class HabitModel {
       targetValue: targetValue?.toDouble(),
       unit: unit,
       estimatedDurationMinutes: estimatedDurationMinutes,
-      startTime: _parseTime(startTime),
+      startTime: TimeParsingUtils.parseTime(startTime),
       notificationsEnabled: notificationsEnabled,
       reminderOffsetMinutes: reminderOffsetMinutes,
       frequency: HabitFrequency.fromString(frequency),
@@ -142,7 +125,7 @@ class HabitModel {
       targetValue: entity.targetValue,
       unit: entity.unit,
       estimatedDurationMinutes: entity.estimatedDurationMinutes,
-      startTime: _formatTime(entity.startTime),
+      startTime: TimeParsingUtils.formatTime(entity.startTime),
       notificationsEnabled: entity.notificationsEnabled,
       reminderOffsetMinutes: entity.reminderOffsetMinutes,
       frequency: entity.frequency.toValue(),
@@ -164,7 +147,7 @@ class HabitModel {
       'target_value': entity.targetValue,
       'unit': entity.unit,
       'estimated_duration_minutes': entity.estimatedDurationMinutes,
-      'start_time': _formatTime(entity.startTime),
+      'start_time': TimeParsingUtils.formatTime(entity.startTime),
       'notifications_enabled': entity.notificationsEnabled,
       'reminder_offset_minutes': entity.reminderOffsetMinutes,
       'frequency': entity.frequency.toValue(),
@@ -183,7 +166,7 @@ class HabitModel {
       'target_value': entity.targetValue,
       'unit': entity.unit,
       'estimated_duration_minutes': entity.estimatedDurationMinutes,
-      'start_time': _formatTime(entity.startTime),
+      'start_time': TimeParsingUtils.formatTime(entity.startTime),
       'notifications_enabled': entity.notificationsEnabled,
       'reminder_offset_minutes': entity.reminderOffsetMinutes,
       'frequency': entity.frequency.toValue(),

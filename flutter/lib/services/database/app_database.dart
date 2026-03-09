@@ -1,193 +1,74 @@
-import 'package:drift/drift.dart';
-
-// Web is the default; native overrides when dart:io is available.
-// This avoids issues with dart.library.js_interop not being recognized
-// by some Dart web compilers.
-import 'connection/web.dart' as conn
-    if (dart.library.io) 'connection/native.dart';
-
-part 'app_database.g.dart';
-
 // ═══════════════════════════════════════════════════════════════════════════
-// Table Definitions
+// LOCAL-FIRST DISABLED
+// ═══════════════════════════════════════════════════════════════════════════
+//
+// Drift/sqlite3 dependencies are temporarily disabled due to sqlite3 WASM
+// interop incompatibility with the current Dart SDK.
+//
+// This stub preserves the public API surface so the rest of the app compiles.
+// Re-enable by uncommenting drift in pubspec.yaml and restoring this file
+// from git: `git checkout -- lib/services/database/app_database.dart`
 // ═══════════════════════════════════════════════════════════════════════════
 
-/// Local cache of the Supabase `domains` table.
-class LocalDomains extends Table {
-  TextColumn get id => text()();
-  TextColumn get userId => text()();
-  TextColumn get name => text()();
-  TextColumn get icon => text().withDefault(const Constant('🎯'))();
-  TextColumn get color => text().withDefault(const Constant('#6200EE'))();
-  IntColumn get sortOrder => integer().withDefault(const Constant(0))();
-  BoolColumn get isArchived => boolean().withDefault(const Constant(false))();
-  DateTimeColumn get createdAt => dateTime()();
-  DateTimeColumn get updatedAt => dateTime()();
+import 'package:flutter/foundation.dart';
 
-  @override
-  Set<Column> get primaryKey => {id};
-}
-
-/// Local cache of the Supabase `habits` table.
-class LocalHabits extends Table {
-  TextColumn get id => text()();
-  TextColumn get userId => text()();
-  TextColumn get domainId => text().nullable()();
-  TextColumn get name => text()();
-  TextColumn get description => text().nullable()();
-  TextColumn get type => text().withDefault(const Constant('binary'))();
-  RealColumn get targetValue => real().nullable()();
-  TextColumn get unit => text().nullable()();
-  IntColumn get estimatedDurationMinutes =>
-      integer().withDefault(const Constant(15))();
-  TextColumn get startTime => text().nullable()();
-  BoolColumn get notificationsEnabled =>
-      boolean().withDefault(const Constant(true))();
-  IntColumn get reminderOffsetMinutes =>
-      integer().withDefault(const Constant(5))();
-  TextColumn get frequency => text().withDefault(const Constant('daily'))();
-  TextColumn get frequencyDays => text().withDefault(const Constant('[]'))();
-  BoolColumn get isArchived => boolean().withDefault(const Constant(false))();
-  DateTimeColumn get createdAt => dateTime()();
-  DateTimeColumn get updatedAt => dateTime()();
-
-  @override
-  Set<Column> get primaryKey => {id};
-}
-
-/// Local cache of the Supabase `habit_logs` table.
-class LocalHabitLogs extends Table {
-  TextColumn get id => text()();
-  TextColumn get habitId => text()();
-  DateTimeColumn get logDate => dateTime()();
-  BoolColumn get completed => boolean().withDefault(const Constant(false))();
-  RealColumn get value => real().nullable()();
-  TextColumn get actualStartTime => text().nullable()();
-  TextColumn get actualEndTime => text().nullable()();
-  DateTimeColumn get createdAt => dateTime()();
-
-  @override
-  Set<Column> get primaryKey => {id};
-}
-
-/// Queue of operations pending sync to Supabase.
+/// Stub for [AppDatabase] while drift is disabled.
 ///
-/// When offline, writes go to the local DB + this queue.
-/// When back online, the [SyncEngine] processes this queue in order.
-class SyncQueue extends Table {
-  IntColumn get id => integer().autoIncrement()();
+/// All methods are no-ops. Re-enable drift to get actual local persistence.
+class AppDatabase {
+  AppDatabase();
+  AppDatabase.forTesting();
 
-  /// The Supabase table name (e.g., 'habits', 'habit_logs', 'domains').
-  TextColumn get targetTable => text()();
-
-  /// The record ID in the target table.
-  TextColumn get recordId => text()();
-
-  /// Operation type: 'insert', 'update', 'delete'.
-  TextColumn get operation => text()();
-
-  /// JSON-encoded payload for the operation.
-  TextColumn get payload => text()();
-
-  /// When this operation was queued.
-  DateTimeColumn get createdAt => dateTime()();
-
-  /// Number of retry attempts.
-  IntColumn get retryCount => integer().withDefault(const Constant(0))();
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Database Class
-// ═══════════════════════════════════════════════════════════════════════════
-
-@DriftDatabase(tables: [LocalDomains, LocalHabits, LocalHabitLogs, SyncQueue])
-class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(conn.connect());
-
-  /// For testing — accepts a custom [QueryExecutor].
-  AppDatabase.forTesting(super.executor);
-
-  @override
-  int get schemaVersion => 2;
-
-  @override
-  MigrationStrategy get migration => MigrationStrategy(
-    onCreate: (m) => m.createAll(),
-    onUpgrade: (m, from, to) async {
-      if (from < 2) {
-        // v1 → v2: Replace endTime with notification fields, add actual times
-        await m.addColumn(localHabits, localHabits.notificationsEnabled);
-        await m.addColumn(localHabits, localHabits.reminderOffsetMinutes);
-        await m.addColumn(localHabitLogs, localHabitLogs.actualStartTime);
-        await m.addColumn(localHabitLogs, localHabitLogs.actualEndTime);
-        // Drop the old endTime column (Drift handles schema diff)
-      }
-    },
-  );
-
-  // ─────────────────────────────────────────────────────────────────
-  // Sync Queue Operations
-  // ─────────────────────────────────────────────────────────────────
-
-  /// Adds an operation to the sync queue.
+  /// No-op — drift is disabled.
   Future<void> enqueueSync({
     required String tableName,
     required String recordId,
     required String operation,
     required String payload,
   }) async {
-    await into(syncQueue).insert(
-      SyncQueueCompanion.insert(
-        targetTable: tableName,
-        recordId: recordId,
-        operation: operation,
-        payload: payload,
-        createdAt: DateTime.now().toUtc(),
-      ),
-    );
+    debugPrint('[DB-STUB] enqueueSync skipped (drift disabled)');
   }
 
-  /// Gets all pending sync operations, ordered by creation time.
-  Future<List<SyncQueueData>> getPendingSyncOps() async {
-    return (select(syncQueue)..orderBy([(t) => OrderingTerm.asc(t.id)])).get();
-  }
+  /// No-op — returns empty list.
+  Future<List<SyncQueueData>> getPendingSyncOps() async => [];
 
-  /// Removes a sync operation after successful sync.
-  Future<void> removeSyncOp(int id) async {
-    await (delete(syncQueue)..where((t) => t.id.equals(id))).go();
-  }
+  /// No-op.
+  Future<void> removeSyncOp(int id) async {}
 
-  /// Increments the retry count for a failed sync operation.
-  Future<void> incrementRetry(int id) async {
-    await (update(syncQueue)..where((t) => t.id.equals(id))).write(
-      SyncQueueCompanion.custom(
-        retryCount: syncQueue.retryCount + const Constant(1),
-      ),
-    );
-  }
+  /// No-op.
+  Future<void> incrementRetry(int id) async {}
 
-  /// Returns the number of pending sync operations.
-  Future<int> pendingSyncCount() async {
-    final count = countAll();
-    final query = selectOnly(syncQueue)..addColumns([count]);
-    final result = await query.getSingle();
-    return result.read(count) ?? 0;
-  }
+  /// No-op — returns 0.
+  Future<int> pendingSyncCount() async => 0;
 
-  /// Clears all local data (for logout).
+  /// No-op.
   Future<void> clearAll() async {
-    await delete(localDomains).go();
-    await delete(localHabits).go();
-    await delete(localHabitLogs).go();
-    await delete(syncQueue).go();
+    debugPrint('[DB-STUB] clearAll skipped (drift disabled)');
   }
 
-  /// Clears all data for a specific user.
+  /// No-op.
   Future<void> clearForUser(String userId) async {
-    await (delete(localDomains)..where((t) => t.userId.equals(userId))).go();
-    await (delete(localHabits)..where((t) => t.userId.equals(userId))).go();
-    // habit_logs don't have userId — clear by joining habits
-    await delete(localHabitLogs).go();
-    await delete(syncQueue).go();
+    debugPrint('[DB-STUB] clearForUser skipped (drift disabled)');
   }
+}
+
+/// Stub data class matching drift-generated [SyncQueueData].
+class SyncQueueData {
+  final int id;
+  final String targetTable;
+  final String recordId;
+  final String operation;
+  final String payload;
+  final DateTime createdAt;
+  final int retryCount;
+
+  SyncQueueData({
+    required this.id,
+    required this.targetTable,
+    required this.recordId,
+    required this.operation,
+    required this.payload,
+    required this.createdAt,
+    this.retryCount = 0,
+  });
 }

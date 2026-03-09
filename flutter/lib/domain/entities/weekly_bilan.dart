@@ -54,20 +54,22 @@ class WeeklyBilan extends Equatable {
 
   /// An empty bilan.
   factory WeeklyBilan.empty() {
-    return WeeklyBilan(
-      weekStartDate: DateTime.now(),
-    );
+    return WeeklyBilan(weekStartDate: DateTime.now());
   }
 
   @override
   List<Object?> get props => [
-        weekStartDate,
-        domainTimes,
-        totalMinutes,
-        totalMinutesLastWeek,
-        completionRate,
-        topHabit,
-        longestStreak,
-        isFirstWeek,
-      ];
+    weekStartDate,
+    domainTimes,
+    totalMinutes,
+    totalMinutesLastWeek,
+    completionRate,
+    topHabit,
+    longestStreak,
+    isFirstWeek,
+  ];
+
+  @override
+  String toString() =>
+      'WeeklyBilan(week: $weekStartDate, ${totalHours.toStringAsFixed(1)}h, $completionRateLabel)';
 }

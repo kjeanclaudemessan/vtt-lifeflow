@@ -23,8 +23,8 @@ class AuthRepositoryImpl implements IAuthRepository {
   AuthRepositoryImpl({
     SupabaseAuthService? authService,
     SupabaseService? supabaseService,
-  })  : _authService = authService ?? locator<SupabaseAuthService>(),
-        _supabaseService = supabaseService ?? locator<SupabaseService>();
+  }) : _authService = authService ?? locator<SupabaseAuthService>(),
+       _supabaseService = supabaseService ?? locator<SupabaseService>();
 
   // ─────────────────────────────────────────────────────────────────
   // Private Helpers
@@ -49,8 +49,10 @@ class AuthRepositoryImpl implements IAuthRepository {
   /// Fetches full profile using get_my_profile RPC.
   Future<UserEntity?> _fetchFullProfile() async {
     try {
-      final response =
-          await _supabaseService.client.rpc('get_my_profile').select().single();
+      final response = await _supabaseService.client
+          .rpc('get_my_profile')
+          .select()
+          .single();
 
       return UserModel.fromProfileRpc(response).toEntity();
     } catch (e) {
@@ -138,14 +140,12 @@ class AuthRepositoryImpl implements IAuthRepository {
       password: password,
     );
 
-    return result.fold(
-      (failure) => Left(failure),
-      (user) async {
-        // Try to get full profile after sign in
-        final fullProfile = await _fetchFullProfile();
-        return Right(fullProfile ?? _toBasicEntity(user));
-      },
-    );
+    if (result.isLeft())
+      return result.fold((f) => Left(f), (_) => throw 'unreachable');
+
+    final user = result.getOrElse(() => throw 'unreachable');
+    final fullProfile = await _fetchFullProfile();
+    return Right(fullProfile ?? _toBasicEntity(user));
   }
 
   @override
@@ -171,14 +171,9 @@ class AuthRepositoryImpl implements IAuthRepository {
   // ─────────────────────────────────────────────────────────────────
 
   @override
-  Future<Either<Failure, Unit>> signInWithPhone({
-    required String phone,
-  }) async {
+  Future<Either<Failure, Unit>> signInWithPhone({required String phone}) async {
     final result = await _authService.signInWithPhone(phone: phone);
-    return result.fold(
-      (failure) => Left(failure),
-      (_) => const Right(unit),
-    );
+    return result.fold((failure) => Left(failure), (_) => const Right(unit));
   }
 
   @override
@@ -190,10 +185,7 @@ class AuthRepositoryImpl implements IAuthRepository {
       phone: phone,
       metadata: metadata,
     );
-    return result.fold(
-      (failure) => Left(failure),
-      (_) => const Right(unit),
-    );
+    return result.fold((failure) => Left(failure), (_) => const Right(unit));
   }
 
   @override
@@ -208,24 +200,18 @@ class AuthRepositoryImpl implements IAuthRepository {
       type: _toSupabaseOtpType(type),
     );
 
-    return result.fold(
-      (failure) => Left(failure),
-      (user) async {
-        final fullProfile = await _fetchFullProfile();
-        return Right(fullProfile ?? _toBasicEntity(user));
-      },
-    );
+    if (result.isLeft())
+      return result.fold((f) => Left(f), (_) => throw 'unreachable');
+
+    final user = result.getOrElse(() => throw 'unreachable');
+    final fullProfile = await _fetchFullProfile();
+    return Right(fullProfile ?? _toBasicEntity(user));
   }
 
   @override
-  Future<Either<Failure, Unit>> resendPhoneOtp({
-    required String phone,
-  }) async {
+  Future<Either<Failure, Unit>> resendPhoneOtp({required String phone}) async {
     final result = await _authService.resendPhoneOtp(phone: phone);
-    return result.fold(
-      (failure) => Left(failure),
-      (_) => const Right(unit),
-    );
+    return result.fold((failure) => Left(failure), (_) => const Right(unit));
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -273,10 +259,7 @@ class AuthRepositoryImpl implements IAuthRepository {
     String? redirectTo,
   }) async {
     final result = await _authService.resetPassword(email);
-    return result.fold(
-      (failure) => Left(failure),
-      (_) => const Right(unit),
-    );
+    return result.fold((failure) => Left(failure), (_) => const Right(unit));
   }
 
   @override
@@ -284,13 +267,13 @@ class AuthRepositoryImpl implements IAuthRepository {
     required String newPassword,
   }) async {
     final result = await _authService.updatePassword(newPassword);
-    return result.fold(
-      (failure) => Left(failure),
-      (user) async {
-        final fullProfile = await _fetchFullProfile();
-        return Right(fullProfile ?? _toBasicEntity(user));
-      },
-    );
+
+    if (result.isLeft())
+      return result.fold((f) => Left(f), (_) => throw 'unreachable');
+
+    final user = result.getOrElse(() => throw 'unreachable');
+    final fullProfile = await _fetchFullProfile();
+    return Right(fullProfile ?? _toBasicEntity(user));
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -329,7 +312,8 @@ class AuthRepositoryImpl implements IAuthRepository {
 
       // Fallback if fetch fails
       return const Left(
-          ServerFailure(message: 'Failed to fetch updated profile'));
+        ServerFailure(message: 'Failed to fetch updated profile'),
+      );
     } catch (e) {
       return Left(ErrorHandler.handle(e));
     }
@@ -374,27 +358,22 @@ class AuthRepositoryImpl implements IAuthRepository {
   @override
   Future<Either<Failure, Unit>> signOut() async {
     final result = await _authService.signOut();
-    return result.fold(
-      (failure) => Left(failure),
-      (_) => const Right(unit),
-    );
+    return result.fold((failure) => Left(failure), (_) => const Right(unit));
   }
 
   @override
   Future<Either<Failure, UserEntity>> refreshSession() async {
     final result = await _authService.refreshSession();
-    return result.fold(
-      (failure) => Left(failure),
-      (session) async {
-        final user = _authService.currentUser;
-        if (user == null) {
-          return const Left(
-              AuthFailure(message: 'No user after session refresh'));
-        }
-        final fullProfile = await _fetchFullProfile();
-        return Right(fullProfile ?? _toBasicEntity(user));
-      },
-    );
+
+    if (result.isLeft())
+      return result.fold((f) => Left(f), (_) => throw 'unreachable');
+
+    final user = _authService.currentUser;
+    if (user == null) {
+      return const Left(AuthFailure(message: 'No user after session refresh'));
+    }
+    final fullProfile = await _fetchFullProfile();
+    return Right(fullProfile ?? _toBasicEntity(user));
   }
 
   // ─────────────────────────────────────────────────────────────────

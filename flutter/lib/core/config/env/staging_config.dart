@@ -25,7 +25,10 @@ class StagingConfig implements EnvConfig {
       const String.fromEnvironment('SUPABASE_ANON_KEY');
 
   @override
-  String get posthogApiKey => const String.fromEnvironment('POSTHOG_API_KEY');
+  String get posthogApiKey => const String.fromEnvironment(
+        'POSTHOG_API_KEY',
+        defaultValue: 'phc_fsT0dUEqJuzDX28AfyvclkiWUmyUcfsNdyS39DYkp6q',
+      );
 
   @override
   String get posthogHost => const String.fromEnvironment(

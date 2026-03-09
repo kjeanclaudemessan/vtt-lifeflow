@@ -10,10 +10,7 @@ class TodayBilanCard extends StatelessWidget {
   /// Called when the card is tapped.
   final VoidCallback? onTap;
 
-  const TodayBilanCard({
-    super.key,
-    this.onTap,
-  });
+  const TodayBilanCard({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +20,7 @@ class TodayBilanCard extends StatelessWidget {
       padding: EdgeInsets.all(AppSpacing.md),
       child: Row(
         children: [
-          Text('📊', style: TextStyle(fontSize: 28)),
+          Text('📊', style: AppTypography.headingLarge),
           SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(

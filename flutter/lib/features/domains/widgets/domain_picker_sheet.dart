@@ -53,10 +53,7 @@ class DomainPickerSheet extends StatelessWidget {
         ...domains.map((domain) {
           final isSelected = domain.id == selectedDomainId;
           return AppListTile(
-            leading: Text(
-              domain.icon,
-              style: TextStyle(fontSize: 24),
-            ),
+            leading: Text(domain.icon, style: AppTypography.headingMedium),
             title: Text(
               domain.name,
               style: AppTypography.titleMedium.copyWith(
@@ -65,10 +62,7 @@ class DomainPickerSheet extends StatelessWidget {
               ),
             ),
             trailing: isSelected
-                ? Icon(
-                    Icons.check_circle,
-                    color: AppColors.primary,
-                  )
+                ? Icon(Icons.check_circle, color: AppColors.primary)
                 : null,
             isSelected: isSelected,
             onTap: () => Navigator.of(context).pop(domain),

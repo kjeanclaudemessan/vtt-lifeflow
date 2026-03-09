@@ -27,6 +27,14 @@ class StreakInfo extends Equatable {
   static const empty = StreakInfo();
 
   @override
-  List<Object?> get props =>
-      [currentStreak, bestStreak, freezeUsedDates, isFreezeActive];
+  List<Object?> get props => [
+    currentStreak,
+    bestStreak,
+    freezeUsedDates,
+    isFreezeActive,
+  ];
+
+  @override
+  String toString() =>
+      'StreakInfo(current: $currentStreak, best: $bestStreak, freeze: $isFreezeActive)';
 }

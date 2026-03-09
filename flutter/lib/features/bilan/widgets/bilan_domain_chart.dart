@@ -49,8 +49,9 @@ class BilanDomainChart extends StatelessWidget {
         final percentage = totalMinutes > 0
             ? (counter.totalMinutesThisWeek / totalMinutes * 100).round()
             : 0;
-        final barValue =
-            maxMinutes > 0 ? counter.totalMinutesThisWeek / maxMinutes : 0.0;
+        final barValue = maxMinutes > 0
+            ? counter.totalMinutesThisWeek / maxMinutes
+            : 0.0;
 
         return Padding(
           padding: EdgeInsets.only(bottom: AppSpacing.md),
@@ -59,10 +60,7 @@ class BilanDomainChart extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(
-                    counter.domainIcon,
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  Text(counter.domainIcon, style: AppTypography.textLarge),
                   SizedBox(width: AppSpacing.xs),
                   Expanded(
                     child: Text(

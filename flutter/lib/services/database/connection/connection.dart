@@ -1,9 +1,8 @@
-import 'package:drift/drift.dart';
+// LOCAL-FIRST DISABLED — drift is temporarily removed.
+// This stub is kept so the conditional import in app_database.dart
+// doesn't break if referenced.
 
-/// Stub — should never be called directly.
-/// Platform-specific implementations are selected via conditional imports.
-QueryExecutor connect() {
-  throw UnsupportedError(
-    'Cannot create a database connection without dart:ffi or dart:js_interop',
-  );
+/// Stub — drift is disabled.
+void connect() {
+  throw UnsupportedError('Database is disabled (drift removed)');
 }

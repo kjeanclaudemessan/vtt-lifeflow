@@ -219,7 +219,7 @@ class _HabitFormBodyState extends State<_HabitFormBody> {
           child: Row(
             children: [
               if (domain != null) ...[
-                Text(domain.icon, style: TextStyle(fontSize: 20)),
+                Text(domain.icon, style: AppTypography.headingSmall),
                 SizedBox(width: AppSpacing.xs),
                 Expanded(
                   child: Text(

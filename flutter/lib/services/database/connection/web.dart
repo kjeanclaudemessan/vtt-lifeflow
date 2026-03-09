@@ -1,9 +1,6 @@
-import 'package:drift/drift.dart';
-import 'package:drift/web.dart';
+// LOCAL-FIRST DISABLED — drift is temporarily removed.
 
-/// Opens an IndexedDB-backed database for web platforms.
-///
-/// Uses sql.js (SQLite compiled to JS) with IndexedDB for persistence.
-QueryExecutor connect() {
-  return WebDatabase('lifeflow');
+/// Stub — drift is disabled.
+void connect() {
+  throw UnsupportedError('Database is disabled (drift removed)');
 }

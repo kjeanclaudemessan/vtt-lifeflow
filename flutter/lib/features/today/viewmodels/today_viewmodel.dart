@@ -11,8 +11,9 @@ import '../../../domain/repositories/i_domain_repository.dart';
 import '../../../domain/repositories/i_habit_repository.dart';
 import '../../../domain/repositories/i_notification_repository.dart';
 import '../../../services/analytics/analytics_service.dart';
-import '../../../services/haptic_service.dart';
 import '../../../services/habit_event_service.dart';
+import '../../../services/habit_toggle_service.dart';
+import '../../../services/haptic_service.dart';
 import '../../../services/time_counter_service.dart';
 
 /// ViewModel for the today dashboard.
@@ -24,6 +25,7 @@ class TodayViewModel extends BaseViewModel {
   final _counterService = locator<TimeCounterService>();
   final _notifRepo = locator<INotificationRepository>();
   final _habitEvents = locator<HabitEventService>();
+  final _toggleService = locator<HabitToggleService>();
   final _haptic = locator<HapticService>();
 
   List<HabitEntity> _todayHabits = [];
@@ -183,11 +185,10 @@ class TodayViewModel extends BaseViewModel {
       return sum + habit.effectiveDuration(log.value).round();
     });
 
-    // Load streaks
-    for (final habit in _todayHabits) {
-      final result = await _habitRepo.getStreakInfo(habit.id);
-      result.fold((_) {}, (info) => _streaks[habit.id] = info);
-    }
+    // Load streaks in parallel
+    _streaks = await _toggleService.loadStreaksBatch(
+      _todayHabits.map((h) => h.id).toList(),
+    );
 
     // Load unread notification count
     final notifResult = await _notifRepo.getUnreadCount();
@@ -201,58 +202,37 @@ class TodayViewModel extends BaseViewModel {
   /// For binary habits: toggles completed on/off. Auto-records actualStartTime.
   /// For quantitative: should NOT be called directly — use [logHabitWithValue].
   Future<void> toggleHabit(String habitId, {double? value}) async {
-    final today = DateTime.now();
-    final todayDate = DateTime(today.year, today.month, today.day);
-    final existingLog = _todayLogs[habitId];
+    final result = await _toggleService.toggleHabit(
+      habitId: habitId,
+      existingLog: _todayLogs[habitId],
+      value: value,
+      recordStartTime: true,
+    );
 
-    if (existingLog != null && existingLog.completed) {
-      final result = await _habitRepo.removeLog(
-        habitId: habitId,
-        date: todayDate,
+    if (result.hasError) {
+      setError(result.error);
+      return;
+    }
+
+    if (result.completed) {
+      _todayLogs[habitId] = result.log!;
+      locator<AnalyticsService>().capture(
+        'habit_completed',
+        properties: {'habit_id': habitId, 'completion_rate': completionRate},
       );
-      result.fold((f) => setError(f.message), (_) {
-        _haptic.light();
-        _todayLogs.remove(habitId);
-        locator<AnalyticsService>().capture(
-          'habit_uncompleted',
-          properties: {'habit_id': habitId},
-        );
-        rebuildUi();
-      });
+      if (completionRate == 1.0) {
+        _justCompletedAll = true;
+      }
     } else {
-      // Auto-record actual start time
-      final now = TimeOfDay.now();
-      final result = await _habitRepo.logHabit(
-        habitId: habitId,
-        date: todayDate,
-        completed: true,
-        value: value,
-        actualStartTime: now,
-      );
-      result.fold((f) => setError(f.message), (log) {
-        _haptic.success();
-        _todayLogs[habitId] = log;
-        locator<AnalyticsService>().capture(
-          'habit_completed',
-          properties: {'habit_id': habitId, 'completion_rate': completionRate},
-        );
-        // Trigger celebration when all habits are completed
-        if (completionRate == 1.0) {
-          _justCompletedAll = true;
-        }
-        rebuildUi();
-      });
+      _todayLogs.remove(habitId);
     }
 
     // Refresh streak
-    final streakResult = await _habitRepo.getStreakInfo(habitId);
-    streakResult.fold((_) {}, (info) {
-      _streaks[habitId] = info;
-      rebuildUi();
-    });
+    final streak = await _toggleService.refreshStreak(habitId);
+    if (streak != null) _streaks[habitId] = streak;
 
-    // Notify other views (Habits, Counter) about the toggle
-    _habitEvents.notifyHabitChanged();
+    _toggleService.notifyChanged();
+    rebuildUi();
   }
 
   /// Logs a quantitative habit with a specific value.
@@ -263,43 +243,28 @@ class TodayViewModel extends BaseViewModel {
     final habit = _todayHabits.where((h) => h.id == habitId).firstOrNull;
     if (habit == null) return;
 
-    final today = DateTime.now();
-    final todayDate = DateTime(today.year, today.month, today.day);
-    final completed = value >= (habit.targetValue ?? 1);
-    final now = TimeOfDay.now();
-
-    final result = await _habitRepo.logHabit(
+    final result = await _toggleService.logWithValue(
       habitId: habitId,
-      date: todayDate,
-      completed: completed,
       value: value,
-      actualStartTime: now,
+      targetValue: habit.targetValue ?? 1,
     );
 
-    result.fold((f) => setError(f.message), (log) {
-      _haptic.success();
-      _todayLogs[habitId] = log;
-      locator<AnalyticsService>().capture(
-        'habit_value_logged',
-        properties: {
-          'habit_id': habitId,
-          'value': value,
-          'completed': completed,
-        },
-      );
-      if (completionRate == 1.0) {
-        _justCompletedAll = true;
-      }
-      rebuildUi();
-    });
+    if (result.hasError) {
+      setError(result.error);
+      return;
+    }
+
+    _todayLogs[habitId] = result.log!;
+    if (completionRate == 1.0) {
+      _justCompletedAll = true;
+    }
 
     // Refresh streak
-    final streakResult = await _habitRepo.getStreakInfo(habitId);
-    streakResult.fold((_) {}, (info) {
-      _streaks[habitId] = info;
-      rebuildUi();
-    });
-    _habitEvents.notifyHabitChanged();
+    final streak = await _toggleService.refreshStreak(habitId);
+    if (streak != null) _streaks[habitId] = streak;
+
+    _toggleService.notifyChanged();
+    rebuildUi();
   }
 
   /// Updates the actual time range for a completed habit log.
