@@ -65,7 +65,7 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => ApiService());
   locator.registerSingleton(ConnectivityService());
   locator.registerLazySingleton(() => DialogHelper());
-  locator.registerSingleton(AppDatabase());
+  locator.registerLazySingleton(() => AppDatabase());
   locator.registerLazySingleton(() => SyncEngine());
   locator.registerLazySingleton(() => SupabaseService());
   locator.registerLazySingleton(() => SupabaseAuthService());

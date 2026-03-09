@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 import 'habit_entity.dart';
 
@@ -23,6 +24,12 @@ class HabitLogEntity extends Equatable {
   /// The actual value for quantitative habits (null for binary).
   final double? value;
 
+  /// The actual start time the habit was performed (null = used habit.startTime).
+  final TimeOfDay? actualStartTime;
+
+  /// The actual end time the habit was performed (null = computed from start + duration).
+  final TimeOfDay? actualEndTime;
+
   /// When this log was created.
   final DateTime createdAt;
 
@@ -32,6 +39,8 @@ class HabitLogEntity extends Equatable {
     required this.logDate,
     this.completed = false,
     this.value,
+    this.actualStartTime,
+    this.actualEndTime,
     required this.createdAt,
   });
 
@@ -61,6 +70,45 @@ class HabitLogEntity extends Equatable {
     return habit.effectiveDuration(value);
   }
 
+  /// Calculates time adherence (0.0–1.0) for this log vs the habit’s planned slot.
+  ///
+  /// Returns 1.0 if:
+  /// - The habit has no planned time slot (`habit.startTime == null`)
+  /// - The actual time matches the planned slot
+  /// Returns a degraded score based on how far the actual time deviates.
+  double timeAdherence(HabitEntity habit) {
+    if (habit.startTime == null) return 1.0;
+    final actual = actualStartTime ?? habit.startTime!;
+    final planned = habit.startTime!;
+    final diffMinutes =
+        ((actual.hour * 60 + actual.minute) -
+                (planned.hour * 60 + planned.minute))
+            .abs();
+    if (diffMinutes <= 15) return 1.0;
+    if (diffMinutes <= 60) return 0.85;
+    if (diffMinutes <= 120) return 0.6;
+    return 0.4;
+  }
+
+  /// Human-readable adherence label.
+  ///
+  /// Returns null if within the planned slot.
+  String? adherenceLabel(HabitEntity habit) {
+    if (habit.startTime == null) return null;
+    final actual = actualStartTime ?? habit.startTime!;
+    final planned = habit.startTime!;
+    final diffMinutes =
+        (actual.hour * 60 + actual.minute) -
+        (planned.hour * 60 + planned.minute);
+    if (diffMinutes.abs() <= 15) return null; // On time
+    final sign = diffMinutes > 0 ? '+' : '-';
+    final abs = diffMinutes.abs();
+    if (abs < 60) return '$sign${abs}min';
+    final h = abs ~/ 60;
+    final m = abs % 60;
+    return m > 0 ? '$sign${h}h${m.toString().padLeft(2, '0')}' : '$sign${h}h';
+  }
+
   // ─────────────────────────────────────────────────────────────────
   // Copy
   // ─────────────────────────────────────────────────────────────────
@@ -72,6 +120,8 @@ class HabitLogEntity extends Equatable {
     DateTime? logDate,
     bool? completed,
     double? value,
+    TimeOfDay? actualStartTime,
+    TimeOfDay? actualEndTime,
     DateTime? createdAt,
   }) {
     return HabitLogEntity(
@@ -80,6 +130,8 @@ class HabitLogEntity extends Equatable {
       logDate: logDate ?? this.logDate,
       completed: completed ?? this.completed,
       value: value ?? this.value,
+      actualStartTime: actualStartTime ?? this.actualStartTime,
+      actualEndTime: actualEndTime ?? this.actualEndTime,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -95,6 +147,8 @@ class HabitLogEntity extends Equatable {
       id: '',
       habitId: '',
       logDate: now,
+      actualStartTime: null,
+      actualEndTime: null,
       createdAt: now,
     );
   }
@@ -114,13 +168,23 @@ class HabitLogEntity extends Equatable {
       logDate: logDate ?? now,
       completed: completed,
       value: value,
+      actualStartTime: null,
+      actualEndTime: null,
       createdAt: now,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [id, habitId, logDate, completed, value, createdAt];
+  List<Object?> get props => [
+    id,
+    habitId,
+    logDate,
+    completed,
+    value,
+    actualStartTime,
+    actualEndTime,
+    createdAt,
+  ];
 
   @override
   String toString() =>

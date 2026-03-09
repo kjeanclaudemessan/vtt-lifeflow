@@ -660,16 +660,30 @@ class $LocalHabitsTable extends LocalHabits
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _endTimeMeta = const VerificationMeta(
-    'endTime',
-  );
+  static const VerificationMeta _notificationsEnabledMeta =
+      const VerificationMeta('notificationsEnabled');
   @override
-  late final GeneratedColumn<String> endTime = GeneratedColumn<String>(
-    'end_time',
+  late final GeneratedColumn<bool> notificationsEnabled = GeneratedColumn<bool>(
+    'notifications_enabled',
     aliasedName,
-    true,
-    type: DriftSqlType.string,
+    false,
+    type: DriftSqlType.bool,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("notifications_enabled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _reminderOffsetMinutesMeta =
+      const VerificationMeta('reminderOffsetMinutes');
+  @override
+  late final GeneratedColumn<int> reminderOffsetMinutes = GeneratedColumn<int>(
+    'reminder_offset_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(5),
   );
   static const VerificationMeta _frequencyMeta = const VerificationMeta(
     'frequency',
@@ -744,7 +758,8 @@ class $LocalHabitsTable extends LocalHabits
     unit,
     estimatedDurationMinutes,
     startTime,
-    endTime,
+    notificationsEnabled,
+    reminderOffsetMinutes,
     frequency,
     frequencyDays,
     isArchived,
@@ -835,10 +850,22 @@ class $LocalHabitsTable extends LocalHabits
         startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta),
       );
     }
-    if (data.containsKey('end_time')) {
+    if (data.containsKey('notifications_enabled')) {
       context.handle(
-        _endTimeMeta,
-        endTime.isAcceptableOrUnknown(data['end_time']!, _endTimeMeta),
+        _notificationsEnabledMeta,
+        notificationsEnabled.isAcceptableOrUnknown(
+          data['notifications_enabled']!,
+          _notificationsEnabledMeta,
+        ),
+      );
+    }
+    if (data.containsKey('reminder_offset_minutes')) {
+      context.handle(
+        _reminderOffsetMinutesMeta,
+        reminderOffsetMinutes.isAcceptableOrUnknown(
+          data['reminder_offset_minutes']!,
+          _reminderOffsetMinutesMeta,
+        ),
       );
     }
     if (data.containsKey('frequency')) {
@@ -927,10 +954,14 @@ class $LocalHabitsTable extends LocalHabits
         DriftSqlType.string,
         data['${effectivePrefix}start_time'],
       ),
-      endTime: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}end_time'],
-      ),
+      notificationsEnabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}notifications_enabled'],
+      )!,
+      reminderOffsetMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}reminder_offset_minutes'],
+      )!,
       frequency: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}frequency'],
@@ -971,7 +1002,8 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
   final String? unit;
   final int estimatedDurationMinutes;
   final String? startTime;
-  final String? endTime;
+  final bool notificationsEnabled;
+  final int reminderOffsetMinutes;
   final String frequency;
   final String frequencyDays;
   final bool isArchived;
@@ -988,7 +1020,8 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
     this.unit,
     required this.estimatedDurationMinutes,
     this.startTime,
-    this.endTime,
+    required this.notificationsEnabled,
+    required this.reminderOffsetMinutes,
     required this.frequency,
     required this.frequencyDays,
     required this.isArchived,
@@ -1018,9 +1051,8 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
     if (!nullToAbsent || startTime != null) {
       map['start_time'] = Variable<String>(startTime);
     }
-    if (!nullToAbsent || endTime != null) {
-      map['end_time'] = Variable<String>(endTime);
-    }
+    map['notifications_enabled'] = Variable<bool>(notificationsEnabled);
+    map['reminder_offset_minutes'] = Variable<int>(reminderOffsetMinutes);
     map['frequency'] = Variable<String>(frequency);
     map['frequency_days'] = Variable<String>(frequencyDays);
     map['is_archived'] = Variable<bool>(isArchived);
@@ -1049,9 +1081,8 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
       startTime: startTime == null && nullToAbsent
           ? const Value.absent()
           : Value(startTime),
-      endTime: endTime == null && nullToAbsent
-          ? const Value.absent()
-          : Value(endTime),
+      notificationsEnabled: Value(notificationsEnabled),
+      reminderOffsetMinutes: Value(reminderOffsetMinutes),
       frequency: Value(frequency),
       frequencyDays: Value(frequencyDays),
       isArchived: Value(isArchived),
@@ -1078,7 +1109,12 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
         json['estimatedDurationMinutes'],
       ),
       startTime: serializer.fromJson<String?>(json['startTime']),
-      endTime: serializer.fromJson<String?>(json['endTime']),
+      notificationsEnabled: serializer.fromJson<bool>(
+        json['notificationsEnabled'],
+      ),
+      reminderOffsetMinutes: serializer.fromJson<int>(
+        json['reminderOffsetMinutes'],
+      ),
       frequency: serializer.fromJson<String>(json['frequency']),
       frequencyDays: serializer.fromJson<String>(json['frequencyDays']),
       isArchived: serializer.fromJson<bool>(json['isArchived']),
@@ -1102,7 +1138,8 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
         estimatedDurationMinutes,
       ),
       'startTime': serializer.toJson<String?>(startTime),
-      'endTime': serializer.toJson<String?>(endTime),
+      'notificationsEnabled': serializer.toJson<bool>(notificationsEnabled),
+      'reminderOffsetMinutes': serializer.toJson<int>(reminderOffsetMinutes),
       'frequency': serializer.toJson<String>(frequency),
       'frequencyDays': serializer.toJson<String>(frequencyDays),
       'isArchived': serializer.toJson<bool>(isArchived),
@@ -1122,7 +1159,8 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
     Value<String?> unit = const Value.absent(),
     int? estimatedDurationMinutes,
     Value<String?> startTime = const Value.absent(),
-    Value<String?> endTime = const Value.absent(),
+    bool? notificationsEnabled,
+    int? reminderOffsetMinutes,
     String? frequency,
     String? frequencyDays,
     bool? isArchived,
@@ -1140,7 +1178,8 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
     estimatedDurationMinutes:
         estimatedDurationMinutes ?? this.estimatedDurationMinutes,
     startTime: startTime.present ? startTime.value : this.startTime,
-    endTime: endTime.present ? endTime.value : this.endTime,
+    notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+    reminderOffsetMinutes: reminderOffsetMinutes ?? this.reminderOffsetMinutes,
     frequency: frequency ?? this.frequency,
     frequencyDays: frequencyDays ?? this.frequencyDays,
     isArchived: isArchived ?? this.isArchived,
@@ -1165,7 +1204,12 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
           ? data.estimatedDurationMinutes.value
           : this.estimatedDurationMinutes,
       startTime: data.startTime.present ? data.startTime.value : this.startTime,
-      endTime: data.endTime.present ? data.endTime.value : this.endTime,
+      notificationsEnabled: data.notificationsEnabled.present
+          ? data.notificationsEnabled.value
+          : this.notificationsEnabled,
+      reminderOffsetMinutes: data.reminderOffsetMinutes.present
+          ? data.reminderOffsetMinutes.value
+          : this.reminderOffsetMinutes,
       frequency: data.frequency.present ? data.frequency.value : this.frequency,
       frequencyDays: data.frequencyDays.present
           ? data.frequencyDays.value
@@ -1191,7 +1235,8 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
           ..write('unit: $unit, ')
           ..write('estimatedDurationMinutes: $estimatedDurationMinutes, ')
           ..write('startTime: $startTime, ')
-          ..write('endTime: $endTime, ')
+          ..write('notificationsEnabled: $notificationsEnabled, ')
+          ..write('reminderOffsetMinutes: $reminderOffsetMinutes, ')
           ..write('frequency: $frequency, ')
           ..write('frequencyDays: $frequencyDays, ')
           ..write('isArchived: $isArchived, ')
@@ -1213,7 +1258,8 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
     unit,
     estimatedDurationMinutes,
     startTime,
-    endTime,
+    notificationsEnabled,
+    reminderOffsetMinutes,
     frequency,
     frequencyDays,
     isArchived,
@@ -1234,7 +1280,8 @@ class LocalHabit extends DataClass implements Insertable<LocalHabit> {
           other.unit == this.unit &&
           other.estimatedDurationMinutes == this.estimatedDurationMinutes &&
           other.startTime == this.startTime &&
-          other.endTime == this.endTime &&
+          other.notificationsEnabled == this.notificationsEnabled &&
+          other.reminderOffsetMinutes == this.reminderOffsetMinutes &&
           other.frequency == this.frequency &&
           other.frequencyDays == this.frequencyDays &&
           other.isArchived == this.isArchived &&
@@ -1253,7 +1300,8 @@ class LocalHabitsCompanion extends UpdateCompanion<LocalHabit> {
   final Value<String?> unit;
   final Value<int> estimatedDurationMinutes;
   final Value<String?> startTime;
-  final Value<String?> endTime;
+  final Value<bool> notificationsEnabled;
+  final Value<int> reminderOffsetMinutes;
   final Value<String> frequency;
   final Value<String> frequencyDays;
   final Value<bool> isArchived;
@@ -1271,7 +1319,8 @@ class LocalHabitsCompanion extends UpdateCompanion<LocalHabit> {
     this.unit = const Value.absent(),
     this.estimatedDurationMinutes = const Value.absent(),
     this.startTime = const Value.absent(),
-    this.endTime = const Value.absent(),
+    this.notificationsEnabled = const Value.absent(),
+    this.reminderOffsetMinutes = const Value.absent(),
     this.frequency = const Value.absent(),
     this.frequencyDays = const Value.absent(),
     this.isArchived = const Value.absent(),
@@ -1290,7 +1339,8 @@ class LocalHabitsCompanion extends UpdateCompanion<LocalHabit> {
     this.unit = const Value.absent(),
     this.estimatedDurationMinutes = const Value.absent(),
     this.startTime = const Value.absent(),
-    this.endTime = const Value.absent(),
+    this.notificationsEnabled = const Value.absent(),
+    this.reminderOffsetMinutes = const Value.absent(),
     this.frequency = const Value.absent(),
     this.frequencyDays = const Value.absent(),
     this.isArchived = const Value.absent(),
@@ -1313,7 +1363,8 @@ class LocalHabitsCompanion extends UpdateCompanion<LocalHabit> {
     Expression<String>? unit,
     Expression<int>? estimatedDurationMinutes,
     Expression<String>? startTime,
-    Expression<String>? endTime,
+    Expression<bool>? notificationsEnabled,
+    Expression<int>? reminderOffsetMinutes,
     Expression<String>? frequency,
     Expression<String>? frequencyDays,
     Expression<bool>? isArchived,
@@ -1333,7 +1384,10 @@ class LocalHabitsCompanion extends UpdateCompanion<LocalHabit> {
       if (estimatedDurationMinutes != null)
         'estimated_duration_minutes': estimatedDurationMinutes,
       if (startTime != null) 'start_time': startTime,
-      if (endTime != null) 'end_time': endTime,
+      if (notificationsEnabled != null)
+        'notifications_enabled': notificationsEnabled,
+      if (reminderOffsetMinutes != null)
+        'reminder_offset_minutes': reminderOffsetMinutes,
       if (frequency != null) 'frequency': frequency,
       if (frequencyDays != null) 'frequency_days': frequencyDays,
       if (isArchived != null) 'is_archived': isArchived,
@@ -1354,7 +1408,8 @@ class LocalHabitsCompanion extends UpdateCompanion<LocalHabit> {
     Value<String?>? unit,
     Value<int>? estimatedDurationMinutes,
     Value<String?>? startTime,
-    Value<String?>? endTime,
+    Value<bool>? notificationsEnabled,
+    Value<int>? reminderOffsetMinutes,
     Value<String>? frequency,
     Value<String>? frequencyDays,
     Value<bool>? isArchived,
@@ -1374,7 +1429,9 @@ class LocalHabitsCompanion extends UpdateCompanion<LocalHabit> {
       estimatedDurationMinutes:
           estimatedDurationMinutes ?? this.estimatedDurationMinutes,
       startTime: startTime ?? this.startTime,
-      endTime: endTime ?? this.endTime,
+      notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+      reminderOffsetMinutes:
+          reminderOffsetMinutes ?? this.reminderOffsetMinutes,
       frequency: frequency ?? this.frequency,
       frequencyDays: frequencyDays ?? this.frequencyDays,
       isArchived: isArchived ?? this.isArchived,
@@ -1419,8 +1476,13 @@ class LocalHabitsCompanion extends UpdateCompanion<LocalHabit> {
     if (startTime.present) {
       map['start_time'] = Variable<String>(startTime.value);
     }
-    if (endTime.present) {
-      map['end_time'] = Variable<String>(endTime.value);
+    if (notificationsEnabled.present) {
+      map['notifications_enabled'] = Variable<bool>(notificationsEnabled.value);
+    }
+    if (reminderOffsetMinutes.present) {
+      map['reminder_offset_minutes'] = Variable<int>(
+        reminderOffsetMinutes.value,
+      );
     }
     if (frequency.present) {
       map['frequency'] = Variable<String>(frequency.value);
@@ -1456,7 +1518,8 @@ class LocalHabitsCompanion extends UpdateCompanion<LocalHabit> {
           ..write('unit: $unit, ')
           ..write('estimatedDurationMinutes: $estimatedDurationMinutes, ')
           ..write('startTime: $startTime, ')
-          ..write('endTime: $endTime, ')
+          ..write('notificationsEnabled: $notificationsEnabled, ')
+          ..write('reminderOffsetMinutes: $reminderOffsetMinutes, ')
           ..write('frequency: $frequency, ')
           ..write('frequencyDays: $frequencyDays, ')
           ..write('isArchived: $isArchived, ')
@@ -1529,6 +1592,28 @@ class $LocalHabitLogsTable extends LocalHabitLogs
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _actualStartTimeMeta = const VerificationMeta(
+    'actualStartTime',
+  );
+  @override
+  late final GeneratedColumn<String> actualStartTime = GeneratedColumn<String>(
+    'actual_start_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _actualEndTimeMeta = const VerificationMeta(
+    'actualEndTime',
+  );
+  @override
+  late final GeneratedColumn<String> actualEndTime = GeneratedColumn<String>(
+    'actual_end_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1547,6 +1632,8 @@ class $LocalHabitLogsTable extends LocalHabitLogs
     logDate,
     completed,
     value,
+    actualStartTime,
+    actualEndTime,
     createdAt,
   ];
   @override
@@ -1594,6 +1681,24 @@ class $LocalHabitLogsTable extends LocalHabitLogs
         value.isAcceptableOrUnknown(data['value']!, _valueMeta),
       );
     }
+    if (data.containsKey('actual_start_time')) {
+      context.handle(
+        _actualStartTimeMeta,
+        actualStartTime.isAcceptableOrUnknown(
+          data['actual_start_time']!,
+          _actualStartTimeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('actual_end_time')) {
+      context.handle(
+        _actualEndTimeMeta,
+        actualEndTime.isAcceptableOrUnknown(
+          data['actual_end_time']!,
+          _actualEndTimeMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -1631,6 +1736,14 @@ class $LocalHabitLogsTable extends LocalHabitLogs
         DriftSqlType.double,
         data['${effectivePrefix}value'],
       ),
+      actualStartTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actual_start_time'],
+      ),
+      actualEndTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actual_end_time'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -1650,6 +1763,8 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
   final DateTime logDate;
   final bool completed;
   final double? value;
+  final String? actualStartTime;
+  final String? actualEndTime;
   final DateTime createdAt;
   const LocalHabitLog({
     required this.id,
@@ -1657,6 +1772,8 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
     required this.logDate,
     required this.completed,
     this.value,
+    this.actualStartTime,
+    this.actualEndTime,
     required this.createdAt,
   });
   @override
@@ -1668,6 +1785,12 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
     map['completed'] = Variable<bool>(completed);
     if (!nullToAbsent || value != null) {
       map['value'] = Variable<double>(value);
+    }
+    if (!nullToAbsent || actualStartTime != null) {
+      map['actual_start_time'] = Variable<String>(actualStartTime);
+    }
+    if (!nullToAbsent || actualEndTime != null) {
+      map['actual_end_time'] = Variable<String>(actualEndTime);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
@@ -1682,6 +1805,12 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
       value: value == null && nullToAbsent
           ? const Value.absent()
           : Value(value),
+      actualStartTime: actualStartTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actualStartTime),
+      actualEndTime: actualEndTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actualEndTime),
       createdAt: Value(createdAt),
     );
   }
@@ -1697,6 +1826,8 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
       logDate: serializer.fromJson<DateTime>(json['logDate']),
       completed: serializer.fromJson<bool>(json['completed']),
       value: serializer.fromJson<double?>(json['value']),
+      actualStartTime: serializer.fromJson<String?>(json['actualStartTime']),
+      actualEndTime: serializer.fromJson<String?>(json['actualEndTime']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -1709,6 +1840,8 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
       'logDate': serializer.toJson<DateTime>(logDate),
       'completed': serializer.toJson<bool>(completed),
       'value': serializer.toJson<double?>(value),
+      'actualStartTime': serializer.toJson<String?>(actualStartTime),
+      'actualEndTime': serializer.toJson<String?>(actualEndTime),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -1719,6 +1852,8 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
     DateTime? logDate,
     bool? completed,
     Value<double?> value = const Value.absent(),
+    Value<String?> actualStartTime = const Value.absent(),
+    Value<String?> actualEndTime = const Value.absent(),
     DateTime? createdAt,
   }) => LocalHabitLog(
     id: id ?? this.id,
@@ -1726,6 +1861,12 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
     logDate: logDate ?? this.logDate,
     completed: completed ?? this.completed,
     value: value.present ? value.value : this.value,
+    actualStartTime: actualStartTime.present
+        ? actualStartTime.value
+        : this.actualStartTime,
+    actualEndTime: actualEndTime.present
+        ? actualEndTime.value
+        : this.actualEndTime,
     createdAt: createdAt ?? this.createdAt,
   );
   LocalHabitLog copyWithCompanion(LocalHabitLogsCompanion data) {
@@ -1735,6 +1876,12 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
       logDate: data.logDate.present ? data.logDate.value : this.logDate,
       completed: data.completed.present ? data.completed.value : this.completed,
       value: data.value.present ? data.value.value : this.value,
+      actualStartTime: data.actualStartTime.present
+          ? data.actualStartTime.value
+          : this.actualStartTime,
+      actualEndTime: data.actualEndTime.present
+          ? data.actualEndTime.value
+          : this.actualEndTime,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -1747,14 +1894,24 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
           ..write('logDate: $logDate, ')
           ..write('completed: $completed, ')
           ..write('value: $value, ')
+          ..write('actualStartTime: $actualStartTime, ')
+          ..write('actualEndTime: $actualEndTime, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, habitId, logDate, completed, value, createdAt);
+  int get hashCode => Object.hash(
+    id,
+    habitId,
+    logDate,
+    completed,
+    value,
+    actualStartTime,
+    actualEndTime,
+    createdAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1764,6 +1921,8 @@ class LocalHabitLog extends DataClass implements Insertable<LocalHabitLog> {
           other.logDate == this.logDate &&
           other.completed == this.completed &&
           other.value == this.value &&
+          other.actualStartTime == this.actualStartTime &&
+          other.actualEndTime == this.actualEndTime &&
           other.createdAt == this.createdAt);
 }
 
@@ -1773,6 +1932,8 @@ class LocalHabitLogsCompanion extends UpdateCompanion<LocalHabitLog> {
   final Value<DateTime> logDate;
   final Value<bool> completed;
   final Value<double?> value;
+  final Value<String?> actualStartTime;
+  final Value<String?> actualEndTime;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
   const LocalHabitLogsCompanion({
@@ -1781,6 +1942,8 @@ class LocalHabitLogsCompanion extends UpdateCompanion<LocalHabitLog> {
     this.logDate = const Value.absent(),
     this.completed = const Value.absent(),
     this.value = const Value.absent(),
+    this.actualStartTime = const Value.absent(),
+    this.actualEndTime = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -1790,6 +1953,8 @@ class LocalHabitLogsCompanion extends UpdateCompanion<LocalHabitLog> {
     required DateTime logDate,
     this.completed = const Value.absent(),
     this.value = const Value.absent(),
+    this.actualStartTime = const Value.absent(),
+    this.actualEndTime = const Value.absent(),
     required DateTime createdAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -1802,6 +1967,8 @@ class LocalHabitLogsCompanion extends UpdateCompanion<LocalHabitLog> {
     Expression<DateTime>? logDate,
     Expression<bool>? completed,
     Expression<double>? value,
+    Expression<String>? actualStartTime,
+    Expression<String>? actualEndTime,
     Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
@@ -1811,6 +1978,8 @@ class LocalHabitLogsCompanion extends UpdateCompanion<LocalHabitLog> {
       if (logDate != null) 'log_date': logDate,
       if (completed != null) 'completed': completed,
       if (value != null) 'value': value,
+      if (actualStartTime != null) 'actual_start_time': actualStartTime,
+      if (actualEndTime != null) 'actual_end_time': actualEndTime,
       if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -1822,6 +1991,8 @@ class LocalHabitLogsCompanion extends UpdateCompanion<LocalHabitLog> {
     Value<DateTime>? logDate,
     Value<bool>? completed,
     Value<double?>? value,
+    Value<String?>? actualStartTime,
+    Value<String?>? actualEndTime,
     Value<DateTime>? createdAt,
     Value<int>? rowid,
   }) {
@@ -1831,6 +2002,8 @@ class LocalHabitLogsCompanion extends UpdateCompanion<LocalHabitLog> {
       logDate: logDate ?? this.logDate,
       completed: completed ?? this.completed,
       value: value ?? this.value,
+      actualStartTime: actualStartTime ?? this.actualStartTime,
+      actualEndTime: actualEndTime ?? this.actualEndTime,
       createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
@@ -1854,6 +2027,12 @@ class LocalHabitLogsCompanion extends UpdateCompanion<LocalHabitLog> {
     if (value.present) {
       map['value'] = Variable<double>(value.value);
     }
+    if (actualStartTime.present) {
+      map['actual_start_time'] = Variable<String>(actualStartTime.value);
+    }
+    if (actualEndTime.present) {
+      map['actual_end_time'] = Variable<String>(actualEndTime.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1871,6 +2050,8 @@ class LocalHabitLogsCompanion extends UpdateCompanion<LocalHabitLog> {
           ..write('logDate: $logDate, ')
           ..write('completed: $completed, ')
           ..write('value: $value, ')
+          ..write('actualStartTime: $actualStartTime, ')
+          ..write('actualEndTime: $actualEndTime, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -2658,7 +2839,8 @@ typedef $$LocalHabitsTableCreateCompanionBuilder =
       Value<String?> unit,
       Value<int> estimatedDurationMinutes,
       Value<String?> startTime,
-      Value<String?> endTime,
+      Value<bool> notificationsEnabled,
+      Value<int> reminderOffsetMinutes,
       Value<String> frequency,
       Value<String> frequencyDays,
       Value<bool> isArchived,
@@ -2678,7 +2860,8 @@ typedef $$LocalHabitsTableUpdateCompanionBuilder =
       Value<String?> unit,
       Value<int> estimatedDurationMinutes,
       Value<String?> startTime,
-      Value<String?> endTime,
+      Value<bool> notificationsEnabled,
+      Value<int> reminderOffsetMinutes,
       Value<String> frequency,
       Value<String> frequencyDays,
       Value<bool> isArchived,
@@ -2746,8 +2929,13 @@ class $$LocalHabitsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get endTime => $composableBuilder(
-    column: $table.endTime,
+  ColumnFilters<bool> get notificationsEnabled => $composableBuilder(
+    column: $table.notificationsEnabled,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get reminderOffsetMinutes => $composableBuilder(
+    column: $table.reminderOffsetMinutes,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2836,8 +3024,13 @@ class $$LocalHabitsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get endTime => $composableBuilder(
-    column: $table.endTime,
+  ColumnOrderings<bool> get notificationsEnabled => $composableBuilder(
+    column: $table.notificationsEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get reminderOffsetMinutes => $composableBuilder(
+    column: $table.reminderOffsetMinutes,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -2912,8 +3105,15 @@ class $$LocalHabitsTableAnnotationComposer
   GeneratedColumn<String> get startTime =>
       $composableBuilder(column: $table.startTime, builder: (column) => column);
 
-  GeneratedColumn<String> get endTime =>
-      $composableBuilder(column: $table.endTime, builder: (column) => column);
+  GeneratedColumn<bool> get notificationsEnabled => $composableBuilder(
+    column: $table.notificationsEnabled,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get reminderOffsetMinutes => $composableBuilder(
+    column: $table.reminderOffsetMinutes,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get frequency =>
       $composableBuilder(column: $table.frequency, builder: (column) => column);
@@ -2976,7 +3176,8 @@ class $$LocalHabitsTableTableManager
                 Value<String?> unit = const Value.absent(),
                 Value<int> estimatedDurationMinutes = const Value.absent(),
                 Value<String?> startTime = const Value.absent(),
-                Value<String?> endTime = const Value.absent(),
+                Value<bool> notificationsEnabled = const Value.absent(),
+                Value<int> reminderOffsetMinutes = const Value.absent(),
                 Value<String> frequency = const Value.absent(),
                 Value<String> frequencyDays = const Value.absent(),
                 Value<bool> isArchived = const Value.absent(),
@@ -2994,7 +3195,8 @@ class $$LocalHabitsTableTableManager
                 unit: unit,
                 estimatedDurationMinutes: estimatedDurationMinutes,
                 startTime: startTime,
-                endTime: endTime,
+                notificationsEnabled: notificationsEnabled,
+                reminderOffsetMinutes: reminderOffsetMinutes,
                 frequency: frequency,
                 frequencyDays: frequencyDays,
                 isArchived: isArchived,
@@ -3014,7 +3216,8 @@ class $$LocalHabitsTableTableManager
                 Value<String?> unit = const Value.absent(),
                 Value<int> estimatedDurationMinutes = const Value.absent(),
                 Value<String?> startTime = const Value.absent(),
-                Value<String?> endTime = const Value.absent(),
+                Value<bool> notificationsEnabled = const Value.absent(),
+                Value<int> reminderOffsetMinutes = const Value.absent(),
                 Value<String> frequency = const Value.absent(),
                 Value<String> frequencyDays = const Value.absent(),
                 Value<bool> isArchived = const Value.absent(),
@@ -3032,7 +3235,8 @@ class $$LocalHabitsTableTableManager
                 unit: unit,
                 estimatedDurationMinutes: estimatedDurationMinutes,
                 startTime: startTime,
-                endTime: endTime,
+                notificationsEnabled: notificationsEnabled,
+                reminderOffsetMinutes: reminderOffsetMinutes,
                 frequency: frequency,
                 frequencyDays: frequencyDays,
                 isArchived: isArchived,
@@ -3072,6 +3276,8 @@ typedef $$LocalHabitLogsTableCreateCompanionBuilder =
       required DateTime logDate,
       Value<bool> completed,
       Value<double?> value,
+      Value<String?> actualStartTime,
+      Value<String?> actualEndTime,
       required DateTime createdAt,
       Value<int> rowid,
     });
@@ -3082,6 +3288,8 @@ typedef $$LocalHabitLogsTableUpdateCompanionBuilder =
       Value<DateTime> logDate,
       Value<bool> completed,
       Value<double?> value,
+      Value<String?> actualStartTime,
+      Value<String?> actualEndTime,
       Value<DateTime> createdAt,
       Value<int> rowid,
     });
@@ -3117,6 +3325,16 @@ class $$LocalHabitLogsTableFilterComposer
 
   ColumnFilters<double> get value => $composableBuilder(
     column: $table.value,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actualStartTime => $composableBuilder(
+    column: $table.actualStartTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actualEndTime => $composableBuilder(
+    column: $table.actualEndTime,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3160,6 +3378,16 @@ class $$LocalHabitLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get actualStartTime => $composableBuilder(
+    column: $table.actualStartTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actualEndTime => $composableBuilder(
+    column: $table.actualEndTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -3189,6 +3417,16 @@ class $$LocalHabitLogsTableAnnotationComposer
 
   GeneratedColumn<double> get value =>
       $composableBuilder(column: $table.value, builder: (column) => column);
+
+  GeneratedColumn<String> get actualStartTime => $composableBuilder(
+    column: $table.actualStartTime,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actualEndTime => $composableBuilder(
+    column: $table.actualEndTime,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -3232,6 +3470,8 @@ class $$LocalHabitLogsTableTableManager
                 Value<DateTime> logDate = const Value.absent(),
                 Value<bool> completed = const Value.absent(),
                 Value<double?> value = const Value.absent(),
+                Value<String?> actualStartTime = const Value.absent(),
+                Value<String?> actualEndTime = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LocalHabitLogsCompanion(
@@ -3240,6 +3480,8 @@ class $$LocalHabitLogsTableTableManager
                 logDate: logDate,
                 completed: completed,
                 value: value,
+                actualStartTime: actualStartTime,
+                actualEndTime: actualEndTime,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -3250,6 +3492,8 @@ class $$LocalHabitLogsTableTableManager
                 required DateTime logDate,
                 Value<bool> completed = const Value.absent(),
                 Value<double?> value = const Value.absent(),
+                Value<String?> actualStartTime = const Value.absent(),
+                Value<String?> actualEndTime = const Value.absent(),
                 required DateTime createdAt,
                 Value<int> rowid = const Value.absent(),
               }) => LocalHabitLogsCompanion.insert(
@@ -3258,6 +3502,8 @@ class $$LocalHabitLogsTableTableManager
                 logDate: logDate,
                 completed: completed,
                 value: value,
+                actualStartTime: actualStartTime,
+                actualEndTime: actualEndTime,
                 createdAt: createdAt,
                 rowid: rowid,
               ),

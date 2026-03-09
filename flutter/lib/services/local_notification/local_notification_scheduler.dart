@@ -95,8 +95,9 @@ class LocalNotificationScheduler {
     try {
       tz.initializeTimeZones();
 
-      const androidSettings =
-          AndroidInitializationSettings('@mipmap/ic_launcher');
+      const androidSettings = AndroidInitializationSettings(
+        '@mipmap/ic_launcher',
+      );
 
       const darwinSettings = DarwinInitializationSettings(
         requestAlertPermission: true,
@@ -113,15 +114,18 @@ class LocalNotificationScheduler {
         initSettings,
         onDidReceiveNotificationResponse: (NotificationResponse response) {
           debugPrint(
-              '[LocalNotif] Notification tapped: payload=${response.payload}');
+            '[LocalNotif] Notification tapped: payload=${response.payload}',
+          );
           onNotificationTapped?.call(response.payload);
         },
       );
 
       // Create Android notification channels
       if (!kIsWeb && Platform.isAndroid) {
-        final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+        final androidPlugin = _plugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
 
         await androidPlugin?.createNotificationChannel(_reminderChannel);
         await androidPlugin?.createNotificationChannel(_streakChannel);
@@ -147,6 +151,11 @@ class LocalNotificationScheduler {
     if (!_isInitialized) return;
     if (habit.startTime == null) return;
     if (habit.isArchived) return;
+    if (!habit.notificationsEnabled) {
+      // Notifications disabled for this habit — cancel existing and return
+      await cancelHabitReminder(habit);
+      return;
+    }
 
     final notifId = habit.id.hashCode.abs() % 100000;
 
@@ -157,12 +166,19 @@ class LocalNotificationScheduler {
     final days = _getDaysForHabit(habit);
     if (days.isEmpty) return;
 
+    // Apply reminder offset: schedule N minutes BEFORE startTime
+    final offset = habit.reminderOffsetMinutes;
+    final rawMinutes =
+        habit.startTime!.hour * 60 + habit.startTime!.minute - offset;
+    final adjustedHour = ((rawMinutes ~/ 60) % 24 + 24) % 24;
+    final adjustedMinute = ((rawMinutes % 60) + 60) % 60;
+
     // Schedule for each applicable day
     for (final day in days) {
       final scheduledDate = _nextInstanceOfDay(
         day,
-        habit.startTime!.hour,
-        habit.startTime!.minute,
+        adjustedHour,
+        adjustedMinute,
       );
 
       final dayNotifId = notifId + day;
@@ -200,7 +216,8 @@ class LocalNotificationScheduler {
     }
 
     debugPrint(
-        '[LocalNotif] Scheduled reminder for "${habit.name}" at ${habit.startTime!.hour}:${habit.startTime!.minute.toString().padLeft(2, '0')} (${days.length} days)');
+      '[LocalNotif] Scheduled reminder for "${habit.name}" at $adjustedHour:${adjustedMinute.toString().padLeft(2, '0')} (offset: -${offset}min, ${days.length} days)',
+    );
   }
 
   /// Cancel all reminders for a habit.
@@ -223,9 +240,11 @@ class LocalNotificationScheduler {
     // Cancel all existing
     await _plugin.cancelAll();
 
-    // Reschedule each active habit with a startTime
+    // Reschedule each active habit with a startTime and notifications enabled
     for (final habit in habits) {
-      if (!habit.isArchived && habit.startTime != null) {
+      if (!habit.isArchived &&
+          habit.startTime != null &&
+          habit.notificationsEnabled) {
         await scheduleHabitReminder(habit);
       }
     }
@@ -246,9 +265,7 @@ class LocalNotificationScheduler {
 
     final nextSunday = _nextInstanceOfDay(DateTime.sunday, 20, 0);
 
-    final payload = jsonEncode({
-      'type': NotificationType.weeklyBilan.name,
-    });
+    final payload = jsonEncode({'type': NotificationType.weeklyBilan.name});
 
     await _plugin.zonedSchedule(
       bilanNotifId,

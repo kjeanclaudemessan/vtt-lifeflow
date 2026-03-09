@@ -38,14 +38,17 @@ class HabitEntity extends Equatable {
   /// Start of the preferred time range (for TodayView grouping).
   final TimeOfDay? startTime;
 
-  /// End of the preferred time range.
-  final TimeOfDay? endTime;
-
   /// How often this habit should be tracked.
   final HabitFrequency frequency;
 
   /// Days of the week for weekly/custom frequency (0=Sun, 6=Sat).
   final List<int> frequencyDays;
+
+  /// Whether local notification reminders are enabled for this habit.
+  final bool notificationsEnabled;
+
+  /// Minutes before [startTime] to send the notification reminder.
+  final int reminderOffsetMinutes;
 
   /// Whether the habit is archived (soft delete).
   final bool isArchived;
@@ -67,9 +70,10 @@ class HabitEntity extends Equatable {
     this.unit,
     this.estimatedDurationMinutes = 15,
     this.startTime,
-    this.endTime,
     this.frequency = HabitFrequency.daily,
     this.frequencyDays = const [],
+    this.notificationsEnabled = true,
+    this.reminderOffsetMinutes = 5,
     this.isArchived = false,
     required this.createdAt,
     required this.updatedAt,
@@ -85,16 +89,28 @@ class HabitEntity extends Equatable {
   /// Time slot based on [startTime] (for TodayView grouping).
   TimeSlot get timeSlot => TimeSlot.fromHour(startTime?.hour);
 
-  /// Formatted time range label (e.g., "6h – 8h").
+  /// Computed end time: [startTime] + [estimatedDurationMinutes].
+  /// Returns `null` if [startTime] is null.
+  TimeOfDay? get endTime {
+    if (startTime == null) return null;
+    final totalMinutes =
+        startTime!.hour * 60 + startTime!.minute + estimatedDurationMinutes;
+    return TimeOfDay(
+      hour: (totalMinutes ~/ 60) % 24,
+      minute: totalMinutes % 60,
+    );
+  }
+
+  /// Formatted time range label (e.g., "6h – 6h30").
   /// Returns `null` if no time range is set.
   String? get timeRangeLabel {
     if (startTime == null) return null;
     final start =
         '${startTime!.hour}h${startTime!.minute > 0 ? startTime!.minute.toString().padLeft(2, '0') : ''}';
-    if (endTime == null) return start;
-    final end =
-        '${endTime!.hour}h${endTime!.minute > 0 ? endTime!.minute.toString().padLeft(2, '0') : ''}';
-    return '$start – $end';
+    final end = endTime!;
+    final endStr =
+        '${end.hour}h${end.minute > 0 ? end.minute.toString().padLeft(2, '0') : ''}';
+    return '$start – $endStr';
   }
 
   /// Calculates the effective duration in minutes for the time counter.
@@ -136,9 +152,10 @@ class HabitEntity extends Equatable {
     String? unit,
     int? estimatedDurationMinutes,
     TimeOfDay? startTime,
-    TimeOfDay? endTime,
     HabitFrequency? frequency,
     List<int>? frequencyDays,
+    bool? notificationsEnabled,
+    int? reminderOffsetMinutes,
     bool? isArchived,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -155,9 +172,11 @@ class HabitEntity extends Equatable {
       estimatedDurationMinutes:
           estimatedDurationMinutes ?? this.estimatedDurationMinutes,
       startTime: startTime ?? this.startTime,
-      endTime: endTime ?? this.endTime,
       frequency: frequency ?? this.frequency,
       frequencyDays: frequencyDays ?? this.frequencyDays,
+      notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+      reminderOffsetMinutes:
+          reminderOffsetMinutes ?? this.reminderOffsetMinutes,
       isArchived: isArchived ?? this.isArchived,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -203,23 +222,24 @@ class HabitEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        userId,
-        domainId,
-        name,
-        description,
-        type,
-        targetValue,
-        unit,
-        estimatedDurationMinutes,
-        startTime,
-        endTime,
-        frequency,
-        frequencyDays,
-        isArchived,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    userId,
+    domainId,
+    name,
+    description,
+    type,
+    targetValue,
+    unit,
+    estimatedDurationMinutes,
+    startTime,
+    frequency,
+    frequencyDays,
+    notificationsEnabled,
+    reminderOffsetMinutes,
+    isArchived,
+    createdAt,
+    updatedAt,
+  ];
 
   @override
   String toString() => 'HabitEntity(id: $id, name: $name, type: $type)';

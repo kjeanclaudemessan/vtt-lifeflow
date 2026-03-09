@@ -95,8 +95,10 @@ Future<void> _initializeServices() async {
   pushService.onNotificationTapped = notifRouter.handlePushTap;
   localScheduler.onNotificationTapped = notifRouter.handleLocalTap;
 
-  // Start offline sync engine
-  locator<SyncEngine>().start();
+  // Start offline sync engine (skip on web — no local DB needed yet)
+  if (!kIsWeb) {
+    locator<SyncEngine>().start();
+  }
 }
 
 /// Logs startup information in debug mode.

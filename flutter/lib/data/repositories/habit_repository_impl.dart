@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 
 import '../../app/app.locator.dart';
 import '../../core/errors/error_handler.dart';
@@ -16,7 +17,7 @@ class HabitRepositoryImpl implements IHabitRepository {
   final SupabaseService _supabaseService;
 
   HabitRepositoryImpl({SupabaseService? supabaseService})
-      : _supabaseService = supabaseService ?? locator<SupabaseService>();
+    : _supabaseService = supabaseService ?? locator<SupabaseService>();
 
   /// Current authenticated user ID.
   String get _userId => _supabaseService.client.auth.currentUser!.id;
@@ -75,9 +76,7 @@ class HabitRepositoryImpl implements IHabitRepository {
   @override
   FutureResult<HabitEntity> createHabit(HabitEntity entity) async {
     try {
-      final data = HabitModel.toInsertJson(
-        entity.copyWith(userId: _userId),
-      );
+      final data = HabitModel.toInsertJson(entity.copyWith(userId: _userId));
 
       final response = await _supabaseService.client
           .from('habits')
@@ -164,6 +163,8 @@ class HabitRepositoryImpl implements IHabitRepository {
     required DateTime date,
     required bool completed,
     double? value,
+    TimeOfDay? actualStartTime,
+    TimeOfDay? actualEndTime,
   }) async {
     try {
       final data = HabitLogModel.toUpsertJson(
@@ -171,14 +172,13 @@ class HabitRepositoryImpl implements IHabitRepository {
         date: date,
         completed: completed,
         value: value,
+        actualStartTime: actualStartTime,
+        actualEndTime: actualEndTime,
       );
 
       final response = await _supabaseService.client
           .from('habit_logs')
-          .upsert(
-            data,
-            onConflict: 'habit_id,log_date',
-          )
+          .upsert(data, onConflict: 'habit_id,log_date')
           .select()
           .single();
 
@@ -284,12 +284,14 @@ class HabitRepositoryImpl implements IHabitRepository {
       if (tempStreak > bestStreak) bestStreak = tempStreak;
       if (currentStreak > bestStreak) bestStreak = currentStreak;
 
-      return Right(StreakInfo(
-        currentStreak: currentStreak,
-        bestStreak: bestStreak,
-        freezeUsedDates: freezeUsedDates,
-        isFreezeActive: isFreezeActive,
-      ));
+      return Right(
+        StreakInfo(
+          currentStreak: currentStreak,
+          bestStreak: bestStreak,
+          freezeUsedDates: freezeUsedDates,
+          isFreezeActive: isFreezeActive,
+        ),
+      );
     } catch (e, s) {
       return Left(ErrorHandler.handle(e, s));
     }

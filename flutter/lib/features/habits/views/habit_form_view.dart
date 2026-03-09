@@ -26,9 +26,7 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          viewModel.isEditMode ? l10n.habitEdit : l10n.habitAdd,
-        ),
+        title: Text(viewModel.isEditMode ? l10n.habitEdit : l10n.habitAdd),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
@@ -56,10 +54,7 @@ class _HabitFormBody extends StatefulWidget {
   final HabitFormViewModel viewModel;
   final Brightness brightness;
 
-  const _HabitFormBody({
-    required this.viewModel,
-    required this.brightness,
-  });
+  const _HabitFormBody({required this.viewModel, required this.brightness});
 
   @override
   State<_HabitFormBody> createState() => _HabitFormBodyState();
@@ -89,8 +84,9 @@ class _HabitFormBodyState extends State<_HabitFormBody> {
         if (mounted) setState(() => _shaking = false);
       });
       // Scroll to first error field
-      final targetKey =
-          viewModel.nameError != null ? _nameFieldKey : _domainFieldKey;
+      final targetKey = viewModel.nameError != null
+          ? _nameFieldKey
+          : _domainFieldKey;
       final renderObject = targetKey.currentContext?.findRenderObject();
       if (renderObject != null) {
         _scrollController.animateTo(
@@ -163,6 +159,10 @@ class _HabitFormBodyState extends State<_HabitFormBody> {
 
           // Time range
           _buildTimeRange(context, viewModel, brightness),
+          SizedBox(height: AppSpacing.md),
+
+          // Notification settings
+          _buildNotificationSettings(context, viewModel, brightness),
           SizedBox(height: AppSpacing.md),
 
           // Frequency
@@ -249,9 +249,7 @@ class _HabitFormBodyState extends State<_HabitFormBody> {
           SizedBox(height: AppSpacing.xxs),
           Text(
             viewModel.domainError!,
-            style: AppTypography.caption.copyWith(
-              color: AppColors.error,
-            ),
+            style: AppTypography.caption.copyWith(color: AppColors.error),
           ),
         ],
       ],
@@ -393,7 +391,8 @@ class _HabitFormBodyState extends State<_HabitFormBody> {
                 onTap: () async {
                   final time = await showTimePicker(
                     context: context,
-                    initialTime: viewModel.startTime ??
+                    initialTime:
+                        viewModel.startTime ??
                         const TimeOfDay(hour: 6, minute: 0),
                   );
                   viewModel.setStartTime(time);
@@ -411,39 +410,109 @@ class _HabitFormBodyState extends State<_HabitFormBody> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-              child: Icon(
-                Icons.arrow_forward,
-                color: AppColors.textSecondary(brightness),
-                size: AppSizing.iconMd,
+            if (viewModel.startTime != null) ...[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                child: Icon(
+                  Icons.arrow_forward,
+                  color: AppColors.textSecondary(brightness),
+                  size: AppSizing.iconMd,
+                ),
               ),
-            ),
-            Expanded(
-              child: AppCard.outlined(
-                onTap: () async {
-                  final time = await showTimePicker(
-                    context: context,
-                    initialTime: viewModel.endTime ??
-                        const TimeOfDay(hour: 8, minute: 0),
-                  );
-                  viewModel.setEndTime(time);
-                },
-                padding: EdgeInsets.all(AppSpacing.sm),
-                child: Center(
-                  child: Text(
-                    viewModel.endTime?.format(context) ?? '--:--',
-                    style: AppTypography.textMedium.copyWith(
-                      color: viewModel.endTime != null
-                          ? AppColors.textPrimary(brightness)
-                          : AppColors.textSecondary(brightness),
+              Expanded(
+                child: AppCard.outlined(
+                  padding: EdgeInsets.all(AppSpacing.sm),
+                  child: Center(
+                    child: Text(
+                      _computedEndTime(viewModel)?.format(context) ?? '--:--',
+                      style: AppTypography.textMedium.copyWith(
+                        color: AppColors.textSecondary(brightness),
+                      ),
                     ),
                   ),
                 ),
               ),
+            ],
+          ],
+        ),
+        if (viewModel.startTime != null)
+          Padding(
+            padding: EdgeInsets.only(top: AppSpacing.xxs),
+            child: Text(
+              l10n.habitEndTimeComputed,
+              style: AppTypography.caption.copyWith(
+                color: AppColors.textSecondary(brightness),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  /// Computes end time from start + estimated duration.
+  TimeOfDay? _computedEndTime(HabitFormViewModel viewModel) {
+    final start = viewModel.startTime;
+    if (start == null) return null;
+    final totalMinutes =
+        start.hour * 60 + start.minute + viewModel.estimatedDurationMinutes;
+    return TimeOfDay(
+      hour: (totalMinutes ~/ 60) % 24,
+      minute: totalMinutes % 60,
+    );
+  }
+
+  Widget _buildNotificationSettings(
+    BuildContext context,
+    HabitFormViewModel viewModel,
+    Brightness brightness,
+  ) {
+    final l10n = context.l10n;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                l10n.habitNotifications,
+                style: AppTypography.labelMedium.copyWith(
+                  color: AppColors.textPrimary(brightness),
+                ),
+              ),
+            ),
+            Switch.adaptive(
+              value: viewModel.notificationsEnabled,
+              onChanged: viewModel.setNotificationsEnabled,
+              activeColor: AppColors.primary,
             ),
           ],
         ),
+        if (viewModel.notificationsEnabled && viewModel.startTime != null) ...[
+          SizedBox(height: AppSpacing.xs),
+          Text(
+            l10n.habitReminderOffset,
+            style: AppTypography.caption.copyWith(
+              color: AppColors.textSecondary(brightness),
+            ),
+          ),
+          SizedBox(height: AppSpacing.xxs),
+          Wrap(
+            spacing: AppSpacing.xs,
+            runSpacing: AppSpacing.xs,
+            children: HabitFormViewModel.offsetPresets.map((minutes) {
+              final isSelected = viewModel.reminderOffsetMinutes == minutes;
+              final label = minutes == 0
+                  ? l10n.habitReminderAtTime
+                  : '${minutes}min ${l10n.habitReminderBefore}';
+              return AppChip(
+                label: label,
+                isSelected: isSelected,
+                onTap: () => viewModel.setReminderOffsetMinutes(minutes),
+              );
+            }).toList(),
+          ),
+        ],
       ],
     );
   }
@@ -478,7 +547,8 @@ class _HabitFormBodyState extends State<_HabitFormBody> {
             Expanded(
               child: AppChip(
                 label: l10n.habitFrequencyWeekly,
-                isSelected: viewModel.frequency == HabitFrequency.weekly ||
+                isSelected:
+                    viewModel.frequency == HabitFrequency.weekly ||
                     viewModel.frequency == HabitFrequency.custom,
                 onTap: () => viewModel.setFrequency(HabitFrequency.weekly),
               ),

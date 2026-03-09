@@ -18,7 +18,9 @@ HabitModel _$HabitModelFromJson(Map<String, dynamic> json) => HabitModel(
   estimatedDurationMinutes:
       (json['estimated_duration_minutes'] as num?)?.toInt() ?? 15,
   startTime: json['start_time'] as String?,
-  endTime: json['end_time'] as String?,
+  notificationsEnabled: json['notifications_enabled'] as bool? ?? true,
+  reminderOffsetMinutes:
+      (json['reminder_offset_minutes'] as num?)?.toInt() ?? 5,
   frequency: json['frequency'] as String? ?? 'daily',
   frequencyDays: (json['frequency_days'] as List<dynamic>?)
       ?.map((e) => (e as num).toInt())
@@ -40,7 +42,8 @@ Map<String, dynamic> _$HabitModelToJson(HabitModel instance) =>
       'unit': instance.unit,
       'estimated_duration_minutes': instance.estimatedDurationMinutes,
       'start_time': instance.startTime,
-      'end_time': instance.endTime,
+      'notifications_enabled': instance.notificationsEnabled,
+      'reminder_offset_minutes': instance.reminderOffsetMinutes,
       'frequency': instance.frequency,
       'frequency_days': instance.frequencyDays,
       'is_archived': instance.isArchived,

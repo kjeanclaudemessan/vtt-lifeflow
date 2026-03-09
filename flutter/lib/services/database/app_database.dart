@@ -1,9 +1,10 @@
 import 'package:drift/drift.dart';
 
-import 'connection/connection.dart' as conn
-    if (dart.library.ffi) 'connection/native.dart'
-    if (dart.library.js_interop) 'connection/web.dart'
-    if (dart.library.html) 'connection/web.dart';
+// Web is the default; native overrides when dart:io is available.
+// This avoids issues with dart.library.js_interop not being recognized
+// by some Dart web compilers.
+import 'connection/web.dart' as conn
+    if (dart.library.io) 'connection/native.dart';
 
 part 'app_database.g.dart';
 
@@ -40,7 +41,10 @@ class LocalHabits extends Table {
   IntColumn get estimatedDurationMinutes =>
       integer().withDefault(const Constant(15))();
   TextColumn get startTime => text().nullable()();
-  TextColumn get endTime => text().nullable()();
+  BoolColumn get notificationsEnabled =>
+      boolean().withDefault(const Constant(true))();
+  IntColumn get reminderOffsetMinutes =>
+      integer().withDefault(const Constant(5))();
   TextColumn get frequency => text().withDefault(const Constant('daily'))();
   TextColumn get frequencyDays => text().withDefault(const Constant('[]'))();
   BoolColumn get isArchived => boolean().withDefault(const Constant(false))();
@@ -58,6 +62,8 @@ class LocalHabitLogs extends Table {
   DateTimeColumn get logDate => dateTime()();
   BoolColumn get completed => boolean().withDefault(const Constant(false))();
   RealColumn get value => real().nullable()();
+  TextColumn get actualStartTime => text().nullable()();
+  TextColumn get actualEndTime => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
 
   @override
@@ -102,13 +108,20 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) => m.createAll(),
     onUpgrade: (m, from, to) async {
-      // Future migrations go here
+      if (from < 2) {
+        // v1 → v2: Replace endTime with notification fields, add actual times
+        await m.addColumn(localHabits, localHabits.notificationsEnabled);
+        await m.addColumn(localHabits, localHabits.reminderOffsetMinutes);
+        await m.addColumn(localHabitLogs, localHabitLogs.actualStartTime);
+        await m.addColumn(localHabitLogs, localHabitLogs.actualEndTime);
+        // Drop the old endTime column (Drift handles schema diff)
+      }
     },
   );
 

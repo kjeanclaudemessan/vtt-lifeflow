@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../../core/typedefs/typedefs.dart';
 import '../entities/habit_entity.dart';
 import '../entities/habit_log_entity.dart';
@@ -48,6 +50,8 @@ abstract class IHabitRepository {
     required DateTime date,
     required bool completed,
     double? value,
+    TimeOfDay? actualStartTime,
+    TimeOfDay? actualEndTime,
   });
 
   /// Removes a habit log for a specific date (uncheck).

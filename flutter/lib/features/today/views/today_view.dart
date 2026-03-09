@@ -13,6 +13,8 @@ import '../../../design_system/design_system.dart';
 import '../../../domain/entities/habit_entity.dart';
 import '../../../modules/notifications/widgets/notification_badge.dart';
 import '../viewmodels/today_viewmodel.dart';
+import '../widgets/habit_time_edit_sheet.dart';
+import '../widgets/habit_value_sheet.dart';
 import '../widgets/today_bilan_card.dart';
 import '../widgets/today_counter_summary.dart';
 import '../widgets/today_habits_section.dart';
@@ -62,13 +64,13 @@ class TodayView extends StackedView<TodayViewModel> {
           viewModel.isBusy
               ? const AppLoadingState()
               : viewModel.hasError
-                  ? AppErrorState.generic(onRetry: viewModel.init)
-                  : viewModel.todayHabits.isEmpty
-                      ? _buildEmptyState(context, l10n)
-                      : AppRefreshIndicator(
-                          onRefresh: viewModel.refresh,
-                          child: _buildContent(context, viewModel, brightness),
-                        ),
+              ? AppErrorState.generic(onRetry: viewModel.init)
+              : viewModel.todayHabits.isEmpty
+              ? _buildEmptyState(context, l10n)
+              : AppRefreshIndicator(
+                  onRefresh: viewModel.refresh,
+                  child: _buildContent(context, viewModel, brightness),
+                ),
           // Confetti celebration overlay
           AppCelebrationOverlay(
             shouldCelebrate: viewModel.justCompletedAll,
@@ -227,6 +229,9 @@ class TodayView extends StackedView<TodayViewModel> {
           logResolver: viewModel.todayLogFor,
           streakResolver: viewModel.streakFor,
           onToggle: (id) => viewModel.toggleHabit(id),
+          onValueTap: (id, current) =>
+              _openValueSheet(context, viewModel, id, current),
+          onLongPress: (id) => _openTimeEditSheet(context, viewModel, id),
         );
 
       case TodayMode.progress:
@@ -247,8 +252,12 @@ class TodayView extends StackedView<TodayViewModel> {
               ...viewModel.completedHabits.map((habit) {
                 return Padding(
                   padding: EdgeInsets.only(bottom: AppSpacing.xs),
-                  child:
-                      _buildCompletedTile(habit, viewModel, brightness, l10n),
+                  child: _buildCompletedTile(
+                    habit,
+                    viewModel,
+                    brightness,
+                    l10n,
+                  ),
                 );
               }),
               SizedBox(height: AppSpacing.md),
@@ -268,6 +277,9 @@ class TodayView extends StackedView<TodayViewModel> {
                 logResolver: viewModel.todayLogFor,
                 streakResolver: viewModel.streakFor,
                 onToggle: (id) => viewModel.toggleHabit(id),
+                onValueTap: (id, current) =>
+                    _openValueSheet(context, viewModel, id, current),
+                onLongPress: (id) => _openTimeEditSheet(context, viewModel, id),
               ),
             ],
           ],
@@ -303,6 +315,9 @@ class TodayView extends StackedView<TodayViewModel> {
               logResolver: viewModel.todayLogFor,
               streakResolver: viewModel.streakFor,
               onToggle: (id) => viewModel.toggleHabit(id),
+              onValueTap: (id, current) =>
+                  _openValueSheet(context, viewModel, id, current),
+              onLongPress: (id) => _openTimeEditSheet(context, viewModel, id),
             ),
           ],
         );
@@ -328,10 +343,12 @@ class TodayView extends StackedView<TodayViewModel> {
         ),
         child: Row(
           children: [
-            Icon(Icons.check_circle,
-                color: AppColors.success,
-                size: AppSizing.iconMd,
-                semanticLabel: l10n.semanticsCompleted),
+            Icon(
+              Icons.check_circle,
+              color: AppColors.success,
+              size: AppSizing.iconMd,
+              semanticLabel: l10n.semanticsCompleted,
+            ),
             SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(
@@ -365,6 +382,57 @@ class TodayView extends StackedView<TodayViewModel> {
       map.entries.toList()
         ..sort((a, b) => a.key.sortWeight.compareTo(b.key.sortWeight)),
     );
+  }
+
+  /// Opens the [HabitValueSheet] for a quantitative habit.
+  Future<void> _openValueSheet(
+    BuildContext context,
+    TodayViewModel viewModel,
+    String habitId,
+    double? currentValue,
+  ) async {
+    final habit = viewModel.todayHabits
+        .where((h) => h.id == habitId)
+        .firstOrNull;
+    if (habit == null) return;
+
+    final value = await HabitValueSheet.show(
+      context: context,
+      habit: habit,
+      currentValue: currentValue,
+    );
+    if (value != null) {
+      await viewModel.logHabitWithValue(habitId, value);
+    }
+  }
+
+  /// Opens the [HabitTimeEditSheet] for adjusting actual execution time.
+  Future<void> _openTimeEditSheet(
+    BuildContext context,
+    TodayViewModel viewModel,
+    String habitId,
+  ) async {
+    final habit = viewModel.todayHabits
+        .where((h) => h.id == habitId)
+        .firstOrNull;
+    if (habit == null) return;
+
+    final log = viewModel.todayLogFor(habitId);
+    if (log == null || !log.completed) return;
+
+    final result = await HabitTimeEditSheet.show(
+      context: context,
+      habit: habit,
+      actualStartTime: log.actualStartTime,
+      actualEndTime: log.actualEndTime,
+    );
+    if (result != null) {
+      await viewModel.updateActualTime(
+        habitId,
+        startTime: result.startTime,
+        endTime: result.endTime,
+      );
+    }
   }
 
   @override

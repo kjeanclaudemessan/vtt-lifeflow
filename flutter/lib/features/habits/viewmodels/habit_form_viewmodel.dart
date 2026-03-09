@@ -54,8 +54,15 @@ class HabitFormViewModel extends BaseViewModel {
   TimeOfDay? _startTime;
   TimeOfDay? get startTime => _startTime;
 
-  TimeOfDay? _endTime;
-  TimeOfDay? get endTime => _endTime;
+  /// Notification settings.
+  bool _notificationsEnabled = true;
+  bool get notificationsEnabled => _notificationsEnabled;
+
+  int _reminderOffsetMinutes = 5;
+  int get reminderOffsetMinutes => _reminderOffsetMinutes;
+
+  /// Available reminder offset presets (minutes before start time).
+  static const offsetPresets = [0, 5, 10, 15, 30];
 
   /// Frequency.
   HabitFrequency _frequency = HabitFrequency.daily;
@@ -96,11 +103,13 @@ class HabitFormViewModel extends BaseViewModel {
       unitController.text = habit.unit ?? '';
       _estimatedDurationMinutes = habit.estimatedDurationMinutes;
       _startTime = habit.startTime;
-      _endTime = habit.endTime;
+      _notificationsEnabled = habit.notificationsEnabled;
+      _reminderOffsetMinutes = habit.reminderOffsetMinutes;
       _frequency = habit.frequency;
       _frequencyDays = List.from(habit.frequencyDays);
-      _selectedDomain =
-          _domains.where((d) => d.id == habit.domainId).firstOrNull;
+      _selectedDomain = _domains
+          .where((d) => d.id == habit.domainId)
+          .firstOrNull;
     }
 
     setBusy(false);
@@ -127,8 +136,13 @@ class HabitFormViewModel extends BaseViewModel {
     rebuildUi();
   }
 
-  void setEndTime(TimeOfDay? time) {
-    _endTime = time;
+  void setNotificationsEnabled(bool enabled) {
+    _notificationsEnabled = enabled;
+    rebuildUi();
+  }
+
+  void setReminderOffsetMinutes(int minutes) {
+    _reminderOffsetMinutes = minutes;
     rebuildUi();
   }
 
@@ -188,12 +202,13 @@ class HabitFormViewModel extends BaseViewModel {
           : null,
       unit: _type == HabitType.quantitative
           ? unitController.text.trim().isEmpty
-              ? null
-              : unitController.text.trim()
+                ? null
+                : unitController.text.trim()
           : null,
       estimatedDurationMinutes: _estimatedDurationMinutes,
       startTime: _startTime,
-      endTime: _endTime,
+      notificationsEnabled: _notificationsEnabled,
+      reminderOffsetMinutes: _reminderOffsetMinutes,
       frequency: _frequency,
       frequencyDays: _frequencyDays,
       isArchived: _editingHabit?.isArchived ?? false,
@@ -238,15 +253,12 @@ class HabitFormViewModel extends BaseViewModel {
   /// Creates a new domain and selects it in the form.
   Future<void> createDomainAndSelect(DomainEntity domain) async {
     final result = await _domainRepo.createDomain(domain);
-    result.fold(
-      (failure) => setError(failure.message),
-      (created) {
-        _domains.add(created);
-        _selectedDomain = created;
-        _domainError = null;
-        rebuildUi();
-      },
-    );
+    result.fold((failure) => setError(failure.message), (created) {
+      _domains.add(created);
+      _selectedDomain = created;
+      _domainError = null;
+      rebuildUi();
+    });
   }
 
   @override

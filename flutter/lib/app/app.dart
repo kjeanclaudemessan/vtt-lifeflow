@@ -119,7 +119,7 @@ import 'package:lifeflow/ui/views/startup/startup_view.dart';
     LazySingleton(classType: ApiService),
     Singleton(classType: ConnectivityService),
     LazySingleton(classType: DialogHelper),
-    Singleton(classType: AppDatabase),
+    LazySingleton(classType: AppDatabase),
     LazySingleton(classType: SyncEngine),
 
     // ═══════════════════════════════════════════════════════════════════════

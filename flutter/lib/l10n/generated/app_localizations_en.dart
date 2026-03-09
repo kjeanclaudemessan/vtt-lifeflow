@@ -874,6 +874,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitTimeRange => 'Time range';
 
   @override
+  String get habitEndTimeComputed =>
+      'End time is calculated from start + duration';
+
+  @override
+  String get habitNotifications => 'Notifications';
+
+  @override
+  String get habitReminderOffset => 'Reminder before start time';
+
+  @override
+  String get habitReminderAtTime => 'At time';
+
+  @override
+  String get habitReminderBefore => 'before';
+
+  @override
+  String get habitValueComplete => 'Complete!';
+
+  @override
+  String get habitValueSave => 'Save value';
+
+  @override
+  String get habitTimeEditSubtitle => 'Adjust actual execution time';
+
+  @override
+  String get habitActualStart => 'Started at';
+
+  @override
+  String get habitActualEnd => 'Ended at';
+
+  @override
+  String get habitActualDuration => 'Actual duration';
+
+  @override
   String get habitFrequency => 'Frequency';
 
   @override

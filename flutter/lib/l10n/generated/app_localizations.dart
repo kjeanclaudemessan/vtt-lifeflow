@@ -1688,6 +1688,72 @@ abstract class AppLocalizations {
   /// **'Time range'**
   String get habitTimeRange;
 
+  /// No description provided for @habitEndTimeComputed.
+  ///
+  /// In en, this message translates to:
+  /// **'End time is calculated from start + duration'**
+  String get habitEndTimeComputed;
+
+  /// No description provided for @habitNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get habitNotifications;
+
+  /// No description provided for @habitReminderOffset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder before start time'**
+  String get habitReminderOffset;
+
+  /// No description provided for @habitReminderAtTime.
+  ///
+  /// In en, this message translates to:
+  /// **'At time'**
+  String get habitReminderAtTime;
+
+  /// No description provided for @habitReminderBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'before'**
+  String get habitReminderBefore;
+
+  /// No description provided for @habitValueComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete!'**
+  String get habitValueComplete;
+
+  /// No description provided for @habitValueSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save value'**
+  String get habitValueSave;
+
+  /// No description provided for @habitTimeEditSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust actual execution time'**
+  String get habitTimeEditSubtitle;
+
+  /// No description provided for @habitActualStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Started at'**
+  String get habitActualStart;
+
+  /// No description provided for @habitActualEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended at'**
+  String get habitActualEnd;
+
+  /// No description provided for @habitActualDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Actual duration'**
+  String get habitActualDuration;
+
   /// No description provided for @habitFrequency.
   ///
   /// In en, this message translates to:

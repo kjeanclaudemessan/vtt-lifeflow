@@ -876,6 +876,40 @@ class AppLocalizationsFr extends AppLocalizations {
   String get habitTimeRange => 'Plage horaire';
 
   @override
+  String get habitEndTimeComputed =>
+      'L\'heure de fin est calculée à partir du début + durée';
+
+  @override
+  String get habitNotifications => 'Notifications';
+
+  @override
+  String get habitReminderOffset => 'Rappel avant l\'heure de début';
+
+  @override
+  String get habitReminderAtTime => 'À l\'heure';
+
+  @override
+  String get habitReminderBefore => 'avant';
+
+  @override
+  String get habitValueComplete => 'Terminé !';
+
+  @override
+  String get habitValueSave => 'Enregistrer la valeur';
+
+  @override
+  String get habitTimeEditSubtitle => 'Ajuster l\'heure réelle d\'exécution';
+
+  @override
+  String get habitActualStart => 'Commencé à';
+
+  @override
+  String get habitActualEnd => 'Terminé à';
+
+  @override
+  String get habitActualDuration => 'Durée réelle';
+
+  @override
   String get habitFrequency => 'Fréquence';
 
   @override

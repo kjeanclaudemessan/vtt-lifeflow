@@ -28,6 +28,12 @@ class TodayHabitsSection extends StatelessWidget {
   /// Called when a habit is toggled.
   final void Function(String habitId) onToggle;
 
+  /// Called when a quantitative habit tile is tapped (opens value sheet).
+  final void Function(String habitId, double? currentValue)? onValueTap;
+
+  /// Called when a completed habit is long-pressed (opens time edit sheet).
+  final void Function(String habitId)? onLongPress;
+
   const TodayHabitsSection({
     super.key,
     required this.habitsBySlot,
@@ -35,6 +41,8 @@ class TodayHabitsSection extends StatelessWidget {
     required this.logResolver,
     required this.streakResolver,
     required this.onToggle,
+    this.onValueTap,
+    this.onLongPress,
   });
 
   @override
@@ -78,6 +86,15 @@ class TodayHabitsSection extends StatelessWidget {
                     log: logResolver(habit.id),
                     streak: streakResolver(habit.id),
                     onToggle: () => onToggle(habit.id),
+                    onValueSubmit: habit.isQuantitative && onValueTap != null
+                        ? (_) => onValueTap!(
+                            habit.id,
+                            logResolver(habit.id)?.value,
+                          )
+                        : null,
+                    onLongPress: onLongPress != null
+                        ? () => onLongPress!(habit.id)
+                        : null,
                   ),
                 ),
               );

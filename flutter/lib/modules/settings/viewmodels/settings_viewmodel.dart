@@ -284,7 +284,7 @@ class SettingsViewModel extends BaseViewModel {
 
     result.fold((failure) => setError(failure.message), (_) {
       locator<PushNotificationService>().removeTokenFromSupabase();
-      locator<AppDatabase>().clearAll();
+      if (!kIsWeb) locator<AppDatabase>().clearAll();
       locator<AnalyticsService>().capture('user_logged_out');
       locator<AnalyticsService>().reset();
       _navigationService.clearStackAndShow(Routes.loginView);

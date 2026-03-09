@@ -34,6 +34,9 @@ class HabitCheckTile extends StatelessWidget {
   /// Called when the tile is tapped (navigate to detail/edit).
   final VoidCallback? onTap;
 
+  /// Called on long-press (e.g. to edit actual time).
+  final VoidCallback? onLongPress;
+
   const HabitCheckTile({
     super.key,
     required this.habit,
@@ -43,6 +46,7 @@ class HabitCheckTile extends StatelessWidget {
     this.onToggle,
     this.onValueSubmit,
     this.onTap,
+    this.onLongPress,
   });
 
   bool get _isCompleted => log?.completed ?? false;
@@ -55,41 +59,45 @@ class HabitCheckTile extends StatelessWidget {
       label:
           '${habit.name}, ${_isCompleted ? context.l10n.semanticsCompleted : context.l10n.semanticsNotCompleted}',
       button: true,
-      child: AppCard.outlined(
-        onTap: onTap,
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.sm,
-        ),
-        child: Row(
-          children: [
-            // Check / input area
-            _buildCheckArea(context, brightness),
-            SizedBox(width: AppSpacing.sm),
-            // Content
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Name row
-                  Text(
-                    _buildDisplayName(),
-                    style: AppTypography.titleMedium.copyWith(
-                      color: _isCompleted
-                          ? AppColors.textSecondary(brightness)
-                          : AppColors.textPrimary(brightness),
-                      decoration:
-                          _isCompleted ? TextDecoration.lineThrough : null,
+      child: GestureDetector(
+        onLongPress: _isCompleted ? onLongPress : null,
+        child: AppCard.outlined(
+          onTap: onTap,
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
+          child: Row(
+            children: [
+              // Check / input area
+              _buildCheckArea(context, brightness),
+              SizedBox(width: AppSpacing.sm),
+              // Content
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Name row
+                    Text(
+                      _buildDisplayName(),
+                      style: AppTypography.titleMedium.copyWith(
+                        color: _isCompleted
+                            ? AppColors.textSecondary(brightness)
+                            : AppColors.textPrimary(brightness),
+                        decoration: _isCompleted
+                            ? TextDecoration.lineThrough
+                            : null,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: AppSpacing.xxs),
-                  // Info row: domain chip + streak + duration
-                  _buildInfoRow(context, brightness),
-                ],
+                    SizedBox(height: AppSpacing.xxs),
+                    // Info row: domain chip + streak + duration
+                    _buildInfoRow(context, brightness),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -111,16 +119,15 @@ class HabitCheckTile extends StatelessWidget {
     );
   }
 
-  Widget _buildQuantitativeCheck(
-    BuildContext context,
-    Brightness brightness,
-  ) {
+  Widget _buildQuantitativeCheck(BuildContext context, Brightness brightness) {
     final current = log?.value ?? 0;
     final target = habit.targetValue ?? 1;
     final percentage = (current / target).clamp(0.0, 1.0);
 
     return GestureDetector(
-      onTap: onToggle,
+      onTap: onValueSubmit != null
+          ? () => onValueSubmit?.call(current)
+          : onToggle,
       child: SizedBox(
         width: 44,
         height: 44,
@@ -136,10 +143,12 @@ class HabitCheckTile extends StatelessWidget {
               ),
             ),
             if (_isCompleted)
-              Icon(Icons.check,
-                  color: AppColors.success,
-                  size: AppSizing.iconSm,
-                  semanticLabel: context.l10n.semanticsCompleted),
+              Icon(
+                Icons.check,
+                color: AppColors.success,
+                size: AppSizing.iconSm,
+                semanticLabel: context.l10n.semanticsCompleted,
+              ),
           ],
         ),
       ),
@@ -171,10 +180,7 @@ class HabitCheckTile extends StatelessWidget {
           ),
         // Streak badge
         if (streak.currentStreak > 0)
-          HabitStreakBadge(
-            streak: streak,
-            habitName: habit.name,
-          ),
+          HabitStreakBadge(streak: streak, habitName: habit.name),
         // Duration
         Text(
           '${habit.estimatedDurationMinutes}m',
@@ -182,6 +188,34 @@ class HabitCheckTile extends StatelessWidget {
             color: AppColors.textSecondary(brightness),
           ),
         ),
+        // Adherence indicator
+        if (_isCompleted && log != null) _buildAdherenceIndicator(brightness),
+      ],
+    );
+  }
+
+  /// Builds a colored dot indicating time adherence.
+  Widget _buildAdherenceIndicator(Brightness brightness) {
+    final adherence = log!.timeAdherence(habit);
+    final label = log!.adherenceLabel(habit);
+    final color = adherence >= 0.85
+        ? AppColors.success
+        : adherence >= 0.6
+        ? AppColors.warning
+        : AppColors.error;
+
+    if (label == null) return const SizedBox.shrink(); // On time, no indicator
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 6,
+          height: 6,
+          decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+        ),
+        SizedBox(width: AppSpacing.xxs),
+        Text(label, style: AppTypography.caption.copyWith(color: color)),
       ],
     );
   }

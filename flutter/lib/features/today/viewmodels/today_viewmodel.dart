@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../app/app.locator.dart';
@@ -155,25 +156,18 @@ class TodayViewModel extends BaseViewModel {
     );
 
     List<HabitLogEntity> todayLogs = [];
-    results[2].fold(
-      (f) {},
-      (logs) => todayLogs = logs as List<HabitLogEntity>,
-    );
+    results[2].fold((f) {}, (logs) => todayLogs = logs as List<HabitLogEntity>);
 
     List<HabitLogEntity> weekLogs = [];
-    results[3].fold(
-      (f) {},
-      (logs) => weekLogs = logs as List<HabitLogEntity>,
-    );
+    results[3].fold((f) {}, (logs) => weekLogs = logs as List<HabitLogEntity>);
 
     // Filter to today's scheduled habits
-    _todayHabits =
-        allHabits.where((h) => !h.isArchived && h.isScheduledForToday).toList();
+    _todayHabits = allHabits
+        .where((h) => !h.isArchived && h.isScheduledForToday)
+        .toList();
 
     // Map today's logs by habit ID
-    _todayLogs = {
-      for (final log in todayLogs) log.habitId: log,
-    };
+    _todayLogs = {for (final log in todayLogs) log.habitId: log};
 
     // Calculate today's domain minutes
     _todayDomainMinutes = _counterService.getDailyTotal(
@@ -192,79 +186,149 @@ class TodayViewModel extends BaseViewModel {
     // Load streaks
     for (final habit in _todayHabits) {
       final result = await _habitRepo.getStreakInfo(habit.id);
-      result.fold(
-        (_) {},
-        (info) => _streaks[habit.id] = info,
-      );
+      result.fold((_) {}, (info) => _streaks[habit.id] = info);
     }
 
     // Load unread notification count
     final notifResult = await _notifRepo.getUnreadCount();
-    notifResult.fold(
-      (_) {},
-      (count) => _unreadNotificationCount = count,
-    );
+    notifResult.fold((_) {}, (count) => _unreadNotificationCount = count);
 
     rebuildUi();
   }
 
   /// Toggle a habit check for today.
+  ///
+  /// For binary habits: toggles completed on/off. Auto-records actualStartTime.
+  /// For quantitative: should NOT be called directly — use [logHabitWithValue].
   Future<void> toggleHabit(String habitId, {double? value}) async {
     final today = DateTime.now();
     final todayDate = DateTime(today.year, today.month, today.day);
     final existingLog = _todayLogs[habitId];
 
     if (existingLog != null && existingLog.completed) {
-      final result =
-          await _habitRepo.removeLog(habitId: habitId, date: todayDate);
-      result.fold(
-        (f) => setError(f.message),
-        (_) {
-          _haptic.light();
-          _todayLogs.remove(habitId);
-          locator<AnalyticsService>().capture('habit_uncompleted', properties: {
-            'habit_id': habitId,
-          });
-          rebuildUi();
-        },
+      final result = await _habitRepo.removeLog(
+        habitId: habitId,
+        date: todayDate,
       );
+      result.fold((f) => setError(f.message), (_) {
+        _haptic.light();
+        _todayLogs.remove(habitId);
+        locator<AnalyticsService>().capture(
+          'habit_uncompleted',
+          properties: {'habit_id': habitId},
+        );
+        rebuildUi();
+      });
     } else {
+      // Auto-record actual start time
+      final now = TimeOfDay.now();
       final result = await _habitRepo.logHabit(
         habitId: habitId,
         date: todayDate,
         completed: true,
         value: value,
+        actualStartTime: now,
       );
-      result.fold(
-        (f) => setError(f.message),
-        (log) {
-          _haptic.success();
-          _todayLogs[habitId] = log;
-          locator<AnalyticsService>().capture('habit_completed', properties: {
-            'habit_id': habitId,
-            'completion_rate': completionRate,
-          });
-          // Trigger celebration when all habits are completed
-          if (completionRate == 1.0) {
-            _justCompletedAll = true;
-          }
-          rebuildUi();
-        },
-      );
+      result.fold((f) => setError(f.message), (log) {
+        _haptic.success();
+        _todayLogs[habitId] = log;
+        locator<AnalyticsService>().capture(
+          'habit_completed',
+          properties: {'habit_id': habitId, 'completion_rate': completionRate},
+        );
+        // Trigger celebration when all habits are completed
+        if (completionRate == 1.0) {
+          _justCompletedAll = true;
+        }
+        rebuildUi();
+      });
     }
 
     // Refresh streak
     final streakResult = await _habitRepo.getStreakInfo(habitId);
-    streakResult.fold(
-      (_) {},
-      (info) {
-        _streaks[habitId] = info;
-        rebuildUi();
-      },
-    );
+    streakResult.fold((_) {}, (info) {
+      _streaks[habitId] = info;
+      rebuildUi();
+    });
 
     // Notify other views (Habits, Counter) about the toggle
     _habitEvents.notifyHabitChanged();
+  }
+
+  /// Logs a quantitative habit with a specific value.
+  ///
+  /// Called from the [HabitValueSheet]. Auto-determines [completed]
+  /// based on whether [value] >= target.
+  Future<void> logHabitWithValue(String habitId, double value) async {
+    final habit = _todayHabits.where((h) => h.id == habitId).firstOrNull;
+    if (habit == null) return;
+
+    final today = DateTime.now();
+    final todayDate = DateTime(today.year, today.month, today.day);
+    final completed = value >= (habit.targetValue ?? 1);
+    final now = TimeOfDay.now();
+
+    final result = await _habitRepo.logHabit(
+      habitId: habitId,
+      date: todayDate,
+      completed: completed,
+      value: value,
+      actualStartTime: now,
+    );
+
+    result.fold((f) => setError(f.message), (log) {
+      _haptic.success();
+      _todayLogs[habitId] = log;
+      locator<AnalyticsService>().capture(
+        'habit_value_logged',
+        properties: {
+          'habit_id': habitId,
+          'value': value,
+          'completed': completed,
+        },
+      );
+      if (completionRate == 1.0) {
+        _justCompletedAll = true;
+      }
+      rebuildUi();
+    });
+
+    // Refresh streak
+    final streakResult = await _habitRepo.getStreakInfo(habitId);
+    streakResult.fold((_) {}, (info) {
+      _streaks[habitId] = info;
+      rebuildUi();
+    });
+    _habitEvents.notifyHabitChanged();
+  }
+
+  /// Updates the actual time range for a completed habit log.
+  ///
+  /// Called from the [HabitTimeEditSheet] (long-press on completed habit).
+  Future<void> updateActualTime(
+    String habitId, {
+    required TimeOfDay startTime,
+    required TimeOfDay endTime,
+  }) async {
+    final existingLog = _todayLogs[habitId];
+    if (existingLog == null || !existingLog.completed) return;
+
+    final today = DateTime.now();
+    final todayDate = DateTime(today.year, today.month, today.day);
+
+    final result = await _habitRepo.logHabit(
+      habitId: habitId,
+      date: todayDate,
+      completed: true,
+      value: existingLog.value,
+      actualStartTime: startTime,
+      actualEndTime: endTime,
+    );
+
+    result.fold((f) => setError(f.message), (log) {
+      _todayLogs[habitId] = log;
+      rebuildUi();
+    });
   }
 
   /// Refresh all data.

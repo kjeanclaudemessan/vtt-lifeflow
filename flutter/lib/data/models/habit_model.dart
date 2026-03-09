@@ -42,8 +42,11 @@ class HabitModel {
   @JsonKey(name: 'start_time')
   final String? startTime;
 
-  @JsonKey(name: 'end_time')
-  final String? endTime;
+  @JsonKey(name: 'notifications_enabled')
+  final bool notificationsEnabled;
+
+  @JsonKey(name: 'reminder_offset_minutes')
+  final int reminderOffsetMinutes;
 
   @JsonKey(name: 'frequency')
   final String frequency;
@@ -71,7 +74,8 @@ class HabitModel {
     this.unit,
     this.estimatedDurationMinutes = 15,
     this.startTime,
-    this.endTime,
+    this.notificationsEnabled = true,
+    this.reminderOffsetMinutes = 5,
     this.frequency = 'daily',
     this.frequencyDays,
     this.isArchived = false,
@@ -116,7 +120,8 @@ class HabitModel {
       unit: unit,
       estimatedDurationMinutes: estimatedDurationMinutes,
       startTime: _parseTime(startTime),
-      endTime: _parseTime(endTime),
+      notificationsEnabled: notificationsEnabled,
+      reminderOffsetMinutes: reminderOffsetMinutes,
       frequency: HabitFrequency.fromString(frequency),
       frequencyDays: frequencyDays ?? [],
       isArchived: isArchived,
@@ -138,7 +143,8 @@ class HabitModel {
       unit: entity.unit,
       estimatedDurationMinutes: entity.estimatedDurationMinutes,
       startTime: _formatTime(entity.startTime),
-      endTime: _formatTime(entity.endTime),
+      notificationsEnabled: entity.notificationsEnabled,
+      reminderOffsetMinutes: entity.reminderOffsetMinutes,
       frequency: entity.frequency.toValue(),
       frequencyDays: entity.frequencyDays,
       isArchived: entity.isArchived,
@@ -159,7 +165,8 @@ class HabitModel {
       'unit': entity.unit,
       'estimated_duration_minutes': entity.estimatedDurationMinutes,
       'start_time': _formatTime(entity.startTime),
-      'end_time': _formatTime(entity.endTime),
+      'notifications_enabled': entity.notificationsEnabled,
+      'reminder_offset_minutes': entity.reminderOffsetMinutes,
       'frequency': entity.frequency.toValue(),
       'frequency_days': entity.frequencyDays,
       'is_archived': entity.isArchived,
@@ -177,7 +184,8 @@ class HabitModel {
       'unit': entity.unit,
       'estimated_duration_minutes': entity.estimatedDurationMinutes,
       'start_time': _formatTime(entity.startTime),
-      'end_time': _formatTime(entity.endTime),
+      'notifications_enabled': entity.notificationsEnabled,
+      'reminder_offset_minutes': entity.reminderOffsetMinutes,
       'frequency': entity.frequency.toValue(),
       'frequency_days': entity.frequencyDays,
       'is_archived': entity.isArchived,
