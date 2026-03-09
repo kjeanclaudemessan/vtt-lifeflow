@@ -212,8 +212,10 @@ jobs:
 
       # ── Firebase config ──────────────────────────────────────────────
       - name: Decode GoogleService-Info.plist
-        if: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST_BASE64 != '' }}
-        run: echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_BASE64 }}" | base64 --decode > ios/Runner/GoogleService-Info.plist
+        env:
+          PLIST_B64: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST_BASE64 }}
+        if: ${{ env.PLIST_B64 != '' }}
+        run: echo "$PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
 
       - name: Build iOS (no codesign)
         run: |
