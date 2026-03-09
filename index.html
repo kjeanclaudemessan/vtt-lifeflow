@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeFlow — Politique de Confidentialité</title>
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --bg: #FAFAFA;
+            --text: #1A1A2E;
+            --muted: #6B7280;
+            --card: #FFFFFF;
+            --border: #E5E7EB;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #4F46E5 100%);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+        header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        header p { opacity: 0.9; font-size: 1rem; }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+        .meta {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin: 1.5rem 0 2rem;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        h2 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+        h3 {
+            font-size: 1.1rem;
+            margin: 1rem 0 0.5rem;
+        }
+        p { margin-bottom: 0.8rem; }
+        ul {
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+        li { margin-bottom: 0.4rem; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+        th, td {
+            text-align: left;
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: var(--bg);
+            font-weight: 600;
+        }
+        .highlight {
+            background: #EEF2FF;
+            border-left: 4px solid var(--primary);
+            padding: 1rem 1.2rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+        a { color: var(--primary); }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+        }
+        .lang-switch {
+            text-align: center;
+            margin: 1rem 0;
+        }
+        .lang-switch a {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.5rem; }
+            .card { padding: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>LifeFlow</h1>
+    <p>Politique de Confidentialité</p>
+</header>
+
+<div class="container">
+    <p class="meta">Dernière mise à jour : 9 mars 2026</p>
+
+    <div class="lang-switch">
+        <a href="privacy-en.html">🇬🇧 English version</a>
+    </div>
+
+    <div class="card">
+        <h2>1. Introduction</h2>
+        <p><strong>LifeFlow</strong> est une application mobile de suivi d'habitudes et de bien-être quotidien, développée par <strong>VitaTech</strong>.</p>
+        <p>Nous accordons une grande importance à la protection de vos données personnelles. Cette politique de confidentialité décrit les informations que nous collectons, comment nous les utilisons et les droits dont vous disposez.</p>
+        <div class="highlight">
+            <strong>En résumé :</strong> Nous collectons uniquement les données nécessaires au fonctionnement de l'application. Nous ne vendons jamais vos données à des tiers.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>2. Données collectées</h2>
+
+        <h3>2.1 Données de compte</h3>
+        <p>Lors de la création de votre compte, nous collectons :</p>
+        <ul>
+            <li>Adresse e-mail</li>
+            <li>Nom d'affichage (optionnel)</li>
+            <li>Photo de profil (optionnel)</li>
+        </ul>
+        <p>L'authentification est gérée par <a href="https://supabase.com/privacy" target="_blank">Supabase</a>, un service conforme au RGPD.</p>
+
+        <h3>2.2 Données d'utilisation</h3>
+        <p>Pour améliorer l'expérience utilisateur, nous collectons des données d'utilisation anonymisées via <a href="https://posthog.com/privacy" target="_blank">PostHog</a> :</p>
+        <ul>
+            <li>Écrans visités</li>
+            <li>Fonctionnalités utilisées (création d'habitude, complétion, etc.)</li>
+            <li>Événements de session (connexion, déconnexion)</li>
+            <li>Type d'appareil, version de l'OS et de l'application</li>
+        </ul>
+        <p><strong>Aucune donnée d'habitude personnelle n'est envoyée à PostHog.</strong> Seuls les événements agrégés (« une habitude a été créée ») sont transmis, sans le contenu spécifique.</p>
+
+        <h3>2.3 Données d'habitudes</h3>
+        <p>Le cœur de LifeFlow — vos habitudes, domaines de vie, objectifs et historique de complétion — est stocké de manière sécurisée dans votre compte personnel sur nos serveurs <strong>Supabase</strong>.</p>
+
+        <table>
+            <tr><th>Donnée</th><th>Finalité</th><th>Stockage</th></tr>
+            <tr><td>Habitudes & domaines</td><td>Fonctionnement de l'app</td><td>Supabase (chiffré)</td></tr>
+            <tr><td>Historique de complétion</td><td>Suivi & statistiques</td><td>Supabase (chiffré)</td></tr>
+            <tr><td>Objectifs quantitatifs</td><td>Suivi de progression</td><td>Supabase (chiffré)</td></tr>
+            <tr><td>Préférences (langue, thème)</td><td>Personnalisation</td><td>Appareil local</td></tr>
+        </table>
+
+        <h3>2.4 Notifications push</h3>
+        <p>Si vous activez les notifications, nous utilisons <a href="https://firebase.google.com/support/privacy" target="_blank">Firebase Cloud Messaging (FCM)</a> de Google pour vous envoyer des rappels. Seul un jeton d'appareil anonyme est utilisé — aucune donnée personnelle n'est partagée avec Google à cette fin.</p>
+    </div>
+
+    <div class="card">
+        <h2>3. Utilisation des données</h2>
+        <p>Vos données sont utilisées exclusivement pour :</p>
+        <ul>
+            <li><strong>Fournir le service</strong> — synchroniser vos habitudes entre vos appareils</li>
+            <li><strong>Améliorer l'application</strong> — comprendre quelles fonctionnalités sont populaires (analytics anonymisées)</li>
+            <li><strong>Envoyer des rappels</strong> — notifications push pour vos habitudes (si activées)</li>
+            <li><strong>Support technique</strong> — diagnostiquer les problèmes signalés</li>
+        </ul>
+        <div class="highlight">
+            Nous ne faisons <strong>aucune</strong> publicité ciblée. Vos données ne sont <strong>jamais vendues</strong> à des tiers.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>4. Partage des données</h2>
+        <p>Nous ne partageons vos données qu'avec les sous-traitants techniques nécessaires au fonctionnement du service :</p>
+        <table>
+            <tr><th>Service</th><th>Fonction</th><th>Localisation</th></tr>
+            <tr><td>Supabase</td><td>Base de données & Authentification</td><td>UE / US</td></tr>
+            <tr><td>PostHog</td><td>Analytics anonymisées</td><td>US</td></tr>
+            <tr><td>Firebase (Google)</td><td>Notifications push</td><td>US</td></tr>
+        </table>
+        <p>Ces sous-traitants sont contractuellement tenus de protéger vos données conformément aux réglementations applicables.</p>
+    </div>
+
+    <div class="card">
+        <h2>5. Sécurité</h2>
+        <p>Nous mettons en œuvre des mesures de sécurité conformes aux standards de l'industrie :</p>
+        <ul>
+            <li>Chiffrement des données en transit (TLS/HTTPS)</li>
+            <li>Chiffrement de la base de données au repos</li>
+            <li>Politiques de sécurité Row-Level Security (RLS) sur Supabase — chaque utilisateur ne peut accéder qu'à ses propres données</li>
+            <li>Authentification par jeton JWT sécurisé</li>
+            <li>Aucun mot de passe stocké en clair</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>6. Vos droits</h2>
+        <p>Conformément au Règlement Général sur la Protection des Données (RGPD) et aux lois applicables, vous disposez des droits suivants :</p>
+        <ul>
+            <li><strong>Accès</strong> — obtenir une copie de vos données personnelles</li>
+            <li><strong>Rectification</strong> — corriger des données inexactes</li>
+            <li><strong>Suppression</strong> — demander l'effacement de votre compte et de toutes vos données</li>
+            <li><strong>Portabilité</strong> — recevoir vos données dans un format structuré</li>
+            <li><strong>Opposition</strong> — refuser le traitement de vos données à des fins d'analytics</li>
+            <li><strong>Retrait du consentement</strong> — désactiver les notifications ou les analytics à tout moment depuis les paramètres de l'application</li>
+        </ul>
+        <p>Pour exercer ces droits, contactez-nous à l'adresse indiquée ci-dessous.</p>
+    </div>
+
+    <div class="card">
+        <h2>7. Conservation des données</h2>
+        <ul>
+            <li><strong>Compte actif</strong> — vos données sont conservées tant que votre compte est actif</li>
+            <li><strong>Suppression de compte</strong> — toutes vos données personnelles sont supprimées dans un délai de 30 jours</li>
+            <li><strong>Analytics</strong> — les données d'utilisation anonymisées sont conservées 12 mois maximum</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>8. Mineurs</h2>
+        <p>LifeFlow n'est pas destiné aux enfants de moins de 13 ans. Nous ne collectons pas sciemment de données auprès de mineurs de moins de 13 ans. Si vous êtes parent et pensez que votre enfant nous a fourni des données personnelles, veuillez nous contacter.</p>
+    </div>
+
+    <div class="card">
+        <h2>9. Modifications</h2>
+        <p>Cette politique peut être mise à jour occasionnellement. En cas de changement significatif, nous vous informerons via l'application ou par e-mail. La date de dernière mise à jour est indiquée en haut de cette page.</p>
+    </div>
+
+    <div class="card">
+        <h2>10. Contact</h2>
+        <p>Pour toute question relative à cette politique de confidentialité ou à vos données personnelles :</p>
+        <ul>
+            <li><strong>Développeur :</strong> VitaTech</li>
+            <li><strong>E-mail :</strong> <a href="mailto:contact@vitatech.dev">contact@vitatech.dev</a></li>
+            <li><strong>Application :</strong> LifeFlow (com.vitatech.lifeflow)</li>
+        </ul>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 VitaTech. Tous droits réservés.<br>
+    LifeFlow — Votre compagnon de bien-être quotidien.
+</footer>
+
+</body>
+</html>
