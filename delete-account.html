@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suppression de compte — LifeFlow</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: #1a1a2e;
+            background: #f8f9fa;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        h1 {
+            font-size: 28px;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            color: #6c757d;
+            font-size: 16px;
+        }
+        h2 {
+            font-size: 20px;
+            color: #1a1a2e;
+            margin: 32px 0 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        p, li {
+            font-size: 15px;
+            color: #495057;
+            margin-bottom: 12px;
+        }
+        ul, ol {
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+        li { margin-bottom: 8px; }
+        .card {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+        .steps {
+            counter-reset: step;
+            list-style: none;
+            padding-left: 0;
+        }
+        .steps li {
+            counter-increment: step;
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 28px;
+            height: 28px;
+            background: #6C63FF;
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        th {
+            background: #f1f3f5;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        td:first-child { font-weight: 500; }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        .warning strong { color: #856404; }
+        .contact-box {
+            background: #e8f4f8;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        a { color: #6C63FF; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        footer {
+            text-align: center;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid #e9ecef;
+            color: #adb5bd;
+            font-size: 13px;
+        }
+        .lang-switch {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .lang-switch a {
+            display: inline-block;
+            padding: 6px 16px;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #495057;
+            margin: 0 4px;
+        }
+        .lang-switch a.active {
+            background: #6C63FF;
+            color: #fff;
+            border-color: #6C63FF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lang-switch">
+            <a href="delete-account.html" class="active">Français</a>
+            <a href="delete-account-en.html">English</a>
+        </div>
+
+        <header>
+            <h1>🗑️ Suppression de compte</h1>
+            <p class="subtitle">LifeFlow — par VitaTech Solutions</p>
+        </header>
+
+        <p>Vous pouvez demander la suppression de votre compte LifeFlow et de toutes les données associées à tout moment. Deux méthodes sont disponibles :</p>
+
+        <h2>Méthode 1 : Depuis l'application</h2>
+        <div class="card">
+            <ol class="steps">
+                <li>Ouvrez <strong>LifeFlow</strong> et connectez-vous à votre compte.</li>
+                <li>Accédez à <strong>Paramètres</strong> (icône ⚙️ en bas à droite).</li>
+                <li>Faites défiler jusqu'à la section <strong>Compte</strong>.</li>
+                <li>Appuyez sur <strong>Supprimer mon compte</strong>.</li>
+                <li>Confirmez la suppression dans la boîte de dialogue.</li>
+            </ol>
+        </div>
+
+        <h2>Méthode 2 : Par e-mail</h2>
+        <div class="card">
+            <p>Si vous ne pouvez pas accéder à l'application, envoyez un e-mail à :</p>
+            <div class="contact-box">
+                <strong>📧 <a href="mailto:contact@vitatech.dev?subject=Demande de suppression de compte LifeFlow">contact@vitatech.dev</a></strong>
+            </div>
+            <p>Objet : <em>Demande de suppression de compte LifeFlow</em></p>
+            <p>Incluez l'adresse e-mail associée à votre compte. Nous traiterons votre demande sous <strong>72 heures</strong>.</p>
+        </div>
+
+        <h2>Données supprimées</h2>
+        <p>Lors de la suppression de votre compte, les données suivantes sont <strong>définitivement effacées</strong> :</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Type de données</th>
+                    <th>Action</th>
+                    <th>Délai</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Profil utilisateur</td>
+                    <td>Supprimé</td>
+                    <td>Immédiat</td>
+                </tr>
+                <tr>
+                    <td>Habitudes et suivi</td>
+                    <td>Supprimé</td>
+                    <td>Immédiat</td>
+                </tr>
+                <tr>
+                    <td>Domaines de vie</td>
+                    <td>Supprimé</td>
+                    <td>Immédiat</td>
+                </tr>
+                <tr>
+                    <td>Notifications</td>
+                    <td>Supprimées</td>
+                    <td>Immédiat</td>
+                </tr>
+                <tr>
+                    <td>Identifiants de connexion</td>
+                    <td>Supprimés</td>
+                    <td>Immédiat</td>
+                </tr>
+                <tr>
+                    <td>Données d'analytics</td>
+                    <td>Anonymisées</td>
+                    <td>Sous 30 jours</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="warning">
+            <strong>⚠️ Attention :</strong> La suppression est <strong>irréversible</strong>. Toutes vos habitudes, statistiques et données de suivi seront définitivement perdues. Aucune récupération n'est possible après confirmation.
+        </div>
+
+        <h2>Questions ?</h2>
+        <div class="contact-box">
+            <p>Pour toute question relative à la suppression de vos données, contactez-nous :</p>
+            <p><strong>📧</strong> <a href="mailto:contact@vitatech.dev">contact@vitatech.dev</a></p>
+        </div>
+
+        <footer>
+            <p>© 2026 VitaTech Solutions — LifeFlow</p>
+            <p><a href="index.html">Politique de confidentialité</a> · <a href="delete-account.html">Suppression de compte</a></p>
+        </footer>
+    </div>
+</body>
+</html>
