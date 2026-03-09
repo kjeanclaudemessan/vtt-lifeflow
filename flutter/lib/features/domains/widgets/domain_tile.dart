@@ -56,10 +56,7 @@ class DomainTile extends StatelessWidget {
       backgroundColor: AppColors.warning,
       iconColor: Colors.white,
       child: AppListTile(
-        leading: Text(
-          domain.icon,
-          style: TextStyle(fontSize: 28),
-        ),
+        leading: Text(domain.icon, style: AppTypography.headingLarge),
         title: Text(
           domain.name,
           style: AppTypography.titleMedium.copyWith(
@@ -87,10 +84,7 @@ class DomainTile extends StatelessWidget {
     return AppListTile(
       leading: Opacity(
         opacity: 0.5,
-        child: Text(
-          domain.icon,
-          style: TextStyle(fontSize: 28),
-        ),
+        child: Text(domain.icon, style: AppTypography.headingLarge),
       ),
       title: Text(
         context.l10n.archivedLabel(domain.name),
@@ -102,9 +96,7 @@ class DomainTile extends StatelessWidget {
         onPressed: onRestore,
         child: Text(
           context.l10n.restore,
-          style: AppTypography.labelMedium.copyWith(
-            color: AppColors.primary,
-          ),
+          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
       ),
     );

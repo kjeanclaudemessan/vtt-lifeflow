@@ -49,9 +49,16 @@ class TimeCounter extends Equatable {
 
   @override
   List<Object?> get props => [
-        domainId,
-        totalMinutesThisWeek,
-        totalMinutesLastWeek,
-        habitBreakdown,
-      ];
+    domainId,
+    domainName,
+    domainColor,
+    domainIcon,
+    totalMinutesThisWeek,
+    totalMinutesLastWeek,
+    habitBreakdown,
+  ];
+
+  @override
+  String toString() =>
+      'TimeCounter(domain: $domainName, thisWeek: ${totalMinutesThisWeek}min, delta: ${deltaMinutes}min)';
 }

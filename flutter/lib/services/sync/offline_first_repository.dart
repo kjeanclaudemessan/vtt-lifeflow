@@ -1,75 +1,45 @@
-import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../app/app.locator.dart';
 import '../../core/errors/error_handler.dart';
 import '../../core/errors/failures.dart';
 import '../connectivity/connectivity_service.dart';
-import '../database/app_database.dart';
 
-/// Mixin providing offline-first read/write patterns.
+/// Stub mixin for offline-first patterns while drift is disabled.
 ///
-/// Repositories using this mixin will:
-/// 1. Always write to local DB first
-/// 2. Queue remote operations when offline
-/// 3. Read from local DB as primary source (fallback to remote)
-/// 4. Sync to Supabase when connectivity is restored
-///
-/// Usage:
-/// ```dart
-/// class HabitRepositoryImpl with OfflineFirstRepository implements IHabitRepository {
-///   Future<Either<Failure, List<HabitEntity>>> getHabits() async {
-///     return localFirst(
-///       localQuery: () => fetchHabitsFromDrift(),
-///       remoteQuery: () => fetchHabitsFromSupabase(),
-///       saveToLocal: (habits) => saveHabitsToDrift(habits),
-///     );
-///   }
-/// }
-/// ```
+/// All operations go directly to remote (Supabase). No local caching.
+/// Re-enable by restoring from git:
+/// `git checkout -- lib/services/sync/offline_first_repository.dart`
 mixin OfflineFirstRepository {
-  AppDatabase get db => locator<AppDatabase>();
   ConnectivityService get connectivity => locator<ConnectivityService>();
 
-  /// Reads data with local-first strategy.
-  ///
-  /// 1. Try local DB first
-  /// 2. If online, also fetch from remote and merge
-  /// 3. If local is empty and offline, return empty list
+  /// Remote-only read (no local cache while drift is disabled).
   Future<Either<Failure, T>> localFirst<T>({
     required Future<T> Function() localQuery,
     required Future<T> Function() remoteQuery,
     required Future<void> Function(T data) saveToLocal,
   }) async {
     try {
-      // Always read local first
-      final localData = await localQuery();
-
-      // If online, refresh from remote in background
       if (connectivity.isOnline) {
-        try {
-          final remoteData = await remoteQuery();
-          await saveToLocal(remoteData);
-          return Right(remoteData);
-        } catch (e) {
-          debugPrint('[Offline] Remote fetch failed, using local: $e');
-          return Right(localData);
-        }
+        final remoteData = await remoteQuery();
+        return Right(remoteData);
       }
-
-      return Right(localData);
+      // Offline fallback — try local query (may fail without drift)
+      try {
+        return Right(await localQuery());
+      } catch (_) {
+        return Left(
+          const NetworkFailure(
+            message: 'No internet connection and no local cache',
+          ),
+        );
+      }
     } catch (e, s) {
       return Left(ErrorHandler.handle(e, s));
     }
   }
 
-  /// Writes data with offline-first strategy.
-  ///
-  /// 1. Write to local DB immediately
-  /// 2. If online, also push to remote
-  /// 3. If offline, queue the operation for later sync
+  /// Remote-only write (no local queue while drift is disabled).
   Future<Either<Failure, T>> writeThrough<T>({
     required Future<T> Function() localWrite,
     required Future<T> Function() remoteWrite,
@@ -79,29 +49,21 @@ mixin OfflineFirstRepository {
     required Map<String, dynamic> payload,
   }) async {
     try {
-      // Always write locally first
-      final result = await localWrite();
-
       if (connectivity.isOnline) {
-        try {
-          final remoteResult = await remoteWrite();
-          return Right(remoteResult);
-        } catch (e) {
-          debugPrint('[Offline] Remote write failed, queued: $e');
-          await _enqueue(tableName, recordId, operation, payload);
-          return Right(result);
-        }
-      } else {
-        // Queue for sync
-        await _enqueue(tableName, recordId, operation, payload);
+        final result = await remoteWrite();
         return Right(result);
       }
+      return Left(
+        const NetworkFailure(
+          message: 'Cannot write while offline (local DB disabled)',
+        ),
+      );
     } catch (e, s) {
       return Left(ErrorHandler.handle(e, s));
     }
   }
 
-  /// Queues a delete operation with offline-first strategy.
+  /// Remote-only delete.
   Future<Either<Failure, void>> deleteThrough({
     required Future<void> Function() localDelete,
     required Future<void> Function() remoteDelete,
@@ -109,37 +71,17 @@ mixin OfflineFirstRepository {
     required String recordId,
   }) async {
     try {
-      await localDelete();
-
       if (connectivity.isOnline) {
-        try {
-          await remoteDelete();
-        } catch (e) {
-          debugPrint('[Offline] Remote delete failed, queued: $e');
-          await _enqueue(tableName, recordId, 'delete', {});
-        }
-      } else {
-        await _enqueue(tableName, recordId, 'delete', {});
+        await remoteDelete();
+        return const Right(null);
       }
-
-      return const Right(null);
+      return Left(
+        const NetworkFailure(
+          message: 'Cannot delete while offline (local DB disabled)',
+        ),
+      );
     } catch (e, s) {
       return Left(ErrorHandler.handle(e, s));
     }
-  }
-
-  Future<void> _enqueue(
-    String tableName,
-    String recordId,
-    String operation,
-    Map<String, dynamic> payload,
-  ) async {
-    await db.enqueueSync(
-      tableName: tableName,
-      recordId: recordId,
-      operation: operation,
-      payload: jsonEncode(payload),
-    );
-    debugPrint('[Offline] Queued: $operation $tableName/$recordId');
   }
 }

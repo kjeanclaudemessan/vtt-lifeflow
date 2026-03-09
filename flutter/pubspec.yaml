@@ -10,7 +10,7 @@ dependencies:
   connectivity_plus: ^7.0.0
   dartz: ^0.10.1
   dio: ^5.9.0
-  drift: ^2.27.0
+  # drift: ^2.27.0  # LOCAL-FIRST: disabled until sqlite3 WASM compat fixed
   equatable: ^2.0.8
   firebase_core: ^4.4.0
   firebase_messaging: ^16.1.1
@@ -32,7 +32,7 @@ dependencies:
   path_provider: ^2.1.5
   share_plus: ^10.1.4
   shared_preferences: ^2.5.4
-  sqlite3_flutter_libs: ^0.5.32
+  # sqlite3_flutter_libs: ^0.5.32  # LOCAL-FIRST: disabled until sqlite3 WASM compat fixed
   posthog_flutter: ^5.0.0
   stacked: ^3.4.0
   stacked_services: ^1.1.0
@@ -45,7 +45,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.4.5
-  drift_dev: ^2.27.0
+  # drift_dev: ^2.27.0  # LOCAL-FIRST: disabled until sqlite3 WASM compat fixed
   flutter_test:
     sdk: flutter
   integration_test:

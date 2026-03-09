@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../core/utils/time_parsing.dart';
 import '../../domain/entities/habit_log_entity.dart';
 
 part 'habit_log_model.g.dart';
@@ -52,23 +53,6 @@ class HabitLogModel {
   /// Converts this model to a JSON map.
   Map<String, dynamic> toJson() => _$HabitLogModelToJson(this);
 
-  /// Parses a TIME string (e.g., "06:30:00") into a [TimeOfDay].
-  static TimeOfDay? _parseTime(String? time) {
-    if (time == null || time.isEmpty) return null;
-    final parts = time.split(':');
-    if (parts.length < 2) return null;
-    return TimeOfDay(
-      hour: int.tryParse(parts[0]) ?? 0,
-      minute: int.tryParse(parts[1]) ?? 0,
-    );
-  }
-
-  /// Formats a [TimeOfDay] to a TIME string (e.g., "06:30:00").
-  static String? _formatTime(TimeOfDay? time) {
-    if (time == null) return null;
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}:00';
-  }
-
   /// Converts this model to a domain [HabitLogEntity].
   HabitLogEntity toEntity() {
     return HabitLogEntity(
@@ -77,8 +61,8 @@ class HabitLogModel {
       logDate: DateTime.parse(logDate),
       completed: completed,
       value: value?.toDouble(),
-      actualStartTime: _parseTime(actualStartTime),
-      actualEndTime: _parseTime(actualEndTime),
+      actualStartTime: TimeParsingUtils.parseTime(actualStartTime),
+      actualEndTime: TimeParsingUtils.parseTime(actualEndTime),
       createdAt: DateTime.parse(createdAt),
     );
   }
@@ -91,8 +75,8 @@ class HabitLogModel {
       logDate: entity.logDate.toIso8601String().split('T').first,
       completed: entity.completed,
       value: entity.value,
-      actualStartTime: _formatTime(entity.actualStartTime),
-      actualEndTime: _formatTime(entity.actualEndTime),
+      actualStartTime: TimeParsingUtils.formatTime(entity.actualStartTime),
+      actualEndTime: TimeParsingUtils.formatTime(entity.actualEndTime),
       createdAt: entity.createdAt.toIso8601String(),
     );
   }
@@ -111,8 +95,8 @@ class HabitLogModel {
       'log_date': date.toIso8601String().split('T').first,
       'completed': completed,
       'value': value,
-      'actual_start_time': _formatTime(actualStartTime),
-      'actual_end_time': _formatTime(actualEndTime),
+      'actual_start_time': TimeParsingUtils.formatTime(actualStartTime),
+      'actual_end_time': TimeParsingUtils.formatTime(actualEndTime),
     };
   }
 }

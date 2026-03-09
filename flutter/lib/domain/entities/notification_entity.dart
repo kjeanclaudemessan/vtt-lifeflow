@@ -1,22 +1,10 @@
 import 'package:equatable/equatable.dart';
 
 /// Type of notification in the domain layer.
-enum NotifType {
-  general,
-  reminder,
-  alert,
-  success,
-  streak,
-  bilan,
-}
+enum NotifType { general, reminder, alert, success, streak, bilan }
 
 /// Channel for notification routing.
-enum NotifChannel {
-  reminders,
-  streaks,
-  bilan,
-  general,
-}
+enum NotifChannel { reminders, streaks, bilan, general }
 
 /// Represents a notification in the domain layer.
 ///
@@ -95,15 +83,51 @@ class NotificationEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        userId,
-        title,
-        body,
-        type,
-        channel,
-        isRead,
-        actionUrl,
-        metadata,
-        createdAt,
-      ];
+    id,
+    userId,
+    title,
+    body,
+    type,
+    channel,
+    isRead,
+    actionUrl,
+    metadata,
+    createdAt,
+  ];
+
+  @override
+  String toString() =>
+      'NotificationEntity(id: $id, type: $type, title: $title, isRead: $isRead)';
+
+  /// Creates an empty notification for initialization.
+  factory NotificationEntity.empty() {
+    return NotificationEntity(
+      id: '',
+      userId: '',
+      title: '',
+      body: '',
+      createdAt: DateTime.now(),
+    );
+  }
+
+  /// Creates a mock notification for testing.
+  factory NotificationEntity.mock({
+    String id = 'mock-notif-id',
+    String title = 'Test Notification',
+    String body = 'This is a test notification.',
+    NotifType type = NotifType.general,
+    NotifChannel channel = NotifChannel.general,
+    bool isRead = false,
+  }) {
+    return NotificationEntity(
+      id: id,
+      userId: 'mock-user-id',
+      title: title,
+      body: body,
+      type: type,
+      channel: channel,
+      isRead: isRead,
+      createdAt: DateTime.now(),
+    );
+  }
 }

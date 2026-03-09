@@ -10,6 +10,7 @@ import '../../../domain/repositories/i_domain_repository.dart';
 import '../../../domain/repositories/i_habit_repository.dart';
 import '../../../services/haptic_service.dart';
 import '../../../services/habit_event_service.dart';
+import '../../../services/habit_toggle_service.dart';
 
 /// ViewModel for the habits list view.
 ///
@@ -19,6 +20,7 @@ class HabitsViewModel extends BaseViewModel {
   final _domainRepo = locator<IDomainRepository>();
   final _habitEvents = locator<HabitEventService>();
   final _haptic = locator<HapticService>();
+  final _toggleService = locator<HabitToggleService>();
 
   List<HabitEntity> _allHabits = [];
   List<DomainEntity> _domains = [];
@@ -49,8 +51,9 @@ class HabitsViewModel extends BaseViewModel {
     }
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
-      habits =
-          habits.where((h) => h.name.toLowerCase().contains(query)).toList();
+      habits = habits
+          .where((h) => h.name.toLowerCase().contains(query))
+          .toList();
     }
     return habits;
   }
@@ -124,14 +127,11 @@ class HabitsViewModel extends BaseViewModel {
       (domains) => _domains = domains as List<DomainEntity>,
     );
 
-    results[2].fold(
-      (failure) {},
-      (logs) {
-        _todayLogs = {
-          for (final log in (logs as List<HabitLogEntity>)) log.habitId: log,
-        };
-      },
-    );
+    results[2].fold((failure) {}, (logs) {
+      _todayLogs = {
+        for (final log in (logs as List<HabitLogEntity>)) log.habitId: log,
+      };
+    });
 
     // Load streaks for all habits
     await _loadStreaks();
@@ -140,15 +140,9 @@ class HabitsViewModel extends BaseViewModel {
   }
 
   Future<void> _loadStreaks() async {
-    final streakMap = <String, StreakInfo>{};
-    for (final habit in _allHabits) {
-      final result = await _habitRepo.getStreakInfo(habit.id);
-      result.fold(
-        (_) {},
-        (info) => streakMap[habit.id] = info,
-      );
-    }
-    _streaks = streakMap;
+    _streaks = await _toggleService.loadStreaksBatch(
+      _allHabits.map((h) => h.id).toList(),
+    );
   }
 
   void filterByDomain(String? domainId) {
@@ -169,52 +163,29 @@ class HabitsViewModel extends BaseViewModel {
 
   /// Toggles a habit check for today.
   Future<void> toggleHabit(String habitId, {double? value}) async {
-    final today = DateTime.now();
-    final todayDate = DateTime(today.year, today.month, today.day);
-    final existingLog = _todayLogs[habitId];
+    final result = await _toggleService.toggleHabit(
+      habitId: habitId,
+      existingLog: _todayLogs[habitId],
+      value: value,
+    );
 
-    if (existingLog != null && existingLog.completed) {
-      // Un-check: remove log
-      final result =
-          await _habitRepo.removeLog(habitId: habitId, date: todayDate);
-      result.fold(
-        (failure) => setError(failure.message),
-        (_) {
-          _haptic.light();
-          _todayLogs.remove(habitId);
-          rebuildUi();
-        },
-      );
+    if (result.hasError) {
+      setError(result.error);
+      return;
+    }
+
+    if (result.completed) {
+      _todayLogs[habitId] = result.log!;
     } else {
-      // Check: log habit
-      final result = await _habitRepo.logHabit(
-        habitId: habitId,
-        date: todayDate,
-        completed: true,
-        value: value,
-      );
-      result.fold(
-        (failure) => setError(failure.message),
-        (log) {
-          _haptic.success();
-          _todayLogs[habitId] = log;
-          rebuildUi();
-        },
-      );
+      _todayLogs.remove(habitId);
     }
 
     // Refresh streak for this habit
-    final streakResult = await _habitRepo.getStreakInfo(habitId);
-    streakResult.fold(
-      (_) {},
-      (info) {
-        _streaks[habitId] = info;
-        rebuildUi();
-      },
-    );
+    final streak = await _toggleService.refreshStreak(habitId);
+    if (streak != null) _streaks[habitId] = streak;
 
-    // Notify other views (Today, Counter) about the toggle
-    _habitEvents.notifyHabitChanged();
+    _toggleService.notifyChanged();
+    rebuildUi();
   }
 
   /// Archives a habit.

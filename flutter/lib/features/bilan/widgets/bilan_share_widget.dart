@@ -97,7 +97,9 @@ class _ShareStatsRow extends StatelessWidget {
         if (bilan.longestStreak != null &&
             bilan.longestStreak!.currentStreak > 0)
           _StatChip(
-              emoji: '🔥', value: '${bilan.longestStreak!.currentStreak}j'),
+            emoji: '🔥',
+            value: '${bilan.longestStreak!.currentStreak}j',
+          ),
       ],
     );
   }
@@ -123,7 +125,7 @@ class _StatChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(emoji, style: TextStyle(fontSize: 16)),
+          Text(emoji, style: AppTypography.textMedium),
           SizedBox(width: AppSpacing.xxs),
           Text(
             value,

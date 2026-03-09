@@ -1,7 +1,5 @@
-import 'package:dartz/dartz.dart';
-
 import '../../core/enums/auth_enums.dart';
-import '../../core/errors/failures.dart';
+import '../../core/typedefs/typedefs.dart';
 import '../entities/user_entity.dart';
 
 /// Contract for authentication operations.
@@ -19,7 +17,7 @@ abstract class IAuthRepository {
   /// Gets the current authenticated user with full profile data.
   ///
   /// Returns [UserEntity] if authenticated, `null` if not.
-  Future<Either<Failure, UserEntity?>> getCurrentUser();
+  FutureResult<UserEntity?> getCurrentUser();
 
   /// Stream of authentication state changes.
   ///
@@ -36,7 +34,7 @@ abstract class IAuthRepository {
   /// Signs in a user with email and password.
   ///
   /// Returns [UserEntity] on success, [Failure] on error.
-  Future<Either<Failure, UserEntity>> signInWithEmail({
+  FutureResult<UserEntity> signInWithEmail({
     required String email,
     required String password,
   });
@@ -45,7 +43,7 @@ abstract class IAuthRepository {
   ///
   /// [metadata] can include additional user data like first_name, last_name.
   /// Returns [UserEntity] on success, [Failure] on error.
-  Future<Either<Failure, UserEntity>> signUpWithEmail({
+  FutureResult<UserEntity> signUpWithEmail({
     required String email,
     required String password,
     Map<String, dynamic>? metadata,
@@ -58,15 +56,13 @@ abstract class IAuthRepository {
   /// Initiates phone sign-in by sending an OTP.
   ///
   /// Returns [Unit] on success (OTP sent), [Failure] on error.
-  Future<Either<Failure, Unit>> signInWithPhone({
-    required String phone,
-  });
+  FutureUnitResult signInWithPhone({required String phone});
 
   /// Initiates phone sign-up by sending an OTP.
   ///
   /// [metadata] can include additional user data like first_name, last_name.
   /// Returns [Unit] on success (OTP sent), [Failure] on error.
-  Future<Either<Failure, Unit>> signUpWithPhone({
+  FutureUnitResult signUpWithPhone({
     required String phone,
     Map<String, dynamic>? metadata,
   });
@@ -75,7 +71,7 @@ abstract class IAuthRepository {
   ///
   /// [type] defaults to [OtpType.sms].
   /// Returns [UserEntity] on success, [Failure] on error.
-  Future<Either<Failure, UserEntity>> verifyPhoneOtp({
+  FutureResult<UserEntity> verifyPhoneOtp({
     required String phone,
     required String token,
     OtpType type = OtpType.sms,
@@ -84,9 +80,7 @@ abstract class IAuthRepository {
   /// Resends the phone OTP.
   ///
   /// Returns [Unit] on success, [Failure] on error.
-  Future<Either<Failure, Unit>> resendPhoneOtp({
-    required String phone,
-  });
+  FutureUnitResult resendPhoneOtp({required String phone});
 
   // ─────────────────────────────────────────────────────────────────
   // OAuth Authentication
@@ -95,7 +89,7 @@ abstract class IAuthRepository {
   /// Signs in with an OAuth provider (Google, Apple, etc.).
   ///
   /// Returns `true` if OAuth flow started successfully.
-  Future<Either<Failure, bool>> signInWithOAuth({
+  FutureResult<bool> signInWithOAuth({
     required OAuthProvider provider,
     String? redirectTo,
   });
@@ -107,10 +101,7 @@ abstract class IAuthRepository {
   /// Sends a magic link to the user's email.
   ///
   /// Returns [Unit] on success, [Failure] on error.
-  Future<Either<Failure, Unit>> sendMagicLink({
-    required String email,
-    String? redirectTo,
-  });
+  FutureUnitResult sendMagicLink({required String email, String? redirectTo});
 
   // ─────────────────────────────────────────────────────────────────
   // Password Management
@@ -119,18 +110,13 @@ abstract class IAuthRepository {
   /// Sends a password reset email.
   ///
   /// Returns [Unit] on success, [Failure] on error.
-  Future<Either<Failure, Unit>> resetPassword({
-    required String email,
-    String? redirectTo,
-  });
+  FutureUnitResult resetPassword({required String email, String? redirectTo});
 
   /// Updates the user's password.
   ///
   /// Requires the user to be authenticated.
   /// Returns [UserEntity] on success, [Failure] on error.
-  Future<Either<Failure, UserEntity>> updatePassword({
-    required String newPassword,
-  });
+  FutureResult<UserEntity> updatePassword({required String newPassword});
 
   // ─────────────────────────────────────────────────────────────────
   // Profile Management
@@ -140,7 +126,7 @@ abstract class IAuthRepository {
   ///
   /// Uses the `update_my_profile` RPC function.
   /// Returns updated [UserEntity] on success, [Failure] on error.
-  Future<Either<Failure, UserEntity>> updateProfile({
+  FutureResult<UserEntity> updateProfile({
     String? firstName,
     String? lastName,
     String? displayName,
@@ -154,7 +140,7 @@ abstract class IAuthRepository {
   ///
   /// Uses the `update_my_metadata` RPC function.
   /// Returns updated metadata on success, [Failure] on error.
-  Future<Either<Failure, Map<String, dynamic>>> updateMetadata(
+  FutureResult<Map<String, dynamic>> updateMetadata(
     Map<String, dynamic> metadata,
   );
 
@@ -162,7 +148,7 @@ abstract class IAuthRepository {
   ///
   /// Uses the `update_my_preferences` RPC function.
   /// Returns updated preferences on success, [Failure] on error.
-  Future<Either<Failure, Map<String, dynamic>>> updatePreferences(
+  FutureResult<Map<String, dynamic>> updatePreferences(
     Map<String, dynamic> preferences,
   );
 
@@ -173,12 +159,12 @@ abstract class IAuthRepository {
   /// Signs out the current user.
   ///
   /// Returns [Unit] on success, [Failure] on error.
-  Future<Either<Failure, Unit>> signOut();
+  FutureUnitResult signOut();
 
   /// Refreshes the current session.
   ///
   /// Returns [UserEntity] on success, [Failure] on error.
-  Future<Either<Failure, UserEntity>> refreshSession();
+  FutureResult<UserEntity> refreshSession();
 
   // ─────────────────────────────────────────────────────────────────
   // Account Management
@@ -188,5 +174,5 @@ abstract class IAuthRepository {
   ///
   /// Uses the `delete_my_account` RPC function.
   /// Returns `true` on success, [Failure] on error.
-  Future<Either<Failure, bool>> deleteAccount();
+  FutureResult<bool> deleteAccount();
 }

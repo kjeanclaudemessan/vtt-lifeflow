@@ -31,7 +31,7 @@ class BilanView extends StackedView<BilanViewModel> {
     if (viewModel.isBusy) {
       return Scaffold(
         appBar: AppBar(title: Text(l10n.bilanTitle)),
-        body: const Center(child: CircularProgressIndicator()),
+        body: const Center(child: AppLoadingState()),
       );
     }
 
@@ -51,13 +51,14 @@ class BilanView extends StackedView<BilanViewModel> {
     }
 
     final bilan = viewModel.bilan;
-    final weekLabel =
-        _weekLabel(context, viewModel.weekStart, viewModel.weekEnd);
+    final weekLabel = _weekLabel(
+      context,
+      viewModel.weekStart,
+      viewModel.weekEnd,
+    );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.bilanTitle),
-      ),
+      appBar: AppBar(title: Text(l10n.bilanTitle)),
       body: Stack(
         children: [
           // Main scrollable content
@@ -80,8 +81,11 @@ class BilanView extends StackedView<BilanViewModel> {
                   padding: EdgeInsets.all(AppSpacing.md),
                   child: Row(
                     children: [
-                      Icon(Icons.timer_outlined,
-                          size: AppSizing.iconXl, color: AppColors.primary),
+                      Icon(
+                        Icons.timer_outlined,
+                        size: AppSizing.iconXl,
+                        color: AppColors.primary,
+                      ),
                       SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: Column(
@@ -169,7 +173,7 @@ class BilanView extends StackedView<BilanViewModel> {
                     backgroundColor: AppColors.info.withValues(alpha: 0.1),
                     child: Row(
                       children: [
-                        Text('🌱', style: TextStyle(fontSize: 24)),
+                        Text('🌱', style: AppTypography.headlineSmall),
                         SizedBox(width: AppSpacing.sm),
                         Expanded(
                           child: Text(
@@ -239,10 +243,9 @@ class BilanView extends StackedView<BilanViewModel> {
     final file = File('${tempDir.path}/bilan_lifeflow.png');
     await file.writeAsBytes(imageBytes);
 
-    await Share.shareXFiles(
-      [XFile(file.path)],
-      text: '📊 Mon bilan LifeFlow — $weekLabel',
-    );
+    await Share.shareXFiles([
+      XFile(file.path),
+    ], text: '📊 Mon bilan LifeFlow — $weekLabel');
   }
 }
 

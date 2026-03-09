@@ -24,14 +24,12 @@ class CounterView extends StackedView<CounterViewModel> {
     final l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.counterTitle),
-      ),
+      appBar: AppBar(title: Text(l10n.counterTitle)),
       body: viewModel.isBusy
           ? const AppLoadingState()
           : viewModel.hasError
-              ? AppErrorState.generic(onRetry: viewModel.init)
-              : _buildContent(context, viewModel, brightness),
+          ? AppErrorState.generic(onRetry: viewModel.init)
+          : _buildContent(context, viewModel, brightness),
     );
   }
 
@@ -121,11 +119,12 @@ class CounterView extends StackedView<CounterViewModel> {
     Brightness brightness,
   ) {
     final l10n = context.l10n;
-    // Calculate weekly goal (7 days × average habit count × average duration)
-    // Use a simple ratio: assume 2h/day goal = 14h/week = 840 min
-    final weeklyGoalMinutes = 840;
+    // Weekly goal computed from active habits
     final progress =
-        (viewModel.totalMinutesThisWeek / weeklyGoalMinutes).clamp(0.0, 1.0);
+        (viewModel.totalMinutesThisWeek / viewModel.weeklyGoalMinutes).clamp(
+          0.0,
+          1.0,
+        );
 
     return AppCard.elevated(
       padding: EdgeInsets.all(AppSpacing.lg),
@@ -152,8 +151,9 @@ class CounterView extends StackedView<CounterViewModel> {
             builder: (animatedMinutes) {
               final h = animatedMinutes ~/ 60;
               final m = animatedMinutes % 60;
-              final label =
-                  m > 0 ? '${h}h${m.toString().padLeft(2, '0')}' : '${h}h';
+              final label = m > 0
+                  ? '${h}h${m.toString().padLeft(2, '0')}'
+                  : '${h}h';
               return Text(
                 l10n.counterTotalWithTime(label),
                 style: AppTypography.headingMedium.copyWith(
@@ -200,7 +200,7 @@ class CounterView extends StackedView<CounterViewModel> {
       padding: EdgeInsets.all(AppSpacing.md),
       child: Row(
         children: [
-          Text('📊', style: TextStyle(fontSize: 24)),
+          Text('📊', style: AppTypography.headingMedium),
           SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(
@@ -221,10 +221,7 @@ class CounterView extends StackedView<CounterViewModel> {
               ],
             ),
           ),
-          Icon(
-            Icons.chevron_right,
-            color: AppColors.primary,
-          ),
+          Icon(Icons.chevron_right, color: AppColors.primary),
         ],
       ),
     );

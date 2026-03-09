@@ -276,35 +276,36 @@ class UserEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        email,
-        phone,
-        firstName,
-        lastName,
-        displayName,
-        avatarUrl,
-        locale,
-        timezone,
-        role,
-        organizationId,
-        metadata,
-        preferences,
-        isEmailVerified,
-        isPhoneVerified,
-        createdAt,
-        updatedAt,
-        lastSignInAt,
-      ];
+    id,
+    email,
+    phone,
+    firstName,
+    lastName,
+    displayName,
+    avatarUrl,
+    locale,
+    timezone,
+    role,
+    organizationId,
+    metadata,
+    preferences,
+    isEmailVerified,
+    isPhoneVerified,
+    createdAt,
+    updatedAt,
+    lastSignInAt,
+  ];
+
+  @override
+  String toString() =>
+      'UserEntity(id: $id, email: $email, name: $computedDisplayName)';
 
   // ─────────────────────────────────────────────────────────────────
   // Factory Constructors
   // ─────────────────────────────────────────────────────────────────
 
   /// Creates an empty user entity (useful for initial state).
-  factory UserEntity.empty() => UserEntity(
-        id: '',
-        createdAt: DateTime.now(),
-      );
+  factory UserEntity.empty() => UserEntity(id: '', createdAt: DateTime.now());
 
   /// Creates a mock user entity (useful for testing/preview).
   factory UserEntity.mock({
@@ -313,23 +314,22 @@ class UserEntity extends Equatable {
     String firstName = 'John',
     String lastName = 'Doe',
     UserRole role = UserRole.user,
-  }) =>
-      UserEntity(
-        id: id,
-        email: email,
-        phone: '+33612345678',
-        firstName: firstName,
-        lastName: lastName,
-        displayName: firstName,
-        avatarUrl: 'https://i.pravatar.cc/150?u=$id',
-        locale: 'fr',
-        timezone: 'Europe/Paris',
-        role: role,
-        metadata: const {'onboarding_completed': true},
-        preferences: const {'theme': 'system'},
-        isEmailVerified: true,
-        isPhoneVerified: false,
-        createdAt: DateTime.now().subtract(const Duration(days: 30)),
-        lastSignInAt: DateTime.now().subtract(const Duration(hours: 2)),
-      );
+  }) => UserEntity(
+    id: id,
+    email: email,
+    phone: '+33612345678',
+    firstName: firstName,
+    lastName: lastName,
+    displayName: firstName,
+    avatarUrl: 'https://i.pravatar.cc/150?u=$id',
+    locale: 'fr',
+    timezone: 'Europe/Paris',
+    role: role,
+    metadata: const {'onboarding_completed': true},
+    preferences: const {'theme': 'system'},
+    isEmailVerified: true,
+    isPhoneVerified: false,
+    createdAt: DateTime.now().subtract(const Duration(days: 30)),
+    lastSignInAt: DateTime.now().subtract(const Duration(hours: 2)),
+  );
 }

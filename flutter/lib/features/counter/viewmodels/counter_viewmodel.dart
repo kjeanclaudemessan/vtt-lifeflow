@@ -1,6 +1,7 @@
 import 'package:stacked/stacked.dart';
 
 import '../../../app/app.locator.dart';
+import '../../../core/enums/lifeflow_enums.dart';
 import '../../../domain/entities/domain_entity.dart';
 import '../../../domain/entities/habit_entity.dart';
 import '../../../domain/entities/habit_log_entity.dart';
@@ -33,6 +34,23 @@ class CounterViewModel extends BaseViewModel {
   /// Total minutes this week.
   int get totalMinutesThisWeek =>
       _counters.fold(0, (sum, c) => sum + c.totalMinutesThisWeek);
+
+  /// Weekly goal in minutes, computed from active habits.
+  ///
+  /// Sum of (scheduled days × estimatedDurationMinutes) for each active habit.
+  /// Falls back to 840 (14h/week ≈ 2h/day) if no habits exist.
+  int get weeklyGoalMinutes {
+    if (_habits.isEmpty) return 840;
+    final total = _habits.where((h) => !h.isArchived).fold<int>(0, (sum, h) {
+      final days = switch (h.frequency) {
+        HabitFrequency.daily => 7,
+        HabitFrequency.weekly => h.frequencyDays.length,
+        HabitFrequency.custom => h.frequencyDays.length,
+      };
+      return sum + days * h.estimatedDurationMinutes;
+    });
+    return total > 0 ? total : 840;
+  }
 
   /// Delta from last week.
   int get deltaMinutes => _counters.fold(0, (sum, c) => sum + c.deltaMinutes);

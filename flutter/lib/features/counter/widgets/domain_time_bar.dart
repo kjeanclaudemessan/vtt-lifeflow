@@ -32,8 +32,9 @@ class DomainTimeBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final color = counter.domainColor;
-    final progress =
-        maxMinutes > 0 ? counter.totalMinutesThisWeek / maxMinutes : 0.0;
+    final progress = maxMinutes > 0
+        ? counter.totalMinutesThisWeek / maxMinutes
+        : 0.0;
 
     return GestureDetector(
       onTap: onTap,
@@ -43,10 +44,7 @@ class DomainTimeBar extends StatelessWidget {
           // Domain name row
           Row(
             children: [
-              Text(
-                counter.domainIcon,
-                style: TextStyle(fontSize: 18),
-              ),
+              Text(counter.domainIcon, style: AppTypography.textLarge),
               SizedBox(width: AppSpacing.xs),
               Expanded(
                 child: Text(
@@ -90,8 +88,9 @@ class DomainTimeBar extends StatelessWidget {
     final h = abs ~/ 60;
     final m = abs % 60;
     final sign = delta >= 0 ? '▲ +' : '▼ -';
-    final label =
-        m > 0 ? '$sign${h}h${m.toString().padLeft(2, '0')}' : '$sign${h}h';
+    final label = m > 0
+        ? '$sign${h}h${m.toString().padLeft(2, '0')}'
+        : '$sign${h}h';
 
     return Text(
       label,
@@ -105,10 +104,7 @@ class DomainTimeBar extends StatelessWidget {
     if (counter.habitBreakdown.isEmpty) return const SizedBox.shrink();
 
     return Padding(
-      padding: EdgeInsets.only(
-        left: AppSpacing.lg,
-        top: AppSpacing.xs,
-      ),
+      padding: EdgeInsets.only(left: AppSpacing.lg, top: AppSpacing.xs),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: counter.habitBreakdown.entries.map((entry) {

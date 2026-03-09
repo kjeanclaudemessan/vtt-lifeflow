@@ -46,7 +46,7 @@ class TodayCounterSummary extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text('⏱️', style: TextStyle(fontSize: 18)),
+              Text('⏱️', style: AppTypography.textLarge),
               SizedBox(width: AppSpacing.xs),
               Text(
                 context.l10n.counterThisWeek,
