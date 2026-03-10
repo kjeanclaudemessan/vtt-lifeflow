@@ -72,19 +72,23 @@ class LoginView extends StackedView<LoginViewModel> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (config.showRememberMe)
-                    RememberMeCheckbox(
-                      value: viewModel.rememberMe,
-                      onChanged: viewModel.setRememberMe,
-                      label: l10n.rememberMe,
+                    Flexible(
+                      child: RememberMeCheckbox(
+                        value: viewModel.rememberMe,
+                        onChanged: viewModel.setRememberMe,
+                        label: l10n.rememberMe,
+                      ),
                     )
                   else
                     const Spacer(),
-                  TextButton(
-                    onPressed: viewModel.goToForgotPassword,
-                    child: Text(
-                      l10n.forgotPassword,
-                      style: AppTypography.labelMedium.copyWith(
-                        color: AppColors.primary,
+                  Flexible(
+                    child: TextButton(
+                      onPressed: viewModel.goToForgotPassword,
+                      child: Text(
+                        l10n.forgotPassword,
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.primary,
+                        ),
                       ),
                     ),
                   ),
@@ -154,11 +158,13 @@ class LoginView extends StackedView<LoginViewModel> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    l10n.dontHaveAccount,
-                    style: AppTypography.bodyMedium.copyWith(
-                      color:
-                          AppColors.textSecondary(Theme.of(context).brightness),
+                  Flexible(
+                    child: Text(
+                      l10n.dontHaveAccount,
+                      style: AppTypography.bodyMedium.copyWith(
+                        color:
+                            AppColors.textSecondary(Theme.of(context).brightness),
+                      ),
                     ),
                   ),
                   TextButton(

@@ -302,6 +302,7 @@ class RememberMeCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
           width: 24.w,
@@ -316,12 +317,15 @@ class RememberMeCheckbox extends StatelessWidget {
           ),
         ),
         SizedBox(width: AppSpacing.xs),
-        GestureDetector(
-          onTap: () => onChanged?.call(!value),
-          child: Text(
-            label ?? context.l10n.rememberMe,
-            style: AppTypography.bodySmall.copyWith(
-              color: AppColors.textSecondary(Theme.of(context).brightness),
+        Flexible(
+          child: GestureDetector(
+            onTap: () => onChanged?.call(!value),
+            child: Text(
+              label ?? context.l10n.rememberMe,
+              style: AppTypography.bodySmall.copyWith(
+                color: AppColors.textSecondary(Theme.of(context).brightness),
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),

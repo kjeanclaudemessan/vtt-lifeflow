@@ -186,10 +186,13 @@ class _SocialButton extends StatelessWidget {
                       : ColorFilter.mode(foregroundColor, BlendMode.srcIn),
                 ),
                 SizedBox(width: 12.w),
-                Text(
-                  label,
-                  style: AppTypography.labelLarge.copyWith(
-                    color: foregroundColor,
+                Flexible(
+                  child: Text(
+                    label,
+                    style: AppTypography.labelLarge.copyWith(
+                      color: foregroundColor,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
