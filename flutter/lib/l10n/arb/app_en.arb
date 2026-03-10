@@ -646,5 +646,44 @@
   "notifChannelStreaks": "Streaks",
   "notifChannelStreaksDesc": "Streak and achievement notifications",
   "notifChannelBilan": "Weekly review",
-  "notifChannelBilanDesc": "Weekly review reminder"
+  "notifChannelBilanDesc": "Weekly review reminder",
+
+  "@_CELEBRATIONS": {},
+  "celebrationMicroDone": "Done!",
+  "celebrationMicroNice": "Nice!",
+  "celebrationMicroChecked": "Checked!",
+  "celebrationMicroSaved": "Saved!",
+  "celebrationMicroGotIt": "Got it!",
+
+  "celebrationMediumStreak": "{count}-day streak — keep it up!",
+  "@celebrationMediumStreak": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "celebrationMediumWeeklyGoal": "Weekly goal reached!",
+  "celebrationMediumProgress": "Great progress — you're at {percent}%!",
+  "@celebrationMediumProgress": {
+    "placeholders": {
+      "percent": {"type": "int"}
+    }
+  },
+  "celebrationMediumConsistency": "You're building consistency!",
+
+  "celebrationMajorMonthStreak": "{count}-day streak — incredible!",
+  "@celebrationMajorMonthStreak": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "celebrationMajorGoalComplete": "Goal complete — well done!",
+  "celebrationMajorMilestone": "Milestone unlocked!",
+  "celebrationMajor100Days": "100 days — legendary!",
+
+  "@_ENCOURAGEMENT": {},
+  "encouragementKeepGoing": "Keep going, you're doing great!",
+  "encouragementAlmostThere": "Almost there!",
+  "encouragementSmallSteps": "Small steps lead to big changes.",
+  "encouragementProud": "You should be proud!",
+  "encouragementComeBack": "Welcome back — let's pick up where you left off."
 }

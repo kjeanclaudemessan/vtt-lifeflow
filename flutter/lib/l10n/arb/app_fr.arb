@@ -505,5 +505,44 @@
   "notifChannelStreaks": "Séries",
   "notifChannelStreaksDesc": "Notifications de séries et accomplissements",
   "notifChannelBilan": "Bilan hebdomadaire",
-  "notifChannelBilanDesc": "Rappel pour ton bilan de la semaine"
+  "notifChannelBilanDesc": "Rappel pour ton bilan de la semaine",
+
+  "@_CELEBRATIONS": {},
+  "celebrationMicroDone": "Fait !",
+  "celebrationMicroNice": "Bien joué !",
+  "celebrationMicroChecked": "Coché !",
+  "celebrationMicroSaved": "Enregistré !",
+  "celebrationMicroGotIt": "C'est noté !",
+
+  "celebrationMediumStreak": "Série de {count} jours — continue !",
+  "@celebrationMediumStreak": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "celebrationMediumWeeklyGoal": "Objectif de la semaine atteint !",
+  "celebrationMediumProgress": "Belle progression — tu es à {percent} % !",
+  "@celebrationMediumProgress": {
+    "placeholders": {
+      "percent": {"type": "int"}
+    }
+  },
+  "celebrationMediumConsistency": "Tu deviens régulier !",
+
+  "celebrationMajorMonthStreak": "Série de {count} jours — incroyable !",
+  "@celebrationMajorMonthStreak": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "celebrationMajorGoalComplete": "Objectif atteint — bravo !",
+  "celebrationMajorMilestone": "Étape franchie !",
+  "celebrationMajor100Days": "100 jours — légendaire !",
+
+  "@_ENCOURAGEMENT": {},
+  "encouragementKeepGoing": "Continue, tu assures !",
+  "encouragementAlmostThere": "Presque là !",
+  "encouragementSmallSteps": "Les petits pas mènent aux grands changements.",
+  "encouragementProud": "Tu peux être fier de toi !",
+  "encouragementComeBack": "Content de te revoir — on reprend ensemble ?"
 }

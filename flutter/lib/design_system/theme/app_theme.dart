@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../tokens/app_colors.dart';
 import '../tokens/app_radius.dart';
 import '../tokens/app_spacing.dart';
+import 'app_brand_skin.dart';
+import 'app_skins.dart';
 
 /// ============================================================================
 /// VTT DESIGN SYSTEM - THEME
@@ -21,6 +23,20 @@ import '../tokens/app_spacing.dart';
 /// - Clean, refined components
 abstract final class AppTheme {
   // ═══════════════════════════════════════════════════════════════════════════
+  // ACTIVE BRAND SKIN
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// The active brand skin. Change this to switch to another app.
+  /// Defaults to LifeFlow. Other apps set this in their main.dart.
+  static AppBrandSkin _activeSkin = AppSkins.defaultSkin;
+
+  /// Returns the currently active brand skin.
+  static AppBrandSkin get activeSkin => _activeSkin;
+
+  /// Sets the active brand skin. Call before [light] / [dark].
+  static void setSkin(AppBrandSkin skin) => _activeSkin = skin;
+
+  // ═══════════════════════════════════════════════════════════════════════════
   // LIGHT THEME
   // ═══════════════════════════════════════════════════════════════════════════
 
@@ -29,16 +45,21 @@ abstract final class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      fontFamily: GoogleFonts.inter().fontFamily,
+      fontFamily: GoogleFonts.getFont(_activeSkin.fontFamily).fontFamily,
+
+      // ───────────────────────────────────────────────────────────────────────
+      // BRAND SKIN EXTENSION
+      // ───────────────────────────────────────────────────────────────────────
+      extensions: <ThemeExtension<dynamic>>[_activeSkin],
 
       // ───────────────────────────────────────────────────────────────────────
       // COLOR SCHEME
       // ───────────────────────────────────────────────────────────────────────
-      colorScheme: const ColorScheme.light(
-        primary: AppColors.primary,
-        onPrimary: AppColors.onPrimary,
-        primaryContainer: AppColors.primaryContainer,
-        onPrimaryContainer: AppColors.primaryDark,
+      colorScheme: ColorScheme.light(
+        primary: _activeSkin.primary,
+        onPrimary: _activeSkin.onPrimary,
+        primaryContainer: _activeSkin.primaryContainer,
+        onPrimaryContainer: _activeSkin.primaryDark,
         secondary: AppColors.contrastHighLight,
         onSecondary: AppColors.white,
         tertiary: AppColors.info,
@@ -97,30 +118,31 @@ abstract final class AppTheme {
       // ELEVATED BUTTON - Primary action (Porsche Red)
       // ───────────────────────────────────────────────────────────────────────
       elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.onPrimary,
-          disabledBackgroundColor: AppColors.contrastLowLight,
-          disabledForegroundColor: AppColors.contrastMediumLight,
-          padding: AppSpacing.buttonPadding,
-          minimumSize: Size(0, AppSpacing.buttonHeightMd),
-          shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
-          textStyle: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ).copyWith(
-          overlayColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.pressed)) {
-              return AppColors.primaryDark;
-            }
-            if (states.contains(WidgetState.hovered)) {
-              return AppColors.stateHoverLight;
-            }
-            return null;
-          }),
-        ),
+        style:
+            ElevatedButton.styleFrom(
+              elevation: 0,
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.onPrimary,
+              disabledBackgroundColor: AppColors.contrastLowLight,
+              disabledForegroundColor: AppColors.contrastMediumLight,
+              padding: AppSpacing.buttonPadding,
+              minimumSize: Size(0, AppSpacing.buttonHeightMd),
+              shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+              textStyle: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ).copyWith(
+              overlayColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.pressed)) {
+                  return AppColors.primaryDark;
+                }
+                if (states.contains(WidgetState.hovered)) {
+                  return AppColors.stateHoverLight;
+                }
+                return null;
+              }),
+            ),
       ),
 
       // ───────────────────────────────────────────────────────────────────────
@@ -185,8 +207,10 @@ abstract final class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.input,
-          borderSide:
-              const BorderSide(color: AppColors.contrastHighLight, width: 2),
+          borderSide: const BorderSide(
+            color: AppColors.contrastHighLight,
+            width: 2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadius.input,
@@ -213,10 +237,7 @@ abstract final class AppTheme {
           fontSize: 14,
           fontWeight: FontWeight.w600,
         ),
-        errorStyle: GoogleFonts.inter(
-          color: AppColors.error,
-          fontSize: 12,
-        ),
+        errorStyle: GoogleFonts.inter(color: AppColors.error, fontSize: 12),
         prefixIconColor: AppColors.contrastMediumLight,
         suffixIconColor: AppColors.contrastMediumLight,
       ),
@@ -283,7 +304,9 @@ abstract final class AppTheme {
             return const IconThemeData(color: AppColors.white, size: 24);
           }
           return const IconThemeData(
-              color: AppColors.contrastMediumLight, size: 24);
+            color: AppColors.contrastMediumLight,
+            size: 24,
+          );
         }),
       ),
 
@@ -345,8 +368,8 @@ abstract final class AppTheme {
       // ───────────────────────────────────────────────────────────────────────
       // PROGRESS INDICATOR
       // ───────────────────────────────────────────────────────────────────────
-      progressIndicatorTheme: const ProgressIndicatorThemeData(
-        color: AppColors.primary,
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: _activeSkin.primary,
         linearTrackColor: AppColors.contrastLowLight,
         circularTrackColor: AppColors.contrastLowLight,
       ),
@@ -416,31 +439,14 @@ abstract final class AppTheme {
       // ───────────────────────────────────────────────────────────────────────
       // FLOATING ACTION BUTTON
       // ───────────────────────────────────────────────────────────────────────
-      floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.white,
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: _activeSkin.primary,
+        foregroundColor: _activeSkin.onPrimary,
         elevation: 0,
         focusElevation: 0,
         hoverElevation: 0,
         highlightElevation: 0,
-        shape: CircleBorder(),
-      ),
-
-      // ───────────────────────────────────────────────────────────────────────
-      // LIST TILE
-      // ───────────────────────────────────────────────────────────────────────
-      listTileTheme: ListTileThemeData(
-        contentPadding: AppSpacing.listItemPadding,
-        titleTextStyle: GoogleFonts.inter(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimaryLight,
-        ),
-        subtitleTextStyle: GoogleFonts.inter(
-          fontSize: 14,
-          color: AppColors.textSecondaryLight,
-        ),
-        iconColor: AppColors.contrastMediumLight,
+        shape: const CircleBorder(),
       ),
 
       // ───────────────────────────────────────────────────────────────────────
@@ -465,10 +471,7 @@ abstract final class AppTheme {
           color: AppColors.contrastHighLight,
           borderRadius: AppRadius.xs,
         ),
-        textStyle: GoogleFonts.inter(
-          fontSize: 12,
-          color: AppColors.white,
-        ),
+        textStyle: GoogleFonts.inter(fontSize: 12, color: AppColors.white),
       ),
 
       // ───────────────────────────────────────────────────────────────────────
@@ -523,19 +526,13 @@ abstract final class AppTheme {
           fontWeight: FontWeight.w500,
           color: AppColors.textOnPrimary.withValues(alpha: 0.7),
         ),
-        dayStyle: GoogleFonts.inter(
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-        ),
+        dayStyle: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w400),
         weekdayStyle: GoogleFonts.inter(
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: AppColors.textSecondaryLight,
         ),
-        yearStyle: GoogleFonts.inter(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        ),
+        yearStyle: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500),
       ),
 
       // ───────────────────────────────────────────────────────────────────────
@@ -606,16 +603,25 @@ abstract final class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      fontFamily: GoogleFonts.inter().fontFamily,
+      fontFamily: GoogleFonts.getFont(_activeSkin.fontFamily).fontFamily,
+
+      // ───────────────────────────────────────────────────────────────────────
+      // BRAND SKIN EXTENSION
+      // ───────────────────────────────────────────────────────────────────────
+      extensions: <ThemeExtension<dynamic>>[
+        _activeSkin.copyWith(
+          primaryContainer: AppSkins.darkContainerFor(_activeSkin),
+        ),
+      ],
 
       // ───────────────────────────────────────────────────────────────────────
       // COLOR SCHEME
       // ───────────────────────────────────────────────────────────────────────
-      colorScheme: const ColorScheme.dark(
-        primary: AppColors.primary,
-        onPrimary: AppColors.onPrimary,
-        primaryContainer: AppColors.primaryContainerDark,
-        onPrimaryContainer: AppColors.primaryLight,
+      colorScheme: ColorScheme.dark(
+        primary: _activeSkin.primary,
+        onPrimary: _activeSkin.onPrimary,
+        primaryContainer: AppSkins.darkContainerFor(_activeSkin),
+        onPrimaryContainer: _activeSkin.primaryLight,
         secondary: AppColors.contrastHighDark,
         onSecondary: AppColors.black,
         tertiary: AppColors.info,
@@ -752,8 +758,10 @@ abstract final class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.input,
-          borderSide:
-              const BorderSide(color: AppColors.contrastHighDark, width: 2),
+          borderSide: const BorderSide(
+            color: AppColors.contrastHighDark,
+            width: 2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadius.input,
@@ -780,10 +788,7 @@ abstract final class AppTheme {
           fontSize: 14,
           fontWeight: FontWeight.w600,
         ),
-        errorStyle: GoogleFonts.inter(
-          color: AppColors.error,
-          fontSize: 12,
-        ),
+        errorStyle: GoogleFonts.inter(color: AppColors.error, fontSize: 12),
         prefixIconColor: AppColors.contrastMediumDark,
         suffixIconColor: AppColors.contrastMediumDark,
       ),
@@ -850,7 +855,9 @@ abstract final class AppTheme {
             return const IconThemeData(color: AppColors.black, size: 24);
           }
           return const IconThemeData(
-              color: AppColors.contrastMediumDark, size: 24);
+            color: AppColors.contrastMediumDark,
+            size: 24,
+          );
         }),
       ),
 
@@ -912,8 +919,8 @@ abstract final class AppTheme {
       // ───────────────────────────────────────────────────────────────────────
       // PROGRESS INDICATOR
       // ───────────────────────────────────────────────────────────────────────
-      progressIndicatorTheme: const ProgressIndicatorThemeData(
-        color: AppColors.primary,
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: _activeSkin.primary,
         linearTrackColor: AppColors.contrastLowDark,
         circularTrackColor: AppColors.contrastLowDark,
       ),
@@ -983,14 +990,14 @@ abstract final class AppTheme {
       // ───────────────────────────────────────────────────────────────────────
       // FLOATING ACTION BUTTON
       // ───────────────────────────────────────────────────────────────────────
-      floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.white,
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: _activeSkin.primary,
+        foregroundColor: _activeSkin.onPrimary,
         elevation: 0,
         focusElevation: 0,
         hoverElevation: 0,
         highlightElevation: 0,
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
       ),
 
       // ───────────────────────────────────────────────────────────────────────
@@ -1032,10 +1039,7 @@ abstract final class AppTheme {
           color: AppColors.contrastHighDark,
           borderRadius: AppRadius.xs,
         ),
-        textStyle: GoogleFonts.inter(
-          fontSize: 12,
-          color: AppColors.black,
-        ),
+        textStyle: GoogleFonts.inter(fontSize: 12, color: AppColors.black),
       ),
 
       // ───────────────────────────────────────────────────────────────────────
@@ -1090,19 +1094,13 @@ abstract final class AppTheme {
           fontWeight: FontWeight.w500,
           color: AppColors.textOnPrimary.withValues(alpha: 0.7),
         ),
-        dayStyle: GoogleFonts.inter(
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-        ),
+        dayStyle: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w400),
         weekdayStyle: GoogleFonts.inter(
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: AppColors.textSecondaryDark,
         ),
-        yearStyle: GoogleFonts.inter(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        ),
+        yearStyle: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500),
       ),
 
       // ───────────────────────────────────────────────────────────────────────

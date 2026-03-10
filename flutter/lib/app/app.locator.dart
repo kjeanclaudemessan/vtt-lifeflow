@@ -25,6 +25,7 @@ import '../modules/optional/payments/payment_service.dart';
 import '../services/analytics/analytics_service.dart';
 import '../services/api/api_service.dart';
 import '../services/bilan_service.dart';
+import '../services/celebration/celebration_service.dart';
 import '../services/connectivity/connectivity_service.dart';
 import '../services/database/app_database.dart';
 import '../services/dialog/dialog_helper.dart';
@@ -72,6 +73,7 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => SupabaseAuthService());
   locator.registerLazySingleton(() => StorageService());
   locator.registerLazySingleton(() => HapticService());
+  locator.registerLazySingleton(() => CelebrationService());
   locator.registerLazySingleton(() => AnalyticsService());
   locator.registerSingleton(AppSettingsService());
   locator.registerLazySingleton(() => PushNotificationService());
