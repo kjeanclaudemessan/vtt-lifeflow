@@ -379,17 +379,17 @@ await bootstrap(environment: Environment.development);
 
 | Instruction File | Applies To | Summary |
 |---|---|---|
-| `dark-mode.instructions.md` | `**/*.dart` | Never use `*Light`/`*Dark` color variants directly. Use `AppColors.textSecondary(brightness)` helpers. Ban `Colors.white`/`Colors.black`. |
-| `animation.instructions.md` | `**/*_view.dart` | Every visible state change must be animated. Use `AppAnimations` tokens. `AnimatedSwitcher` on content switches, `AnimatedScale` on toggles, `TweenAnimationBuilder` on counters. |
-| `haptic.instructions.md` | `**/*_viewmodel.dart` | Every user action triggers haptic feedback. `mediumImpact` on success, `heavyImpact` on error, `selectionClick` on selection, `lightImpact` on toggle. |
-| `accessibility.instructions.md` | `**/*.dart` | All interactive elements need `Semantics`. All icons need `semanticLabel`. Touch targets ≥ 48dp. Decorative elements get `ExcludeSemantics`. |
+| `design-system-dark-mode.instructions.md` | `**/*.dart` | Dark-first strategy. Never use `*Light`/`*Dark` color variants directly. Use `context.colorScheme`. Ban `Colors.white`/`Colors.black`. Surface hierarchy, shadow adaptation. |
+| `design-system-motion.instructions.md` | `**/*_view.dart` | Every visible state change must be animated. Use `AppAnimations` tokens. `AnimatedSwitcher`, `AnimatedScale`, `TweenAnimationBuilder`. Respect `disableAnimations`. |
+| `design-system-haptics.instructions.md` | `**/*_viewmodel.dart` | Every user action triggers haptic feedback. `mediumImpact` on success, `heavyImpact` on error, `selectionClick` on selection, `lightImpact` on toggle. |
+| `design-system-accessibility.instructions.md` | `**/*.dart` | WCAG AA. All icons need `semanticLabel`. Touch targets ≥ 48dp. No color-only info. `ExcludeSemantics` on decorative. Font scaling 1.0-2.0×. |
 | `i18n-strict.instructions.md` | `**/*_view.dart,**/*_dialog.dart` | Zero hardcoded user-facing strings. No emoji-prefixed labels. Use `context.l10n` exclusively. |
-| `sizing.instructions.md` | `**/*.dart` | No magic numbers for sizes. Use `AppSizing` tokens for icons, avatars, touch targets, progress indicators. |
-| `gestures.instructions.md` | `**/*_view.dart` | Data lists need `RefreshIndicator`. List items need `Slidable` or `Dismissible`. Long-press for quick actions. |
-| `loading-states.instructions.md` | `**/*_view.dart,**/*_viewmodel.dart` | Initial load = skeleton (not spinner). Submit = button loading. Refresh = pull-to-refresh. Pagination = inline loader. |
-| `error-states.instructions.md` | `**/*_view.dart,**/*_viewmodel.dart` | Load error = AppEmptyState + retry. Action error = SnackBar. Full state machine: error → busy → empty → content. |
-| `nav-transitions.instructions.md` | `**/*_viewmodel.dart,**/app.dart` | Push = slide, modal = bottom slide, replace = cross-fade. Hero animations. No raw `Navigator.push`. |
-| `color-consistency.instructions.md` | `**/*_view.dart,**/*.dart` | All Scaffold backgrounds from `context.colorScheme`. Never hardcode `AppColors.*Light`/`*Dark` for surfaces. |
+| `design-system-tokens.instructions.md` | `**/*.dart` | No magic numbers. All colors via `AppColors`, spacing via `AppSpacing`/`AppGaps`, typography via `AppTypography`, sizing via `AppSizing`, radius via `AppRadius`. |
+| `design-system-navigation.instructions.md` | `**/*_view.dart,**/*_viewmodel.dart,**/app.dart` | Bottom nav 4 tabs (no drawer). Push=slide, modal=bottom, replace=fade. Pull-to-refresh on lists. Swipe actions. No raw `Navigator.push`. |
+| `design-system-states.instructions.md` | `**/*_view.dart,**/*_viewmodel.dart` | State machine: error → busy → empty → content. Skeleton loading (not spinner). Human error messages + retry. Empty = invitation CTA. |
+| `design-system-components.instructions.md` | `**/*_view.dart,**/*.dart` | Use DS components (AppButton, AppCard, AppTextField...) not raw Material. 16 components with variants. |
+| `design-system-principles.instructions.md` | `**/*.dart` | 5 design principles. No dark patterns. Progressive disclosure. Ethical AI. One primary objective per screen. |
+| `design-system-celebrations.instructions.md` | `**/*_viewmodel.dart` | Milestones trigger celebrations (checkmark/glow/confetti). Streak badges. No addiction patterns. Max 1 confetti/session. |
 | `reactivity.instructions.md` | `**/*_viewmodel.dart,**/*_service.dart` | Every entity needs an EventService. Every mutation calls `notifyChanged()`. Every consumer subscribes + unsubscribes. No stale UI. |
 
 ### Task Prompts
