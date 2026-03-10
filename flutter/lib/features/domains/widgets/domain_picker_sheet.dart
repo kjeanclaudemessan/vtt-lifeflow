@@ -62,7 +62,10 @@ class DomainPickerSheet extends StatelessWidget {
               ),
             ),
             trailing: isSelected
-                ? Icon(Icons.check_circle, color: AppColors.primary)
+                ? Icon(
+                    Icons.check_circle,
+                    color: Theme.of(context).colorScheme.primary,
+                  )
                 : null,
             isSelected: isSelected,
             onTap: () => Navigator.of(context).pop(domain),

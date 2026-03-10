@@ -62,14 +62,9 @@ class AvatarWidget extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: backgroundColor ?? AppColors.neutral200,
-              border: Border.all(
-                color: AppColors.neutral300,
-                width: 2.w,
-              ),
+              border: Border.all(color: AppColors.neutral300, width: 2.w),
             ),
-            child: ClipOval(
-              child: _buildContent(context, effectiveSize),
-            ),
+            child: ClipOval(child: _buildContent(context, effectiveSize)),
           ),
 
           // Edit button
@@ -82,7 +77,7 @@ class AvatarWidget extends StatelessWidget {
                 height: 32.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   border: Border.all(
                     color: context.colorScheme.surface,
                     width: 2.w,
@@ -91,7 +86,7 @@ class AvatarWidget extends StatelessWidget {
                 child: Icon(
                   Icons.camera_alt_rounded,
                   size: 16.sp,
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
               ),
             ),
@@ -124,10 +119,10 @@ class AvatarWidget extends StatelessWidget {
             child: CircularProgressIndicator(
               value: loadingProgress.expectedTotalBytes != null
                   ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes!
+                        loadingProgress.expectedTotalBytes!
                   : null,
               strokeWidth: 2.w,
-              color: AppColors.primary,
+              color: Theme.of(context).colorScheme.primary,
             ),
           );
         },
@@ -223,8 +218,9 @@ class AvatarPickerOptions extends StatelessWidget {
     VoidCallback? onTap,
     bool isDestructive = false,
   }) {
-    final color =
-        isDestructive ? AppColors.error : context.colorScheme.onSurface;
+    final color = isDestructive
+        ? AppColors.error
+        : context.colorScheme.onSurface;
 
     return ListTile(
       leading: Icon(icon, color: color),

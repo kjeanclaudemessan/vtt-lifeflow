@@ -89,14 +89,8 @@ class OnboardingSlideWidget extends StatelessWidget {
         if (slide.image.isNotEmpty)
           Positioned.fill(
             child: slide.image.endsWith('.svg')
-                ? SvgPicture.asset(
-                    slide.image,
-                    fit: BoxFit.cover,
-                  )
-                : Image.asset(
-                    slide.image,
-                    fit: BoxFit.cover,
-                  ),
+                ? SvgPicture.asset(slide.image, fit: BoxFit.cover)
+                : Image.asset(slide.image, fit: BoxFit.cover),
           ),
 
         // Gradient overlay
@@ -158,13 +152,15 @@ class OnboardingSlideWidget extends StatelessWidget {
               width: 100.w,
               height: 100.w,
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 slide.icon,
                 size: 48.sp,
-                color: AppColors.primary,
+                color: Theme.of(context).colorScheme.primary,
               ),
             )
           else
@@ -205,13 +201,14 @@ class OnboardingSlideWidget extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           color:
-              slide.backgroundColor ?? AppColors.primary.withValues(alpha: 0.1),
+              slide.backgroundColor ??
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
           shape: BoxShape.circle,
         ),
         child: Icon(
           slide.icon,
           size: height * 0.5,
-          color: AppColors.primary,
+          color: Theme.of(context).colorScheme.primary,
         ),
       );
     }
@@ -221,18 +218,10 @@ class OnboardingSlideWidget extends StatelessWidget {
     }
 
     if (slide.image.endsWith('.svg')) {
-      return SvgPicture.asset(
-        slide.image,
-        height: height,
-        fit: BoxFit.contain,
-      );
+      return SvgPicture.asset(slide.image, height: height, fit: BoxFit.contain);
     }
 
-    return Image.asset(
-      slide.image,
-      height: height,
-      fit: BoxFit.contain,
-    );
+    return Image.asset(slide.image, height: height, fit: BoxFit.contain);
   }
 
   /// Get localized text from key.

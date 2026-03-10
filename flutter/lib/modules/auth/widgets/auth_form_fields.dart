@@ -140,8 +140,9 @@ class _AuthPasswordFieldState extends State<AuthPasswordField> {
         ),
         onPressed: widget.onToggleVisibility,
       ),
-      onSubmitted:
-          widget.onSubmitted != null ? (_) => widget.onSubmitted!() : null,
+      onSubmitted: widget.onSubmitted != null
+          ? (_) => widget.onSubmitted!()
+          : null,
     );
   }
 }
@@ -150,10 +151,7 @@ class _AuthPasswordFieldState extends State<AuthPasswordField> {
 class PasswordStrengthIndicator extends StatelessWidget {
   final PasswordStrength strength;
 
-  const PasswordStrengthIndicator({
-    super.key,
-    required this.strength,
-  });
+  const PasswordStrengthIndicator({super.key, required this.strength});
 
   @override
   Widget build(BuildContext context) {
@@ -164,20 +162,20 @@ class PasswordStrengthIndicator extends StatelessWidget {
     final (color, label, progress) = switch (strength) {
       PasswordStrength.none => (Colors.transparent, '', 0.0),
       PasswordStrength.weak => (
-          AppColors.error,
-          context.l10n.passwordStrengthWeak,
-          0.33
-        ),
+        AppColors.error,
+        context.l10n.passwordStrengthWeak,
+        0.33,
+      ),
       PasswordStrength.medium => (
-          AppColors.warning,
-          context.l10n.passwordStrengthMedium,
-          0.66
-        ),
+        AppColors.warning,
+        context.l10n.passwordStrengthMedium,
+        0.66,
+      ),
       PasswordStrength.strong => (
-          AppColors.success,
-          context.l10n.passwordStrengthStrong,
-          1.0
-        ),
+        AppColors.success,
+        context.l10n.passwordStrengthStrong,
+        1.0,
+      ),
     };
 
     return Padding(
@@ -196,10 +194,7 @@ class PasswordStrengthIndicator extends StatelessWidget {
             ),
           ),
           SizedBox(width: AppSpacing.sm),
-          Text(
-            label,
-            style: AppTypography.labelSmall.copyWith(color: color),
-          ),
+          Text(label, style: AppTypography.labelSmall.copyWith(color: color)),
         ],
       ),
     );
@@ -234,7 +229,7 @@ class TermsCheckbox extends StatelessWidget {
           child: Checkbox(
             value: value,
             onChanged: onChanged,
-            activeColor: AppColors.primary,
+            activeColor: Theme.of(context).colorScheme.primary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.r),
             ),
@@ -257,7 +252,7 @@ class TermsCheckbox extends StatelessWidget {
                       child: Text(
                         context.l10n.termsAndConditions,
                         style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.primary,
+                          color: Theme.of(context).colorScheme.primary,
                           decoration: TextDecoration.underline,
                         ),
                       ),
@@ -270,7 +265,7 @@ class TermsCheckbox extends StatelessWidget {
                       child: Text(
                         context.l10n.privacyPolicy,
                         style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.primary,
+                          color: Theme.of(context).colorScheme.primary,
                           decoration: TextDecoration.underline,
                         ),
                       ),
@@ -310,7 +305,7 @@ class RememberMeCheckbox extends StatelessWidget {
           child: Checkbox(
             value: value,
             onChanged: onChanged,
-            activeColor: AppColors.primary,
+            activeColor: Theme.of(context).colorScheme.primary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.r),
             ),

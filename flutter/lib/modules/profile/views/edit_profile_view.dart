@@ -15,10 +15,7 @@ class EditProfileView extends StackedView<EditProfileViewModel> {
   /// Optional custom configuration.
   final ProfileConfig? config;
 
-  const EditProfileView({
-    this.config,
-    super.key,
-  });
+  const EditProfileView({this.config, super.key});
 
   @override
   void onViewModelReady(EditProfileViewModel viewModel) {
@@ -36,12 +33,8 @@ class EditProfileView extends StackedView<EditProfileViewModel> {
     if (viewModel.busy(EditProfileViewModel.loadingBusyKey)) {
       return Scaffold(
         backgroundColor: context.colorScheme.surface,
-        appBar: AppAppBar(
-          title: l10n.editProfile,
-        ),
-        body: const Center(
-          child: AppLoader(),
-        ),
+        appBar: AppAppBar(title: l10n.editProfile),
+        body: const Center(child: AppLoader()),
       );
     }
 
@@ -76,7 +69,7 @@ class EditProfileView extends StackedView<EditProfileViewModel> {
                       l10n.save,
                       style: TextStyle(
                         color: viewModel.canSubmit
-                            ? AppColors.primary
+                            ? Theme.of(context).colorScheme.primary
                             : AppColors.neutral400,
                       ),
                     ),

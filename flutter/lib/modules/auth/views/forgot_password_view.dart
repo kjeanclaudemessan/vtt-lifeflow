@@ -24,9 +24,7 @@ class ForgotPasswordView extends StackedView<ForgotPasswordViewModel> {
 
     return Scaffold(
       backgroundColor: context.colorScheme.surface,
-      appBar: AppAppBar(
-        leading: AppBackButton(onPressed: viewModel.goBack),
-      ),
+      appBar: AppAppBar(leading: AppBackButton(onPressed: viewModel.goBack)),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(AppSpacing.lg),
@@ -47,10 +45,7 @@ class ForgotPasswordView extends StackedView<ForgotPasswordViewModel> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // Header
-        AuthHeader(
-          title: l10n.resetPassword,
-          subtitle: l10n.forgotPassword,
-        ),
+        AuthHeader(title: l10n.resetPassword, subtitle: l10n.forgotPassword),
 
         SizedBox(height: AppSpacing.xxl),
 
@@ -110,7 +105,7 @@ class ForgotPasswordView extends StackedView<ForgotPasswordViewModel> {
             child: Text(
               l10n.back,
               style: AppTypography.labelMedium.copyWith(
-                color: AppColors.primary,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ),
@@ -170,10 +165,7 @@ class ForgotPasswordView extends StackedView<ForgotPasswordViewModel> {
         SizedBox(height: AppSpacing.xxl),
 
         // Back to login button
-        AppButton.primary(
-          label: l10n.signIn,
-          onPressed: viewModel.goBack,
-        ),
+        AppButton.primary(label: l10n.signIn, onPressed: viewModel.goBack),
 
         SizedBox(height: AppSpacing.md),
 
@@ -183,7 +175,7 @@ class ForgotPasswordView extends StackedView<ForgotPasswordViewModel> {
           child: Text(
             l10n.resendCode,
             style: AppTypography.labelMedium.copyWith(
-              color: AppColors.primary,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
         ),

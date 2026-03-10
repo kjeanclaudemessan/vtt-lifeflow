@@ -25,7 +25,7 @@ class StartupView extends StackedView<StartupViewModel> {
               'LifeFlow',
               style: AppTypography.displaySmall.copyWith(
                 fontWeight: FontWeight.w900,
-                color: AppColors.primary,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             SizedBox(height: AppSpacing.xs),

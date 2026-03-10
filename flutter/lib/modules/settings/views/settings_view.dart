@@ -16,10 +16,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
   /// Optional custom configuration.
   final SettingsConfig? config;
 
-  const SettingsView({
-    this.config,
-    super.key,
-  });
+  const SettingsView({this.config, super.key});
 
   @override
   void onViewModelReady(SettingsViewModel viewModel) {
@@ -104,10 +101,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
       backgroundColor: context.colorScheme.surface,
       appBar: AppAppBar(
         title: l10n.settings,
-        leading: AppBackButton(
-          icon: Icons.close,
-          onPressed: viewModel.goBack,
-        ),
+        leading: AppBackButton(icon: Icons.close, onPressed: viewModel.goBack),
       ),
       body: ListView(
         padding: EdgeInsets.all(AppSpacing.lg),
@@ -122,7 +116,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
               child: Text(
                 _getSectionTitle(context, section.titleKey),
                 style: AppTypography.labelLarge.copyWith(
-                  color: AppColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -137,7 +131,8 @@ class SettingsView extends StackedView<SettingsViewModel> {
   }
 
   List<(SettingsSection, SettingsItem)> _getAllItems(
-      SettingsViewModel viewModel) {
+    SettingsViewModel viewModel,
+  ) {
     final items = <(SettingsSection, SettingsItem)>[];
     for (final section in viewModel.config.sections) {
       for (final item in section.items) {
@@ -169,7 +164,8 @@ class SettingsView extends StackedView<SettingsViewModel> {
         icon: item.icon ?? Icons.warning_outlined,
         title: _getItemTitle(context, item.titleKey),
         isDestructive: true,
-        showChevron: item.type == SettingsItemType.navigation ||
+        showChevron:
+            item.type == SettingsItemType.navigation ||
             item.type == SettingsItemType.link,
         trailing: _buildTrailing(context, viewModel, item),
         onTap: () => _handleItemTap(context, viewModel, item),
@@ -210,8 +206,9 @@ class SettingsView extends StackedView<SettingsViewModel> {
                 Icon(
                   item.icon,
                   size: 22.sp,
-                  color:
-                      item.destructive ? AppColors.error : AppColors.neutral500,
+                  color: item.destructive
+                      ? AppColors.error
+                      : AppColors.neutral500,
                 ),
                 SizedBox(width: AppSpacing.md),
               ],
@@ -240,54 +237,52 @@ class SettingsView extends StackedView<SettingsViewModel> {
   ) {
     return switch (item.type) {
       SettingsItemType.toggle => AppSwitch(
-          value: viewModel.getToggleValue(item.id),
-          onChanged: (value) => viewModel.setToggleValue(item.id, value),
-        ),
+        value: viewModel.getToggleValue(item.id),
+        onChanged: (value) => viewModel.setToggleValue(item.id, value),
+      ),
       SettingsItemType.themeSelector => Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              _getThemeModeLabel(context, viewModel.themeMode),
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.neutral500,
-              ),
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            _getThemeModeLabel(context, viewModel.themeMode),
+            style: AppTypography.bodyMedium.copyWith(
+              color: AppColors.neutral500,
             ),
-            SizedBox(width: AppSpacing.xs),
-            Icon(
-              Icons.chevron_right_rounded,
-              size: 20.sp,
-              color: AppColors.neutral400,
-            ),
-          ],
-        ),
-      SettingsItemType.languageSelector => Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              viewModel.getLocaleLabel(viewModel.locale),
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.neutral500,
-              ),
-            ),
-            SizedBox(width: AppSpacing.xs),
-            Icon(
-              Icons.chevron_right_rounded,
-              size: 20.sp,
-              color: AppColors.neutral400,
-            ),
-          ],
-        ),
-      SettingsItemType.info => Text(
-          item.id == 'version' ? viewModel.fullVersion : '',
-          style: AppTypography.bodyMedium.copyWith(
-            color: AppColors.neutral500,
           ),
-        ),
+          SizedBox(width: AppSpacing.xs),
+          Icon(
+            Icons.chevron_right_rounded,
+            size: 20.sp,
+            color: AppColors.neutral400,
+          ),
+        ],
+      ),
+      SettingsItemType.languageSelector => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            viewModel.getLocaleLabel(viewModel.locale),
+            style: AppTypography.bodyMedium.copyWith(
+              color: AppColors.neutral500,
+            ),
+          ),
+          SizedBox(width: AppSpacing.xs),
+          Icon(
+            Icons.chevron_right_rounded,
+            size: 20.sp,
+            color: AppColors.neutral400,
+          ),
+        ],
+      ),
+      SettingsItemType.info => Text(
+        item.id == 'version' ? viewModel.fullVersion : '',
+        style: AppTypography.bodyMedium.copyWith(color: AppColors.neutral500),
+      ),
       SettingsItemType.navigation || SettingsItemType.link => Icon(
-          Icons.chevron_right_rounded,
-          size: 20.sp,
-          color: AppColors.neutral400,
-        ),
+        Icons.chevron_right_rounded,
+        size: 20.sp,
+        color: AppColors.neutral400,
+      ),
       _ => const SizedBox.shrink(),
     };
   }

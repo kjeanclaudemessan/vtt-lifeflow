@@ -54,7 +54,7 @@ class DomainTile extends StatelessWidget {
         return false; // Let the viewmodel handle the removal
       },
       backgroundColor: AppColors.warning,
-      iconColor: Colors.white,
+      iconColor: AppColors.white,
       child: AppListTile(
         leading: Text(domain.icon, style: AppTypography.headingLarge),
         title: Text(
@@ -96,7 +96,9 @@ class DomainTile extends StatelessWidget {
         onPressed: onRestore,
         child: Text(
           context.l10n.restore,
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+          style: AppTypography.labelMedium.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
       ),
     );

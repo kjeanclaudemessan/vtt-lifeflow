@@ -117,7 +117,7 @@ class _HabitValueSheetState extends State<HabitValueSheet> {
                     style: AppTypography.labelMedium.copyWith(
                       color: _isCompleted
                           ? AppColors.success
-                          : AppColors.primary,
+                          : Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ],
@@ -191,6 +191,8 @@ class _RoundButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
 
+    final primary = Theme.of(context).colorScheme.primary;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -199,15 +201,13 @@ class _RoundButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: onTap != null
-              ? AppColors.primary.withValues(alpha: 0.1)
+              ? primary.withValues(alpha: 0.1)
               : AppColors.surfaceSecondary(brightness),
         ),
         alignment: Alignment.center,
         child: Icon(
           icon,
-          color: onTap != null
-              ? AppColors.primary
-              : AppColors.textTertiary(brightness),
+          color: onTap != null ? primary : AppColors.textTertiary(brightness),
           size: AppSizing.iconMd,
         ),
       ),

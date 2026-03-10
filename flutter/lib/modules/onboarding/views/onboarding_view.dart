@@ -17,10 +17,7 @@ class OnboardingView extends StackedView<OnboardingViewModel> {
   /// Optional custom configuration.
   final OnboardingConfig? config;
 
-  const OnboardingView({
-    this.config,
-    super.key,
-  });
+  const OnboardingView({this.config, super.key});
 
   @override
   Widget builder(
@@ -53,7 +50,8 @@ class OnboardingView extends StackedView<OnboardingViewModel> {
                       context.l10n.skip,
                       style: AppTypography.labelMedium.copyWith(
                         color: AppColors.textSecondary(
-                            Theme.of(context).brightness),
+                          Theme.of(context).brightness,
+                        ),
                       ),
                     ),
                   ),
@@ -101,7 +99,9 @@ class OnboardingView extends StackedView<OnboardingViewModel> {
   }
 
   Widget _buildFullscreenStyle(
-      BuildContext context, OnboardingViewModel viewModel) {
+    BuildContext context,
+    OnboardingViewModel viewModel,
+  ) {
     return Scaffold(
       body: Stack(
         children: [
@@ -128,7 +128,7 @@ class OnboardingView extends StackedView<OnboardingViewModel> {
                 child: Text(
                   context.l10n.skip,
                   style: AppTypography.labelMedium.copyWith(
-                    color: Colors.white,
+                    color: AppColors.white,
                   ),
                 ),
               ),
@@ -146,8 +146,8 @@ class OnboardingView extends StackedView<OnboardingViewModel> {
                     currentIndex: viewModel.currentIndex,
                     totalCount: viewModel.config.slideCount,
                     style: viewModel.config.indicatorStyle,
-                    activeColor: Colors.white,
-                    inactiveColor: Colors.white.withValues(alpha: 0.3),
+                    activeColor: AppColors.white,
+                    inactiveColor: AppColors.white.withValues(alpha: 0.3),
                   ),
                 SizedBox(height: AppSpacing.lg),
                 OnboardingNavigation(
@@ -165,7 +165,9 @@ class OnboardingView extends StackedView<OnboardingViewModel> {
   }
 
   Widget _buildMinimalStyle(
-      BuildContext context, OnboardingViewModel viewModel) {
+    BuildContext context,
+    OnboardingViewModel viewModel,
+  ) {
     return Scaffold(
       backgroundColor: context.colorScheme.surface,
       body: SafeArea(

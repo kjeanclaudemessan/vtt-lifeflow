@@ -33,7 +33,7 @@ class BilanShareWidget extends StatelessWidget {
         width: 360,
         padding: EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: AppRadius.lg,
         ),
         child: Column(

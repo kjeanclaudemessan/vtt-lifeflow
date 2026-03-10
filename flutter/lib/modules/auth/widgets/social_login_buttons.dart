@@ -73,37 +73,43 @@ class SocialLoginButtons extends StatelessWidget {
     final buttons = <Widget>[];
 
     if (showGoogle) {
-      buttons.add(_SocialButton(
-        svgAsset: 'assets/icons/google.svg',
-        label: context.l10n.loginWithGoogle,
-        onTap: onGoogleTap,
-        isLoading: isGoogleLoading,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
-        borderColor: AppColors.borderLight,
-      ));
+      buttons.add(
+        _SocialButton(
+          svgAsset: 'assets/icons/google.svg',
+          label: context.l10n.loginWithGoogle,
+          onTap: onGoogleTap,
+          isLoading: isGoogleLoading,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black87,
+          borderColor: AppColors.borderLight,
+        ),
+      );
     }
 
     if (showApple) {
-      buttons.add(_SocialButton(
-        svgAsset: 'assets/icons/apple.svg',
-        label: context.l10n.loginWithApple,
-        onTap: onAppleTap,
-        isLoading: isAppleLoading,
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-      ));
+      buttons.add(
+        _SocialButton(
+          svgAsset: 'assets/icons/apple.svg',
+          label: context.l10n.loginWithApple,
+          onTap: onAppleTap,
+          isLoading: isAppleLoading,
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+        ),
+      );
     }
 
     if (showGithub) {
-      buttons.add(_SocialButton(
-        svgAsset: 'assets/icons/github.svg',
-        label: context.l10n.loginWithGithub,
-        onTap: onGithubTap,
-        isLoading: isGithubLoading,
-        backgroundColor: const Color(0xFF24292E),
-        foregroundColor: Colors.white,
-      ));
+      buttons.add(
+        _SocialButton(
+          svgAsset: 'assets/icons/github.svg',
+          label: context.l10n.loginWithGithub,
+          onTap: onGithubTap,
+          isLoading: isGithubLoading,
+          backgroundColor: const Color(0xFF24292E),
+          foregroundColor: Colors.white,
+        ),
+      );
     }
 
     if (buttons.isEmpty) return const SizedBox.shrink();
@@ -161,8 +167,9 @@ class _SocialButton extends StatelessWidget {
           height: 52.h,
           decoration: BoxDecoration(
             borderRadius: AppRadius.md,
-            border:
-                borderColor != null ? Border.all(color: borderColor!) : null,
+            border: borderColor != null
+                ? Border.all(color: borderColor!)
+                : null,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -172,7 +179,7 @@ class _SocialButton extends StatelessWidget {
                   width: 24.w,
                   height: 24.w,
                   child: CircularProgressIndicator(
-                    strokeWidth: 2,
+                    strokeWidth: 2.w,
                     valueColor: AlwaysStoppedAnimation(foregroundColor),
                   ),
                 )
@@ -208,10 +215,7 @@ class _SocialButton extends StatelessWidget {
 class OrDivider extends StatelessWidget {
   final String text;
 
-  const OrDivider({
-    super.key,
-    this.text = 'or',
-  });
+  const OrDivider({super.key, this.text = 'or'});
 
   @override
   Widget build(BuildContext context) {

@@ -17,10 +17,7 @@ class ProfileView extends StackedView<ProfileViewModel> {
   /// Optional custom configuration.
   final ProfileConfig? config;
 
-  const ProfileView({
-    this.config,
-    super.key,
-  });
+  const ProfileView({this.config, super.key});
 
   @override
   void onViewModelReady(ProfileViewModel viewModel) {
@@ -36,9 +33,7 @@ class ProfileView extends StackedView<ProfileViewModel> {
     if (viewModel.busy(ProfileViewModel.loadingBusyKey)) {
       return Scaffold(
         backgroundColor: context.colorScheme.surface,
-        body: const Center(
-          child: AppLoader(),
-        ),
+        body: const Center(child: AppLoader()),
       );
     }
 
@@ -92,7 +87,8 @@ class ProfileView extends StackedView<ProfileViewModel> {
                         viewModel.email,
                         style: AppTypography.bodyMedium.copyWith(
                           color: AppColors.textSecondary(
-                              Theme.of(context).brightness),
+                            Theme.of(context).brightness,
+                          ),
                         ),
                       ),
                     ],
@@ -104,9 +100,7 @@ class ProfileView extends StackedView<ProfileViewModel> {
             // Profile completion indicator
             if (viewModel.config.showProfileCompletion)
               ProfileSection(
-                children: [
-                  _buildProfileCompletion(context, viewModel),
-                ],
+                children: [_buildProfileCompletion(context, viewModel)],
               ),
 
             // Profile fields
@@ -205,7 +199,8 @@ class ProfileView extends StackedView<ProfileViewModel> {
                         viewModel.email,
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.textSecondary(
-                              Theme.of(context).brightness),
+                            Theme.of(context).brightness,
+                          ),
                         ),
                       ),
                     ],
@@ -268,8 +263,10 @@ class ProfileView extends StackedView<ProfileViewModel> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      AppColors.primary,
-                      AppColors.primary.withValues(alpha: 0.7),
+                      Theme.of(context).colorScheme.primary,
+                      Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.7),
                     ],
                   ),
                 ),
@@ -282,20 +279,20 @@ class ProfileView extends StackedView<ProfileViewModel> {
                         url: viewModel.avatarUrl,
                         initials: viewModel.initials,
                         size: 80,
-                        backgroundColor: Colors.white,
+                        backgroundColor: AppColors.white,
                       ),
                       SizedBox(height: AppSpacing.md),
                       Text(
                         viewModel.displayName,
                         style: AppTypography.titleLarge.copyWith(
-                          color: Colors.white,
+                          color: AppColors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
                         viewModel.email,
                         style: AppTypography.bodyMedium.copyWith(
-                          color: Colors.white.withValues(alpha: 0.9),
+                          color: AppColors.white.withValues(alpha: 0.9),
                         ),
                       ),
                     ],
@@ -356,7 +353,9 @@ class ProfileView extends StackedView<ProfileViewModel> {
   }
 
   Widget _buildProfileCompletion(
-      BuildContext context, ProfileViewModel viewModel) {
+    BuildContext context,
+    ProfileViewModel viewModel,
+  ) {
     final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -364,23 +363,18 @@ class ProfileView extends StackedView<ProfileViewModel> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              l10n.profileCompletion,
-              style: AppTypography.labelMedium,
-            ),
+            Text(l10n.profileCompletion, style: AppTypography.labelMedium),
             Text(
               '${viewModel.profileCompletion}%',
               style: AppTypography.labelMedium.copyWith(
-                color: AppColors.primary,
+                color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ],
         ),
         SizedBox(height: AppSpacing.sm),
-        AppLinearProgress(
-          value: viewModel.profileCompletion / 100,
-        ),
+        AppLinearProgress(value: viewModel.profileCompletion / 100),
       ],
     );
   }

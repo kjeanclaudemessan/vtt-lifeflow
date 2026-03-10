@@ -133,13 +133,13 @@ class CounterView extends StackedView<CounterViewModel> {
           // Animated progress ring with animated counter
           AppAnimatedDouble(
             value: progress,
-            duration: const Duration(milliseconds: 1200),
+            duration: AppAnimations.slow,
             builder: (animatedProgress) {
               return AppProgressRing.large(
                 value: animatedProgress,
                 label: viewModel.totalHoursLabel,
                 sublabel: l10n.counterTitle,
-                color: AppColors.primary,
+                color: Theme.of(context).colorScheme.primary,
               );
             },
           ),
@@ -147,7 +147,7 @@ class CounterView extends StackedView<CounterViewModel> {
           // Animated total text
           AppAnimatedNumber(
             value: viewModel.totalMinutesThisWeek,
-            duration: const Duration(milliseconds: 1000),
+            duration: AppAnimations.slow,
             builder: (animatedMinutes) {
               final h = animatedMinutes ~/ 60;
               final m = animatedMinutes % 60;
@@ -194,8 +194,10 @@ class CounterView extends StackedView<CounterViewModel> {
   ) {
     final l10n = context.l10n;
 
+    final primary = Theme.of(context).colorScheme.primary;
+
     return AppCard.filled(
-      backgroundColor: AppColors.primary.withValues(alpha: 0.08),
+      backgroundColor: primary.withValues(alpha: 0.08),
       onTap: () => locator<NavigationService>().navigateToBilanView(),
       padding: EdgeInsets.all(AppSpacing.md),
       child: Row(
@@ -208,9 +210,7 @@ class CounterView extends StackedView<CounterViewModel> {
               children: [
                 Text(
                   l10n.bilanReady,
-                  style: AppTypography.titleSmall.copyWith(
-                    color: AppColors.primary,
-                  ),
+                  style: AppTypography.titleSmall.copyWith(color: primary),
                 ),
                 Text(
                   l10n.bilanTitle,
@@ -221,7 +221,7 @@ class CounterView extends StackedView<CounterViewModel> {
               ],
             ),
           ),
-          Icon(Icons.chevron_right, color: AppColors.primary),
+          Icon(Icons.chevron_right, color: primary),
         ],
       ),
     );

@@ -36,10 +36,7 @@ class LoginView extends StackedView<LoginViewModel> {
               SizedBox(height: AppSpacing.xxl),
 
               // Header
-              AuthHeader(
-                title: l10n.welcomeBack,
-                subtitle: l10n.signIn,
-              ),
+              AuthHeader(title: l10n.welcomeBack, subtitle: l10n.signIn),
 
               SizedBox(height: AppSpacing.xxl),
 
@@ -61,8 +58,9 @@ class LoginView extends StackedView<LoginViewModel> {
                 obscureText: viewModel.obscurePassword,
                 onToggleVisibility: viewModel.togglePasswordVisibility,
                 textInputAction: TextInputAction.done,
-                onSubmitted:
-                    viewModel.canSubmit ? viewModel.loginWithEmail : null,
+                onSubmitted: viewModel.canSubmit
+                    ? viewModel.loginWithEmail
+                    : null,
               ),
 
               SizedBox(height: AppSpacing.md),
@@ -87,7 +85,7 @@ class LoginView extends StackedView<LoginViewModel> {
                       child: Text(
                         l10n.forgotPassword,
                         style: AppTypography.labelMedium.copyWith(
-                          color: AppColors.primary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
@@ -116,7 +114,9 @@ class LoginView extends StackedView<LoginViewModel> {
                       Expanded(
                         child: Text(
                           AuthErrorMapper.message(
-                              context, viewModel.modelError),
+                            context,
+                            viewModel.modelError,
+                          ),
                           style: AppTypography.bodySmall.copyWith(
                             color: AppColors.error,
                           ),
@@ -131,8 +131,9 @@ class LoginView extends StackedView<LoginViewModel> {
               // Login button
               AppButton.primary(
                 label: l10n.signIn,
-                onPressed:
-                    viewModel.canSubmit ? viewModel.loginWithEmail : null,
+                onPressed: viewModel.canSubmit
+                    ? viewModel.loginWithEmail
+                    : null,
                 isLoading: viewModel.busy(LoginViewModel.loginBusyKey),
               ),
 
@@ -162,8 +163,9 @@ class LoginView extends StackedView<LoginViewModel> {
                     child: Text(
                       l10n.dontHaveAccount,
                       style: AppTypography.bodyMedium.copyWith(
-                        color:
-                            AppColors.textSecondary(Theme.of(context).brightness),
+                        color: AppColors.textSecondary(
+                          Theme.of(context).brightness,
+                        ),
                       ),
                     ),
                   ),
@@ -172,7 +174,7 @@ class LoginView extends StackedView<LoginViewModel> {
                     child: Text(
                       l10n.signUp,
                       style: AppTypography.labelMedium.copyWith(
-                        color: AppColors.primary,
+                        color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

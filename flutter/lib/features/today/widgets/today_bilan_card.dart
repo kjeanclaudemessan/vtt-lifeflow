@@ -14,8 +14,9 @@ class TodayBilanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
     return AppCard.filled(
-      backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+      backgroundColor: primary.withValues(alpha: 0.1),
       onTap: onTap,
       padding: EdgeInsets.all(AppSpacing.md),
       child: Row(
@@ -29,16 +30,14 @@ class TodayBilanCard extends StatelessWidget {
                 Text(
                   context.l10n.bilanWeeklyReady,
                   style: AppTypography.titleSmall.copyWith(
-                    color: AppColors.primary,
+                    color: primary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: AppSpacing.xxs),
                 Text(
                   context.l10n.bilanViewSummary,
-                  style: AppTypography.textSmall.copyWith(
-                    color: AppColors.primary,
-                  ),
+                  style: AppTypography.textSmall.copyWith(color: primary),
                 ),
               ],
             ),

@@ -157,12 +157,7 @@ class DialogHelper {
             children: [
               const AppLoader.small(),
               AppSpacing.horizontalMd,
-              Expanded(
-                child: Text(
-                  message,
-                  style: AppTypography.bodyMedium,
-                ),
-              ),
+              Expanded(child: Text(message, style: AppTypography.bodyMedium)),
             ],
           ),
         ),
@@ -272,7 +267,10 @@ class DialogHelper {
               return ListTile(
                 title: Text(itemLabel(item)),
                 trailing: isSelected
-                    ? const Icon(Icons.check, color: AppColors.primary)
+                    ? Icon(
+                        Icons.check,
+                        color: Theme.of(context).colorScheme.primary,
+                      )
                     : null,
                 onTap: () => Navigator.pop(context, item),
               );

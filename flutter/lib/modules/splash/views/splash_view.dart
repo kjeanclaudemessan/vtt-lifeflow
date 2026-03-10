@@ -46,7 +46,7 @@ class SplashView extends StackedView<SplashViewModel> {
               Text(
                 'LifeFlow',
                 style: AppTypography.headlineLarge.copyWith(
-                  color: AppColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.5,
                 ),
@@ -92,9 +92,7 @@ class SplashView extends StackedView<SplashViewModel> {
         children: [
           Text(
             viewModel.errorMessage ?? l10n.errorOccurred,
-            style: AppTypography.bodyMedium.copyWith(
-              color: AppColors.error,
-            ),
+            style: AppTypography.bodyMedium.copyWith(color: AppColors.error),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: AppSpacing.md),
@@ -122,9 +120,7 @@ class SplashView extends StackedView<SplashViewModel> {
         children: [
           SizedBox(
             width: 200.w,
-            child: AppLinearProgress(
-              value: viewModel.progress,
-            ),
+            child: AppLinearProgress(value: viewModel.progress),
           ),
           SizedBox(height: AppSpacing.sm),
           Text(
@@ -159,10 +155,7 @@ class _AnimatedLogo extends StatefulWidget {
   final SplashAnimation animation;
   final String? logoAsset;
 
-  const _AnimatedLogo({
-    required this.animation,
-    this.logoAsset,
-  });
+  const _AnimatedLogo({required this.animation, this.logoAsset});
 
   @override
   State<_AnimatedLogo> createState() => _AnimatedLogoState();
@@ -184,20 +177,20 @@ class _AnimatedLogoState extends State<_AnimatedLogo>
       duration: Duration(milliseconds: widget.animation.durationMs),
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
-    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.5),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     if (widget.animation != SplashAnimation.none) {
       _controller.forward();
@@ -216,29 +209,23 @@ class _AnimatedLogoState extends State<_AnimatedLogo>
 
     return switch (widget.animation) {
       SplashAnimation.fadeScale => AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            return Opacity(
-              opacity: _fadeAnimation.value,
-              child: Transform.scale(
-                scale: _scaleAnimation.value,
-                child: child,
-              ),
-            );
-          },
-          child: logo,
-        ),
+        animation: _controller,
+        builder: (context, child) {
+          return Opacity(
+            opacity: _fadeAnimation.value,
+            child: Transform.scale(scale: _scaleAnimation.value, child: child),
+          );
+        },
+        child: logo,
+      ),
       SplashAnimation.bounce => ScaleTransition(
-          scale: _scaleAnimation,
-          child: logo,
-        ),
+        scale: _scaleAnimation,
+        child: logo,
+      ),
       SplashAnimation.slideUp => SlideTransition(
-          position: _slideAnimation,
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: logo,
-          ),
-        ),
+        position: _slideAnimation,
+        child: FadeTransition(opacity: _fadeAnimation, child: logo),
+      ),
       SplashAnimation.pulse => _PulsingWidget(child: logo),
       SplashAnimation.none => logo,
     };
@@ -246,11 +233,7 @@ class _AnimatedLogoState extends State<_AnimatedLogo>
 
   Widget _buildLogo(BuildContext context) {
     if (widget.logoAsset != null) {
-      return Image.asset(
-        widget.logoAsset!,
-        width: 150.w,
-        height: 150.w,
-      );
+      return Image.asset(widget.logoAsset!, width: 150.w, height: 150.w);
     }
 
     // Default logo placeholder using design system
@@ -258,7 +241,7 @@ class _AnimatedLogoState extends State<_AnimatedLogo>
       width: 150.w,
       height: 150.w,
       decoration: BoxDecoration(
-        color: AppColors.primary,
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: AppRadius.xl,
         boxShadow: AppShadows.md,
       ),
@@ -289,14 +272,13 @@ class _PulsingWidgetState extends State<_PulsingWidget>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    )..repeat(reverse: true);
+    _controller = AnimationController(vsync: this, duration: AppAnimations.slow)
+      ..repeat(reverse: true);
 
-    _animation = Tween<double>(begin: 0.95, end: 1.05).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0.95,
+      end: 1.05,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -307,9 +289,6 @@ class _PulsingWidgetState extends State<_PulsingWidget>
 
   @override
   Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _animation,
-      child: widget.child,
-    );
+    return ScaleTransition(scale: _animation, child: widget.child);
   }
 }

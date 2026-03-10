@@ -84,11 +84,7 @@ class AuthHeader extends StatelessWidget {
     if (logo != null) return logo!;
 
     if (logoAsset != null) {
-      return Image.asset(
-        logoAsset!,
-        width: logoSize.w,
-        height: logoSize.w,
-      );
+      return Image.asset(logoAsset!, width: logoSize.w, height: logoSize.w);
     }
 
     // Default logo placeholder
@@ -96,7 +92,7 @@ class AuthHeader extends StatelessWidget {
       width: logoSize.w,
       height: logoSize.w,
       decoration: BoxDecoration(
-        color: AppColors.primary,
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: AppRadius.lg,
       ),
       child: Icon(

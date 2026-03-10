@@ -65,20 +65,17 @@ class ThemePickerSheet extends StatelessWidget {
   }) {
     final isSelected = currentTheme == mode;
 
+    final primary = Theme.of(context).colorScheme.primary;
+
     return AppIconListTile(
       icon: icon,
-      iconColor: isSelected ? AppColors.primary : null,
-      iconBackgroundColor:
-          isSelected ? AppColors.primary.withValues(alpha: 0.1) : null,
+      iconColor: isSelected ? primary : null,
+      iconBackgroundColor: isSelected ? primary.withValues(alpha: 0.1) : null,
       title: title,
       subtitle: subtitle,
       showChevron: false,
       trailing: isSelected
-          ? Icon(
-              Icons.check_circle_rounded,
-              size: 24.sp,
-              color: AppColors.primary,
-            )
+          ? Icon(Icons.check_circle_rounded, size: 24.sp, color: primary)
           : null,
       onTap: () {
         onThemeSelected(mode);
@@ -129,16 +126,13 @@ class LanguagePickerSheet extends StatelessWidget {
     final (label, flag) = _getLocaleInfo(locale);
 
     return AppListTile(
-      leading: Text(
-        flag,
-        style: TextStyle(fontSize: 28.sp),
-      ),
+      leading: Text(flag, style: TextStyle(fontSize: 28.sp)),
       title: label,
       trailing: isSelected
           ? Icon(
               Icons.check_circle_rounded,
               size: 24.sp,
-              color: AppColors.primary,
+              color: Theme.of(context).colorScheme.primary,
             )
           : null,
       onTap: () {

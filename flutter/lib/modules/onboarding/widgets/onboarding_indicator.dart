@@ -34,7 +34,7 @@ class OnboardingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final active = activeColor ?? AppColors.primary;
+    final active = activeColor ?? Theme.of(context).colorScheme.primary;
     final inactive = inactiveColor ?? AppColors.neutral300;
 
     return switch (style) {
@@ -50,7 +50,7 @@ class OnboardingIndicator extends StatelessWidget {
       children: List.generate(totalCount, (index) {
         final isActive = index == currentIndex;
         return AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: AppAnimations.fast,
           margin: EdgeInsets.symmetric(horizontal: 4.w),
           width: isActive ? 24.w : 8.w,
           height: 8.w,
@@ -77,7 +77,7 @@ class OnboardingIndicator extends StatelessWidget {
           return Stack(
             children: [
               AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
+                duration: AppAnimations.medium,
                 width: constraints.maxWidth * progress,
                 height: 4.h,
                 decoration: BoxDecoration(

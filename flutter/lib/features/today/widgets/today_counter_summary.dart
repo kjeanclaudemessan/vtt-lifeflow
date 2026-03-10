@@ -58,7 +58,7 @@ class TodayCounterSummary extends StatelessWidget {
               Text(
                 totalLabel,
                 style: AppTypography.titleMedium.copyWith(
-                  color: AppColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.bold,
                 ),
               ),

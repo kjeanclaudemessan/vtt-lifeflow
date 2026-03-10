@@ -48,10 +48,11 @@ class NotificationBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final effectiveIconColor = iconColor ??
+    final effectiveIconColor =
+        iconColor ??
         (isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight);
     final effectiveBadgeColor = badgeColor ?? AppColors.error;
-    final effectiveBadgeTextColor = badgeTextColor ?? Colors.white;
+    final effectiveBadgeTextColor = badgeTextColor ?? AppColors.white;
     final effectiveIconSize = iconSize ?? 24.sp;
 
     final showBadge = count > 0 || showZero;
@@ -85,10 +86,7 @@ class NotificationBadge extends StatelessWidget {
                   padding: EdgeInsets.symmetric(
                     horizontal: count > 9 ? 4.w : 0,
                   ),
-                  constraints: BoxConstraints(
-                    minWidth: 18.w,
-                    minHeight: 18.h,
-                  ),
+                  constraints: BoxConstraints(minWidth: 18.w, minHeight: 18.h),
                   decoration: BoxDecoration(
                     color: effectiveBadgeColor,
                     borderRadius: BorderRadius.circular(9.r),
@@ -96,7 +94,7 @@ class NotificationBadge extends StatelessWidget {
                       color: isDark
                           ? AppColors.backgroundDark
                           : AppColors.backgroundLight,
-                      width: 2,
+                      width: 2.w,
                     ),
                   ),
                   child: Center(
@@ -161,16 +159,14 @@ class _AnimatedNotificationBadgeState extends State<AnimatedNotificationBadge>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 1500),
+      duration: AppAnimations.slow,
       vsync: this,
     );
 
-    _animation = Tween<double>(begin: 1.0, end: 1.3).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
+    _animation = Tween<double>(
+      begin: 1.0,
+      end: 1.3,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     if (widget.showPulse && widget.count > 0) {
       _controller.repeat(reverse: true);
@@ -199,8 +195,9 @@ class _AnimatedNotificationBadgeState extends State<AnimatedNotificationBadge>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final iconColor =
-        isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final iconColor = isDark
+        ? AppColors.textPrimaryDark
+        : AppColors.textPrimaryLight;
 
     return GestureDetector(
       onTap: widget.onTap,
@@ -215,11 +212,7 @@ class _AnimatedNotificationBadgeState extends State<AnimatedNotificationBadge>
             Positioned(
               left: 0,
               top: 4.h,
-              child: Icon(
-                widget.icon,
-                size: 24.sp,
-                color: iconColor,
-              ),
+              child: Icon(widget.icon, size: 24.sp, color: iconColor),
             ),
 
             // Animated Badge
@@ -250,14 +243,14 @@ class _AnimatedNotificationBadgeState extends State<AnimatedNotificationBadge>
                         color: isDark
                             ? AppColors.backgroundDark
                             : AppColors.backgroundLight,
-                        width: 2,
+                        width: 2.w,
                       ),
                     ),
                     child: Center(
                       child: Text(
                         widget.count > 99 ? '99+' : widget.count.toString(),
                         style: AppTypography.labelSmall.copyWith(
-                          color: Colors.white,
+                          color: AppColors.white,
                           fontWeight: FontWeight.w600,
                           fontSize: 10.sp,
                           height: 1,

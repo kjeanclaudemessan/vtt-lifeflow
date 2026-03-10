@@ -84,7 +84,7 @@ class BilanView extends StackedView<BilanViewModel> {
                       Icon(
                         Icons.timer_outlined,
                         size: AppSizing.iconXl,
-                        color: AppColors.primary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       SizedBox(width: AppSpacing.sm),
                       Expanded(
@@ -131,7 +131,7 @@ class BilanView extends StackedView<BilanViewModel> {
                           Text(
                             bilan.completionRateLabel,
                             style: AppTypography.titleMedium.copyWith(
-                              color: AppColors.primary,
+                              color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.w600,
                             ),
                           ),

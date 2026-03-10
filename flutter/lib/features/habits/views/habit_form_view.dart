@@ -484,7 +484,7 @@ class _HabitFormBodyState extends State<_HabitFormBody> {
             Switch.adaptive(
               value: viewModel.notificationsEnabled,
               onChanged: viewModel.setNotificationsEnabled,
-              activeColor: AppColors.primary,
+              activeColor: Theme.of(context).colorScheme.primary,
             ),
           ],
         ),
@@ -585,7 +585,7 @@ class _HabitFormBodyState extends State<_HabitFormBody> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isSelected
-                  ? AppColors.primary
+                  ? Theme.of(context).colorScheme.primary
                   : AppColors.surfaceSecondary(brightness),
             ),
             alignment: Alignment.center,
@@ -593,7 +593,7 @@ class _HabitFormBodyState extends State<_HabitFormBody> {
               days[index],
               style: AppTypography.labelMedium.copyWith(
                 color: isSelected
-                    ? Colors.white
+                    ? AppColors.white
                     : AppColors.textPrimary(brightness),
               ),
             ),

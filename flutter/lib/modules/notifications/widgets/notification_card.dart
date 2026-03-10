@@ -42,11 +42,7 @@ class NotificationCard extends StatelessWidget {
           color: AppColors.error.withValues(alpha: 0.1),
           borderRadius: AppRadius.md,
         ),
-        child: Icon(
-          Icons.delete_outline,
-          color: AppColors.error,
-          size: 24.sp,
-        ),
+        child: Icon(Icons.delete_outline, color: AppColors.error, size: 24.sp),
       ),
       child: GestureDetector(
         onTap: onTap,
@@ -56,13 +52,19 @@ class NotificationCard extends StatelessWidget {
             color: notification.isRead
                 ? (isDark ? AppColors.surfaceDark : AppColors.surfaceLight)
                 : (isDark
-                    ? AppColors.primary.withValues(alpha: 0.1)
-                    : AppColors.primary.withValues(alpha: 0.05)),
+                      ? Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.1)
+                      : Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.05)),
             borderRadius: AppRadius.md,
             border: notification.isRead
                 ? null
                 : Border.all(
-                    color: AppColors.primary.withValues(alpha: 0.2),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.2),
                     width: 1,
                   ),
             boxShadow: notification.isRead ? null : AppShadows.xs,
@@ -144,8 +146,8 @@ class NotificationCard extends StatelessWidget {
                 Container(
                   width: 8.w,
                   height: 8.w,
-                  decoration: const BoxDecoration(
-                    color: AppColors.primary,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -168,11 +170,7 @@ class NotificationCard extends StatelessWidget {
         color: color.withValues(alpha: 0.15),
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        icon,
-        color: color,
-        size: 22.sp,
-      ),
+      child: Icon(icon, color: color, size: 22.sp),
     );
   }
 
@@ -180,7 +178,7 @@ class NotificationCard extends StatelessWidget {
     return switch (type) {
       NotificationType.general => AppColors.neutral500,
       NotificationType.marketing => AppColors.warning,
-      NotificationType.order => AppColors.primary,
+      NotificationType.order => AppColors.info,
       NotificationType.social => AppColors.info,
       NotificationType.reminder => AppColors.warning,
       NotificationType.alert => AppColors.error,

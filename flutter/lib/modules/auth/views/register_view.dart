@@ -27,9 +27,7 @@ class RegisterView extends StackedView<RegisterViewModel> {
 
     return Scaffold(
       backgroundColor: context.colorScheme.surface,
-      appBar: AppAppBar(
-        leading: AppBackButton(onPressed: viewModel.goToLogin),
-      ),
+      appBar: AppAppBar(leading: AppBackButton(onPressed: viewModel.goToLogin)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(AppSpacing.lg),
@@ -37,10 +35,7 @@ class RegisterView extends StackedView<RegisterViewModel> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Header
-              AuthHeader(
-                title: l10n.createAccount,
-                subtitle: l10n.signUp,
-              ),
+              AuthHeader(title: l10n.createAccount, subtitle: l10n.signUp),
 
               SizedBox(height: AppSpacing.xl),
 
@@ -144,7 +139,9 @@ class RegisterView extends StackedView<RegisterViewModel> {
                       Expanded(
                         child: Text(
                           AuthErrorMapper.message(
-                              context, viewModel.modelError),
+                            context,
+                            viewModel.modelError,
+                          ),
                           style: AppTypography.bodySmall.copyWith(
                             color: AppColors.error,
                           ),
@@ -185,8 +182,9 @@ class RegisterView extends StackedView<RegisterViewModel> {
                   Text(
                     l10n.alreadyHaveAccount,
                     style: AppTypography.bodyMedium.copyWith(
-                      color:
-                          AppColors.textSecondary(Theme.of(context).brightness),
+                      color: AppColors.textSecondary(
+                        Theme.of(context).brightness,
+                      ),
                     ),
                   ),
                   TextButton(
@@ -194,7 +192,7 @@ class RegisterView extends StackedView<RegisterViewModel> {
                     child: Text(
                       l10n.signIn,
                       style: AppTypography.labelMedium.copyWith(
-                        color: AppColors.primary,
+                        color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

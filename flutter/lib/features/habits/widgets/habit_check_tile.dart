@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
@@ -113,7 +114,7 @@ class HabitCheckTile extends StatelessWidget {
       curve: AppAnimations.easeOut,
       child: Checkbox(
         value: _isCompleted,
-        activeColor: AppColors.primary,
+        activeColor: Theme.of(context).colorScheme.primary,
         onChanged: (_) => onToggle?.call(),
       ),
     );
@@ -129,17 +130,19 @@ class HabitCheckTile extends StatelessWidget {
           ? () => onValueSubmit?.call(current)
           : onToggle,
       child: SizedBox(
-        width: 44,
-        height: 44,
+        width: 44.w,
+        height: 44.w,
         child: Stack(
           alignment: Alignment.center,
           children: [
             CircularProgressIndicator(
               value: percentage,
-              strokeWidth: 3,
+              strokeWidth: 3.w,
               backgroundColor: AppColors.border(brightness),
               valueColor: AlwaysStoppedAnimation(
-                _isCompleted ? AppColors.success : AppColors.primary,
+                _isCompleted
+                    ? AppColors.success
+                    : Theme.of(context).colorScheme.primary,
               ),
             ),
             if (_isCompleted)
@@ -210,8 +213,8 @@ class HabitCheckTile extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 6,
-          height: 6,
+          width: 6.w,
+          height: 6.w,
           decoration: BoxDecoration(shape: BoxShape.circle, color: color),
         ),
         SizedBox(width: AppSpacing.xxs),
