@@ -1,7 +1,10 @@
 ```prompt
 # Audit UX Quality
 
-Run a comprehensive UX audit on a feature or the entire app, producing scores and actionable fixes.
+> **⚠️ UPGRADED**: This prompt now uses the **12-dimension VTT Design Kit** audit system.
+> For a screen-focused audit, see also `/audit-screen-design`.
+
+Run a comprehensive UX audit on a feature or the entire app, producing scores and actionable fixes across **12 dimensions**.
 
 ## Target
 
@@ -9,71 +12,47 @@ Run a comprehensive UX audit on a feature or the entire app, producing scores an
 
 ## Audit Dimensions (Score /10 each)
 
-### 1. Dark Mode Compliance
-- Scan for `textSecondaryLight`, `textPrimaryLight`, `textTertiaryLight` and all `*Light`/`*Dark` direct references
-- Scan for `Colors.white`, `Colors.black`, `Colors.grey`
-- Scan for `neutral400`, `neutral500`, `neutral600` direct usage
-- Check if `brightness` helpers are used
-- Score: 10 = zero violations, 0 = 20+ violations
-
-### 2. Animation Coverage
-- Check for `AnimatedSwitcher` on state-driven content
-- Check for `AnimatedScale` / `AnimatedContainer` on togglable elements
-- Check for `TweenAnimationBuilder` on changing values
-- Check if `AppAnimations` tokens are used (not raw Duration/Curves)
-- Score: 10 = all state changes animated, 0 = no animations
-
-### 3. Haptic Feedback
-- Check all public ViewModel methods for `HapticFeedback` calls
-- Verify success → mediumImpact, error → heavyImpact, selection → selectionClick
-- Score: 10 = all actions covered, 0 = no haptic
-
-### 4. Accessibility
-- Count `Semantics` widgets in views
-- Check `Icon` widgets for `semanticLabel`
-- Check touch targets (≥ 48dp)
-- Check for `ExcludeSemantics` on decorative elements
-- Score: 10 = fully annotated, 0 = no semantics
-
-### 5. Internationalization
-- Grep for hardcoded strings in views (`Text('...'` without `context.l10n`)
-- Check for emoji-prefixed labels
-- Check for mixed language strings
-- Score: 10 = zero hardcoded, 0 = pervasive hardcoding
-
-### 6. Token Discipline
-- Check colors: all via `AppColors` helpers (not Light/Dark direct)
-- Check spacing: all via `AppSpacing` / `AppGaps`
-- Check typography: all via `AppTypography` (not raw `TextStyle`)
-- Check sizing: all via `AppSizing` (not magic numbers)
-- Score: 10 = zero violations, 0 = pervasive hardcoding
-
-### 7. Gesture Support
-- Check for `RefreshIndicator` on data lists
-- Check for `Slidable` or `Dismissible` on list items
-- Check for long-press handlers
-- Score: 10 = all patterns applied, 0 = tap-only
-
-### 8. Error/Empty/Loading States
-- Check views handle `isBusy` (loading)
-- Check views handle `hasError` (error with retry)
-- Check views handle empty lists (`AppEmptyState`)
-- Score: 10 = all states handled, 0 = no state handling
+| # | Dimension | What to Check |
+|---|-----------|---------------|
+| 1 | Design Principles | ONE primary objective per screen, progressive disclosure, no dark patterns |
+| 2 | Token Discipline | All colors via `AppColors`/`colorScheme`, spacing via `AppSpacing`, typography via `AppTypography`, sizing via `AppSizing`, radius via `AppRadius`, animations via `AppAnimations` |
+| 3 | Dark Mode | No `*Light`/`*Dark` direct refs, no `Colors.white`/`black`/`grey`, surfaces from `colorScheme` |
+| 4 | Component Usage | DS components (AppButton, AppCard, AppTextField...) not raw Material widgets |
+| 5 | State Machine | Error → Loading → Empty → Content order, skeleton loading, human error messages + retry |
+| 6 | Animation Coverage | `AnimatedSwitcher`, `AnimatedScale`, `TweenAnimationBuilder`, `AppAnimations` tokens |
+| 7 | Haptic Feedback | All ViewModel actions have haptic (success=medium, error=heavy, selection=click, toggle=light) |
+| 8 | Accessibility | `semanticLabel` on all icons/images, touch targets ≥ 48dp, no color-only info, WCAG AA |
+| 9 | Navigation | Bottom nav with labels, no drawer, AppBar ≤ 2 actions, correct transitions |
+| 10 | UX Writing / i18n | Zero hardcoded strings, `context.l10n`, action verb buttons, human error messages |
+| 11 | Iconography | Lucide icons (not `Icons.*`), sizes via `AppSizing.icon*`, all have `semanticLabel` |
+| 12 | Celebrations | Milestones trigger celebrations, no addiction patterns, message rotation |
 
 ## Output Format
 
 ```markdown
 ## UX Audit Report — [Scope]
 
-| # | Criterion | Score /10 | Violations | Priority |
-|---|---|---|---|---|
-| 1 | Dark Mode | X | N violations | P0/P1/P2 |
-| 2 | Animations | X | ... | ... |
-| ... |
+| # | Dimension | Score /10 | Violations | Priority |
+|---|-----------|-----------|------------|----------|
+| 1 | Principles | X | N | Px |
+| 2 | Tokens | X | N | Px |
+| 3 | Dark Mode | X | N | Px |
+| 4 | Components | X | N | Px |
+| 5 | States | X | N | Px |
+| 6 | Animations | X | N | Px |
+| 7 | Haptics | X | N | Px |
+| 8 | Accessibility | X | N | Px |
+| 9 | Navigation | X | N | Px |
+| 10 | UX Writing | X | N | Px |
+| 11 | Icons | X | N | Px |
+| 12 | Celebrations | X | N | Px |
+| **Total** | | **/120** | **N** | |
+
+### Weighted Score: X.X/10
 
 ### Detailed Findings
 
-#### [Criterion]: [Score]/10
+#### [Dimension]: [Score]/10
 
 **Violations:**
 - `file.dart:L42` — Description of violation
@@ -90,5 +69,10 @@ Suggest running these prompts to fix issues:
 2. `/add-animations` for missing animations
 3. `/add-haptics` for missing haptic feedback
 4. `/add-accessibility` for missing semantics
-5. `/add-gestures` for missing gestures
+5. `/audit-screen-design` for a focused per-screen audit
+
+## References
+
+- All 14 `flutter/.github/instructions/design-system-*.instructions.md`
+- `flutter/.github/agents/design-system-auditor.md` — Full auditor methodology
 ```

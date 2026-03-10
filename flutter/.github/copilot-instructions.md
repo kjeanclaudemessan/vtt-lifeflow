@@ -391,6 +391,7 @@ await bootstrap(environment: Environment.development);
 | `design-system-principles.instructions.md` | `**/*.dart` | 5 design principles. No dark patterns. Progressive disclosure. Ethical AI. One primary objective per screen. |
 | `design-system-celebrations.instructions.md` | `**/*_viewmodel.dart` | Milestones trigger celebrations (checkmark/glow/confetti). Streak badges. No addiction patterns. Max 1 confetti/session. |
 | `reactivity.instructions.md` | `**/*_viewmodel.dart,**/*_service.dart` | Every entity needs an EventService. Every mutation calls `notifyChanged()`. Every consumer subscribes + unsubscribes. No stale UI. |
+| `design-system-ux-patterns.instructions.md` | `**/*_view.dart,**/*_viewmodel.dart` | 10 standardized UX patterns (Auth, Onboarding, Settings, Search, List→Detail, Forms, Error handling, Paywall, Notifications, Profile). Consistent layouts, transitions, spacing. |
 
 ### Task Prompts
 

@@ -451,7 +451,7 @@ class MyView extends StatefulWidget { }
 
 ## Animation Requirements
 
-> Ref: `animation.instructions.md`
+> Ref: `design-system-motion.instructions.md`
 
 Every visible state change in a view MUST be animated.
 
@@ -508,7 +508,7 @@ TweenAnimationBuilder<double>(
 
 ## Accessibility Requirements
 
-> Ref: `accessibility.instructions.md`
+> Ref: `design-system-accessibility.instructions.md`
 
 ### Icons Must Have Labels
 
@@ -536,7 +536,7 @@ Semantics(
 
 ## Gesture Requirements
 
-> Ref: `gestures.instructions.md`
+> Ref: `design-system-navigation.instructions.md`
 
 ### Data Lists Must Have Pull-to-Refresh
 
@@ -579,7 +579,7 @@ Slidable(
 
 ## Dark Mode Requirements
 
-> Ref: `dark-mode.instructions.md`
+> Ref: `design-system-dark-mode.instructions.md`
 
 ### Extract Brightness
 

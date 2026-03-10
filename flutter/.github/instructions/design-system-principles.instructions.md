@@ -71,6 +71,64 @@ Future<void> deleteHabit(String id) async {
 
 ---
 
+## Brand DNA — Identity of All VTT Apps
+
+Every VTT app shares the same genetic identity across 200+ products.
+
+### Brand Personality (5 Traits)
+
+| # | Trait | Expression in UI |
+|---|-------|-----------------|
+| 1 | **Calme** | Generous whitespace, no information overload, muted neutrals, slow reveal |
+| 2 | **Précis** | Data shown with units, clear labels, no ambiguous icons, predictable navigation |
+| 3 | **Premium** | Dark-first, gold accents (`#D4A853`), Inter font, micro-animations, haptic feedback |
+| 4 | **Humain** | Tu/vous tone, human error messages, zero blame, encouragement over metrics |
+| 5 | **Intelligent** | AI suggestions contextual, smart defaults, pre-filled forms, adaptive onboarding |
+
+### Visual Positioning
+
+Scale 1 (cold minimalist) → 5 (warm & rich):
+
+```
+Linear (1) ——— Apple (2) ——— VTT (3) ——— Headspace (4) ——— Duolingo (5)
+                                ▲
+                       Warm minimalism.
+                  Premium without coldness.
+                 Data-rich without clutter.
+```
+
+- **Color:** Muted tones + single primary accent. No rainbow.
+- **Typography:** One font (Inter), 3 weights. No decorative fonts.
+- **Imagery:** Flat 2D illustrations, not 3D or photographic.
+- **Motion:** Purposeful, not playful. No bouncing mascots.
+
+### Brand Naming Convention
+
+| Family | Suffix | Examples |
+|--------|--------|---------|
+| Personal growth | `*Flow` | LifeFlow, IronFlow, SpiritFlow, MindFlow, WealthFlow |
+| Business tools | `*Pro` | HustlePro, ForgePro, EventPro |
+| Community platforms | `*Flow` or custom | ChurchFlow, CareFlow, PrepExam |
+| Infrastructure | Custom | NEXUS, ChatFlow |
+
+### Parent Brand Visibility
+
+- **Splash screen**: NO "by VitaTech" branding. Each app stands alone.
+- **Settings > About**: "Made with ❤️ by VitaTech Togo" + version number.
+- **App Store listing**: "VitaTech" as publisher name — sufficient for brand link.
+- **In-app**: zero VTT branding in the user-facing UI.
+
+### Brand Consistency Across Apps
+
+- **Same neutral palette** (surfaces, borders, text colors) across all apps.
+- **Different primary** per app (but from the same HSL warmth range).
+- **Same motion language** (durations, curves, patterns).
+- **Same component library** (AppButton, AppCard, etc.).
+- **Same UX writing rules** (tone, error messages, empty states).
+- **Accent Gold** (`#D4A853`) reserved for premium features across ALL apps.
+
+---
+
 ## Emotional Journey Map
 
 Every moment in the app targets a specific emotion. Design & copy must align:
