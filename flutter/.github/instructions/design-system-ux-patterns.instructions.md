@@ -178,6 +178,131 @@ Column(
 - **Never again**: Return users go directly to login or home.
 - **Reset**: available in dev/debug settings only.
 
+### Coach Marks / Tooltips (31.7)
+
+After first login, highlight key UI elements with spotlight tooltips. Max **3 tips** total.
+
+```
+┌──────────────────────────┐
+│  Dim overlay (70%)       │
+│                          │
+│   ┌─────────────────┐    │
+│   │ Tap button area │◄───┤  ← Spotlight cutout (bright)
+│   └─────────────────┘    │
+│                          │
+│   ┌──────────────────┐   │
+│   │ "Appuie ici pour │   │  ← Tooltip bubble (surface color)
+│   │  ajouter."       │   │
+│   │       [Compris]  │   │  ← Dismiss CTA
+│   └──────────────────┘   │
+│                          │
+│         ● ○ ○            │  ← Step indicator (1/3)
+└──────────────────────────┘
+```
+
+| Rule | Value |
+|------|-------|
+| Max tips per flow | **3** — respect user's time |
+| Overlay | Dim 70%, spotlight cutout around target widget |
+| Tooltip | Surface-colored bubble with arrow pointing to target |
+| Text | 1 short sentence, action-oriented |
+| Dismiss | "Compris" button OR tap anywhere outside |
+| Persistence | `SharedPreferences` flag `coach_marks_seen = true` |
+| Trigger | On **first login** only, after home screen loads |
+| Skip all | "Passer le guide" link visible |
+| Haptic | `selectionClick` on each step transition |
+
+```dart
+// ✅ CORRECT — coach mark sequence
+class CoachMarkService {
+  static const _key = 'coach_marks_seen';
+
+  Future<void> showIfFirstTime(BuildContext context, List<CoachMarkStep> steps) async {
+    final seen = _prefs.getBool(_key) ?? false;
+    if (seen) return;
+
+    for (final step in steps) {
+      await _showSpotlight(context, step);
+    }
+    await _prefs.setBool(_key, true);
+  }
+}
+```
+
+### Startup Checklist (31.8)
+
+After sign-up, show a progress checklist on the dashboard to guide first-time setup.
+
+```
+┌──────────────────────────┐
+│  Bien démarrer (2/5)     │  ← Card title + progress
+│  ████████░░░░░░░░         │  ← LinearProgress
+│                          │
+│  ✅ Créer ton compte     │  ← Completed (muted, strikethrough)
+│  ✅ Ajouter ta photo     │  ← Completed
+│  ○  Créer ta première    │  ← Next action (highlighted)
+│     habitude             │
+│  ○  Activer les rappels  │
+│  ○  Inviter un ami       │
+│                          │
+│  [Masquer]               │  ← Ghost button to dismiss
+└──────────────────────────┘
+```
+
+| Rule | Value |
+|------|-------|
+| Position | Top of home/dashboard, inside an `AppCard` |
+| Max items | 5 steps |
+| Progress | `LinearProgressIndicator` showing completion ratio |
+| Completed item | Strikethrough text + `LucideIcons.checkCircle2` in success color |
+| Next item | Bold text + highlighted, tappable → opens the relevant action |
+| Remaining | Muted text + empty circle |
+| Dismiss | "Masquer" ghost button — sets `SharedPreferences` flag |
+| Complete | Auto-dismiss when 5/5 done, with celebration (`CelebrationService.medium`) |
+| Re-show | Never auto-show again once dismissed, available in settings if needed |
+
+```dart
+// ✅ CORRECT — checklist item model
+class ChecklistItem {
+  final String label;
+  final bool isCompleted;
+  final VoidCallback? onTap; // null if completed
+
+  bool get isNext => !isCompleted && onTap != null;
+}
+```
+
+### Progressive Disclosure (31.9)
+
+Show basic features first. Reveal advanced features after usage milestones.
+
+| Milestone | Reveal |
+|-----------|--------|
+| **Day 1** (new user) | Core features only (CRUD, basic views) |
+| **Day 3** or **10 actions** | Stats tab, export button |
+| **Day 7** or **25 actions** | Advanced settings, categories/tags |
+| **Day 14** or **50 actions** | Power features (automations, integrations) |
+
+```dart
+// ✅ CORRECT — progressive disclosure gating
+class FeatureGateService {
+  int get userDaysSinceSignup => DateTime.now().difference(_signupDate).inDays;
+  int get totalActions => _analyticsService.totalActions;
+
+  bool isFeatureUnlocked(FeatureTier tier) {
+    switch (tier) {
+      case FeatureTier.basic: return true;
+      case FeatureTier.intermediate:
+        return userDaysSinceSignup >= 3 || totalActions >= 10;
+      case FeatureTier.advanced:
+        return userDaysSinceSignup >= 7 || totalActions >= 25;
+      case FeatureTier.power:
+        return userDaysSinceSignup >= 14 || totalActions >= 50;
+    }
+  }
+}
+```
+
 ---
 
 ## Pattern 3: Settings Screen
@@ -611,6 +736,144 @@ AppListTile(
 )
 ```
 
+### Trial Progress Bar (30.4)
+
+During a free trial, show a persistent but non-intrusive progress indicator of remaining days.
+
+```
+┌──────────────────────────┐
+│ ✨ Essai Pro — 5j restants│  ← Banner at top of home
+│ ████████░░░░░░░░          │  ← Linear progress (5/7 days used)
+│ [Passer au Pro]           │  ← Ghost CTA
+└──────────────────────────┘
+```
+
+```dart
+// ✅ CORRECT — trial banner with countdown
+class TrialBanner extends StatelessWidget {
+  final int daysRemaining;
+  final int totalTrialDays;
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = 1 - (daysRemaining / totalTrialDays);
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.staticMd),
+      decoration: BoxDecoration(
+        color: AppColors.premium.withOpacity(0.1),
+        borderRadius: AppRadius.md,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(LucideIcons.sparkles, color: AppColors.premium, size: AppSizing.iconSm,
+                   semanticLabel: context.l10n.premiumTrial),
+              AppGaps.horizontalSm,
+              Expanded(
+                child: Text(context.l10n.trialDaysRemaining(daysRemaining),
+                    style: AppTypography.labelMd.copyWith(fontWeight: FontWeight.w600)),
+              ),
+              AppButton(
+                label: context.l10n.upgradeToPro,
+                variant: AppButtonVariant.ghost,
+                size: AppButtonSize.sm,
+                onPressed: onUpgrade,
+              ),
+            ],
+          ),
+          AppGaps.verticalSm,
+          ClipRRect(
+            borderRadius: AppRadius.xs,
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: context.colorScheme.surfaceContainerHighest,
+              valueColor: AlwaysStoppedAnimation(AppColors.premium),
+              minHeight: 4,
+              semanticsLabel: context.l10n.trialProgress,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+### Downgrade UX (30.6)
+
+When a subscription expires, the user **retains read access** but loses write/premium actions.
+
+| State | Visual | Data |
+|-------|--------|------|
+| **Active subscription** | Full access, no banners | All features |
+| **Trial active** | Trial banner (see above) | All features |
+| **Trial expired** | Banner + lock icons reappear | Read-only for premium |
+| **Subscription expired** | Persistent banner + lock icons | Read-only for premium, data preserved |
+| **Grace period** (first 7 days) | Warning banner: "Ton abonnement a expiré" | Full access maintained |
+
+```dart
+// ✅ CORRECT — expired subscription banner
+if (viewModel.subscriptionStatus == SubscriptionStatus.expired) {
+  Container(
+    padding: EdgeInsets.all(AppSpacing.staticMd),
+    color: AppColors.warning.withOpacity(0.1),
+    child: Row(
+      children: [
+        Icon(LucideIcons.alertTriangle, color: AppColors.warning,
+             semanticLabel: context.l10n.subscriptionExpiredAlert),
+        AppGaps.horizontalSm,
+        Expanded(
+          child: Text(context.l10n.subscriptionExpired,
+              style: AppTypography.bodyMd),
+        ),
+        AppButton(
+          label: context.l10n.renewSubscription,
+          variant: AppButtonVariant.primary,
+          size: AppButtonSize.sm,
+          onPressed: viewModel.showPaywall,
+        ),
+      ],
+    ),
+  );
+}
+```
+
+### Social Proof on Paywall (30.8)
+
+Display social proof on the paywall to build trust. Position above the CTA.
+
+```dart
+// ✅ CORRECT — social proof on paywall
+Padding(
+  padding: EdgeInsets.symmetric(vertical: AppSpacing.staticMd),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      // Stacked avatars
+      SizedBox(
+        width: 80,
+        height: 32,
+        child: Stack(
+          children: List.generate(3, (i) => Positioned(
+            left: i * 20.0,
+            child: CircleAvatar(radius: 16,
+                backgroundImage: AssetImage('assets/avatars/user_${i + 1}.png')),
+          )),
+        ),
+      ),
+      AppGaps.horizontalSm,
+      Text(
+        context.l10n.usersJoined(viewModel.premiumUserCount),
+        style: AppTypography.labelMd.copyWith(
+            color: context.colorScheme.onSurfaceVariant),
+      ),
+    ],
+  ),
+)
+```
+
 ---
 
 ## Pattern 9: Notification Center
@@ -682,6 +945,119 @@ AppListTile(
   ),
   onTap: () => viewModel.openNotification(notification),
 )
+```
+
+### Push Notification Visual Design (33.1)
+
+| Element | Rule |
+|---------|------|
+| **Title** | Short (≤ 50 chars), action-oriented: "Rappel quotidien" |
+| **Body** | 1-2 lines (≤ 100 chars): "Il est temps de tracker tes habitudes" |
+| **Big picture** | Optional — only for social/content notifications (image 2:1 ratio) |
+| **Icon** | App icon (small icon = monochrome app logo) |
+| **Accent color** | Brand primary color for Android notification tint |
+| **Deep link** | Every push MUST open the exact relevant screen on tap |
+| **Sound** | Default system sound. Silent for low-priority. |
+| **Grouping (Android)** | Group by channel: reminders, social, system, marketing |
+| **Badge (iOS)** | Increment badge count. Clear on app open. |
+
+```dart
+// ✅ CORRECT — push notification payload structure
+{
+  "notification": {
+    "title": "Rappel quotidien",
+    "body": "Il est temps de tracker tes habitudes 💪",
+    "image": null  // optional big picture URL
+  },
+  "data": {
+    "type": "reminder",
+    "screen": "/habits",
+    "item_id": null
+  }
+}
+```
+
+### In-App Promotional Banners (33.7)
+
+For announcements like "New version available" or "Special offer", use a dismissible banner at the top of the home screen.
+
+```
+┌──────────────────────────┐
+│ ✨ Nouvelle version 2.1  │  ← Dismissible banner
+│ Découvre les nouvelles   │
+│ fonctionnalités      [×] │  ← Close button
+│ [Mettre à jour]          │  ← Optional CTA
+└──────────────────────────┘
+```
+
+| Banner type | Color | Icon | CTA |
+|-------------|-------|------|-----|
+| **New version** | `info` container | `LucideIcons.download` | "Mettre à jour" → store |
+| **Special offer** | `premium` container | `LucideIcons.sparkles` | "Découvrir" → paywall |
+| **System announcement** | `surface` container | `LucideIcons.megaphone` | "En savoir plus" → URL |
+| **Maintenance warning** | `warning` container | `LucideIcons.alertTriangle` | None |
+
+```dart
+// ✅ CORRECT — dismissible in-app promo banner
+class AppPromoBanner extends StatelessWidget {
+  final String title;
+  final String? description;
+  final String? ctaLabel;
+  final VoidCallback? onCtaPressed;
+  final VoidCallback onDismiss;
+  final IconData icon;
+  final Color backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dismissible(
+      key: ValueKey('promo_$title'),
+      direction: DismissDirection.up,
+      onDismissed: (_) => onDismiss(),
+      child: Container(
+        margin: EdgeInsets.all(AppSpacing.staticMd),
+        padding: EdgeInsets.all(AppSpacing.staticMd),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: AppRadius.md,
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: AppSizing.iconMd,
+                 semanticLabel: title),
+            AppGaps.horizontalMd,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: AppTypography.labelMd.copyWith(
+                      fontWeight: FontWeight.w600)),
+                  if (description != null)
+                    Text(description!, style: AppTypography.bodySmall),
+                  if (ctaLabel != null)
+                    Padding(
+                      padding: EdgeInsets.only(top: AppSpacing.staticXs),
+                      child: AppButton(
+                        label: ctaLabel!,
+                        variant: AppButtonVariant.ghost,
+                        size: AppButtonSize.sm,
+                        onPressed: onCtaPressed,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: Icon(LucideIcons.x, size: AppSizing.iconSm,
+                         semanticLabel: context.l10n.dismiss),
+              onPressed: onDismiss,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 ```
 
 ---

@@ -202,6 +202,188 @@ After a successful action:
 
 ---
 
+## Corrupt Data Recovery (28.9)
+
+If JSON is malformed or data is corrupted locally, **never crash**. Show a recoverable state.
+
+```dart
+// ✅ CORRECT — graceful corrupt data handling
+try {
+  final data = MyModel.fromJson(jsonDecode(rawJson));
+  return data;
+} on FormatException catch (e) {
+  // Log to error reporting
+  ErrorReportingService.report(e);
+  // Clear corrupted cache
+  await _cacheService.clear(cacheKey);
+  // Return null — triggers empty state, not crash
+  return null;
+} on TypeError catch (e) {
+  ErrorReportingService.report(e);
+  await _cacheService.clear(cacheKey);
+  return null;
+}
+
+// ❌ FORBIDDEN — crash on bad data
+final data = MyModel.fromJson(jsonDecode(rawJson)); // unguarded
+```
+
+---
+
+## Maintenance Screen (28.10)
+
+When the server returns a maintenance status (HTTP 503 or a feature flag), show a **full-screen blocking** maintenance view.
+
+```
+┌──────────────────────────┐
+│                          │
+│      🔧                  │  ← Maintenance illustration
+│                          │
+│  Maintenance en cours    │  ← headingMedium
+│                          │
+│  Nous améliorons l'app   │  ← bodyMd, onSurfaceVariant
+│  Reviens dans quelques   │
+│  minutes.                │
+│                          │
+│  [Réessayer]             │  ← Primary button, checks status
+│                          │
+│  Temps estimé : ~15min   │  ← labelSmall, optional
+└──────────────────────────┘
+```
+
+```dart
+// ✅ CORRECT — maintenance screen
+class MaintenanceView extends StatelessWidget {
+  final VoidCallback onRetry;
+  final String? estimatedTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.staticLg),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset('assets/illustrations/maintenance.svg',
+                  height: 200, semanticsLabel: context.l10n.maintenance),
+              AppGaps.verticalXl,
+              Text(context.l10n.maintenanceTitle,
+                  style: AppTypography.headingMedium, textAlign: TextAlign.center),
+              AppGaps.verticalSm,
+              Text(context.l10n.maintenanceDescription,
+                  style: AppTypography.bodyMd.copyWith(
+                      color: context.colorScheme.onSurfaceVariant),
+                  textAlign: TextAlign.center),
+              if (estimatedTime != null) ...[
+                AppGaps.verticalMd,
+                Text(context.l10n.estimatedTime(estimatedTime!),
+                    style: AppTypography.labelSmall),
+              ],
+              AppGaps.verticalXl,
+              AppButton(
+                label: context.l10n.commonRetry,
+                variant: AppButtonVariant.primary,
+                onPressed: onRetry,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+---
+
+## Force Update Screen (28.11)
+
+When the app version is below the minimum required, show a **blocking** update screen. The user **cannot dismiss** it.
+
+```
+┌──────────────────────────┐
+│                          │
+│      📱⬆️                │  ← Update illustration
+│                          │
+│  Mise à jour requise     │  ← headingMedium
+│                          │
+│  Une nouvelle version    │  ← bodyMd
+│  est disponible avec des │
+│  améliorations           │
+│  importantes.            │
+│                          │
+│  [Mettre à jour]         │  ← Primary, opens store
+│                          │
+└──────────────────────────┘
+```
+
+### Rules
+
+| Rule | Value |
+|------|-------|
+| Display | Full screen, no AppBar, no back button |
+| CTA | Opens App Store / Play Store link |
+| Dismissibility | **NOT** dismissible — must update |
+| Check frequency | On app launch + every cold resume from background |
+| Version source | Remote Config / Supabase `app_config` table |
+
+```dart
+// ✅ CORRECT — force update check in startup
+Future<void> checkMinimumVersion() async {
+  final minVersion = await _remoteConfigService.getMinVersion();
+  final currentVersion = await PackageInfo.fromPlatform();
+
+  if (_isVersionBelow(currentVersion.version, minVersion)) {
+    _navigationService.clearStackAndShow(Routes.forceUpdateView);
+  }
+}
+```
+
+---
+
+## Feature Flag Off (28.12)
+
+When a feature is disabled via server-side feature flags, **hide it gracefully** — never show a broken or empty view.
+
+### Strategies
+
+| Strategy | When to use | Visual |
+|----------|------------|--------|
+| **Hide completely** | Feature never released to this user | Remove from nav/list (as if it doesn't exist) |
+| **Lock with message** | Feature exists but disabled temporarily | Lock icon + "Bientôt disponible" |
+| **Degrade gracefully** | Partial feature disabled | Show read-only, hide write actions |
+
+```dart
+// ✅ CORRECT — hide feature from navigation
+if (featureFlagService.isEnabled(Feature.analytics)) {
+  destinations.add(AppNavDestination(
+    icon: LucideIcons.barChart3,
+    label: context.l10n.analytics,
+    route: Routes.analyticsView,
+  ));
+}
+
+// ✅ CORRECT — lock with "coming soon"
+AppListTile(
+  leading: Icon(LucideIcons.lock, color: context.colorScheme.onSurfaceVariant,
+                semanticLabel: context.l10n.featureLockedLabel),
+  title: context.l10n.advancedExport,
+  subtitle: context.l10n.comingSoon,
+  trailing: AppBadge.label(label: context.l10n.soon, color: AppColors.info),
+  enabled: false,
+)
+
+// ❌ FORBIDDEN — show feature that crashes when tapped
+AppListTile(
+  title: context.l10n.advancedExport,
+  onTap: () => throw UnimplementedError(), // will crash
+)
+```
+
+---
+
 ## State Combinations
 
 | Loading? | Error? | Empty? | Show |

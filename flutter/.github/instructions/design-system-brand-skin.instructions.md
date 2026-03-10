@@ -286,4 +286,141 @@ final skin = Theme.of(context).extension<AppBrandSkin>() ?? AppBrandSkin.lifeFlo
 4. **LifeFlow is always the fallback** — if skin resolution fails, LifeFlow renders correctly.
 5. **Skin files live in** `lib/design_system/skins/` — one file per app.
 6. **Test every skin** in both light and dark mode before release.
+
+---
+
+## White-Labeling for Community Apps (Phase 36)
+
+Community apps (ChurchFlow, etc.) can be white-labeled for specific organizations (churches, businesses). The skin system supports this.
+
+### Client Logo Override (36.1)
+
+| Scenario | Logo behaviour |
+|----------|---------------|
+| **Standard app** | App logo only (from `appIcon` token) |
+| **White-labeled** | Client logo replaces app logo everywhere |
+| **Co-branded** | Client logo (primary) + "Propulsé par AppName" (secondary) |
+
+```dart
+// ✅ CORRECT — white-label logo resolution
+class WhiteLabelConfig {
+  final String? clientLogoUrl;    // Remote URL (client's logo)
+  final String? clientName;       // "ICC", "Église Riverside"
+  final bool showPoweredBy;       // Show "Propulsé par ChurchFlow"
+
+  /// Resolve the logo to display
+  String get displayLogo => clientLogoUrl ?? brandSkin.appIcon;
+
+  /// Resolve the display name
+  String get displayName => clientName ?? brandSkin.appName;
+}
+```
+
+**Logo placement rules:**
+
+| Location | Standard | White-labeled |
+|----------|---------|---------------|
+| Splash screen | App icon | Client logo (large, centered) |
+| AppBar | App icon (small) | Client logo (small) |
+| Login screen | App icon | Client logo |
+| Settings footer | "Made with ❤️ by VTT" | "Propulsé par ChurchFlow" |
+| PDF export header | App icon | Client logo |
+| Share cards | App icon | Client logo + "via AppName" |
+
+### "Powered By" Naming Pattern (36.3)
+
+| Format | When |
+|--------|------|
+| `"{AppName}"` | Standard (no white-label) |
+| `"{ClientName}"` | Full white-label (client branding dominant) |
+| `"{ClientName} — propulsé par {AppName}"` | Co-branded (client name + platform credit) |
+
+```dart
+// ✅ CORRECT — display name with powered-by
+Widget buildBranding(BuildContext context) {
+  final config = locator<WhiteLabelConfig>();
+
+  return Column(
+    children: [
+      Text(config.displayName, style: AppTypography.headingSmall),
+      if (config.showPoweredBy) ...[
+        AppGaps.verticalXs,
+        Text(
+          context.l10n.poweredBy(brandSkin.appName),
+          style: AppTypography.labelSmall.copyWith(
+              color: context.colorScheme.onSurfaceVariant),
+        ),
+      ],
+    ],
+  );
+}
+```
+
+### Client Splash Override (36.5)
+
+| Element | Standard | White-labeled |
+|---------|---------|---------------|
+| Background | `colorScheme.surface` | Client's brand color OR surface |
+| Logo | App icon (64dp) | Client logo (80dp, larger for branding) |
+| Text below | App name | Client name |
+| Duration | `brandSkin.splashDuration` | Same (no override) |
+| Animation | Fade-in + scale | Same (consistent UX) |
+
+```dart
+// ✅ CORRECT — white-label splash
+class SplashView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final whiteLabel = locator<WhiteLabelConfig>();
+
+    return Scaffold(
+      backgroundColor: context.colorScheme.surface,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Client logo OR app logo
+            whiteLabel.clientLogoUrl != null
+                ? CachedNetworkImage(
+                    imageUrl: whiteLabel.clientLogoUrl!,
+                    height: 80,
+                    placeholder: (_, __) => AppSkeleton.custom(
+                        width: 80, height: 80, borderRadius: AppRadius.md),
+                  )
+                : SvgPicture.asset(context.brandSkin.appIcon, height: 64,
+                    semanticsLabel: whiteLabel.displayName),
+            AppGaps.verticalLg,
+            Text(whiteLabel.displayName,
+                style: AppTypography.headingMedium),
+            if (whiteLabel.showPoweredBy) ...[
+              AppGaps.verticalSm,
+              Text(context.l10n.poweredBy(context.brandSkin.appName),
+                  style: AppTypography.labelSmall.copyWith(
+                      color: context.colorScheme.onSurfaceVariant)),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+### White-Label Configuration Source
+
+| Source | Content | When loaded |
+|--------|---------|-------------|
+| **Supabase `organization_config` table** | `client_logo_url`, `client_name`, `show_powered_by`, `custom_primary_color` | At splash / login |
+| **Remote Config** | Feature flags for white-label features | At startup |
+| **Build-time config** | Hardcoded for dedicated builds (rare) | Compile time |
+
+### White-Label Checklist
+
+- [ ] Client logo replaces app logo on Splash, Login, AppBar, Settings footer
+- [ ] "Propulsé par {AppName}" appears when co-branded
+- [ ] Client name replaces app name in headers
+- [ ] PDF exports use client logo in header
+- [ ] Share cards show client branding
+- [ ] White-label config loaded from `organization_config` table
+- [ ] Fallback to standard branding if no white-label config
 ```
