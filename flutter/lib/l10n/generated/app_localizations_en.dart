@@ -566,6 +566,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get splashFinalTouches => 'Final touches...';
 
   @override
+  String get splashGreetingMorning => 'Good morning';
+
+  @override
+  String get splashGreetingAfternoon => 'Good afternoon';
+
+  @override
+  String get splashGreetingEvening => 'Good evening';
+
+  @override
   String get onboardingSlide1Title => 'Build your habits';
 
   @override
@@ -1337,4 +1346,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notifChannelBilanDesc => 'Weekly review reminder';
+
+  @override
+  String get celebrationMicroDone => 'Done!';
+
+  @override
+  String get celebrationMicroNice => 'Nice!';
+
+  @override
+  String get celebrationMicroChecked => 'Checked!';
+
+  @override
+  String get celebrationMicroSaved => 'Saved!';
+
+  @override
+  String get celebrationMicroGotIt => 'Got it!';
+
+  @override
+  String celebrationMediumStreak(int count) {
+    return '$count-day streak — keep it up!';
+  }
+
+  @override
+  String get celebrationMediumWeeklyGoal => 'Weekly goal reached!';
+
+  @override
+  String celebrationMediumProgress(int percent) {
+    return 'Great progress — you\'re at $percent%!';
+  }
+
+  @override
+  String get celebrationMediumConsistency => 'You\'re building consistency!';
+
+  @override
+  String celebrationMajorMonthStreak(int count) {
+    return '$count-day streak — incredible!';
+  }
+
+  @override
+  String get celebrationMajorGoalComplete => 'Goal complete — well done!';
+
+  @override
+  String get celebrationMajorMilestone => 'Milestone unlocked!';
+
+  @override
+  String get celebrationMajor100Days => '100 days — legendary!';
+
+  @override
+  String get encouragementKeepGoing => 'Keep going, you\'re doing great!';
+
+  @override
+  String get encouragementAlmostThere => 'Almost there!';
+
+  @override
+  String get encouragementSmallSteps => 'Small steps lead to big changes.';
+
+  @override
+  String get encouragementProud => 'You should be proud!';
+
+  @override
+  String get encouragementComeBack =>
+      'Welcome back — let\'s pick up where you left off.';
 }

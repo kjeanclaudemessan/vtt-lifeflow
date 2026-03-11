@@ -3,16 +3,24 @@ import 'package:stacked_services/stacked_services.dart';
 
 import '../../../app/app.locator.dart';
 import '../../../app/app.router.dart';
+import '../../../core/core.dart';
+import '../../../design_system/tokens/app_animations.dart';
 import '../../../domain/repositories/i_auth_repository.dart';
+import '../../../services/haptic_service.dart';
 import '../../../services/storage/local_storage_service.dart';
 import '../config/splash_config.dart';
 
 /// ViewModel for the Splash screen.
 ///
-/// Handles app initialization, auth checking, and navigation routing.
+/// Handles app initialization, contextual greeting, haptic feedback,
+/// choreographed exit animation, and navigation routing.
+///
+/// This is the **first moment of relationship** with the user.
+/// Every transition is intentional — nothing is a hard cut.
 class SplashViewModel extends BaseViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final LocalStorageService _storageService = locator<LocalStorageService>();
+  final HapticService _hapticService = locator<HapticService>();
 
   // Auth repository - lazy to avoid issues if not registered yet
   IAuthRepository? _authRepository;
@@ -22,9 +30,6 @@ class SplashViewModel extends BaseViewModel {
   }
 
   /// Configuration for the splash screen.
-  ///
-  /// This can be customized by overriding in a subclass or by registering
-  /// a custom SplashConfig in the service locator.
   SplashConfig get config => const SplashConfig();
 
   // ─────────────────────────────────────────────────────────────────
@@ -39,6 +44,41 @@ class SplashViewModel extends BaseViewModel {
 
   double _progress = 0;
   double get progress => _progress;
+
+  bool _isExiting = false;
+  bool get isExiting => _isExiting;
+
+  String? _userName;
+
+  // ─────────────────────────────────────────────────────────────────
+  // Contextual Greeting
+  // ─────────────────────────────────────────────────────────────────
+
+  /// Returns a time-of-day greeting, optionally personalized with user name.
+  ///
+  /// - Morning (5-12): "Bonjour" / "Good morning"
+  /// - Afternoon (12-18): "Bon après-midi" / "Good afternoon"
+  /// - Evening (18-5): "Bonsoir" / "Good evening"
+  ///
+  /// If user is authenticated and name is known, appends their name.
+  String contextualGreeting(AppLocalizations l10n) {
+    final hour = DateTime.now().hour;
+    final String timeGreeting;
+
+    if (hour >= 5 && hour < 12) {
+      timeGreeting = l10n.splashGreetingMorning;
+    } else if (hour >= 12 && hour < 18) {
+      timeGreeting = l10n.splashGreetingAfternoon;
+    } else {
+      timeGreeting = l10n.splashGreetingEvening;
+    }
+
+    if (_userName != null && _userName!.isNotEmpty) {
+      return '$timeGreeting, $_userName';
+    }
+
+    return timeGreeting;
+  }
 
   // ─────────────────────────────────────────────────────────────────
   // Initialization
@@ -57,7 +97,7 @@ class SplashViewModel extends BaseViewModel {
         final needsUpdate = await _checkVersion();
         if (needsUpdate) {
           _result = SplashResult.goToForceUpdate;
-          _navigateToResult();
+          await _exitAndNavigate();
           return;
         }
       }
@@ -102,14 +142,24 @@ class SplashViewModel extends BaseViewModel {
         await Future.delayed(Duration(milliseconds: remaining));
       }
 
-      // Navigate
-      _navigateToResult();
+      // Haptic pulse on ready
+      if (config.enableHaptics) {
+        _hapticService.light();
+      }
+
+      // Choreographed exit
+      await _exitAndNavigate();
 
       // Callback
       config.onComplete?.call();
     } catch (e) {
       _errorMessage = e.toString();
       _result = SplashResult.error;
+
+      if (config.enableHaptics) {
+        _hapticService.error();
+      }
+
       setError(e);
     }
   }
@@ -135,10 +185,30 @@ class SplashViewModel extends BaseViewModel {
   /// Preloads user data after authentication.
   Future<void> _preloadUserData() async {
     try {
-      await authRepository.getCurrentUser();
+      final user = await authRepository.getCurrentUser();
+      // Extract user name for contextual greeting
+      _userName = user.fold(
+        (failure) => null,
+        (user) => user?.displayName,
+      );
     } catch (_) {
-      // Ignore errors during preload
+      // Ignore errors during preload — greeting falls back to tagline
     }
+  }
+
+  /// Plays exit animation then navigates.
+  ///
+  /// The transition OUT is choreographed: content fades/scales out
+  /// over 300ms before the navigation happens. This prevents the
+  /// jarring "hard cut" effect of instant route changes.
+  Future<void> _exitAndNavigate() async {
+    if (config.animateExit) {
+      _isExiting = true;
+      rebuildUi();
+      await Future.delayed(AppAnimations.medium);
+    }
+
+    _navigateToResult();
   }
 
   /// Navigates to the appropriate screen based on result.
@@ -162,6 +232,7 @@ class SplashViewModel extends BaseViewModel {
     _errorMessage = null;
     _result = null;
     _progress = 0;
+    _isExiting = false;
     clearErrors();
     await initialize();
   }

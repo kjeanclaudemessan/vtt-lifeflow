@@ -568,6 +568,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get splashFinalTouches => 'Dernières retouches...';
 
   @override
+  String get splashGreetingMorning => 'Bonjour';
+
+  @override
+  String get splashGreetingAfternoon => 'Bon après-midi';
+
+  @override
+  String get splashGreetingEvening => 'Bonsoir';
+
+  @override
   String get onboardingSlide1Title => 'Construis tes habitudes';
 
   @override
@@ -1344,4 +1353,66 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get notifChannelBilanDesc => 'Rappel pour ton bilan de la semaine';
+
+  @override
+  String get celebrationMicroDone => 'Fait !';
+
+  @override
+  String get celebrationMicroNice => 'Bien joué !';
+
+  @override
+  String get celebrationMicroChecked => 'Coché !';
+
+  @override
+  String get celebrationMicroSaved => 'Enregistré !';
+
+  @override
+  String get celebrationMicroGotIt => 'C\'est noté !';
+
+  @override
+  String celebrationMediumStreak(int count) {
+    return 'Série de $count jours — continue !';
+  }
+
+  @override
+  String get celebrationMediumWeeklyGoal => 'Objectif de la semaine atteint !';
+
+  @override
+  String celebrationMediumProgress(int percent) {
+    return 'Belle progression — tu es à $percent % !';
+  }
+
+  @override
+  String get celebrationMediumConsistency => 'Tu deviens régulier !';
+
+  @override
+  String celebrationMajorMonthStreak(int count) {
+    return 'Série de $count jours — incroyable !';
+  }
+
+  @override
+  String get celebrationMajorGoalComplete => 'Objectif atteint — bravo !';
+
+  @override
+  String get celebrationMajorMilestone => 'Étape franchie !';
+
+  @override
+  String get celebrationMajor100Days => '100 jours — légendaire !';
+
+  @override
+  String get encouragementKeepGoing => 'Continue, tu assures !';
+
+  @override
+  String get encouragementAlmostThere => 'Presque là !';
+
+  @override
+  String get encouragementSmallSteps =>
+      'Les petits pas mènent aux grands changements.';
+
+  @override
+  String get encouragementProud => 'Tu peux être fier de toi !';
+
+  @override
+  String get encouragementComeBack =>
+      'Content de te revoir — on reprend ensemble ?';
 }

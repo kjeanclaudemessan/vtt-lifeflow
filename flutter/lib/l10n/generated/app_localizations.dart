@@ -1136,6 +1136,24 @@ abstract class AppLocalizations {
   /// **'Final touches...'**
   String get splashFinalTouches;
 
+  /// No description provided for @splashGreetingMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get splashGreetingMorning;
+
+  /// No description provided for @splashGreetingAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get splashGreetingAfternoon;
+
+  /// No description provided for @splashGreetingEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get splashGreetingEvening;
+
   /// No description provided for @onboardingSlide1Title.
   ///
   /// In en, this message translates to:
@@ -2503,6 +2521,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Weekly review reminder'**
   String get notifChannelBilanDesc;
+
+  /// No description provided for @celebrationMicroDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done!'**
+  String get celebrationMicroDone;
+
+  /// No description provided for @celebrationMicroNice.
+  ///
+  /// In en, this message translates to:
+  /// **'Nice!'**
+  String get celebrationMicroNice;
+
+  /// No description provided for @celebrationMicroChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked!'**
+  String get celebrationMicroChecked;
+
+  /// No description provided for @celebrationMicroSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved!'**
+  String get celebrationMicroSaved;
+
+  /// No description provided for @celebrationMicroGotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it!'**
+  String get celebrationMicroGotIt;
+
+  /// No description provided for @celebrationMediumStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}-day streak — keep it up!'**
+  String celebrationMediumStreak(int count);
+
+  /// No description provided for @celebrationMediumWeeklyGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly goal reached!'**
+  String get celebrationMediumWeeklyGoal;
+
+  /// No description provided for @celebrationMediumProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Great progress — you\'re at {percent}%!'**
+  String celebrationMediumProgress(int percent);
+
+  /// No description provided for @celebrationMediumConsistency.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re building consistency!'**
+  String get celebrationMediumConsistency;
+
+  /// No description provided for @celebrationMajorMonthStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}-day streak — incredible!'**
+  String celebrationMajorMonthStreak(int count);
+
+  /// No description provided for @celebrationMajorGoalComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal complete — well done!'**
+  String get celebrationMajorGoalComplete;
+
+  /// No description provided for @celebrationMajorMilestone.
+  ///
+  /// In en, this message translates to:
+  /// **'Milestone unlocked!'**
+  String get celebrationMajorMilestone;
+
+  /// No description provided for @celebrationMajor100Days.
+  ///
+  /// In en, this message translates to:
+  /// **'100 days — legendary!'**
+  String get celebrationMajor100Days;
+
+  /// No description provided for @encouragementKeepGoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going, you\'re doing great!'**
+  String get encouragementKeepGoing;
+
+  /// No description provided for @encouragementAlmostThere.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost there!'**
+  String get encouragementAlmostThere;
+
+  /// No description provided for @encouragementSmallSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Small steps lead to big changes.'**
+  String get encouragementSmallSteps;
+
+  /// No description provided for @encouragementProud.
+  ///
+  /// In en, this message translates to:
+  /// **'You should be proud!'**
+  String get encouragementProud;
+
+  /// No description provided for @encouragementComeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back — let\'s pick up where you left off.'**
+  String get encouragementComeBack;
 }
 
 class _AppLocalizationsDelegate

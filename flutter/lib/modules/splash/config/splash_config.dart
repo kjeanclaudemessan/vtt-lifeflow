@@ -1,11 +1,14 @@
 /// Configuration for the Splash module.
+///
+/// Controls the splash screen's visual presentation, animation choreography,
+/// contextual greeting, and initialization behavior.
 class SplashConfig {
   /// Minimum duration to display splash screen (milliseconds).
   ///
-  /// Default: 2000ms (2 seconds)
+  /// Default: 2500ms — enough to feel intentional without feeling slow.
   final int minDurationMs;
 
-  /// Animation type for the logo.
+  /// Animation style for the logo entrance.
   final SplashAnimation animation;
 
   /// Whether to check app version (force update).
@@ -17,23 +20,44 @@ class SplashConfig {
   /// Whether to preload user data after auth check.
   final bool preloadUserData;
 
-  /// Custom logo asset path (uses app logo if null).
+  /// Custom logo asset path (uses app icon if null).
   final String? logoAsset;
 
-  /// Background color (uses theme if null).
+  /// Background color override (uses theme surface if null).
   final int? backgroundColor;
+
+  /// Whether to show a contextual greeting based on time of day.
+  ///
+  /// When true, displays "Bonjour", "Bon après-midi", or "Bonsoir"
+  /// followed by the user's name (if authenticated) or brand tagline.
+  final bool showGreeting;
+
+  /// Whether to show the app tagline below the app name.
+  final bool showTagline;
+
+  /// Whether to enable haptic feedback on splash ready.
+  final bool enableHaptics;
+
+  /// Whether to animate the transition OUT of the splash screen.
+  ///
+  /// When true, content fades/scales out before navigation.
+  final bool animateExit;
 
   /// Callback when initialization is complete.
   final void Function()? onComplete;
 
   const SplashConfig({
-    this.minDurationMs = 2000,
-    this.animation = SplashAnimation.fadeScale,
+    this.minDurationMs = 2500,
+    this.animation = SplashAnimation.breathe,
     this.checkVersion = false,
     this.versionCheckUrl,
     this.preloadUserData = true,
     this.logoAsset = 'assets/icon/app_icon.png',
     this.backgroundColor,
+    this.showGreeting = true,
+    this.showTagline = true,
+    this.enableHaptics = true,
+    this.animateExit = true,
     this.onComplete,
   });
 
@@ -49,6 +73,10 @@ class SplashConfig {
     bool? preloadUserData,
     String? logoAsset,
     int? backgroundColor,
+    bool? showGreeting,
+    bool? showTagline,
+    bool? enableHaptics,
+    bool? animateExit,
     void Function()? onComplete,
   }) {
     return SplashConfig(
@@ -59,6 +87,10 @@ class SplashConfig {
       preloadUserData: preloadUserData ?? this.preloadUserData,
       logoAsset: logoAsset ?? this.logoAsset,
       backgroundColor: backgroundColor ?? this.backgroundColor,
+      showGreeting: showGreeting ?? this.showGreeting,
+      showTagline: showTagline ?? this.showTagline,
+      enableHaptics: enableHaptics ?? this.enableHaptics,
+      animateExit: animateExit ?? this.animateExit,
       onComplete: onComplete ?? this.onComplete,
     );
   }
@@ -66,6 +98,10 @@ class SplashConfig {
 
 /// Animation types for the splash logo.
 enum SplashAnimation {
+  /// Breathing scale effect — logo gently pulses in like a heartbeat.
+  /// Warm, organic, human. The default for all apps.
+  breathe,
+
   /// Fade in with scale effect.
   fadeScale,
 
@@ -75,7 +111,7 @@ enum SplashAnimation {
   /// Slide up from bottom.
   slideUp,
 
-  /// Pulse effect.
+  /// Pulse effect (continuous).
   pulse,
 
   /// No animation.
@@ -84,6 +120,7 @@ enum SplashAnimation {
   /// Animation duration in milliseconds.
   int get durationMs {
     return switch (this) {
+      SplashAnimation.breathe => 1200,
       SplashAnimation.fadeScale => 800,
       SplashAnimation.bounce => 1000,
       SplashAnimation.slideUp => 600,
