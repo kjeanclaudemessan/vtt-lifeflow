@@ -4,15 +4,22 @@ import 'package:stacked_services/stacked_services.dart';
 
 import '../../../app/app.locator.dart';
 import '../../../app/app.router.dart';
+import '../../../design_system/tokens/app_animations.dart';
+import '../../../services/haptic_service.dart';
 import '../../../services/storage/local_storage_service.dart';
 import '../config/onboarding_config.dart';
 
 /// ViewModel for the Onboarding screen.
 ///
-/// Handles slide navigation, persistence, and completion.
+/// Handles slide navigation, haptic feedback, choreographed exit,
+/// persistence, and completion celebration.
+///
+/// This is the **first conversation** with the user.
+/// Every slide transition is intentional and animated.
 class OnboardingViewModel extends BaseViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final LocalStorageService _storageService = locator<LocalStorageService>();
+  final HapticService _hapticService = locator<HapticService>();
 
   /// Onboarding configuration.
   final OnboardingConfig config;
@@ -56,6 +63,11 @@ class OnboardingViewModel extends BaseViewModel {
   double get progress =>
       config.slideCount > 0 ? (_currentIndex + 1) / config.slideCount : 0.0;
 
+  bool _isExiting = false;
+
+  /// Whether the exit animation is playing.
+  bool get isExiting => _isExiting;
+
   // ═══════════════════════════════════════════════════════════════════════════
   // NAVIGATION
   // ═══════════════════════════════════════════════════════════════════════════
@@ -65,10 +77,12 @@ class OnboardingViewModel extends BaseViewModel {
     if (isLastSlide) {
       _completeOnboarding();
     } else {
+      if (config.enableHaptics) _hapticService.selection();
+
       pageController.animateToPage(
         _currentIndex + 1,
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
+        duration: AppAnimations.medium,
+        curve: AppAnimations.easeOutCubic,
       );
     }
   }
@@ -76,15 +90,17 @@ class OnboardingViewModel extends BaseViewModel {
   /// Go to the previous slide.
   void previous() {
     if (_currentIndex > 0) {
+      if (config.enableHaptics) _hapticService.selection();
+
       pageController.animateToPage(
         _currentIndex - 1,
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
+        duration: AppAnimations.medium,
+        curve: AppAnimations.easeOutCubic,
       );
     }
   }
 
-  /// Go to a specific slide.
+  /// Go to a specific slide (called by PageView.onPageChanged).
   void goToSlide(int index) {
     if (index >= 0 && index < config.slideCount) {
       _currentIndex = index;
@@ -98,12 +114,23 @@ class OnboardingViewModel extends BaseViewModel {
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // PERSISTENCE
+  // PERSISTENCE & EXIT
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /// Mark onboarding as completed and navigate away.
+  /// Mark onboarding as completed, celebrate, and navigate away.
   Future<void> _completeOnboarding() async {
+    // Haptic success pulse
+    if (config.enableHaptics) _hapticService.success();
+
     await _storageService.setBool(config.storageKey, true);
+
+    // Choreographed exit: fade out content before navigating
+    if (config.animateExit) {
+      _isExiting = true;
+      rebuildUi();
+      await Future.delayed(AppAnimations.medium);
+    }
+
     _navigateToNextScreen();
   }
 

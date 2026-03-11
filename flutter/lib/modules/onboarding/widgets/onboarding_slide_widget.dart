@@ -9,6 +9,8 @@ import '../config/onboarding_config.dart';
 /// Individual onboarding slide widget.
 ///
 /// Displays image/icon, title, and description based on style.
+/// Each element staggers in with [AppStaggeredFadeIn] for a
+/// warm, choreographed entrance.
 class OnboardingSlideWidget extends StatelessWidget {
   /// Slide data.
   final OnboardingSlide slide;
@@ -24,11 +26,14 @@ class OnboardingSlideWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return switch (style) {
-      OnboardingStyle.cards => _buildCards(context),
-      OnboardingStyle.fullscreen => _buildFullscreen(context),
-      OnboardingStyle.minimal => _buildMinimal(context),
-    };
+    return Semantics(
+      label: _getLocalizedText(context.l10n, slide.titleKey),
+      child: switch (style) {
+        OnboardingStyle.cards => _buildCards(context),
+        OnboardingStyle.fullscreen => _buildFullscreen(context),
+        OnboardingStyle.minimal => _buildMinimal(context),
+      },
+    );
   }
 
   Widget _buildCards(BuildContext context) {
@@ -39,39 +44,54 @@ class OnboardingSlideWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Image or icon
-          _buildImage(context, height: 280.h),
+          // Image or icon — enters first
+          AppStaggeredFadeIn(
+            index: 0,
+            offsetY: 16,
+            child: _buildImage(context, height: 280.h),
+          ),
 
           SizedBox(height: AppSpacing.xl),
 
-          // Title
-          Text(
-            _getLocalizedText(l10n, slide.titleKey),
-            style: AppTypography.headlineMedium.copyWith(
-              fontWeight: FontWeight.bold,
-              color: context.colorScheme.onSurface,
+          // Title — enters second
+          AppStaggeredFadeIn(
+            index: 2,
+            offsetY: 12,
+            child: Text(
+              _getLocalizedText(l10n, slide.titleKey),
+              style: AppTypography.headlineMedium.copyWith(
+                fontWeight: FontWeight.bold,
+                color: context.colorScheme.onSurface,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
 
           SizedBox(height: AppSpacing.md),
 
-          // Description
-          Text(
-            _getLocalizedText(l10n, slide.descriptionKey),
-            style: AppTypography.bodyMedium.copyWith(
-              color: AppColors.textSecondary(Theme.of(context).brightness),
+          // Description — enters third
+          AppStaggeredFadeIn(
+            index: 4,
+            offsetY: 12,
+            child: Text(
+              _getLocalizedText(l10n, slide.descriptionKey),
+              style: AppTypography.bodyMedium.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
 
-          // Optional action button
+          // Optional action button — enters last
           if (slide.action != null) ...[
             SizedBox(height: AppSpacing.lg),
-            AppButton.ghost(
-              label: _getLocalizedText(l10n, slide.action!.labelKey),
-              onPressed: slide.action!.onTap,
-              isFullWidth: false,
+            AppStaggeredFadeIn(
+              index: 6,
+              child: AppButton.ghost(
+                label: _getLocalizedText(l10n, slide.action!.labelKey),
+                onPressed: slide.action!.onTap,
+                isFullWidth: false,
+              ),
             ),
           ],
         ],
@@ -95,7 +115,7 @@ class OnboardingSlideWidget extends StatelessWidget {
 
         // Gradient overlay
         Positioned.fill(
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -117,18 +137,25 @@ class OnboardingSlideWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                _getLocalizedText(l10n, slide.titleKey),
-                style: AppTypography.headlineLarge.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              AppStaggeredFadeIn(
+                index: 0,
+                child: Text(
+                  _getLocalizedText(l10n, slide.titleKey),
+                  style: AppTypography.headlineLarge.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colorScheme.onInverseSurface,
+                  ),
                 ),
               ),
               SizedBox(height: AppSpacing.md),
-              Text(
-                _getLocalizedText(l10n, slide.descriptionKey),
-                style: AppTypography.bodyLarge.copyWith(
-                  color: Colors.white.withValues(alpha: 0.9),
+              AppStaggeredFadeIn(
+                index: 2,
+                child: Text(
+                  _getLocalizedText(l10n, slide.descriptionKey),
+                  style: AppTypography.bodyLarge.copyWith(
+                    color: context.colorScheme.onInverseSurface
+                        .withValues(alpha: 0.9),
+                  ),
                 ),
               ),
             ],
@@ -147,47 +174,54 @@ class OnboardingSlideWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Icon or small image
-          if (slide.icon != null)
-            Container(
-              width: 100.w,
-              height: 100.w,
-              decoration: BoxDecoration(
-                color: Theme.of(
-                  context,
-                ).colorScheme.primary.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                slide.icon,
-                size: 48.sp,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            )
-          else
-            _buildImage(context, height: 200.h),
+          AppStaggeredFadeIn(
+            index: 0,
+            child: slide.icon != null
+                ? Container(
+                    width: 100.w,
+                    height: 100.w,
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.primary
+                          .withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      slide.icon,
+                      size: 48.sp,
+                      color: context.colorScheme.primary,
+                    ),
+                  )
+                : _buildImage(context, height: 200.h),
+          ),
 
           SizedBox(height: AppSpacing.xxl),
 
           // Title
-          Text(
-            _getLocalizedText(l10n, slide.titleKey),
-            style: AppTypography.titleLarge.copyWith(
-              fontWeight: FontWeight.w600,
-              color: context.colorScheme.onSurface,
+          AppStaggeredFadeIn(
+            index: 2,
+            child: Text(
+              _getLocalizedText(l10n, slide.titleKey),
+              style: AppTypography.titleLarge.copyWith(
+                fontWeight: FontWeight.w600,
+                color: context.colorScheme.onSurface,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
 
           SizedBox(height: AppSpacing.sm),
 
           // Description
-          Text(
-            _getLocalizedText(l10n, slide.descriptionKey),
-            style: AppTypography.bodyMedium.copyWith(
-              color: AppColors.textSecondary(Theme.of(context).brightness),
-              height: 1.5,
+          AppStaggeredFadeIn(
+            index: 4,
+            child: Text(
+              _getLocalizedText(l10n, slide.descriptionKey),
+              style: AppTypography.bodyMedium.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -202,13 +236,13 @@ class OnboardingSlideWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color:
               slide.backgroundColor ??
-              Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+              context.colorScheme.primary.withValues(alpha: 0.1),
           shape: BoxShape.circle,
         ),
         child: Icon(
           slide.icon,
           size: height * 0.5,
-          color: Theme.of(context).colorScheme.primary,
+          color: context.colorScheme.primary,
         ),
       );
     }
@@ -226,11 +260,7 @@ class OnboardingSlideWidget extends StatelessWidget {
 
   /// Get localized text from key.
   String _getLocalizedText(AppLocalizations l10n, String key) {
-    // This is a simplified approach - in a real app, you would use
-    // a proper localization lookup system
-    // For now, we'll return the key as fallback
     try {
-      // Try common patterns
       return switch (key) {
         'onboardingSlide1Title' => l10n.onboardingSlide1Title,
         'onboardingSlide1Description' => l10n.onboardingSlide1Description,

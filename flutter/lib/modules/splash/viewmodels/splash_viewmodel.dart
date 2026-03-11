@@ -187,10 +187,7 @@ class SplashViewModel extends BaseViewModel {
     try {
       final user = await authRepository.getCurrentUser();
       // Extract user name for contextual greeting
-      _userName = user.fold(
-        (failure) => null,
-        (user) => user?.displayName,
-      );
+      _userName = user.fold((failure) => null, (user) => user?.displayName);
     } catch (_) {
       // Ignore errors during preload — greeting falls back to tagline
     }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// Configuration for the Onboarding module.
 ///
 /// Customizes the onboarding experience including slides,
-/// visual style, and navigation options.
+/// visual style, navigation options, and emotional choreography.
 class OnboardingConfig {
   /// List of slides to display.
   final List<OnboardingSlide> slides;
@@ -29,6 +29,12 @@ class OnboardingConfig {
   /// Duration for auto-advance (if enabled).
   final Duration autoAdvanceDuration;
 
+  /// Whether to enable haptic feedback on slide changes and completion.
+  final bool enableHaptics;
+
+  /// Whether to animate the transition OUT of onboarding before navigation.
+  final bool animateExit;
+
   const OnboardingConfig({
     required this.slides,
     this.style = OnboardingStyle.cards,
@@ -38,6 +44,8 @@ class OnboardingConfig {
     this.storageKey = 'onboarding_completed',
     this.autoAdvance = false,
     this.autoAdvanceDuration = const Duration(seconds: 5),
+    this.enableHaptics = true,
+    this.animateExit = true,
   });
 
   /// Default config — LifeFlow onboarding slides with custom SVG illustrations.

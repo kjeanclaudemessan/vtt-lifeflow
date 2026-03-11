@@ -42,12 +42,16 @@ class OnboardingNavigation extends StatelessWidget {
         children: [
           // Skip button
           if (canSkip && !isLastSlide)
-            TextButton(
-              onPressed: onSkip,
-              child: Text(
-                l10n.skip,
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.textSecondary(Theme.of(context).brightness),
+            Semantics(
+              button: true,
+              label: l10n.skip,
+              child: TextButton(
+                onPressed: onSkip,
+                child: Text(
+                  l10n.skip,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: context.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
             )
@@ -57,12 +61,16 @@ class OnboardingNavigation extends StatelessWidget {
           const Spacer(),
 
           // Next/Get Started button
-          SizedBox(
-            width: 140.w,
-            child: AppButton.primary(
-              label: isLastSlide ? l10n.getStarted : l10n.next,
-              onPressed: onNext,
-              isLoading: isLoading,
+          Semantics(
+            button: true,
+            label: isLastSlide ? l10n.getStarted : l10n.next,
+            child: SizedBox(
+              width: 140.w,
+              child: AppButton.primary(
+                label: isLastSlide ? l10n.getStarted : l10n.next,
+                onPressed: onNext,
+                isLoading: isLoading,
+              ),
             ),
           ),
         ],
@@ -107,21 +115,29 @@ class OnboardingNavigationFull extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Main action button
-          AppButton.primary(
+          Semantics(
+            button: true,
             label: isLastSlide ? l10n.getStarted : l10n.next,
-            onPressed: onNext,
-            isLoading: isLoading,
+            child: AppButton.primary(
+              label: isLastSlide ? l10n.getStarted : l10n.next,
+              onPressed: onNext,
+              isLoading: isLoading,
+            ),
           ),
 
           // Skip button
           if (canSkip && !isLastSlide) ...[
             SizedBox(height: AppSpacing.md),
-            TextButton(
-              onPressed: onSkip,
-              child: Text(
-                l10n.skip,
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.textSecondary(Theme.of(context).brightness),
+            Semantics(
+              button: true,
+              label: l10n.skip,
+              child: TextButton(
+                onPressed: onSkip,
+                child: Text(
+                  l10n.skip,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: context.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
             ),

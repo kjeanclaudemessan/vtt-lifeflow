@@ -575,25 +575,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get splashGreetingEvening => 'Good evening';
 
   @override
-  String get onboardingSlide1Title => 'Build your habits';
+  String get onboardingSlide1Title => 'Your space, your rules';
 
   @override
   String get onboardingSlide1Description =>
-      'Create daily habits, organize them by life domain and track your progress every day.';
+      'Create your habits, organize your life by domains, and track your progress at your own pace.';
 
   @override
-  String get onboardingSlide2Title => 'Track your time';
+  String get onboardingSlide2Title => 'Every minute counts';
 
   @override
   String get onboardingSlide2Description =>
-      'Visualize the time invested in each domain with the automatic counter. Every checked habit counts.';
+      'See the time you invest in each domain. Every habit you check off matters.';
 
   @override
-  String get onboardingSlide3Title => 'Progress every week';
+  String get onboardingSlide3Title => 'Week after week';
 
   @override
   String get onboardingSlide3Description =>
-      'Receive your weekly review, maintain your streaks and become the best version of yourself.';
+      'Get your weekly review, keep your streaks alive, and become who you want to be.';
 
   @override
   String get onboardingDomainsTitle => 'Choose your life domains';

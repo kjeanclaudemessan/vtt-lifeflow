@@ -1157,37 +1157,37 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingSlide1Title.
   ///
   /// In en, this message translates to:
-  /// **'Build your habits'**
+  /// **'Your space, your rules'**
   String get onboardingSlide1Title;
 
   /// No description provided for @onboardingSlide1Description.
   ///
   /// In en, this message translates to:
-  /// **'Create daily habits, organize them by life domain and track your progress every day.'**
+  /// **'Create your habits, organize your life by domains, and track your progress at your own pace.'**
   String get onboardingSlide1Description;
 
   /// No description provided for @onboardingSlide2Title.
   ///
   /// In en, this message translates to:
-  /// **'Track your time'**
+  /// **'Every minute counts'**
   String get onboardingSlide2Title;
 
   /// No description provided for @onboardingSlide2Description.
   ///
   /// In en, this message translates to:
-  /// **'Visualize the time invested in each domain with the automatic counter. Every checked habit counts.'**
+  /// **'See the time you invest in each domain. Every habit you check off matters.'**
   String get onboardingSlide2Description;
 
   /// No description provided for @onboardingSlide3Title.
   ///
   /// In en, this message translates to:
-  /// **'Progress every week'**
+  /// **'Week after week'**
   String get onboardingSlide3Title;
 
   /// No description provided for @onboardingSlide3Description.
   ///
   /// In en, this message translates to:
-  /// **'Receive your weekly review, maintain your streaks and become the best version of yourself.'**
+  /// **'Get your weekly review, keep your streaks alive, and become who you want to be.'**
   String get onboardingSlide3Description;
 
   /// No description provided for @onboardingDomainsTitle.
