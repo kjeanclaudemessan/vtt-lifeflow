@@ -26,7 +26,7 @@ class OnboardingViewModel extends BaseViewModel {
 
   /// Creates the ViewModel with optional config.
   OnboardingViewModel({OnboardingConfig? config})
-      : config = config ?? OnboardingConfig.defaultConfig;
+    : config = config ?? OnboardingConfig.defaultConfig;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // PAGE CONTROLLER
@@ -144,15 +144,17 @@ class OnboardingViewModel extends BaseViewModel {
   // ═══════════════════════════════════════════════════════════════════════════
 
   /// Check if onboarding has been completed.
-  static Future<bool> isCompleted(
-      {String storageKey = 'onboarding_completed'}) async {
+  static Future<bool> isCompleted({
+    String storageKey = 'onboarding_completed',
+  }) async {
     final storage = locator<LocalStorageService>();
     return storage.getBool(storageKey) ?? false;
   }
 
   /// Reset onboarding status (show again).
-  static Future<void> reset(
-      {String storageKey = 'onboarding_completed'}) async {
+  static Future<void> reset({
+    String storageKey = 'onboarding_completed',
+  }) async {
     final storage = locator<LocalStorageService>();
     await storage.remove(storageKey);
   }

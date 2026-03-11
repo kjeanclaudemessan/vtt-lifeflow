@@ -35,7 +35,8 @@ class OnboardingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final active = activeColor ?? Theme.of(context).colorScheme.primary;
-    final inactive = inactiveColor ?? Theme.of(context).colorScheme.outlineVariant;
+    final inactive =
+        inactiveColor ?? Theme.of(context).colorScheme.outlineVariant;
 
     return switch (style) {
       IndicatorStyle.dots => _buildDots(active, inactive),

@@ -153,8 +153,9 @@ class OnboardingSlideWidget extends StatelessWidget {
                 child: Text(
                   _getLocalizedText(l10n, slide.descriptionKey),
                   style: AppTypography.bodyLarge.copyWith(
-                    color: context.colorScheme.onInverseSurface
-                        .withValues(alpha: 0.9),
+                    color: context.colorScheme.onInverseSurface.withValues(
+                      alpha: 0.9,
+                    ),
                   ),
                 ),
               ),
@@ -181,8 +182,7 @@ class OnboardingSlideWidget extends StatelessWidget {
                     width: 100.w,
                     height: 100.w,
                     decoration: BoxDecoration(
-                      color: context.colorScheme.primary
-                          .withValues(alpha: 0.1),
+                      color: context.colorScheme.primary.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -249,6 +249,39 @@ class OnboardingSlideWidget extends StatelessWidget {
 
     if (slide.image.isEmpty) {
       return SizedBox(height: height);
+    }
+
+    // Lottie animation — auto-fallback to SVG if .json not found
+    if (slide.image.endsWith('.json')) {
+      final svgFallback = slide.image
+          .replaceFirst('assets/lottie/', 'assets/images/onboarding/')
+          .replaceFirst('.json', '.svg');
+      return AppLottieAnimation(
+        asset: slide.image,
+        height: height,
+        placeholder: SvgPicture.asset(
+          svgFallback,
+          height: height,
+          fit: BoxFit.contain,
+        ),
+      );
+    }
+
+    // Rive animation — auto-fallback to SVG if .riv not found
+    if (slide.image.endsWith('.riv')) {
+      final svgFallback = slide.image
+          .replaceFirst('assets/rive/', 'assets/images/onboarding/')
+          .replaceFirst('.riv', '.svg');
+      return AppRiveAnimation(
+        asset: slide.image,
+        stateMachineName: 'idle',
+        height: height,
+        placeholder: SvgPicture.asset(
+          svgFallback,
+          height: height,
+          fit: BoxFit.contain,
+        ),
+      );
     }
 
     if (slide.image.endsWith('.svg')) {

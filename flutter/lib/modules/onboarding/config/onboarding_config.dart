@@ -48,26 +48,30 @@ class OnboardingConfig {
     this.animateExit = true,
   });
 
-  /// Default config — LifeFlow onboarding slides with custom SVG illustrations.
+  /// Default config — LifeFlow onboarding slides.
+  ///
+  /// Uses Lottie animations (`.json`) with automatic SVG fallback.
+  /// Switch to `.riv` (Rive) or `.svg` (static) by changing the file extension.
+  /// Supported formats: `.json` (Lottie), `.riv` (Rive), `.svg`, `.png`.
   static OnboardingConfig get defaultConfig => const OnboardingConfig(
-        slides: [
-          OnboardingSlide(
-            image: 'assets/images/onboarding/onboarding_habits.svg',
-            titleKey: 'onboardingSlide1Title',
-            descriptionKey: 'onboardingSlide1Description',
-          ),
-          OnboardingSlide(
-            image: 'assets/images/onboarding/onboarding_time.svg',
-            titleKey: 'onboardingSlide2Title',
-            descriptionKey: 'onboardingSlide2Description',
-          ),
-          OnboardingSlide(
-            image: 'assets/images/onboarding/onboarding_progress.svg',
-            titleKey: 'onboardingSlide3Title',
-            descriptionKey: 'onboardingSlide3Description',
-          ),
-        ],
-      );
+    slides: [
+      OnboardingSlide(
+        image: 'assets/lottie/onboarding_habits.json',
+        titleKey: 'onboardingSlide1Title',
+        descriptionKey: 'onboardingSlide1Description',
+      ),
+      OnboardingSlide(
+        image: 'assets/lottie/onboarding_time.json',
+        titleKey: 'onboardingSlide2Title',
+        descriptionKey: 'onboardingSlide2Description',
+      ),
+      OnboardingSlide(
+        image: 'assets/lottie/onboarding_progress.json',
+        titleKey: 'onboardingSlide3Title',
+        descriptionKey: 'onboardingSlide3Description',
+      ),
+    ],
+  );
 
   /// Whether social login is configured.
   bool get hasMultipleSlides => slides.length > 1;
@@ -111,9 +115,9 @@ class OnboardingSlide {
     required this.titleKey,
     required this.descriptionKey,
     this.backgroundColor,
-  })  : image = '',
-        icon = icon,
-        action = null;
+  }) : image = '',
+       icon = icon,
+       action = null;
 }
 
 /// Optional action button for a slide.
@@ -124,10 +128,7 @@ class OnboardingAction {
   /// Callback when tapped.
   final VoidCallback onTap;
 
-  const OnboardingAction({
-    required this.labelKey,
-    required this.onTap,
-  });
+  const OnboardingAction({required this.labelKey, required this.onTap});
 }
 
 /// Visual styles for the onboarding.

@@ -30,6 +30,7 @@ dependencies:
   package_info_plus: ^9.0.0
   path: ^1.9.0
   path_provider: ^2.1.5
+  rive: ^0.14.4
   share_plus: ^10.1.4
   shared_preferences: ^2.5.4
   # sqlite3_flutter_libs: ^0.5.32  # LOCAL-FIRST: disabled until sqlite3 WASM compat fixed
@@ -66,6 +67,8 @@ flutter:
     - assets/icon/
     - assets/icons/
     - assets/images/onboarding/
+    - assets/lottie/
+    - assets/rive/
     - google_fonts/
 
 # ═══════════════════════════════════════════════════════════════════════

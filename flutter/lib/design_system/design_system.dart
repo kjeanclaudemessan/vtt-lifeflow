@@ -55,6 +55,10 @@ export 'widgets/app_navigation.dart';
 export 'widgets/app_progress.dart';
 // Widgets - Pull-to-Refresh
 export 'widgets/app_refresh_indicator.dart';
+// Widgets - Lottie Animations
+export 'widgets/app_lottie_animation.dart';
+// Widgets - Rive Animations
+export 'widgets/app_rive_animation.dart';
 // Widgets - Search
 export 'widgets/app_search_bar.dart';
 export 'widgets/app_shake_animation.dart';
