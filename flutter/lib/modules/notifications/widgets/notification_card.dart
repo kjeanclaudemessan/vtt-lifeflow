@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../core/extensions/context_extensions.dart';
+import '../../../core/core.dart';
 import '../../../design_system/design_system.dart';
 import '../config/notifications_config.dart';
 
@@ -29,8 +29,6 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Dismissible(
       key: Key(notification.id),
       direction: DismissDirection.endToStart,
@@ -39,127 +37,124 @@ class NotificationCard extends StatelessWidget {
         alignment: Alignment.centerRight,
         padding: EdgeInsets.only(right: AppSpacing.lg),
         decoration: BoxDecoration(
-          color: AppColors.error.withValues(alpha: 0.1),
+          color: context.colorScheme.error.withValues(alpha: 0.1),
           borderRadius: AppRadius.md,
         ),
-        child: Icon(Icons.delete_outline, color: AppColors.error, size: 24.sp),
+        child: Icon(
+          Icons.delete_outline,
+          color: context.colorScheme.error,
+          size: 24.sp,
+        ),
       ),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: EdgeInsets.all(AppSpacing.md),
-          decoration: BoxDecoration(
-            color: notification.isRead
-                ? (isDark ? AppColors.surfaceDark : AppColors.surfaceLight)
-                : (isDark
-                      ? Theme.of(
-                          context,
-                        ).colorScheme.primary.withValues(alpha: 0.1)
-                      : Theme.of(
-                          context,
-                        ).colorScheme.primary.withValues(alpha: 0.05)),
-            borderRadius: AppRadius.md,
-            border: notification.isRead
-                ? null
-                : Border.all(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.2),
-                    width: 1,
-                  ),
-            boxShadow: notification.isRead ? null : AppShadows.xs,
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Icon
-              _buildIcon(isDark),
-              SizedBox(width: AppSpacing.md),
+      child: Semantics(
+        label: '${notification.title}. ${notification.body}',
+        button: true,
+        child: GestureDetector(
+          onTap: onTap,
+          child: Container(
+            padding: EdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              color: notification.isRead
+                  ? context.colorScheme.surface
+                  : context.colorScheme.primary.withValues(alpha: 0.05),
+              borderRadius: AppRadius.md,
+              border: notification.isRead
+                  ? null
+                  : Border.all(
+                      color: context.colorScheme.primary.withValues(alpha: 0.2),
+                      width: 1,
+                    ),
+              boxShadow: notification.isRead ? null : AppShadows.xs,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Icon
+                _buildIcon(context),
+                SizedBox(width: AppSpacing.md),
 
-              // Content
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title and time
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            notification.title,
-                            style: AppTypography.labelLarge.copyWith(
-                              fontWeight: notification.isRead
-                                  ? FontWeight.w500
-                                  : FontWeight.w600,
-                              color: isDark
-                                  ? AppColors.textPrimaryDark
-                                  : AppColors.textPrimaryLight,
+                // Content
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Title and time
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              notification.title,
+                              style: AppTypography.labelLarge.copyWith(
+                                fontWeight: notification.isRead
+                                    ? FontWeight.w500
+                                    : FontWeight.w600,
+                                color: context.colorScheme.onSurface,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
+                          SizedBox(width: AppSpacing.sm),
+                          Text(
+                            _formatTime(context, notification.createdAt),
+                            style: AppTypography.labelSmall.copyWith(
+                              color: context.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: AppSpacing.xs),
+
+                      // Body
+                      Text(
+                        notification.body,
+                        style: AppTypography.bodyMedium.copyWith(
+                          color: context.colorScheme.onSurfaceVariant,
                         ),
-                        SizedBox(width: AppSpacing.sm),
-                        Text(
-                          _formatTime(context, notification.createdAt),
-                          style: AppTypography.labelSmall.copyWith(
-                            color: AppColors.neutral500,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+
+                      // Image if present
+                      if (notification.imageUrl != null) ...[
+                        SizedBox(height: AppSpacing.sm),
+                        ClipRRect(
+                          borderRadius: AppRadius.sm,
+                          child: Image.network(
+                            notification.imageUrl!,
+                            height: 120.h,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) =>
+                                const SizedBox.shrink(),
                           ),
                         ),
                       ],
-                    ),
-                    SizedBox(height: AppSpacing.xs),
-
-                    // Body
-                    Text(
-                      notification.body,
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: isDark
-                            ? AppColors.textSecondaryDark
-                            : AppColors.textSecondaryLight,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                    // Image if present
-                    if (notification.imageUrl != null) ...[
-                      SizedBox(height: AppSpacing.sm),
-                      ClipRRect(
-                        borderRadius: AppRadius.sm,
-                        child: Image.network(
-                          notification.imageUrl!,
-                          height: 120.h,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-                        ),
-                      ),
                     ],
-                  ],
-                ),
-              ),
-
-              // Unread indicator
-              if (!notification.isRead) ...[
-                SizedBox(width: AppSpacing.sm),
-                Container(
-                  width: 8.w,
-                  height: 8.w,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    shape: BoxShape.circle,
                   ),
                 ),
+
+                // Unread indicator
+                if (!notification.isRead) ...[
+                  SizedBox(width: AppSpacing.sm),
+                  Container(
+                    width: 8.w,
+                    height: 8.w,
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.primary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildIcon(bool isDark) {
+  Widget _buildIcon(BuildContext context) {
     final color = _getTypeColor(notification.type);
     final icon = notification.icon ?? _getTypeIcon(notification.type);
 

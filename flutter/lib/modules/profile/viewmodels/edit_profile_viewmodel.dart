@@ -8,6 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../app/app.locator.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../domain/repositories/i_auth_repository.dart';
+import '../../../services/haptic_service.dart';
 import '../../../services/storage/storage_service.dart';
 import '../config/profile_config.dart';
 
@@ -18,6 +19,7 @@ class EditProfileViewModel extends BaseViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final IAuthRepository _authRepository = locator<IAuthRepository>();
   final StorageService _storageService = locator<StorageService>();
+  final HapticService _haptic = locator<HapticService>();
   final ImagePicker _imagePicker = ImagePicker();
 
   /// Profile configuration.
@@ -25,7 +27,7 @@ class EditProfileViewModel extends BaseViewModel {
 
   /// Creates the ViewModel with optional config.
   EditProfileViewModel({ProfileConfig? config})
-      : config = config ?? ProfileConfig.defaultConfig;
+    : config = config ?? ProfileConfig.defaultConfig;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // STATE
@@ -117,14 +119,11 @@ class EditProfileViewModel extends BaseViewModel {
       busyObject: loadingBusyKey,
     );
 
-    result.fold(
-      (failure) => setError(failure.message),
-      (user) {
-        _user = user;
-        _initializeFieldValues();
-        rebuildUi();
-      },
-    );
+    result.fold((failure) => setError(failure.message), (user) {
+      _user = user;
+      _initializeFieldValues();
+      rebuildUi();
+    });
   }
 
   /// Initialize field values from user data.
@@ -281,10 +280,7 @@ class EditProfileViewModel extends BaseViewModel {
     }
 
     if (metadataUpdates.isNotEmpty) {
-      updateData['metadata'] = {
-        ...?_user?.metadata,
-        ...metadataUpdates,
-      };
+      updateData['metadata'] = {...?_user?.metadata, ...metadataUpdates};
     }
 
     // Handle avatar upload if changed
@@ -317,8 +313,14 @@ class EditProfileViewModel extends BaseViewModel {
     );
 
     result.fold(
-      (failure) => setError(failure.message),
-      (_) => _navigationService.back(result: true),
+      (failure) {
+        _haptic.error();
+        setError(failure.message);
+      },
+      (_) {
+        _haptic.success();
+        _navigationService.back(result: true);
+      },
     );
   }
 

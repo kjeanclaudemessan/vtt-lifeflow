@@ -177,7 +177,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get forgotPassword => 'Mot de passe oublié ?';
 
   @override
-  String get resetPassword => 'Réinitialiser le mot de passe';
+  String get resetPassword => 'Ça arrive à tout le monde';
 
   @override
   String get newPassword => 'Nouveau mot de passe';
@@ -215,13 +215,25 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get createAccount => 'Créer un compte';
+  String get createAccount => 'On fait connaissance ?';
 
   @override
-  String get alreadyHaveAccount => 'Vous avez déjà un compte ?';
+  String get createAccountAction => 'Créer mon compte';
 
   @override
-  String get dontHaveAccount => 'Vous n\'avez pas de compte ?';
+  String get alreadyHaveAccount => 'Déjà parmi nous ?';
+
+  @override
+  String get dontHaveAccount => 'Première fois ici ?';
+
+  @override
+  String get authLoginSubtitle => 'Entre chez toi';
+
+  @override
+  String get authRegisterSubtitle => 'Ça prend 30 secondes';
+
+  @override
+  String get authForgotSubtitle => 'On t\'envoie un lien de secours';
 
   @override
   String get loginWithEmail => 'Se connecter avec email';
@@ -369,16 +381,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get successCopied => 'Copié dans le presse-papiers';
 
   @override
-  String get successLoggedIn => 'Connexion réussie';
+  String get successLoggedIn => 'Te voilà !';
 
   @override
-  String get successLoggedOut => 'Déconnexion réussie';
+  String get successLoggedOut => 'À bientôt';
 
   @override
-  String get successRegistered => 'Compte créé avec succès';
+  String get successRegistered => 'Bienvenue parmi nous !';
 
   @override
-  String get successPasswordReset => 'Email de réinitialisation envoyé';
+  String get successPasswordReset => 'Check ta boîte mail';
 
   @override
   String get successPasswordChanged => 'Mot de passe modifié avec succès';
@@ -608,11 +620,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onboardingDomainsMinimum => 'Choisis au moins 1 domaine';
 
   @override
-  String get welcomeBack => 'Bon retour !';
+  String get welcomeBack => 'Content de te revoir';
 
   @override
   String welcomeBackUser(String name) {
-    return 'Bon retour, $name !';
+    return 'Content de te revoir, $name';
   }
 
   @override
@@ -1200,7 +1212,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String passwordResetSentMessage(String email) {
-    return 'Nous avons envoyé un email à $email avec les instructions pour réinitialiser votre mot de passe.';
+    return 'Un lien t\'attend dans la boîte de $email. Vérifie aussi les spams, on sait jamais.';
   }
 
   @override

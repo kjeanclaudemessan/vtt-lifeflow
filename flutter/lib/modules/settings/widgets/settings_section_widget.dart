@@ -55,17 +55,17 @@ class SettingsSectionWidget extends StatelessWidget {
         horizontal: AppSpacing.md,
         vertical: AppSpacing.sm,
       ),
-      children: [
-        for (final item in section.items) _buildItem(context, item),
-      ],
+      children: [for (final item in section.items) _buildItem(context, item)],
     );
   }
 
   Widget _buildItem(BuildContext context, SettingsItem item) {
     return switch (item.type) {
       SettingsItemType.themeSelector => _buildThemeSelector(context, item),
-      SettingsItemType.languageSelector =>
-        _buildLanguageSelector(context, item),
+      SettingsItemType.languageSelector => _buildLanguageSelector(
+        context,
+        item,
+      ),
       SettingsItemType.toggle => _buildToggle(context, item),
       SettingsItemType.info => _buildInfo(context, item),
       _ => _buildTappableItem(context, item),
@@ -78,7 +78,8 @@ class SettingsSectionWidget extends StatelessWidget {
         icon: item.icon ?? Icons.warning_outlined,
         title: _getLocalizedTitle(context, item.titleKey),
         isDestructive: true,
-        showChevron: item.type == SettingsItemType.navigation ||
+        showChevron:
+            item.type == SettingsItemType.navigation ||
             item.type == SettingsItemType.link,
         onTap: () => onItemTap?.call(item),
       );
@@ -87,7 +88,8 @@ class SettingsSectionWidget extends StatelessWidget {
     return AppIconListTile(
       icon: item.icon ?? Icons.settings_outlined,
       title: _getLocalizedTitle(context, item.titleKey),
-      showChevron: item.type == SettingsItemType.navigation ||
+      showChevron:
+          item.type == SettingsItemType.navigation ||
           item.type == SettingsItemType.link,
       onTap: () => onItemTap?.call(item),
     );
@@ -109,7 +111,7 @@ class SettingsSectionWidget extends StatelessWidget {
       trailing: Text(
         currentLabel,
         style: AppTypography.bodyMedium.copyWith(
-          color: AppColors.neutral500,
+          color: context.colorScheme.onSurfaceVariant,
         ),
       ),
       onTap: () => onItemTap?.call(item),
@@ -130,7 +132,7 @@ class SettingsSectionWidget extends StatelessWidget {
       trailing: Text(
         currentLabel,
         style: AppTypography.bodyMedium.copyWith(
-          color: AppColors.neutral500,
+          color: context.colorScheme.onSurfaceVariant,
         ),
       ),
       onTap: () => onItemTap?.call(item),
@@ -158,7 +160,7 @@ class SettingsSectionWidget extends StatelessWidget {
       trailing: Text(
         value,
         style: AppTypography.bodyMedium.copyWith(
-          color: AppColors.neutral500,
+          color: context.colorScheme.onSurfaceVariant,
         ),
       ),
     );

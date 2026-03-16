@@ -155,9 +155,9 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
                         child: Text(
-                          _formatDate(date),
+                          _formatDate(context, date),
                           style: AppTypography.labelLarge.copyWith(
-                            color: AppColors.neutral500,
+                            color: context.colorScheme.onSurfaceVariant,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -203,7 +203,7 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
             child: Text(
               l10n.markAllRead,
               style: AppTypography.labelMedium.copyWith(
-                color: Theme.of(context).colorScheme.primary,
+                color: context.colorScheme.primary,
               ),
             ),
           ),
@@ -225,16 +225,9 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
                 onTap: viewModel.clearAll,
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.delete_outline,
-                      size: 20,
-                      color: AppColors.error,
-                    ),
+                    const Icon(Icons.delete_outline, size: 20),
                     SizedBox(width: AppSpacing.sm),
-                    Text(
-                      l10n.clearAll,
-                      style: const TextStyle(color: AppColors.error),
-                    ),
+                    Text(l10n.clearAll),
                   ],
                 ),
               ),
@@ -292,8 +285,12 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
       background: Container(
         alignment: Alignment.centerRight,
         padding: EdgeInsets.only(right: AppSpacing.lg),
-        color: AppColors.error.withValues(alpha: 0.1),
-        child: Icon(Icons.delete_outline, color: AppColors.error, size: 24.sp),
+        color: context.colorScheme.error.withValues(alpha: 0.1),
+        child: Icon(
+          Icons.delete_outline,
+          color: context.colorScheme.error,
+          size: 24.sp,
+        ),
       ),
       child: AppListTile(
         onTap: () => viewModel.onNotificationTap(notification),
@@ -308,16 +305,18 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
           notification.body,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: AppTypography.bodySmall.copyWith(color: AppColors.neutral500),
+          style: AppTypography.bodySmall.copyWith(
+            color: context.colorScheme.onSurfaceVariant,
+          ),
         ),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              _formatTime(notification.createdAt),
+              _formatTime(context, notification.createdAt),
               style: AppTypography.labelSmall.copyWith(
-                color: AppColors.neutral400,
+                color: context.colorScheme.onSurfaceVariant,
               ),
             ),
             if (!notification.isRead) ...[
@@ -326,7 +325,7 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
                 width: 8.w,
                 height: 8.w,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colorScheme.primary,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -376,32 +375,34 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
     };
   }
 
-  String _formatTime(DateTime dateTime) {
+  String _formatTime(BuildContext context, DateTime dateTime) {
+    final l10n = context.l10n;
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
     if (difference.inMinutes < 1) {
-      return 'À l\'instant';
+      return l10n.timeAgoJustNow;
     } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes} min';
+      return l10n.timeAgoMinutes(difference.inMinutes);
     } else if (difference.inHours < 24) {
-      return '${difference.inHours}h';
+      return l10n.timeAgoHours(difference.inHours);
     } else if (difference.inDays < 7) {
-      return '${difference.inDays}j';
+      return l10n.timeAgoDays(difference.inDays);
     } else {
       return '${dateTime.day}/${dateTime.month}';
     }
   }
 
-  String _formatDate(DateTime date) {
+  String _formatDate(BuildContext context, DateTime date) {
+    final l10n = context.l10n;
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
 
     if (date == today) {
-      return 'Aujourd\'hui';
+      return l10n.today;
     } else if (date == yesterday) {
-      return 'Hier';
+      return l10n.yesterday;
     } else {
       return '${date.day}/${date.month}/${date.year}';
     }

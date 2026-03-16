@@ -64,7 +64,7 @@
   "password": "Password",
   "confirmPassword": "Confirm password",
   "forgotPassword": "Forgot password?",
-  "resetPassword": "Reset password",
+  "resetPassword": "It happens to everyone",
   "newPassword": "New password",
   "currentPassword": "Current password",
   "phoneNumber": "Phone number",
@@ -84,9 +84,13 @@
       }
     }
   },
-  "createAccount": "Create account",
-  "alreadyHaveAccount": "Already have an account?",
-  "dontHaveAccount": "Don't have an account?",
+  "createAccount": "Let's get to know each other",
+  "createAccountAction": "Create my account",
+  "alreadyHaveAccount": "Already one of us?",
+  "dontHaveAccount": "First time here?",
+  "authLoginSubtitle": "Come on in",
+  "authRegisterSubtitle": "It takes 30 seconds",
+  "authForgotSubtitle": "We'll send you a rescue link",
   "loginWithEmail": "Log in with email",
   "loginWithPhone": "Log in with phone",
   "loginWithGoogle": "Continue with Google",
@@ -161,10 +165,10 @@
   "successUpdated": "Successfully updated",
   "successSent": "Successfully sent",
   "successCopied": "Copied to clipboard",
-  "successLoggedIn": "Successfully logged in",
-  "successLoggedOut": "Successfully logged out",
-  "successRegistered": "Account created successfully",
-  "successPasswordReset": "Password reset email sent",
+  "successLoggedIn": "There you are!",
+  "successLoggedOut": "See you soon",
+  "successRegistered": "Welcome aboard!",
+  "successPasswordReset": "Check your inbox",
   "successPasswordChanged": "Password changed successfully",
   "successVerificationSent": "Verification code sent",
   "@_DIALOGS": {},
@@ -266,8 +270,8 @@
   "onboardingDomainsDescription": "Select the domains you want to track. You can add more later.",
   "onboardingDomainsMinimum": "Select at least 1 domain",
   "@_MISC": {},
-  "welcomeBack": "Welcome back!",
-  "welcomeBackUser": "Welcome back, {name}!",
+  "welcomeBack": "Good to see you again",
+  "welcomeBackUser": "Good to see you, {name}",
   "@welcomeBackUser": {
     "placeholders": {
       "name": {
@@ -568,7 +572,7 @@
   "avatarTakePhoto": "Take Photo",
   "avatarChooseFromGallery": "Choose from Gallery",
   "avatarRemovePhoto": "Remove Photo",
-  "passwordResetSentMessage": "We sent an email to {email} with instructions to reset your password.",
+  "passwordResetSentMessage": "A link is waiting for you in {email}'s inbox. Check spam too, just in case.",
   "@passwordResetSentMessage": {
     "placeholders": {
       "email": {"type": "String"}

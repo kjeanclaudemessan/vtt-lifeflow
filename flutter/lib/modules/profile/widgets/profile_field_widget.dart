@@ -67,23 +67,42 @@ class _ProfileFieldWidgetState extends State<ProfileFieldWidget> {
 
     // Get localized label
     final label = _getLocalizedLabel(l10n, widget.field.labelKey);
-    final errorText =
-        widget.error != null ? _getLocalizedLabel(l10n, widget.error!) : null;
+    final errorText = widget.error != null
+        ? _getLocalizedLabel(l10n, widget.error!)
+        : null;
 
     return switch (widget.field.type) {
       ProfileFieldType.text => _buildTextField(label, errorText, isEditable),
       ProfileFieldType.email => _buildEmailField(label, errorText, isEditable),
       ProfileFieldType.phone => _buildPhoneField(label, errorText, isEditable),
-      ProfileFieldType.number =>
-        _buildNumberField(label, errorText, isEditable),
-      ProfileFieldType.date =>
-        _buildDateField(context, label, errorText, isEditable),
-      ProfileFieldType.select =>
-        _buildSelectField(context, label, errorText, isEditable),
-      ProfileFieldType.multiSelect =>
-        _buildMultiSelectField(context, label, errorText, isEditable),
-      ProfileFieldType.textarea =>
-        _buildTextareaField(label, errorText, isEditable),
+      ProfileFieldType.number => _buildNumberField(
+        label,
+        errorText,
+        isEditable,
+      ),
+      ProfileFieldType.date => _buildDateField(
+        context,
+        label,
+        errorText,
+        isEditable,
+      ),
+      ProfileFieldType.select => _buildSelectField(
+        context,
+        label,
+        errorText,
+        isEditable,
+      ),
+      ProfileFieldType.multiSelect => _buildMultiSelectField(
+        context,
+        label,
+        errorText,
+        isEditable,
+      ),
+      ProfileFieldType.textarea => _buildTextareaField(
+        label,
+        errorText,
+        isEditable,
+      ),
     };
   }
 
@@ -135,7 +154,11 @@ class _ProfileFieldWidgetState extends State<ProfileFieldWidget> {
   }
 
   Widget _buildDateField(
-      BuildContext context, String label, String? errorText, bool isEditable) {
+    BuildContext context,
+    String label,
+    String? errorText,
+    bool isEditable,
+  ) {
     return GestureDetector(
       onTap: isEditable
           ? () async {
@@ -164,21 +187,27 @@ class _ProfileFieldWidgetState extends State<ProfileFieldWidget> {
   }
 
   Widget _buildSelectField(
-      BuildContext context, String label, String? errorText, bool isEditable) {
+    BuildContext context,
+    String label,
+    String? errorText,
+    bool isEditable,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
           style: AppTypography.labelMedium.copyWith(
-            color: AppColors.textSecondary(Theme.of(context).brightness),
+            color: context.colorScheme.onSurfaceVariant,
           ),
         ),
         SizedBox(height: AppSpacing.xs),
         Container(
           decoration: BoxDecoration(
             border: Border.all(
-              color: errorText != null ? AppColors.error : AppColors.neutral300,
+              color: errorText != null
+                  ? context.colorScheme.error
+                  : context.colorScheme.outlineVariant,
             ),
             borderRadius: AppRadius.md,
           ),
@@ -193,14 +222,11 @@ class _ProfileFieldWidgetState extends State<ProfileFieldWidget> {
               hint: Text(
                 label,
                 style: AppTypography.bodyMedium.copyWith(
-                  color: AppColors.neutral400,
+                  color: context.colorScheme.onSurfaceVariant,
                 ),
               ),
               items: widget.field.options?.map((option) {
-                return DropdownMenuItem(
-                  value: option,
-                  child: Text(option),
-                );
+                return DropdownMenuItem(value: option, child: Text(option));
               }).toList(),
               onChanged: isEditable
                   ? (newValue) {
@@ -215,7 +241,7 @@ class _ProfileFieldWidgetState extends State<ProfileFieldWidget> {
           Text(
             errorText,
             style: AppTypography.bodySmall.copyWith(
-              color: AppColors.error,
+              color: context.colorScheme.error,
             ),
           ),
         ],
@@ -224,7 +250,11 @@ class _ProfileFieldWidgetState extends State<ProfileFieldWidget> {
   }
 
   Widget _buildMultiSelectField(
-      BuildContext context, String label, String? errorText, bool isEditable) {
+    BuildContext context,
+    String label,
+    String? errorText,
+    bool isEditable,
+  ) {
     // For now, render as a simple text field
     // In a real app, this would open a multi-select dialog
     return _buildTextField(label, errorText, isEditable);
@@ -301,7 +331,7 @@ class ProfileFieldDisplay extends StatelessWidget {
               Icon(
                 icon,
                 size: 20.sp,
-                color: AppColors.neutral500,
+                color: context.colorScheme.onSurfaceVariant,
               ),
               SizedBox(width: AppSpacing.md),
             ],
@@ -312,8 +342,7 @@ class ProfileFieldDisplay extends StatelessWidget {
                   Text(
                     label,
                     style: AppTypography.bodySmall.copyWith(
-                      color:
-                          AppColors.textSecondary(Theme.of(context).brightness),
+                      color: context.colorScheme.onSurfaceVariant,
                     ),
                   ),
                   SizedBox(height: 2.h),
@@ -321,7 +350,7 @@ class ProfileFieldDisplay extends StatelessWidget {
                     value.isEmpty ? '-' : value,
                     style: AppTypography.bodyMedium.copyWith(
                       color: value.isEmpty
-                          ? AppColors.neutral400
+                          ? context.colorScheme.onSurfaceVariant
                           : context.colorScheme.onSurface,
                     ),
                   ),
@@ -332,7 +361,7 @@ class ProfileFieldDisplay extends StatelessWidget {
               Icon(
                 Icons.chevron_right_rounded,
                 size: 20.sp,
-                color: AppColors.neutral400,
+                color: context.colorScheme.onSurfaceVariant,
               ),
           ],
         ),

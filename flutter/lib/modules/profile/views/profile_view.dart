@@ -86,9 +86,7 @@ class ProfileView extends StackedView<ProfileViewModel> {
                       Text(
                         viewModel.email,
                         style: AppTypography.bodyMedium.copyWith(
-                          color: AppColors.textSecondary(
-                            Theme.of(context).brightness,
-                          ),
+                          color: context.colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -198,9 +196,7 @@ class ProfileView extends StackedView<ProfileViewModel> {
                       Text(
                         viewModel.email,
                         style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.textSecondary(
-                            Theme.of(context).brightness,
-                          ),
+                          color: context.colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -263,10 +259,8 @@ class ProfileView extends StackedView<ProfileViewModel> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Theme.of(context).colorScheme.primary,
-                      Theme.of(
-                        context,
-                      ).colorScheme.primary.withValues(alpha: 0.7),
+                      context.colorScheme.primary,
+                      context.colorScheme.primary.withValues(alpha: 0.7),
                     ],
                   ),
                 ),
@@ -279,20 +273,22 @@ class ProfileView extends StackedView<ProfileViewModel> {
                         url: viewModel.avatarUrl,
                         initials: viewModel.initials,
                         size: 80,
-                        backgroundColor: AppColors.white,
+                        backgroundColor: context.colorScheme.onPrimary,
                       ),
                       SizedBox(height: AppSpacing.md),
                       Text(
                         viewModel.displayName,
                         style: AppTypography.titleLarge.copyWith(
-                          color: AppColors.white,
+                          color: context.colorScheme.onPrimary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
                         viewModel.email,
                         style: AppTypography.bodyMedium.copyWith(
-                          color: AppColors.white.withValues(alpha: 0.9),
+                          color: context.colorScheme.onPrimary.withValues(
+                            alpha: 0.9,
+                          ),
                         ),
                       ),
                     ],
@@ -367,14 +363,19 @@ class ProfileView extends StackedView<ProfileViewModel> {
             Text(
               '${viewModel.profileCompletion}%',
               style: AppTypography.labelMedium.copyWith(
-                color: Theme.of(context).colorScheme.primary,
+                color: context.colorScheme.primary,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ],
         ),
         SizedBox(height: AppSpacing.sm),
-        AppLinearProgress(value: viewModel.profileCompletion / 100),
+        TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: viewModel.profileCompletion / 100),
+          duration: AppAnimations.slow,
+          curve: AppAnimations.easeOut,
+          builder: (context, value, _) => AppLinearProgress(value: value),
+        ),
       ],
     );
   }

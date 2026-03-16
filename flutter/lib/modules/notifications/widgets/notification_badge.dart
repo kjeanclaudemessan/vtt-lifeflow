@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/core.dart';
 import '../../../design_system/design_system.dart';
 
 /// Badge widget for displaying notification count.
@@ -47,70 +48,73 @@ class NotificationBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final effectiveIconColor =
-        iconColor ??
-        (isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight);
-    final effectiveBadgeColor = badgeColor ?? AppColors.error;
-    final effectiveBadgeTextColor = badgeTextColor ?? AppColors.white;
+    final effectiveIconColor = iconColor ?? context.colorScheme.onSurface;
+    final effectiveBadgeColor = badgeColor ?? context.colorScheme.error;
+    final effectiveBadgeTextColor =
+        badgeTextColor ?? context.colorScheme.onError;
     final effectiveIconSize = iconSize ?? 24.sp;
 
     final showBadge = count > 0 || showZero;
 
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: effectiveIconSize + 12.w,
-        height: effectiveIconSize + 8.h,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            // Icon
-            Positioned(
-              left: 0,
-              top: 4.h,
-              child: Icon(
-                icon,
-                size: effectiveIconSize,
-                color: effectiveIconColor,
-              ),
-            ),
-
-            // Badge
-            if (showBadge)
+    return Semantics(
+      label: count > 0 ? 'Notifications: $count unread' : 'Notifications',
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: SizedBox(
+          width: effectiveIconSize + 12.w,
+          height: effectiveIconSize + 8.h,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              // Icon
               Positioned(
-                right: 0,
-                top: 0,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: count > 9 ? 4.w : 0,
-                  ),
-                  constraints: BoxConstraints(minWidth: 18.w, minHeight: 18.h),
-                  decoration: BoxDecoration(
-                    color: effectiveBadgeColor,
-                    borderRadius: BorderRadius.circular(9.r),
-                    border: Border.all(
-                      color: isDark
-                          ? AppColors.backgroundDark
-                          : AppColors.backgroundLight,
-                      width: 2.w,
+                left: 0,
+                top: 4.h,
+                child: Icon(
+                  icon,
+                  size: effectiveIconSize,
+                  color: effectiveIconColor,
+                ),
+              ),
+
+              // Badge
+              if (showBadge)
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: count > 9 ? 4.w : 0,
                     ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      _formatCount(count),
-                      style: AppTypography.labelSmall.copyWith(
-                        color: effectiveBadgeTextColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 10.sp,
-                        height: 1,
+                    constraints: BoxConstraints(
+                      minWidth: 18.w,
+                      minHeight: 18.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: effectiveBadgeColor,
+                      borderRadius: BorderRadius.circular(9.r),
+                      border: Border.all(
+                        color: context.colorScheme.surface,
+                        width: 2.w,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        _formatCount(count),
+                        style: AppTypography.labelSmall.copyWith(
+                          color: effectiveBadgeTextColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 10.sp,
+                          height: 1,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -194,10 +198,7 @@ class _AnimatedNotificationBadgeState extends State<AnimatedNotificationBadge>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final iconColor = isDark
-        ? AppColors.textPrimaryDark
-        : AppColors.textPrimaryLight;
+    final iconColor = context.colorScheme.onSurface;
 
     return GestureDetector(
       onTap: widget.onTap,
@@ -237,12 +238,10 @@ class _AnimatedNotificationBadgeState extends State<AnimatedNotificationBadge>
                       minHeight: 18.h,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.error,
+                      color: context.colorScheme.error,
                       borderRadius: BorderRadius.circular(9.r),
                       border: Border.all(
-                        color: isDark
-                            ? AppColors.backgroundDark
-                            : AppColors.backgroundLight,
+                        color: context.colorScheme.surface,
                         width: 2.w,
                       ),
                     ),
@@ -250,7 +249,7 @@ class _AnimatedNotificationBadgeState extends State<AnimatedNotificationBadge>
                       child: Text(
                         widget.count > 99 ? '99+' : widget.count.toString(),
                         style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.white,
+                          color: context.colorScheme.onError,
                           fontWeight: FontWeight.w600,
                           fontSize: 10.sp,
                           height: 1,

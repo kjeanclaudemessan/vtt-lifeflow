@@ -11,6 +11,7 @@ import '../../../core/enums/auth_enums.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../domain/repositories/i_auth_repository.dart';
 import '../../../services/analytics/analytics_service.dart';
+import '../../../services/haptic_service.dart';
 import '../../../services/push_notification/push_notification_service.dart';
 import '../../../services/supabase/supabase_auth_service.dart';
 import '../config/auth_config.dart';
@@ -23,6 +24,7 @@ class RegisterViewModel extends BaseViewModel {
   final IAuthRepository _authRepository = locator<IAuthRepository>();
   final SupabaseAuthService _authService = locator<SupabaseAuthService>();
   final AnalyticsService _analytics = locator<AnalyticsService>();
+  final HapticService _haptic = locator<HapticService>();
 
   StreamSubscription? _authSubscription;
   bool _isWaitingForOAuth = false;
@@ -231,24 +233,31 @@ class RegisterViewModel extends BaseViewModel {
   }
 
   void _handleAuthResult(Either<Failure, UserEntity> result) {
-    result.fold((failure) => setError(failure), (user) {
-      _analytics.identify(
-        userId: user.id,
-        properties: {
-          if (user.email != null) 'email': user.email!,
-          'signup_method': 'email',
-        },
-      );
-      _analytics.capture('user_signed_up', properties: {'method': 'email'});
-      locator<PushNotificationService>().saveTokenToSupabase();
+    result.fold(
+      (failure) {
+        _haptic.error();
+        setError(failure);
+      },
+      (user) {
+        _haptic.success();
+        _analytics.identify(
+          userId: user.id,
+          properties: {
+            if (user.email != null) 'email': user.email!,
+            'signup_method': 'email',
+          },
+        );
+        _analytics.capture('user_signed_up', properties: {'method': 'email'});
+        locator<PushNotificationService>().saveTokenToSupabase();
 
-      if (config.requireEmailVerification) {
-        // TODO: Navigate to email verification view
-        _navigationService.clearStackAndShow(Routes.homeView);
-      } else {
-        _navigationService.clearStackAndShow(Routes.homeView);
-      }
-    });
+        if (config.requireEmailVerification) {
+          // TODO: Navigate to email verification view
+          _navigationService.clearStackAndShow(Routes.homeView);
+        } else {
+          _navigationService.clearStackAndShow(Routes.homeView);
+        }
+      },
+    );
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -280,6 +289,7 @@ class RegisterViewModel extends BaseViewModel {
     result.fold(
       (failure) {
         _isWaitingForOAuth = false;
+        _haptic.error();
         setError(failure);
       },
       (success) {

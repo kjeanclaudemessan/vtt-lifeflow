@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -157,53 +158,62 @@ class _SocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: backgroundColor,
-      borderRadius: AppRadius.md,
-      child: InkWell(
-        onTap: isLoading ? null : onTap,
+    return Semantics(
+      button: true,
+      label: label,
+      child: Material(
+        color: backgroundColor,
         borderRadius: AppRadius.md,
-        child: Container(
-          height: 52.h,
-          decoration: BoxDecoration(
-            borderRadius: AppRadius.md,
-            border: borderColor != null
-                ? Border.all(color: borderColor!)
-                : null,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (isLoading)
-                SizedBox(
-                  width: 24.w,
-                  height: 24.w,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.w,
-                    valueColor: AlwaysStoppedAnimation(foregroundColor),
-                  ),
-                )
-              else ...[
-                SvgPicture.asset(
-                  svgAsset,
-                  width: 20.sp,
-                  height: 20.sp,
-                  colorFilter: svgAsset.contains('google')
-                      ? null // Google logo keeps original colors
-                      : ColorFilter.mode(foregroundColor, BlendMode.srcIn),
-                ),
-                SizedBox(width: 12.w),
-                Flexible(
-                  child: Text(
-                    label,
-                    style: AppTypography.labelLarge.copyWith(
-                      color: foregroundColor,
+        child: InkWell(
+          onTap: isLoading
+              ? null
+              : () {
+                  HapticFeedback.selectionClick();
+                  onTap?.call();
+                },
+          borderRadius: AppRadius.md,
+          child: Container(
+            height: 52.h,
+            decoration: BoxDecoration(
+              borderRadius: AppRadius.md,
+              border: borderColor != null
+                  ? Border.all(color: borderColor!)
+                  : null,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (isLoading)
+                  SizedBox(
+                    width: 24.w,
+                    height: 24.w,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.w,
+                      valueColor: AlwaysStoppedAnimation(foregroundColor),
                     ),
-                    overflow: TextOverflow.ellipsis,
+                  )
+                else ...[
+                  SvgPicture.asset(
+                    svgAsset,
+                    width: 20.sp,
+                    height: 20.sp,
+                    colorFilter: svgAsset.contains('google')
+                        ? null // Google logo keeps original colors
+                        : ColorFilter.mode(foregroundColor, BlendMode.srcIn),
                   ),
-                ),
+                  SizedBox(width: 12.w),
+                  Flexible(
+                    child: Text(
+                      label,
+                      style: AppTypography.labelLarge.copyWith(
+                        color: foregroundColor,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
@@ -229,7 +239,7 @@ class OrDivider extends StatelessWidget {
             child: Text(
               text,
               style: AppTypography.bodySmall.copyWith(
-                color: AppColors.textSecondary(Theme.of(context).brightness),
+                color: context.colorScheme.onSurfaceVariant,
               ),
             ),
           ),

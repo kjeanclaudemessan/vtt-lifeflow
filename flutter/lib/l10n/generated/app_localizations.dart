@@ -437,7 +437,7 @@ abstract class AppLocalizations {
   /// No description provided for @resetPassword.
   ///
   /// In en, this message translates to:
-  /// **'Reset password'**
+  /// **'It happens to everyone'**
   String get resetPassword;
 
   /// No description provided for @newPassword.
@@ -509,20 +509,44 @@ abstract class AppLocalizations {
   /// No description provided for @createAccount.
   ///
   /// In en, this message translates to:
-  /// **'Create account'**
+  /// **'Let\'s get to know each other'**
   String get createAccount;
+
+  /// No description provided for @createAccountAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Create my account'**
+  String get createAccountAction;
 
   /// No description provided for @alreadyHaveAccount.
   ///
   /// In en, this message translates to:
-  /// **'Already have an account?'**
+  /// **'Already one of us?'**
   String get alreadyHaveAccount;
 
   /// No description provided for @dontHaveAccount.
   ///
   /// In en, this message translates to:
-  /// **'Don\'t have an account?'**
+  /// **'First time here?'**
   String get dontHaveAccount;
+
+  /// No description provided for @authLoginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Come on in'**
+  String get authLoginSubtitle;
+
+  /// No description provided for @authRegisterSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'It takes 30 seconds'**
+  String get authRegisterSubtitle;
+
+  /// No description provided for @authForgotSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll send you a rescue link'**
+  String get authForgotSubtitle;
 
   /// No description provided for @loginWithEmail.
   ///
@@ -797,25 +821,25 @@ abstract class AppLocalizations {
   /// No description provided for @successLoggedIn.
   ///
   /// In en, this message translates to:
-  /// **'Successfully logged in'**
+  /// **'There you are!'**
   String get successLoggedIn;
 
   /// No description provided for @successLoggedOut.
   ///
   /// In en, this message translates to:
-  /// **'Successfully logged out'**
+  /// **'See you soon'**
   String get successLoggedOut;
 
   /// No description provided for @successRegistered.
   ///
   /// In en, this message translates to:
-  /// **'Account created successfully'**
+  /// **'Welcome aboard!'**
   String get successRegistered;
 
   /// No description provided for @successPasswordReset.
   ///
   /// In en, this message translates to:
-  /// **'Password reset email sent'**
+  /// **'Check your inbox'**
   String get successPasswordReset;
 
   /// No description provided for @successPasswordChanged.
@@ -1211,13 +1235,13 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeBack.
   ///
   /// In en, this message translates to:
-  /// **'Welcome back!'**
+  /// **'Good to see you again'**
   String get welcomeBack;
 
   /// No description provided for @welcomeBackUser.
   ///
   /// In en, this message translates to:
-  /// **'Welcome back, {name}!'**
+  /// **'Good to see you, {name}'**
   String welcomeBackUser(String name);
 
   /// No description provided for @getStarted.
@@ -2249,7 +2273,7 @@ abstract class AppLocalizations {
   /// No description provided for @passwordResetSentMessage.
   ///
   /// In en, this message translates to:
-  /// **'We sent an email to {email} with instructions to reset your password.'**
+  /// **'A link is waiting for you in {email}\'s inbox. Check spam too, just in case.'**
   String passwordResetSentMessage(String email);
 
   /// No description provided for @semanticsCompleted.

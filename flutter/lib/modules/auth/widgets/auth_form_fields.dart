@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/extensions/context_extensions.dart';
@@ -136,7 +137,7 @@ class _AuthPasswordFieldState extends State<AuthPasswordField> {
           widget.obscureText
               ? Icons.visibility_outlined
               : Icons.visibility_off_outlined,
-          color: AppColors.textTertiary(Theme.of(context).brightness),
+          color: context.colorScheme.onSurfaceVariant,
         ),
         onPressed: widget.onToggleVisibility,
       ),
@@ -162,7 +163,7 @@ class PasswordStrengthIndicator extends StatelessWidget {
     final (color, label, progress) = switch (strength) {
       PasswordStrength.none => (Colors.transparent, '', 0.0),
       PasswordStrength.weak => (
-        AppColors.error,
+        context.colorScheme.error,
         context.l10n.passwordStrengthWeak,
         0.33,
       ),
@@ -178,24 +179,33 @@ class PasswordStrengthIndicator extends StatelessWidget {
       ),
     };
 
-    return Padding(
-      padding: EdgeInsets.only(top: AppSpacing.xs),
-      child: Row(
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: AppRadius.xs,
-              child: LinearProgressIndicator(
-                value: progress,
-                backgroundColor: AppColors.contrastLowLight,
-                valueColor: AlwaysStoppedAnimation(color),
-                minHeight: 4.h,
+    return Semantics(
+      label: '${context.l10n.password}: $label',
+      child: Padding(
+        padding: EdgeInsets.only(top: AppSpacing.xs),
+        child: Row(
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: AppRadius.xs,
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween(end: progress),
+                  duration: AppAnimations.medium,
+                  curve: Curves.easeOutCubic,
+                  builder: (context, value, _) => LinearProgressIndicator(
+                    value: value,
+                    backgroundColor:
+                        context.colorScheme.surfaceContainerHighest,
+                    valueColor: AlwaysStoppedAnimation(color),
+                    minHeight: 4.h,
+                  ),
+                ),
               ),
             ),
-          ),
-          SizedBox(width: AppSpacing.sm),
-          Text(label, style: AppTypography.labelSmall.copyWith(color: color)),
-        ],
+            SizedBox(width: AppSpacing.sm),
+            Text(label, style: AppTypography.labelSmall.copyWith(color: color)),
+          ],
+        ),
       ),
     );
   }
@@ -228,7 +238,10 @@ class TermsCheckbox extends StatelessWidget {
           height: 24.w,
           child: Checkbox(
             value: value,
-            onChanged: onChanged,
+            onChanged: (v) {
+              HapticFeedback.selectionClick();
+              onChanged?.call(v);
+            },
             activeColor: Theme.of(context).colorScheme.primary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.r),
@@ -243,7 +256,7 @@ class TermsCheckbox extends StatelessWidget {
               TextSpan(
                 text: termsText ?? context.l10n.agreeToTermsPrefix,
                 style: AppTypography.bodySmall.copyWith(
-                  color: AppColors.textSecondary(Theme.of(context).brightness),
+                  color: context.colorScheme.onSurfaceVariant,
                 ),
                 children: [
                   WidgetSpan(
@@ -304,7 +317,10 @@ class RememberMeCheckbox extends StatelessWidget {
           height: 24.w,
           child: Checkbox(
             value: value,
-            onChanged: onChanged,
+            onChanged: (v) {
+              HapticFeedback.selectionClick();
+              onChanged?.call(v);
+            },
             activeColor: Theme.of(context).colorScheme.primary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.r),
@@ -318,7 +334,7 @@ class RememberMeCheckbox extends StatelessWidget {
             child: Text(
               label ?? context.l10n.rememberMe,
               style: AppTypography.bodySmall.copyWith(
-                color: AppColors.textSecondary(Theme.of(context).brightness),
+                color: context.colorScheme.onSurfaceVariant,
               ),
               overflow: TextOverflow.ellipsis,
             ),

@@ -65,7 +65,7 @@ class ThemePickerSheet extends StatelessWidget {
   }) {
     final isSelected = currentTheme == mode;
 
-    final primary = Theme.of(context).colorScheme.primary;
+    final primary = context.colorScheme.primary;
 
     return AppIconListTile(
       icon: icon,
@@ -132,7 +132,7 @@ class LanguagePickerSheet extends StatelessWidget {
           ? Icon(
               Icons.check_circle_rounded,
               size: 24.sp,
-              color: Theme.of(context).colorScheme.primary,
+              color: context.colorScheme.primary,
             )
           : null,
       onTap: () {

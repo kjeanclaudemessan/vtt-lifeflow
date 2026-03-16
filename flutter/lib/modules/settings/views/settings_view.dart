@@ -116,7 +116,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
               child: Text(
                 _getSectionTitle(context, section.titleKey),
                 style: AppTypography.labelLarge.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colorScheme.primary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -207,8 +207,8 @@ class SettingsView extends StackedView<SettingsViewModel> {
                   item.icon,
                   size: 22.sp,
                   color: item.destructive
-                      ? AppColors.error
-                      : AppColors.neutral500,
+                      ? context.colorScheme.error
+                      : context.colorScheme.onSurfaceVariant,
                 ),
                 SizedBox(width: AppSpacing.md),
               ],
@@ -217,7 +217,7 @@ class SettingsView extends StackedView<SettingsViewModel> {
                   _getItemTitle(context, item.titleKey),
                   style: AppTypography.bodyMedium.copyWith(
                     color: item.destructive
-                        ? AppColors.error
+                        ? context.colorScheme.error
                         : context.colorScheme.onSurface,
                   ),
                 ),
@@ -246,14 +246,14 @@ class SettingsView extends StackedView<SettingsViewModel> {
           Text(
             _getThemeModeLabel(context, viewModel.themeMode),
             style: AppTypography.bodyMedium.copyWith(
-              color: AppColors.neutral500,
+              color: context.colorScheme.onSurfaceVariant,
             ),
           ),
           SizedBox(width: AppSpacing.xs),
           Icon(
             Icons.chevron_right_rounded,
             size: 20.sp,
-            color: AppColors.neutral400,
+            color: context.colorScheme.onSurfaceVariant,
           ),
         ],
       ),
@@ -263,25 +263,27 @@ class SettingsView extends StackedView<SettingsViewModel> {
           Text(
             viewModel.getLocaleLabel(viewModel.locale),
             style: AppTypography.bodyMedium.copyWith(
-              color: AppColors.neutral500,
+              color: context.colorScheme.onSurfaceVariant,
             ),
           ),
           SizedBox(width: AppSpacing.xs),
           Icon(
             Icons.chevron_right_rounded,
             size: 20.sp,
-            color: AppColors.neutral400,
+            color: context.colorScheme.onSurfaceVariant,
           ),
         ],
       ),
       SettingsItemType.info => Text(
         item.id == 'version' ? viewModel.fullVersion : '',
-        style: AppTypography.bodyMedium.copyWith(color: AppColors.neutral500),
+        style: AppTypography.bodyMedium.copyWith(
+          color: context.colorScheme.onSurfaceVariant,
+        ),
       ),
       SettingsItemType.navigation || SettingsItemType.link => Icon(
         Icons.chevron_right_rounded,
         size: 20.sp,
-        color: AppColors.neutral400,
+        color: context.colorScheme.onSurfaceVariant,
       ),
       _ => const SizedBox.shrink(),
     };

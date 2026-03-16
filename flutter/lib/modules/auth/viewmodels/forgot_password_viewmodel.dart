@@ -5,6 +5,8 @@ import 'package:stacked_services/stacked_services.dart';
 import '../../../app/app.locator.dart';
 import '../../../core/core.dart';
 import '../../../domain/repositories/i_auth_repository.dart';
+import '../../../services/haptic_service.dart';
+import '../config/auth_config.dart';
 
 /// ViewModel for the Forgot Password screen.
 ///
@@ -12,6 +14,13 @@ import '../../../domain/repositories/i_auth_repository.dart';
 class ForgotPasswordViewModel extends BaseViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final IAuthRepository _authRepository = locator<IAuthRepository>();
+  final HapticService _haptic = locator<HapticService>();
+
+  // ─────────────────────────────────────────────────────────────────
+  // Config
+  // ─────────────────────────────────────────────────────────────────
+
+  AuthConfig get config => const AuthConfig();
 
   // ─────────────────────────────────────────────────────────────────
   // State
@@ -70,8 +79,12 @@ class ForgotPasswordViewModel extends BaseViewModel {
 
   void _handleResult(Either<Failure, Unit> result) {
     result.fold(
-      (failure) => setError(failure.message),
+      (failure) {
+        _haptic.error();
+        setError(failure.message);
+      },
       (_) {
+        _haptic.success();
         _emailSent = true;
         rebuildUi();
       },

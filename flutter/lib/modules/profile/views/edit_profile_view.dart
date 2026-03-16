@@ -69,8 +69,8 @@ class EditProfileView extends StackedView<EditProfileViewModel> {
                       l10n.save,
                       style: TextStyle(
                         color: viewModel.canSubmit
-                            ? Theme.of(context).colorScheme.primary
-                            : AppColors.neutral400,
+                            ? context.colorScheme.primary
+                            : context.colorScheme.onSurfaceVariant,
                       ),
                     ),
             ),
@@ -101,14 +101,14 @@ class EditProfileView extends StackedView<EditProfileViewModel> {
                 Container(
                   padding: EdgeInsets.all(AppSpacing.md),
                   decoration: BoxDecoration(
-                    color: AppColors.error.withValues(alpha: 0.1),
+                    color: context.colorScheme.error.withValues(alpha: 0.1),
                     borderRadius: AppRadius.md,
                   ),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.error_outline_rounded,
-                        color: AppColors.error,
+                        color: context.colorScheme.error,
                         size: 20,
                       ),
                       SizedBox(width: AppSpacing.sm),
@@ -116,7 +116,7 @@ class EditProfileView extends StackedView<EditProfileViewModel> {
                         child: Text(
                           viewModel.modelError.toString(),
                           style: AppTypography.bodySmall.copyWith(
-                            color: AppColors.error,
+                            color: context.colorScheme.error,
                           ),
                         ),
                       ),

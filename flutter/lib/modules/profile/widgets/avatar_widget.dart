@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/core.dart';
-import '../../../core/extensions/context_extensions.dart';
 import '../../../design_system/design_system.dart';
 
 /// Avatar widget with edit functionality.
@@ -51,46 +51,60 @@ class AvatarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final effectiveSize = size.w;
 
-    return GestureDetector(
-      onTap: editable ? (onEditTap ?? onTap) : onTap,
-      child: Stack(
-        children: [
-          // Avatar container
-          Container(
-            width: effectiveSize,
-            height: effectiveSize,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: backgroundColor ?? AppColors.neutral200,
-              border: Border.all(color: AppColors.neutral300, width: 2.w),
-            ),
-            child: ClipOval(child: _buildContent(context, effectiveSize)),
-          ),
-
-          // Edit button
-          if (editable)
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: Container(
-                width: 32.w,
-                height: 32.w,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Theme.of(context).colorScheme.primary,
-                  border: Border.all(
-                    color: context.colorScheme.surface,
-                    width: 2.w,
-                  ),
-                ),
-                child: Icon(
-                  Icons.camera_alt_rounded,
-                  size: 16.sp,
-                  color: AppColors.white,
+    return Semantics(
+      label: 'User avatar${editable ? ", tap to change" : ""}',
+      image: true,
+      child: GestureDetector(
+        onTap: editable
+            ? () {
+                HapticFeedback.selectionClick();
+                (onEditTap ?? onTap)?.call();
+              }
+            : onTap,
+        child: Stack(
+          children: [
+            // Avatar container
+            Container(
+              width: effectiveSize,
+              height: effectiveSize,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color:
+                    backgroundColor ??
+                    context.colorScheme.surfaceContainerHighest,
+                border: Border.all(
+                  color: context.colorScheme.outlineVariant,
+                  width: 2.w,
                 ),
               ),
+              child: ClipOval(child: _buildContent(context, effectiveSize)),
             ),
-        ],
+
+            // Edit button
+            if (editable)
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  width: 32.w,
+                  height: 32.w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: context.colorScheme.primary,
+                    border: Border.all(
+                      color: context.colorScheme.surface,
+                      width: 2.w,
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.camera_alt_rounded,
+                    size: 16.sp,
+                    color: context.colorScheme.onPrimary,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -141,7 +155,7 @@ class AvatarWidget extends StatelessWidget {
       return Icon(
         Icons.person_rounded,
         size: effectiveSize * 0.5,
-        color: AppColors.neutral500,
+        color: context.colorScheme.onSurfaceVariant,
       );
     }
 
@@ -151,7 +165,7 @@ class AvatarWidget extends StatelessWidget {
         style: AppTypography.headlineMedium.copyWith(
           fontSize: effectiveSize * 0.35,
           fontWeight: FontWeight.w600,
-          color: AppColors.neutral600,
+          color: context.colorScheme.onSurfaceVariant,
         ),
       ),
     );
@@ -219,7 +233,7 @@ class AvatarPickerOptions extends StatelessWidget {
     bool isDestructive = false,
   }) {
     final color = isDestructive
-        ? AppColors.error
+        ? context.colorScheme.error
         : context.colorScheme.onSurface;
 
     return ListTile(

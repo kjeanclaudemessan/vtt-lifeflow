@@ -41,7 +41,7 @@ class ProfileSection extends StatelessWidget {
         color: context.colorScheme.surface,
         borderRadius: AppRadius.lg,
         border: Border.all(
-          color: AppColors.neutral200,
+          color: context.colorScheme.outlineVariant,
           width: 1.w,
         ),
       ),
@@ -69,7 +69,7 @@ class ProfileSection extends StatelessWidget {
               if (child != children.last) {
                 yield Divider(
                   height: 1.h,
-                  color: AppColors.neutral200,
+                  color: context.colorScheme.outlineVariant,
                 );
               }
             })
@@ -92,12 +92,7 @@ class ProfileCard extends StatelessWidget {
   /// Callback when tapped.
   final VoidCallback? onTap;
 
-  const ProfileCard({
-    required this.child,
-    this.padding,
-    this.onTap,
-    super.key,
-  });
+  const ProfileCard({required this.child, this.padding, this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +107,7 @@ class ProfileCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: AppRadius.lg,
             border: Border.all(
-              color: AppColors.neutral200,
+              color: context.colorScheme.outlineVariant,
               width: 1.w,
             ),
           ),
@@ -151,8 +146,9 @@ class ProfileActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        isDestructive ? AppColors.error : context.colorScheme.onSurface;
+    final color = isDestructive
+        ? context.colorScheme.error
+        : context.colorScheme.onSurface;
 
     return InkWell(
       onTap: onTap,
@@ -164,18 +160,12 @@ class ProfileActionButton extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(
-              icon,
-              size: 20.sp,
-              color: color,
-            ),
+            Icon(icon, size: 20.sp, color: color),
             SizedBox(width: AppSpacing.md),
             Expanded(
               child: Text(
                 label,
-                style: AppTypography.bodyMedium.copyWith(
-                  color: color,
-                ),
+                style: AppTypography.bodyMedium.copyWith(color: color),
               ),
             ),
             if (trailing != null)
@@ -184,7 +174,7 @@ class ProfileActionButton extends StatelessWidget {
               Icon(
                 Icons.chevron_right_rounded,
                 size: 20.sp,
-                color: AppColors.neutral400,
+                color: context.colorScheme.onSurfaceVariant,
               ),
           ],
         ),
