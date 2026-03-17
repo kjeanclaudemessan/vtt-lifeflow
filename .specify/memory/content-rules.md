@@ -1,8 +1,14 @@
 # Content Rules — Le Langage de l'App
 
-> **Ce fichier définit TOUT ce que l'app "dit" à l'utilisateur.**
-> Textes, labels, messages, notifications, placeholders, erreurs, vides, célébrations.
+> **Ce fichier définit QUOI dire et COMMENT le dire.**
+> Ton, voix, wording exact par contexte, voix par type d'app, stratégie de notifications.
 > L'IA le lit avant de rédiger tout texte visible dans l'interface.
+>
+> **Ce fichier ne contient PAS :** de conventions de clés i18n, de règles ICU/pluralisation,
+> de mapping d'icônes, de format de dates/nombres, de code Dart.
+> Pour l'i18n technique → voir `i18n.instructions.md` + `i18n-strict.instructions.md`
+> Pour les icônes/illustrations → voir `illustrations.instructions.md`
+> Pour le UX writing avancé → voir `ux-writing.instructions.md`
 >
 > **Principe** : Chaque mot affiché est un choix de design. Un texte maladroit
 > casse l'expérience autant qu'un mauvais layout.
@@ -31,82 +37,84 @@ L'APP EST :                         L'APP N'EST PAS :
 
 ### Matrice de ton selon le contexte :
 
-```
-CONTEXTE              TON                     EXEMPLE
-─────────────────────────────────────────────────────────────
-Premier lancement     Accueillant, sobre      "Bienvenue. Commençons."
-Action quotidienne    Neutre, efficace        "Habitude ajoutée"
-Progression           Positif, factuel        "12 jours consécutifs"
-Milestone             Chaleureux, spécifique  "30 jours de méditation. Impressionnant."
-Erreur technique      Honnête, orienté aide   "Impossible de charger. Vérifier la connexion."
-Retour après absence  Neutre, positif         "Bon retour. 47 habitudes complétées au total."
-Notification          Utile, court            "Routine du soir dans 15 min"
-Vide / empty state    Invitant, pas accusant  "Espace libre pour tes premières habitudes"
-Suppression           Factuel, réversible     "Supprimé. Annuler ?"
-```
+| Contexte | Ton | Exemple |
+|----------|-----|---------|
+| Premier lancement | Accueillant, sobre | "Bienvenue. Commençons." |
+| Action quotidienne | Neutre, efficace | "Habitude ajoutée" |
+| Progression | Positif, factuel | "12 jours consécutifs" |
+| Milestone | Chaleureux, spécifique | "30 jours de méditation. Impressionnant." |
+| Erreur technique | Honnête, orienté aide | "Impossible de charger. Vérifier la connexion." |
+| Retour après absence | Neutre, positif | "Bon retour. 47 habitudes complétées au total." |
+| Notification | Utile, court | "Routine du soir dans 15 min" |
+| Vide / empty state | Invitant, pas accusant | "Espace libre pour tes premières habitudes" |
+| Suppression | Factuel, réversible | "Supprimé. Annuler ?" |
 
 ---
 
-## II. Règles i18n (internationalisation)
+## II. Voice Profiles par Type d'App
 
-### Convention de Clés
+### L'identité vocale change selon le TYPE d'app produit par la factory.
+
+### Flow (développement personnel)
 
 ```
-FORMAT : module.section.element.qualifier
+Apps       : LifeFlow, MeditationFlow, ReadFlow, SilvaFlow, MindFlow
+Persona    : Coach calme, compagnon de route
+Ton        : Doux, encourageant, jamais pressant ni paternel
+Vocabulaire: "progression", "régularité", "moment", "rituel", "bien joué"
+Éviter     : Urgence, commandement, jargon fitness/coaching
 
 EXEMPLES :
-  habits.home.title              → "Mes habitudes"
-  habits.home.empty_title        → "Espace libre pour tes habitudes"
-  habits.home.empty_description  → "Commence avec un template ou crée la tienne"
-  habits.detail.streak_label     → "Jours consécutifs"
-  habits.create.name_hint        → "Nom de l'habitude"
-  common.actions.save             → "Enregistrer"
-  common.actions.cancel           → "Annuler"
-  common.actions.delete           → "Supprimer"
-  common.actions.undo             → "Annuler"
-  common.errors.network           → "Connexion perdue"
-  common.errors.generic           → "Une erreur est survenue"
+  Greeting matin  : "Bonne journée. Voici ton plan."
+  Completion      : "Tout est fait. Belle journée."
+  Milestone       : "3 semaines de méditation. Tu installes une habitude."
+  Return          : "Bon retour. 47 pratiques au total."
+  Empty state     : "Un espace pour tes premières habitudes"
 ```
 
-### Hiérarchie des fichiers ARB
+### Pro (productivité, business)
 
 ```
-lib/l10n/
-  app_fr.arb          # Français (langue primaire)
-  app_en.arb          # Anglais
-  app_[locale].arb    # Autres langues
+Apps       : ContratPro, FleetMaster, PressingSync, StockManager, ImportTrack
+Persona    : Assistant efficace, co-pilote
+Ton        : Direct, factuel, orienté résultat — pas de fleurs
+Vocabulaire: "traité", "en attente", "validé", "efficacité", "résumé"
+Éviter     : Émotions excessives, emojis, métaphores
 
-RÈGLES :
-  1. La langue primaire est TOUJOURS écrite en premier (fr ou en selon le produit)
-  2. Aucun texte hardcodé JAMAIS dans le code Flutter. Zéro exception.
-  3. Les clés sont descriptives, pas abrégées (pas "hm_ttl", oui "habits.home.title")
-  4. Pluralisation : utiliser les ICU Message Format (one/other, pas de if/else)
-  5. Paramètres : {count}, {name}, {date} — pas de concaténation de strings
+EXEMPLES :
+  Greeting matin  : "3 contrats en attente. 2 paiements à vérifier."
+  Completion      : "Rien en attente."
+  Milestone       : "47 contrats gérés ce mois-ci."
+  Return          : "12 éléments en attente depuis ta dernière visite."
+  Empty state     : "Aucun contrat. Créer le premier."
 ```
 
-### Pluralisation (ICU)
+### Community (social, collectif)
 
-```json
-"habits_completed": "{count, plural, =0{Aucune habitude complétée} =1{1 habitude complétée} other{{count} habitudes complétées}}"
 ```
+Apps       : ChurchFlow, TontineFlow, EventPro, CoupleFlow, ParentFlow
+Persona    : Animateur chaleureux, facilitateur
+Ton        : Inclusif, célébratoire, centré sur le groupe
+Vocabulaire: "ensemble", "le groupe", "activité", "événement", "membres"
+Éviter     : Individualisme, compétition, ton froid
 
-### Textes dynamiques avec paramètres
-
-```json
-"streak_message": "{count} jours consécutifs",
-"welcome_back": "Bon retour. {total} habitudes complétées au total.",
-"morning_greeting": "Bonne journée ! {count} habitudes aujourd'hui."
+EXEMPLES :
+  Greeting matin  : "Le groupe est actif. 3 nouveaux messages."
+  Completion      : "Événement clôturé. 12 participants."
+  Milestone       : "100 membres. La communauté grandit."
+  Return          : "5 nouvelles activités depuis ta dernière visite."
+  Empty state     : "Invite tes premiers membres pour commencer"
 ```
 
 ---
 
-## III. Textes par Contexte
+## III. Textes par Contexte (wording exact)
 
 ### Titres d'écran (AppBar)
 
 ```
 RÈGLE : Court. 1-3 mots. Pas de phrase.
-EXEMPLES :
+
   ✓ "Habitudes"            ✗ "Mes habitudes quotidiennes"
   ✓ "Profil"               ✗ "Mon profil utilisateur"
   ✓ "Routine du soir"      ✗ "Votre routine du soir programmée"
@@ -117,14 +125,14 @@ EXEMPLES :
 
 ```
 RÈGLE : Verbe + objet (sauf actions universelles). Max 3 mots.
-EXEMPLES :
+
   ✓ "Ajouter habitude"     ✗ "Cliquez ici pour ajouter"
   ✓ "Enregistrer"          ✗ "Sauvegarder les modifications"
   ✓ "Commencer"            ✗ "Commencer maintenant !"
   ✓ "Suivant"              ✗ "Passer à l'étape suivante"
 
 BOUTONS DESTRUCTIFS :
-  ✓ "Supprimer"            — (rouge, sans exclamation)
+  ✓ "Supprimer" (rouge, sans exclamation)
   ✓ "Se déconnecter"
   JAMAIS : "Êtes-vous sûr ?" → Utiliser undo snackbar à la place
 ```
@@ -139,8 +147,6 @@ STRUCTURE :
   Titre : Invitation positive (pas "Rien ici")
   Description : Explication + ce que l'utilisateur peut faire
   CTA : Bouton pour commencer
-
-EXEMPLES PAR CONTEXTE :
 
 First-run (jamais utilisé) :
   ✓ Titre : "Tes habitudes t'attendent"
@@ -164,11 +170,8 @@ Recherche sans résultat :
 
 ```
 RÈGLE : Honnête + Orienté solution. Pas de jargon technique.
+STRUCTURE : QUOI s'est passé + QUOI faire
 
-STRUCTURE :
-  QUOI s'est passé + QUOI faire
-
-EXEMPLES :
   Réseau :
     ✓ "Connexion perdue. Vérifier le Wi-Fi et réessayer."
     ✗ "Error: NetworkException - timeout after 30000ms"
@@ -183,7 +186,7 @@ EXEMPLES :
     ✗ "Veuillez remplir tous les champs obligatoires" (en haut, vague)
   
   Permission :
-    ✓ "LifeFlow a besoin d'accéder aux notifications pour te rappeler tes routines."
+    ✓ "[AppName] a besoin d'accéder aux notifications pour te rappeler tes routines."
     ✗ "L'application nécessite les permissions de notification"
 
 INTERDITS ABSOLUS :
@@ -200,12 +203,11 @@ INTERDITS ABSOLUS :
 ```
 RÈGLE : Spécifique + Proportionnel. Pas de "Bravo !" sans contexte.
 
-PROPORTIONNALITÉ :
   Tier 1 (micro) — Action quotidienne :
     → Pas de texte visible. Feedback tactile/visuel suffit.
   
   Tier 2 (midi) — Milestone court :
-    → "7 jours consécutifs 🔥"  (bref, factuel)
+    → "7 jours consécutifs 🔥" (bref, factuel)
     → "Routine terminée"
   
   Tier 3 (macro) — Milestone significatif :
@@ -220,78 +222,147 @@ INTERDITS :
   ✗ "Bravo !" seul (générique, vide de sens)
   ✗ "Tu es génial !" (l'app n'est pas un cheerleader)
   ✗ "Continue comme ça !" (injonction déguisée)
-  ✗ Emojis excessifs (1 par message max, et seulement si il ajoute du sens)
+  ✗ Emojis excessifs (1 par message max, et seulement s'il ajoute du sens)
 ```
 
-### Notifications push
+---
+
+## IV. Error Recovery Content Strategy
+
+### Le ton pendant une erreur définit le niveau de confiance de l'utilisateur.
+
+### Stratégie par type d'erreur :
 
 ```
-RÈGLE : Chaque notification doit JUSTIFIER son interruption.
-        Si l'utilisateur peut vivre sans, ne pas l'envoyer.
+PERTE RÉSEAU
+  Émotion : Frustration, peur de perdre ses données
+  Ton     : Rassurant, factuel
+  Message : "Connexion perdue. Tes données sont sauvegardées localement."
+  Sub     : "La synchronisation reprendra automatiquement."
+  JAMAIS  : "Erreur réseau", "Timeout", jargon technique
 
-STRUCTURE :
-  Titre : Contexte court (nom de la routine, type)
-  Body : Info utile + action implicite
+ERREUR SERVEUR
+  Émotion : Impatience, perte de confiance
+  Ton     : Honnête, temporaire
+  Message : "Service temporairement indisponible."
+  Sub     : "Réessayer dans quelques minutes."
+  JAMAIS  : "500", "Internal Server Error", code HTTP
 
-EXEMPLES :
-  ✓ Titre : "Routine du soir"
-    Body : "3 habitudes en attente. 15 minutes estimées."
-  
-  ✓ Titre : "Bilan hebdomadaire"
-    Body : "Semaine à 78%. Voir le détail."
-  
-  ✗ Titre : "N'oubliez pas !"
-    Body : "Vous avez des habitudes à compléter"
-    → Culpabilisant, vague, pas utile
+SESSION EXPIRÉE
+  Émotion : Confusion
+  Ton     : Direct, pratique
+  Message : "Session expirée. Reconnecte-toi pour continuer."
+  Sub     : (champ de login immédiat)
+  JAMAIS  : "401 Unauthorized", "Token expired"
 
-FRÉQUENCE :
+PERMISSION REFUSÉE
+  Émotion : Méfiance
+  Ton     : Explicatif, patient
+  Message : "[App] a besoin de [permission] pour [bénéfice concret]."
+  Sub     : "Tu peux l'activer plus tard dans les réglages."
+  JAMAIS  : "Permission requise", langage technique
+
+VALIDATION
+  Émotion : Agacement
+  Ton     : Factuel, pas accusateur
+  Message : "Format d'email incorrect" (sous le champ)
+  JAMAIS  : "Vous avez entré...", "Veuillez...", message vague en haut de page
+
+DONNÉES CORROMPUES
+  Émotion : Panique
+  Ton     : Ultra-rassurant
+  Message : "Un problème a été détecté. Tes données récentes sont en sécurité."
+  Sub     : "Nous récupérons les informations..."
+  JAMAIS  : Montrer les données corrompues, stack trace, "données perdues"
+```
+
+### Principe fondamental des erreurs :
+
+```
+L'app PREND LA RESPONSABILITÉ. Jamais l'utilisateur.
+
+  ✓ "Service indisponible"      → c'est le service qui a un problème
+  ✓ "Format incorrect"          → c'est le format, pas l'utilisateur
+  ✗ "Vous avez entré..."        → accusation
+  ✗ "Veuillez réessayer"        → l'utilisateur n'a rien fait de mal
+```
+
+---
+
+## V. Notification Strategy
+
+### Chaque notification doit JUSTIFIER son interruption. Si l'utilisateur peut vivre sans, ne pas l'envoyer.
+
+### Types de notifications
+
+```
+TYPE 1 — RAPPEL DE ROUTINE (déclenchée par le planning de l'utilisateur)
+  Quand   : Heure configurée par l'utilisateur
+  Titre   : Nom de la routine
+  Body    : "{count} habitudes. {duration} estimées."
+  Exemple : "Routine du soir • 3 habitudes. 15 minutes estimées."
+
+TYPE 2 — BILAN PÉRIODIQUE (hebdomadaire)
+  Quand   : Une fois par semaine (jour + heure configurables)
+  Titre   : "Bilan hebdomadaire"
+  Body    : "Semaine à {percent}%. Voir le détail."
+  Exemple : "Bilan hebdomadaire • Semaine à 78%. Voir le détail."
+
+TYPE 3 — MILESTONE (atteint un seuil)
+  Quand   : Au moment de l'accomplissement (pas différé)
+  Titre   : Le milestone
+  Body    : Message spécifique
+  Exemple : "Streak 30 jours 🔥 • Un mois entier de méditation."
+  Fréquence : Max 1 par semaine (ne pas spammer les milestones mineurs)
+
+TYPE 4 — ACTIVITÉ GROUPE (apps Community uniquement)
+  Quand   : Quand un événement pertinent se produit
+  Titre   : Source de l'activité
+  Body    : L'activité
+  Exemple : "Tontine du mois • Collecte terminée. Voir les résultats."
+```
+
+### Règles de fréquence
+
+```
   - Max 3 notifications/jour (rappels routines + 1 bilan)
-  - 0 notification après 22h (mode REPOS)
-  - L'utilisateur contrôle TOUT dans les settings
-  - Si l'utilisateur a tout fait → pas de notification
+  - 0 notification entre 22h et 6h (ABSOLU)
+  - Si l'utilisateur a tout fait aujourd'hui → PAS de notification
+  - Si l'utilisateur ignore 3 notifications consécutives → réduire la fréquence
+  - L'utilisateur contrôle TOUT dans les settings (par type, par routine)
+```
+
+### Dégradation de fréquence
+
+```
+L'app s'adapte au comportement de l'utilisateur :
+
+  Engagement élevé (ouvre chaque jour) :
+    → Notifications minimales (l'utilisateur n'en a pas besoin)
+    → Uniquement les bilans et milestones
+
+  Engagement moyen (ouvre 3-4x/semaine) :
+    → Rappels de routine aux heures configurées
+    → Bilan hebdomadaire
+
+  Engagement faible (ouvre 1x/semaine ou moins) :
+    → Réduire progressivement les rappels
+    → Garder uniquement le bilan hebdomadaire
+    → Après 2 semaines d'inactivité : STOP total
+    → Si retour : reprendre doucement (1 notification, pas 3)
+
+  JAMAIS :
+    ✗ "Tu nous manques !"
+    ✗ "Tu n'as pas ouvert l'app depuis 3 jours"
+    ✗ Augmenter les notifications quand l'engagement baisse
+    ✗ Notification passive-agressive déguisée en motivation
 ```
 
 ---
 
-## IV. Icônes et Visuels
+## VI. Seed Data et Contenu Pré-rempli
 
-### Convention d'icônes
-
-```
-BIBLIOTHÈQUE : LucideIcons exclusivement (cohérence design)
-
-MAPPING PAR CONCEPT :
-  Habitudes       → lucide.repeat / lucide.check_circle
-  Routines        → lucide.list_checks / lucide.clock
-  Domaines de vie → lucide.compass / lucide.layers
-  Profil          → lucide.user
-  Settings        → lucide.settings
-  Stats           → lucide.bar_chart_3 / lucide.trending_up
-  Ajout           → lucide.plus
-  Retour          → lucide.arrow_left
-  Suppression     → lucide.trash_2
-  Édition         → lucide.edit_3
-  Recherche       → lucide.search
-  Notification    → lucide.bell
-  Streak/Feu      → lucide.flame
-  Partage         → lucide.share_2
-
-RÈGLES :
-  - Chaque icône est accompagnée d'un label SAUF dans l'AppBar (+ tooltip)
-  - Taille standard : 24dp (icônes de contenu), 20dp (icônes de navigation)
-  - Couleur : AppColors.icon (neutre) ou AppColors.primary (action/actif)
-```
-
----
-
-## V. Seed Data et Contenu Pré-rempli
-
-### Pourquoi du seed data ?
-
-```
-L'écran vide est l'ENNEMI de l'onboarding. Le seed data élimine le vide.
-L'utilisateur voit de la valeur AVANT de fournir des données.
-```
+### L'écran vide est l'ENNEMI de l'onboarding. Le seed data élimine le vide.
 
 ### Règles de seed data
 
@@ -328,49 +399,6 @@ L'utilisateur voit de la valeur AVANT de fournir des données.
 
 ---
 
-## VI. Conventions de Format
-
-### Dates et heures
-
-```
-AFFICHAGE :
-  Aujourd'hui    → "Aujourd'hui" (pas la date)
-  Hier           → "Hier"
-  Cette semaine  → "Lundi", "Mardi" (nom du jour)
-  Plus ancien    → "12 mars" (sans l'année si c'est l'année courante)
-  Autre année    → "12 mars 2025"
-  
-HEURES :
-  Format 24h ou 12h selon la locale du device (pas hardcodé)
-  Durées : "2h30", "45 min", "5 min" (pas "2 heures et 30 minutes")
-
-RELATIF :
-  < 1 min   → "À l'instant"
-  < 1 heure → "il y a 23 min"
-  < 24h     → "il y a 3h"
-  > 24h     → Date absolue
-```
-
-### Nombres et métriques
-
-```
-GRANDS NOMBRES :
-  1 000     → "1 000" (espace insécable, pas de virgule)
-  1 000 000 → "1M" (abrégé au-delà du million)
-
-POURCENTAGES :
-  Arrondir à l'entier : "72%" (pas "72.3%")
-  Exception : si la précision a du sens (finance), garder 1 décimale
-
-COMPTEURS :
-  0 → Traitement spécial (empty state, pas juste "0 habitudes")
-  1 → Singulier ("1 habitude")
-  2+ → Pluriel ("3 habitudes")
-  Format ICU pour les pluriels (voir section i18n)
-```
-
----
-
 ## VII. Les "Jamais" du Contenu
 
 ```
@@ -386,7 +414,22 @@ COMPTEURS :
 ✗ Double négation                  → "Ne voulez-vous pas ne pas..." = cauchemar
 ✗ Condescendance                   → "C'est facile !" (ça ne l'est peut-être pas pour lui)
 ✗ Gendered language (en anglais)   → "his/her" → "their"
+✗ "Tu nous manques"               → Culpabilisant, manipulateur
+✗ "Continue comme ça !"           → Injonction déguisée en encouragement
 ```
+
+---
+
+## Implémentation (→ .github/instructions/)
+
+| Aspect | Fichier de référence |
+|--------|---------------------|
+| i18n (clés, ARB, ICU, pluralisation) | `design-system-i18n.instructions.md` |
+| i18n strict (zéro hardcode, lint) | `design-system-i18n-strict.instructions.md` |
+| Icônes / illustrations (mapping) | `design-system-illustrations.instructions.md` |
+| UX writing patterns | `design-system-ux-writing.instructions.md` |
+| Format dates/nombres (locale-aware) | `design-system-i18n.instructions.md` §format |
+| Célébrations / milestones | `design-system-celebrations.instructions.md` |
 
 ---
 

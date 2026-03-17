@@ -1,8 +1,14 @@
-# Experience Architecture — Comment Chaque Session Ressemble
+# Experience Architecture — L'Architecture Émotionnelle de Chaque Session
 
-> **Ce fichier définit l'ARCHITECTURE ÉMOTIONNELLE de chaque session utilisateur.**
-> Pas les layouts. Pas les widgets. L'arc narratif, le rythme, le timing psychologique.
+> **Ce fichier définit le RYTHME et l'ARC ÉMOTIONNEL de chaque session utilisateur.**
+> Pas les layouts. Pas les widgets. Le timing psychologique, les moments critiques, les boucles de rétention.
 > L'IA le lit avant de concevoir un flux ou un écran.
+>
+> **Ce fichier ne contient PAS :** de layouts spécifiques, de noms de widgets, de code Dart, de tokens de design.
+> Pour les layouts → voir `wireframe-rules.md`
+> Pour les animations/transitions → voir `motion.instructions.md`
+> Pour les célébrations visuelles → voir `celebrations.instructions.md`
+> Pour les états d'écran → voir `states.instructions.md`
 >
 > **Dépend de :** Product Soul (les principes) → ce fichier les applique au rythme d'usage.
 
@@ -44,94 +50,51 @@ RÉCOMPENSE (2-5s)
     Proportionnel à l'importance de l'action.
 ```
 
-### Application Code :
-
-Chaque View principale encode les 4 temps :
-```
-1. ARRIVÉE    → Ce qui se charge en premier (le header, le résumé contextuel)
-2. RECOGNITION → Les données personnalisées (progression, stats du jour, état)
-3. ACTION     → L'action primaire (le bouton/zone la plus visible)
-4. RÉCOMPENSE → Le feedback post-action (animation, haptic, message, UI update)
-```
+Chaque View principale encode implicitement ces 4 temps :
+1. **ARRIVÉE** → ce qui se charge en premier (header, résumé contextuel)
+2. **RECONNAISSANCE** → les données personnalisées (progression, stats du jour)
+3. **ACTION** → l'action primaire (la zone la plus visible)
+4. **RÉCOMPENSE** → le feedback post-action
 
 ---
 
 ## II. Temps Psychologique
 
-### L'app n'affiche pas la même chose selon l'heure. Pas par caprice — parce que l'utilisateur n'EST PAS la même personne à 7h et à 22h.
+### L'app n'affiche pas la même chose selon l'heure. L'utilisateur n'EST PAS la même personne à 7h et à 22h.
 
 ### Les 4 Modes Temporels :
 
 ```
 MATIN (6h-12h) — Mode INTENTION
-═══════════════════════════════════════════════════
-  L'utilisateur se sent : plein de potentiel, légèrement anxieux de la journée
-  
-  L'app montre :
-    - Le plan du jour (pas les stats d'hier)
-    - Les actions du matin en premier
-    - Ton énergique mais pas agressif : "Bonne journée ! Voici ton plan."
-  
-  L'app cache :
-    - Les bilans, les graphiques, les stats lourdes
-    - Les notifications non urgentes
-  
+  L'utilisateur se sent : plein de potentiel, légèrement anxieux
+  L'app montre : le plan du jour, les actions du matin
+  L'app cache : les bilans, les graphiques, les stats lourdes
+  Ton : énergique mais pas agressif
   Sentiment cible : "Je sais ce que je fais aujourd'hui."
 
-
 MI-JOURNÉE (12h-18h) — Mode EXÉCUTION
-═══════════════════════════════════════════════════
   L'utilisateur se sent : occupé, en mode productif ou en perte de focus
-  
-  L'app montre :
-    - L'état d'avancement ("4/7 fait")
-    - L'action en cours ou la prochaine action
-    - Interface minimale : action rapide en <10 secondes
-  
-  L'app cache :
-    - Les onboardings, les suggestions, le contenu discovery
-  
+  L'app montre : l'état d'avancement, l'action en cours ou suivante
+  L'app cache : les onboardings, les suggestions, le discovery
+  Ton : neutre, efficace
   Sentiment cible : "Fait. Je continue."
 
-
 SOIR (18h-22h) — Mode RÉFLEXION
-═══════════════════════════════════════════════════
-  L'utilisateur se sent : fatigué, besoin de clôturer, parfois culpabilisant
-  
-  L'app montre :
-    - Le bilan du jour (positif-first : CE QUI A ÉTÉ FAIT, pas ce qui manque)
-    - La routine du soir si applicable
-    - Suggestions douces : journal, humeur, gratitude
-  
-  L'app cache :
-    - Les actions futures (demain), les plannings
-    - Pas de rappel de ce qui n'a pas été fait
-  
+  L'utilisateur se sent : fatigué, besoin de clôturer
+  L'app montre : le bilan du jour (positif-first), la routine du soir
+  L'app cache : les actions futures, les plannings
+  Ton : réflexif, doux
   Sentiment cible : "J'ai quand même avancé. Bonne soirée."
 
-
 NUIT (22h-6h) — Mode REPOS
-═══════════════════════════════════════════════════
   L'utilisateur ne devrait pas être dans l'app. S'il y est :
-  
-  L'app montre :
-    - Interface ultra-minimale
-    - Pas de stimulation visuelle (animations réduites, luminosité douce)
-  
-  L'app dit : "Repose-toi. On se revoit demain 🌙" (si pertinent)
-  
-  L'app NE fait PAS :
-    - Envoyer des notifications
-    - Montrer des tâches en retard
-    - Proposer des actions
-  
+  L'app montre : interface ultra-minimale
+  L'app NE fait PAS : notifications, tâches en retard, propositions d'action
   Sentiment cible : Calme.
 ```
 
-### Application Code :
-
 ```dart
-// Le ViewModel principal expose un mode temporel
+// Le ViewModel expose un mode temporel
 enum TimeMode { morning, midday, evening, night }
 
 TimeMode get currentTimeMode {
@@ -141,9 +104,6 @@ TimeMode get currentTimeMode {
   if (hour >= 18 && hour < 22) return TimeMode.evening;
   return TimeMode.night;
 }
-
-// La View adapte son contenu principal selon le mode
-// Le greeting, l'ordre des sections, les actions visibles changent
 ```
 
 ---
@@ -154,205 +114,205 @@ TimeMode get currentTimeMode {
 
 ### Moment #1 : First Run (le premier lancement)
 
-```
-ENJEU : L'utilisateur décide en 30 secondes s'il garde l'app.
+L'utilisateur décide en 30 secondes s'il garde l'app.
 
-SÉQUENCE OPTIMALE (max 60 secondes avant la valeur) :
-  1. Splash (2s) → transition fluide, pas un logo qui traîne
-  2. Proposition de valeur en 1 phrase (PAS 3 slides avec des illustrations)
-     → "Construis tes habitudes. Vois ta progression."
-     → OU : skip l'onboarding entièrement si la proposition est claire en-app
-  3. Auth minimaliste (email + password, ou OAuth, RIEN D'AUTRE)
-  4. Premier écran REMPLI :
-     → Templates proposés ("Voici 5 habitudes populaires. Lesquelles te parlent ?")
-     → OU contenu pré-rempli (domaines de vie par défaut, habitudes suggérées)
-     → JAMAIS un écran vide avec "Crée ta première habitude"
+**Séquence optimale (max 60s avant la valeur) :**
+1. Splash (2s) → transition fluide
+2. Proposition de valeur en 1 phrase (PAS 3 slides d'illustrations)
+3. Auth minimaliste (email + password, ou OAuth, RIEN D'AUTRE)
+4. Premier écran REMPLI : templates, suggestions, contenu pré-rempli — JAMAIS vide
 
-RÈGLE DU FIRST RUN : 
-  L'utilisateur doit RECEVOIR de la valeur avant d'en DONNER.
-  L'app donne d'abord (templates, suggestions, data context).
-  L'utilisateur personnalise après.
-```
+**Règle :** L'utilisateur REÇOIT de la valeur avant d'en DONNER.
 
 ### Moment #2 : First Win (la première victoire)
 
-```
-ENJEU : L'utilisateur doit ressentir un succès dans les 2 premières minutes.
+L'utilisateur doit ressentir un succès dans les 2 premières minutes.
 
-EXEMPLES :
-  - Cocher sa première habitude → célébration disproportionnée 
-    (animation, message "Première habitude !" — plus qu'un simple check)
-  - Créer sa première routine → "Ta routine est prête ! Lance-la quand tu veux."
-  - Configurer ses domaines de vie → visualisation immédiate (pas juste une liste)
+- Cocher sa première habitude → célébration disproportionnée
+- Créer sa première routine → "Ta routine est prête !"
+- Configurer ses domaines → visualisation immédiate
 
-RÈGLE : Le first win est DESIGNÉ, pas accidentel. 
-L'app guide vers ce moment comme un tutoriel invisible.
-```
+**Règle :** Le first win est DESIGNÉ, pas accidentel. L'app guide vers ce moment comme un tutoriel invisible.
 
 ### Moment #3 : Day 7 (l'aha-moment)
 
-```
-ENJEU : L'utilisateur comprend POURQUOI il continue d'utiliser l'app.
-
-C'est le moment du premier bilan significatif.
-Une semaine de data = assez pour montrer une tendance.
+C'est le moment du premier bilan significatif. Une semaine de data = assez pour une tendance.
 
 L'app doit :
-  - Présenter un récapitulatif visuel impactant (pas un tableau — un RÉCIT)
-  - "Cette semaine : 5 habitudes maintenues, 2h de méditation, streak de 4 jours"
-  - Comparer à "la semaine d'avant" quand possible (même si la semaine d'avant = zéro)
-  - Terminer par une projection : "Si tu continues : X en un mois"
+- Présenter un récapitulatif visuel impactant (un RÉCIT, pas un tableau)
+- Comparer à "la semaine d'avant" quand possible
+- Terminer par une projection : "Si tu continues : X en un mois"
 
-C'EST LE MOMENT OÙ LE CHURN CHUTE. Si l'utilisateur passe le jour 7 
-avec un aha-moment, la probabilité qu'il reste augmente dramatiquement.
-```
+**C'est LE moment où le churn chute.** Si l'utilisateur passe le jour 7 avec un aha-moment, la probabilité qu'il reste augmente dramatiquement.
 
-### Moment #4 : The Dip (la baisse de motivation)
+### Moment #4 : The Dip (la baisse de motivation, jours 10-21)
 
-```
-ENJEU : Entre le jour 10 et le jour 21, la nouveauté s'estompe. 
-L'utilisateur a besoin de raisons de continuer.
+La nouveauté s'estompe. L'utilisateur a besoin de raisons de continuer.
 
-L'app doit :
-  - Varier les récompenses (pas le même message de félicitation chaque jour)
-  - Introduire de la profondeur (features secondaires qui apparaissent naturellement)
-  - Reconnaître les milestones : 10 jours, 2 semaines, 21 jours
-  - Ne JAMAIS augmenter la friction (pas de nouvelles modales, pas de surveys)
+**L'app doit :**
+- Varier les récompenses (pas le même message chaque jour)
+- Introduire de la profondeur (features secondaires qui apparaissent naturellement)
+- Reconnaître les milestones : 10 jours, 2 semaines, 21 jours
+- Proposer des insights sur les patterns détectés ("Tu médites surtout le matin")
 
-L'app ne doit PAS :
-  - Envoyer plus de notifications (l'utilisateur s'en lasse)
-  - Proposer des "challenges" non demandés
-  - Montrer des classements (la comparaison sociale démotive les gens en dip)
-```
+**L'app ne doit PAS :**
+- Envoyer PLUS de notifications (l'utilisateur s'en lasse)
+- Proposer des challenges non demandés
+- Montrer des classements (la comparaison sociale démotive en dip)
+- Augmenter la friction (pas de modales, pas de surveys)
 
 ### Moment #5 : The Return (le retour après absence)
 
-```
-ENJEU : L'utilisateur revient après 3+ jours. C'est son dernier jugement.
+L'utilisateur revient après 3+ jours. C'est son dernier jugement.
 
-L'app doit :
-  1. NE PAS mentionner l'absence. Ni en jours, ni en ton.
-  2. Montrer le TOTAL positif cumulé depuis le début (pas depuis la dernière visite)
-  3. Proposer un redémarrage doux : "Juste une chose aujourd'hui ?"
-  4. Le streak est un "nouveau départ !", pas un "streak perdu"
-  5. Les settings/habitudes sont exactement comme ils les avaient laissées
+**Séquence :**
+1. NE PAS mentionner l'absence. Ni en jours, ni en ton.
+2. Montrer le TOTAL positif cumulé depuis le début
+3. Proposer un redémarrage doux : "Juste une chose aujourd'hui ?"
+4. Le streak est un "nouveau départ !", pas un "streak perdu"
+5. Les settings/données sont exactement comme il les avait laissées
 
-L'app ne doit PAS :
-  ✗ "Ça fait 5 jours qu'on ne t'a pas vu !"
-  ✗ "Tu as manqué tes objectifs"
-  ✗ "Streak perdu (était 12 jours)"
-  ✗ Popup de ré-engagement
-```
+**Jamais :** "Ça fait 5 jours !", "Tu as manqué tes objectifs", "Streak perdu", popup de ré-engagement.
 
 ### Moment #6 : The Share (le moment de recommandation)
 
-```
-ENJEU : L'utilisateur veut parler de l'app à quelqu'un. Faciliter ce moment.
-
 Ce qui déclenche le partage :
-  - Un milestone personnel visuellement partageable (pas un screenshot brut)
-  - Une feature spécifique qui l'a épaté
-  - Son propre résultat rendu beau (bilan visuel, streak card, progression)
+- Un milestone visuellement partageable (share card générée, pas screenshot brut)
+- Son propre résultat rendu beau (bilan visuel, streak card, progression)
 
-L'app doit :
-  - Avoir un "share card" pour les milestones (image générée, jolie, avec le logo)
-  - Rendre la progression exportable en 1 tap
-  - Ne JAMAIS demander "Note-nous sur le Store" sauf après un moment de joie évident
+L'app doit rendre la progression exportable en 1 tap. Ne JAMAIS demander "Note-nous sur le Store" sauf après un moment de joie évident.
+
+---
+
+## IV. Rétention Loop Architecture
+
+### Le cycle d'engagement éthique
+
+```
+TRIGGER → ACTION → RÉCOMPENSE → INVESTISSEMENT → (loop)
+
+TRIGGER
+  Externe (jours 1-7)  : notification utile, rappel de routine
+  Interne (jour 7+)    : habitude, besoin de vérifier, envie de cocher
+  Le but : passer du trigger externe à l'interne le plus vite possible.
+
+ACTION
+  La plus courte possible. 30-90 secondes par session.
+  L'app n'est PAS un réseau social. L'utilisateur fait sa chose et sort.
+
+RÉCOMPENSE
+  Variable : les messages changent. Les animations surprennent.
+  Informative : progrès réel (stats, patterns, insights).
+  JAMAIS addictive : pas de points fictifs, pas de streaks punitifs.
+
+INVESTISSEMENT
+  Chaque utilisation enrichit l'app : données, personnalisation, historique.
+  L'app devient plus précieuse avec le temps.
+  C'est l'investissement (pas le paywall) qui crée la rétention.
+```
+
+### Dégradation Gracieuse de l'Engagement
+
+```
+Si l'utilisateur ralentit son usage :
+  Semaine 1 : Notifications normales (rappels de routine)
+  Semaine 2 : Réduire à 1 notification/jour maximum
+  Semaine 3 : 1 notification tous les 2 jours, contenu "bilan" type
+  Semaine 4+ : Stop. Silence. L'app attend son retour sans harceler.
+
+  Quand il revient : "Bon retour. Voici ton total." Pas "Tu nous manquais !"
+```
+
+### Variable Rewards par Tier d'Action
+
+```
+QUOTIDIEN (check habitude, compléter routine) :
+  Pool de 10+ messages courts alternés : 
+  "✓", "Fait.", "Un pas de plus.", "Régulier.", "C'est noté."
+  L'animation haptic/visuel varie aussi subtilement.
+
+HEBDOMADAIRE (bilan de la semaine) :
+  Insight unique basé sur les données réelles :
+  "Cette semaine : +2 habitudes vs la semaine dernière."
+  "Tu médites surtout le matin. Ça te va ?"
+
+MILESTONE (streak 7, 30, 100) :
+  Message unique, spécifique, jamais réutilisé.
+  "30 jours. Un mois entier. Tu as prouvé que c'est possible."
 ```
 
 ---
 
-## IV. Archétypes d'Écran (avec l'arc narratif)
+## V. Archétypes d'Écran (JOB + ARC + STATES)
 
 ### Chaque type d'écran suit l'arc ARRIVÉE → RECONNAISSANCE → ACTION → RÉCOMPENSE
+
+> Les layouts, les widgets, et le code spécifique sont dans `wireframe-rules.md` et les `.github/instructions/`.
+> Ici : le JOB émotionnel et les STATES temporels UNIQUEMENT.
 
 ### 1. Dashboard / Home
 
 ```
 JOB : "Comment je m'en sors ?" (réponse en 3 secondes)
 
-ARRIVÉE    : Greeting contextuel (heure du jour + prénom optionnel)
-RECOGNITION: Résumé quantifié personnel (X/Y fait, progression %, streak)
+ARRIVÉE    : Greeting contextuel (heure du jour)
+RECOGNITION: Résumé quantifié personnel (X/Y, progression %, streak)
 ACTION     : La prochaine chose à faire (le CTA le plus probable)
-RÉCOMPENSE : Si tout est fait → CompletionState (voir Vérité #6)
+RÉCOMPENSE : Si tout est fait → CompletionState
 
-LAYOUT :
-  - Header : greeting + date
-  - Zone 1 : métrique principale (le chiffre le plus important GROS)
-  - Zone 2 : liste courte des actions du moment (max 5 visibles)
-  - Zone 3 : résumé secondaire (graphique compact optionnel)
-  - JAMAIS plus de 3 zones visuelles distinctes
+STATES TEMPORELS :
+  Matin → actions du jour, ton énergique
+  Midi  → progression actuelle, ton neutre
+  Soir  → bilan, ton réflexif
+  Nuit  → ultra-minimal
 
-STATES :
-  - Morning : actions du jour, ton énergique
-  - Midday : progression actuelle, ton neutre
-  - Evening : bilan, ton réflexif
-  - Completion : tout est fait → célébration douce
-  - First run : suggestions et templates, pas vide
-  - Return : welcome back + total cumulé
+STATES CRITIQUES :
+  First run → suggestions + templates, pas vide
+  Return    → welcome back + total cumulé  
+  Completion → tout est fait → célébration douce
 ```
 
 ### 2. Liste (habits, tâches, items)
 
 ```
-JOB : "Qu'est-ce que j'ai / qu'est-ce que je fais ?" 
+JOB : "Qu'est-ce que j'ai / qu'est-ce que je fais ?"
 
-ARRIVÉE    : Liste apparaît avec staggered fade, skeleton pendant le chargement
-RECOGNITION: Tri intelligent (les plus pertinents en haut, pas alphabétique par défaut)
-ACTION     : Interaction directe sur les items (toggle, swipe) + FAB pour créer
-RÉCOMPENSE : Feedback immédiat sur toggle (haptic + animation)
+ARRIVÉE    : Contenu apparaît rapidement
+RECOGNITION: Tri intelligent (pertinents d'abord, pas alphabétique)
+ACTION     : Interaction directe (toggle, swipe) + création
+RÉCOMPENSE : Feedback immédiat sur chaque interaction
 
-LAYOUT :
-  - Search bar (si >10 items probables)
-  - Filter chips (si catégories)
-  - Liste scrollable (ListTile ou Card selon densité)
-  - FAB en bas à droite (créer nouveau)
-
-STATES :
-  - Loading → AppSkeleton
-  - Empty → AppEmptyState (invitation, pas constat) + CTA
-  - First-run empty → Templates/suggestions spéciales
-  - Content → Liste avec interactions
-  - Error → Message honnête + retry
+STATES CRITIQUES :
+  First-run empty → Templates/suggestions spéciales
+  Cleared empty   → Message de fierté si approprié
+  Content         → Liste avec interactions directes
 ```
 
 ### 3. Formulaire (create, edit)
 
 ```
-JOB : "Je veux sauvegarder quelque chose" (le plus vite possible)
+JOB : "Sauvegarder quelque chose" (le plus vite possible)
 
-ARRIVÉE    : Champs apparaissent en stagger top→bottom
-RECOGNITION: Pré-remplissage intelligent (defaults contextuels)
+ARRIVÉE    : Champs pré-remplis intelligemment (defaults contextuels)  
 ACTION     : Remplir + soumettre
-RÉCOMPENSE : Animation de succès + redirection vers le contexte (pas la liste brute)
+RÉCOMPENSE : Confirmation + redirection vers le contexte pertinent
 
-LAYOUT :
-  - ≤4 champs : Bottom sheet
-  - >4 champs : Page complète
-  - >8 champs : Stepper (grouper en étapes)
-  - Bouton primaire sticky en bas (toujours visible, même avec le clavier)
-  
-RÈGLES :
-  - Les champs optionnels sont CACHÉS par défaut (expansion "Plus d'options")
-  - Le clavier ne masque jamais le bouton de soumission
-  - Validation en temps réel (après que l'utilisateur quitte le champ, pas pendant la saisie)
-  - Erreur = message sous le champ (pas snackbar/dialog)
+RÈGLES DÉCISIONNELLES :
+  ≤4 champs → Bottom sheet
+  >4 champs → Page complète
+  >8 champs → Stepper
+  Champs optionnels → cachés par défaut ("Plus d'options")
 ```
 
 ### 4. Détail (fiche, profil d'item)
 
 ```
-JOB : "Je veux tout savoir sur cet élément"
+JOB : "Tout savoir sur cet élément"
 
-ARRIVÉE    : Header hero en premier (image/icône + titre), body en scroll
-RECOGNITION: Stats personnelles liées à cet item (streak, progression, historique)
-ACTION     : Actions contextuelles (edit, delete, share)
-RÉCOMPENSE : Si modification → confirmation visuelle inline (pas de popup)
-
-LAYOUT :
-  - Header : icône/image + titre + subtitle + badge optionnel
-  - Sections : infos groupées par thème (description, stats, historique)
-  - Actions : en haut dans l'AppBar (edit, share) ou en bas (delete avec confirmation)
+ARRIVÉE    : Header hero (icône + titre)
+RECOGNITION: Stats personnelles liées (streak, progression, historique)
+ACTION     : Edit, delete, share (contextuels)
+RÉCOMPENSE : Confirmation inline (pas de popup)
 ```
 
 ### 5. Célébration (streak, milestone, completion)
@@ -360,51 +320,27 @@ LAYOUT :
 ```
 JOB : "Me faire sentir que j'ai réussi quelque chose"
 
-L'écran de célébration est ÉPHÉMÈRE (3-5 secondes) mais MÉMORABLE.
-
-SÉQUENCE :
-  1. Scale + glow depuis le centre (0-500ms)
-  2. Message spécifique (PAS "Bravo !" générique — "7 jours de méditation 🧘")
-  3. Chiffre héro (le nombre impressionnant en grand)
-  4. Illustration ou animation contextuelle
-  5. Fade out progressif vers l'écran suivant (pas de bouton "Fermer")
-
-PROPORTIONNALITÉ :
-  - Action quotidienne → micro-animation + haptic léger
-  - Streak 7 jours → écran dédié 3s
-  - Streak 30 jours → écran dédié + share card proposée
-  - Streak 100 jours → full celebration + message unique
+ÉPHÉMÈRE (3-5s) mais MÉMORABLE.
+Message spécifique (PAS "Bravo !").
+Proportionnel à l'importance du milestone.
 ```
 
 ### 6. Empty / Zero State
 
 ```
-JOB : "L'app doit me donner envie de commencer, pas me montrer le vide"
+JOB : "Donner envie de commencer, pas montrer le vide"
 
-DEUX TYPES :
-  A. First-run empty (jamais utilisé cette feature)
-     → Templates, suggestions, "Les gens commencent souvent par..."
-     → CTA : "Commencer avec un template" OU "Créer le mien"
-     → Illustration douce, pas de texte technique
-     
-  B. Cleared empty (l'utilisateur a tout fait/supprimé) 
-     → Message de fierté si approprié ("Tout est fait pour aujourd'hui 🎯")
-     → OU invitation douce si supprimé ("Prêt quand tu voudras recommencer")
-     → JAMAIS "Liste vide" ou "Aucun élément"
+First-run  → Templates, suggestions, invitation
+Cleared    → Message de fierté OU invitation douce
+JAMAIS : "Liste vide", "Aucun élément"
 ```
 
 ### 7. Settings / Profil
 
 ```
-JOB : "Ajuster l'app à mes préférences" (visite rare mais importante)
+JOB : "Ajuster l'app à mes préférences" (visite rare)
 
-LAYOUT :
-  - Sections groupées avec headers (Compte, Préférences, Données, À propos)
-  - ListTile avec toggle/navigation/info
-  - Max 10 settings visibles. Le reste dans des sous-pages.
-  - Version de l'app en footer (discrete)
-
-RÈGLE : Les settings sont pour les POWER USERS. 
+Les settings sont pour les POWER USERS.
 Les defaults intelligents font que la plupart ne visitent jamais cette page.
 ```
 
@@ -413,59 +349,195 @@ Les defaults intelligents font que la plupart ne visitent jamais cette page.
 ```
 JOB : "Comprendre la valeur en 30 secondes"
 
-OPTION A — Onboarding classique (3 slides max) :
-  Slide 1 : Proposition de valeur (CE que l'app fait)
-  Slide 2 : Feature différenciante (COMMENT elle le fait différemment)
-  Slide 3 : CTA inscription
-  Skip toujours visible.
+PRÉFÉRÉ (2026) : Pas de slides. Auth rapide, puis l'app MONTRE sa valeur.
+FALLBACK : 3 slides max. Skip toujours visible.
 
-OPTION B — Onboarding in-context (préféré en 2026) :
-  Pas de slides. Auth rapide, puis l'app MONTRE sa valeur directement
-  avec du contenu pré-rempli et des tooltips contextuels.
-
-L'onboarding classique est de MOINS EN MOINS efficace. 
-Les utilisateurs de 2026 skip tout. Préférer l'option B.
+Les utilisateurs de 2026 skip tout. Montrer > Dire.
 ```
 
 ---
 
-## V. Patterns Transversaux
+## VI. Progressive Disclosure Temporal (J1 → J90)
 
-### Progressive Disclosure (spatial)
-
-```
-Surface : Ce qui est visible au premier regard (titre, stat principale, CTA)
-Profondeur 1 : Ce qui apparaît au scroll ou au tap (détails, historique)
-Profondeur 2 : Ce qui est dans les settings ou les sous-pages (configuration avancée)
-
-RÈGLE : Chaque niveau de profondeur divise l'audience par 5.
-100% voient la surface. 20% scrollent. 4% vont dans les settings.
-→ Mettre l'essentiel en surface. Toujours.
-```
-
-### Progressive Disclosure (temporel)
+### Plan de découverte sur 3 mois :
 
 ```
-Jour 1   : Features de base (create, view, check)
-Semaine 1 : Discovery features (filtres, personnalisation, raccourcis)
-Mois 1   : Power features (export, stats avancées, automatisations)
+JOUR 1 — INSTALLATION & FIRST WIN
+  L'utilisateur voit     : L'essentiel. UNE action à faire.
+  L'app propose          : Templates, contenu pré-rempli
+  Objectif               : First win dans les 2 minutes
+  Feature depth          : Surface uniquement
 
-Les features avancées ne sont pas CACHÉES — elles sont INTRODUITES 
-au bon moment, quand l'utilisateur est prêt. Via tooltips contextuels, 
-pas via onboarding forcé.
+JOUR 2-3 — HABITUDE NAISSANTE
+  L'utilisateur fait     : Sa routine de base (ouvrir → cocher → fermer)
+  L'app propose          : Rien de nouveau. Solidifier l'habitude de base.
+  Objectif               : L'utilisateur revient de lui-même
+  
+JOUR 3-7 — DISCOVERY CONTEXTUEL
+  L'utilisateur voit     : Des tips contextuels (pas des popups !)
+  L'app propose          : "Tu savais que tu peux aussi X ?" (au bon moment)
+  Objectif               : Découverte d'une 2ème feature
+  Feature depth          : Filtres, personnalisation légère
+
+JOUR 7 — AHA-MOMENT (CRITIQUE)
+  L'utilisateur voit     : Premier bilan hebdomadaire avec visuel impactant
+  L'app propose          : Projection "Si tu continues : X en un mois"
+  Objectif               : Comprendre POURQUOI continuer
+  Feature depth          : Stats de base, trends
+
+JOUR 7-14 — APPROPRIATION
+  L'utilisateur fait     : Personnalise (renomme, réorganise, ajuste)
+  L'app propose          : Suggestions de personnalisation contextuelles
+  Objectif               : L'app devient SON espace (moment "mine")
+  Feature depth          : Personnalisation, organisation
+
+JOUR 14-21 — THE DIP (TRAVERSÉE)
+  L'utilisateur sent     : La nouveauté s'estompe
+  L'app fait             : Varier les rewards, détecter des patterns, introduire de la profondeur
+  Objectif               : Garder l'intérêt par la VALEUR (pas la stimulation)
+  Feature depth          : Insights, patterns détectés
+
+JOUR 21-30 — HABITUDE FORMÉE
+  L'utilisateur est      : En mode automatique. Ouvrir l'app = réflexe.
+  L'app révèle           : Features avancées (export, stats détaillées, automatisations)
+  Objectif               : L'utilisateur sent qu'il a encore à découvrir
+  Feature depth          : Power features, raccourcis
+
+JOUR 30-90 — POWER USER & AMBASSADEUR
+  L'utilisateur a        : Accumulé assez de données pour voir des trends long terme
+  L'app propose          : Bilans mensuels, comparaisons de tendance, share cards
+  Objectif               : L'utilisateur recommande spontanément
+  Feature depth          : Tout est accessible
 ```
 
-### Transitions et Navigation
+**JAMAIS** de feature gating temporel artificiel. Le calendrier ci-dessus guide la PRÉSENTATION, pas le verrouillage.
+
+---
+
+## VII. Error Recovery Flows
+
+### Quand quelque chose casse, l'émotion prime sur la technique.
+
+### Par type d'erreur :
 
 ```
-Liste → Détail     : slide right (hero animation sur l'image/titre si possible)
-Retour             : slide left (pop)
-Formulaire / Modal : slide up (bottom sheet ou page modale)
-Auth → Home        : cross-fade (clearStackAndShow, sentiment de "nouveau monde")
-Tab switch         : instant (pas d'animation, la navigation est utilitaire)
-Célébration        : scale + fade depuis le centre
-Suppression        : item slide out + undo snackbar
+PERTE RÉSEAU (mid-action)
+  Émotion de l'utilisateur : Frustration, peur de perdre ses données
+  L'app fait               : 
+    1. Sauvegarde locale silencieuse (les données ne sont PAS perdues)
+    2. Indicateur discret "Hors ligne" (pas une modale)
+    3. Sync automatique au retour de la connexion
+    4. Confirmation : "Tout a été synchronisé."
+  L'app dit                : "Connexion perdue. Tes données sont sauvegardées localement."
+  L'app NE dit PAS         : "NetworkException", "timeout", "Oups !"
+
+ERREUR SERVEUR (500)
+  Émotion de l'utilisateur : Impatience, perte de confiance
+  L'app fait               : 
+    1. Retry automatique silencieux (1 fois après 3s)
+    2. Si échec : message + action
+  L'app dit                : "Service temporairement indisponible. Réessayer dans quelques minutes."
+  L'app NE dit PAS         : "Internal Server Error", le code HTTP
+
+TOKEN EXPIRÉ (mid-session)
+  Émotion de l'utilisateur : Confusion ("pourquoi ça ne marche plus ?")
+  L'app fait               : 
+    1. Refresh automatique du token (silencieux, invisible)
+    2. Retry de l'action qui a échoué
+    3. Si refresh impossible → redirection douce vers login
+  L'app dit (si re-login)  : "Session expirée. Reconnecte-toi pour continuer."
+  L'app NE dit PAS         : "401 Unauthorized"
+
+ERREUR DE VALIDATION (formulaire)
+  Émotion de l'utilisateur : Agacement ("qu'est-ce que j'ai mal fait ?"
+  L'app fait               : 
+    1. Message sous le champ concerné (pas un toast en haut)
+    2. Le champ invalide est visuellement marqué
+    3. Le message est factuel, pas accusateur
+  L'app dit                : "Format d'email incorrect" (pas "Vous avez entré...")
+
+PERMISSION REFUSÉE (caméra, notifs, localisation)
+  Émotion de l'utilisateur : Méfiance ("pourquoi l'app veut ça ?"
+  L'app fait               :
+    1. Explique POURQUOI avant de demander 
+    2. Si refusé : dégrade gracieusement (feature marche sans, en mode réduit)
+    3. Propose d'activer plus tard dans les settings
+  L'app dit                : "[AppName] a besoin de X pour [bénéfice utilisateur]."
+
+DONNÉES CORROMPUES / INCOHÉRENTES
+  Émotion de l'utilisateur : Panique
+  L'app fait               :
+    1. Ne JAMAIS montrer les données corrompues
+    2. Tenter une récupération silencieuse (re-fetch serveur)
+    3. Si impossible : informer + offrir export de ce qui est récupérable
+  L'app dit                : "Un problème a été détecté. Tes données récentes sont en sécurité."
 ```
+
+---
+
+## VIII. Profils d'App : Flow vs Pro vs Community
+
+### L'arc émotionnel varie selon le TYPE d'app produit par la factory.
+
+### Flow (développement personnel)
+```
+Apps         : LifeFlow, MeditationFlow, ReadFlow, SilvaFlow, MindFlow
+Personnalité : Coach calme, compagnon de route
+Ton          : Doux, encourageant, jamais pressant
+Arc dominant : La SÉRÉNITÉ. L'app rassure et accompagne.
+Engagement   : Basé sur les rituels quotidiens (matin, midi, soir)
+Metric       : Régularité de la pratique (pas intensité)
+Aha-moment   : "Cette semaine, 5 jours de méditation. Tu installe une habitude."
+```
+
+### Pro (productivité, business)
+```
+Apps         : ContratPro, FleetMaster, PressingSync, StockManager, ImportTrack
+Personnalité : Assistant efficace, co-pilote
+Ton          : Direct, factuel, orienté résultat
+Arc dominant : L'EFFICACITÉ. L'app fait gagner du temps.
+Engagement   : Basé sur les tasks et les résultats
+Metric       : Temps gagné, tâches accomplies, erreurs évitées
+Aha-moment   : "Ce mois-ci, 47 contrats gérés en 12h au lieu de 30h."
+```
+
+### Community (social, collectif)
+```
+Apps         : ChurchFlow, TontineFlow, EventPro, CoupleFlow, ParentFlow
+Personnalité : Animateur, facilitateur
+Ton          : Chaleureux, inclusif, célébratoire
+Arc dominant : La CONNEXION. L'app rapproche les gens.
+Engagement   : Basé sur l'interaction avec les autres
+Metric       : Activité du groupe, participation, événements réussis
+Aha-moment   : "12 membres actifs cette semaine. L'élan se construit."
+```
+
+### Impact sur l'architecture d'expérience
+
+| Aspect | Flow | Pro | Community |
+|--------|------|-----|-----------|
+| Session type | Rituel quotidien (30-90s) | Task-based (2-5min) | Consultation + interaction |
+| Notification strategy | Rappels doux, max 2/jour | Alerts urgentes + bilans | Activité du groupe |
+| Completion state | Célébration douce | "Rien en attente" factuel | "Le groupe est actif" |
+| The Dip strategy | Varier les insights | Montrer le ROI cumulé | Montrer la dynamique |
+| Return after absence | Total positif | "X en attente" neutre | "Nouveaux messages/activité" |
+| Empty state | Invitation contemplative | Template business | Inviter des membres |
+
+---
+
+## Implémentation (→ .github/instructions/)
+
+| Aspect | Fichier de référence |
+|--------|---------------------|
+| Animations / transitions | `design-system-motion.instructions.md` |
+| Célébrations visuelles | `design-system-celebrations.instructions.md` |
+| États d'écran (loading/empty/error) | `design-system-states.instructions.md` |
+| Navigation patterns | `design-system-navigation.instructions.md` |
+| Composants UI | `design-system-components.instructions.md` |
+| Haptics feedback | `design-system-haptics.instructions.md` |
+| Offline / sync | `design-system-offline-sync.instructions.md` |
+| UX patterns avancés | `design-system-ux-patterns.instructions.md` |
+| Layouts/responsive | `design-system-responsive.instructions.md` |
 
 ---
 

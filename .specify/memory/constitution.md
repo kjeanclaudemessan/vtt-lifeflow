@@ -188,14 +188,46 @@ speckit.specify → speckit.plan → speckit.tasks → speckit.implement
 
 ---
 
-## VIII. Governance
+## VIII. Product Rules (Design Authority)
+
+> The `.specify/memory/` files define the **QUOI and POURQUOI** — product design decisions.
+> The `.github/instructions/` files define the **COMMENT** — code implementation patterns.
+> These two layers are complementary and MUST NOT overlap.
+
+### Product Rule Files
+
+| File | Authority | Scope |
+|------|-----------|-------|
+| `product-soul.md` | Product identity, JTBD, tiebreakers, moat, analytics, privacy | What the product IS and believes |
+| `experience-architecture.md` | Session arc, critical moments, retention loops, error recovery, app profiles | How the experience FEELS |
+| `wireframe-rules.md` | Screen structure decisions, restraint principle, platform UX | How screens are STRUCTURED |
+| `content-rules.md` | Voice/ton, textes par contexte, voice profiles, notifications, seed data | What the product SAYS |
+
+### Two-Layer Architecture
+
+```
+.specify/memory/          → QUOI / POURQUOI  (product decisions, IA reads for factory)
+flutter/.github/instructions/ → COMMENT      (code patterns, Copilot auto-applies via applyTo)
+```
+
+### Rule: No Duplication Across Layers
+
+- Product rule files contain **ZERO Dart code** (except rare conceptual enums)
+- Product rule files **do not specify token values, widget names, or layout code**
+- Each product rule file ends with a **cross-ref table** pointing to relevant `.github/instructions/` files
+- If content belongs in both layers, it lives in `.github/instructions/` and the product rule file references it
+
+---
+
+## IX. Governance
 
 This constitution **supersedes** all conflicting guidance. Priority order:
 
 1. **This constitution** (`.specify/memory/constitution.md`)
-2. **Root `.github/copilot-instructions.md`** (SpecKit workflow, cross-layer rules)
-3. **Stack `.github/copilot-instructions.md`** (Flutter / FastAPI / Supabase patterns)
-4. **Stack `.github/instructions/*.instructions.md`** (file-pattern specific)
-5. **Feature `specs/<branch>/plan.md`** (feature-specific decisions)
+2. **Product rules** (`.specify/memory/*.md` — product-soul, experience-architecture, wireframe-rules, content-rules)
+3. **Root `.github/copilot-instructions.md`** (SpecKit workflow, cross-layer rules)
+4. **Stack `.github/copilot-instructions.md`** (Flutter / FastAPI / Supabase patterns)
+5. **Stack `.github/instructions/*.instructions.md`** (file-pattern specific)
+6. **Feature `specs/<branch>/plan.md`** (feature-specific decisions)
 
-**Version**: 2.0.0 | **Ratified**: 2026-02-19 | **Scope**: Multi-stack
+**Version**: 3.0.0 | **Ratified**: 2026-03-17 | **Scope**: Multi-stack

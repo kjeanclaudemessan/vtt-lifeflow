@@ -32,43 +32,36 @@
 > pour que l'IA produise des apps world-class sans deviner.
 
 - [x] **T001** — Créer `.specify/memory/product-soul.md` 🔴 ✅
-  - Philosophie produit (un produit = ce que l'utilisateur DEVIENT, pas ce qu'il utilise)
-  - JTBD émotionnel (5 questions avant chaque feature)
-  - Les 7 Vérités Produit (première impression permanente, churn silencieux, complexité=bug, micro-interactions=produit, onboarding sans fin, completion state, retour après absence)
-  - Feeling Framework (identité, moments clés, anti-feelings)
-  - Tiebreakers (10 règles de départage universelles)
-  - Choix techniques universels (Supabase, Stacked, GetIt, LucideIcons, mobile-first, freemium)
-  - Les "Jamais" (produit, UX, tech)
+  - Philosophie produit, JTBD émotionnel, 7 Vérités Produit, Feeling Framework
+  - Tiebreakers (12 règles de départage), Les "Jamais" (produit + UX)
+  - **Ajouté v2 :** Monétisation UX, Rétention & Engagement (hook éthique, courbe J1→J90, dégradation gracieuse), Moat Framework (4 fossés), Analytics Principles, Privacy as Feature
+  - Cross-ref table vers `.github/instructions/`
 
 - [x] **T002** — Créer `.specify/memory/experience-architecture.md` 🔴 ✅
-  - Arc narratif de chaque session (ARRIVÉE → RECONNAISSANCE → ACTION → RÉCOMPENSE)
-  - Temps psychologique (4 modes : matin/intention, midi/exécution, soir/réflexion, nuit/repos)
-  - Les 6 moments critiques (First Run, First Win, Day 7, The Dip, The Return, The Share)
-  - 8 archétypes d'écran avec recette émotionnelle (Dashboard, Liste, Formulaire, Détail, Célébration, Empty State, Settings, Onboarding)
-  - Patterns transversaux (progressive disclosure spatial + temporel, transitions)
+  - Arc narratif de session, Temps psychologique (4 modes), 6 Moments Critiques
+  - 8 archétypes d'écran avec recette émotionnelle
+  - **Ajouté v2 :** Rétention Loop Architecture (trigger→action→reward→investment, dégradation, variable rewards), Error Recovery Flows (stratégie émotionnelle par type d'erreur), Profils d'App (Flow/Pro/Community), Progressive Disclosure enrichi (J1→J90)
+  - Cross-ref table vers `.github/instructions/`
 
 - [x] **T003** — Créer `.specify/memory/wireframe-rules.md` 🔴 ✅
-  - Framework "Users Do" (5 questions avant chaque wireframe : DOES/NEEDS/FEELS/FROM/GOES)
-  - 5 couches structurelles (Navigation Shell, Zone Hero, Zone Contenu, Zone Action, Zone Feedback)
-  - Règles de densité et espacement (AppGaps, AppSpacing, AppTextStyles)
-  - Déduction automatique (workflow IA : instruction → Users Do → archétype → couches → states → temps)
-  - Anti-patterns wireframe (hamburger, carrousel hero, double CTA, écran vide après create)
-  - Responsive breakpoints (mobile-first)
+  - Framework "Users Do", 5 couches structurelles (tables décisionnelles, pas code)
+  - Déduction automatique enrichie (Restraint Check + Platform Check)
+  - **Ajouté v2 :** Restraint Principle (masque validation, ≤3 zones, ≤2 scrolls, ≤2s hésitation), Platform-Specific UX (iOS vs Android + cross-platform rules)
+  - Cross-ref table vers `.github/instructions/`
 
 - [x] **T004** — Créer `.specify/memory/content-rules.md` 🟡 ✅
-  - Ton et voix (ami compétent : calme/encourageant/direct/précis/humble)
-  - Matrice de ton par contexte (premier lancement, progression, erreur, retour, notification)
-  - Règles i18n (convention clés `module.section.element`, ICU pluralisation, paramètres)
-  - Textes par contexte (titres, boutons, empty states, erreurs, célébrations, notifications)
-  - Icônes LucideIcons mapping par concept
-  - Seed data culturellement neutre et universellement désirable
-  - Conventions de format (dates, heures, nombres)
-  - Les "Jamais" du contenu (pas d'Oups, pas de Hey, pas de Lorem ipsum)
+  - Ton et voix (ami compétent), Matrice de ton par contexte
+  - Textes par contexte (titres, boutons, empty states, erreurs, célébrations)
+  - Seed data culturellement neutre, Les "Jamais" du contenu
+  - **Ajouté v2 :** Voice Profiles par type d'app (Flow/Pro/Community), Error Recovery Content Strategy (wording émotionnel par type d'erreur), Notification Strategy avancée (types, fréquence, dégradation progressive)
+  - Cross-ref table vers `.github/instructions/`
+  - **Supprimé :** i18n technique (→ .github), icon mapping (→ .github), format dates/nombres (→ .github)
 
-- [ ] **T005** — Mettre à jour la constitution pour référencer les 4 fichiers produit 🟡
-  - Ajouter dans `.specify/memory/constitution.md` la section "Fichiers de Règles Produit"
-  - Établir l'ordre de priorité : Constitution > product-soul.md > experience-architecture.md > wireframe-rules.md > content-rules.md
-  - Vérifier que les agents SpecKit lisent ces fichiers au démarrage
+- [x] **T005** — Mettre à jour la constitution pour référencer les 4 fichiers produit 🟡 ✅
+  - Ajouté §VIII Product Rules (Design Authority) dans `.specify/memory/constitution.md`
+  - Two-Layer Architecture (QUOI/POURQUOI vs COMMENT) documentée
+  - Ordre de priorité mis à jour : Constitution > Product Rules > Root > Stack > Instructions > Plan
+  - Version bump : 2.0.0 → 3.0.0
 
 ---
 
