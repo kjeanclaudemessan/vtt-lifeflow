@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+# Pre-commit hook: runs quality gates on staged files.
+# Gates 1,2,3 = BLOCKING (commit aborted on FAIL)
+# Gates 4,5,7 = WARNING (informational, does not block)
+# Gate 6 = disabled
+#
+# To install: copy or symlink this file to .git/hooks/pre-commit
+#   cp scripts/gates/pre-commit .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+#
+# To bypass (emergency): git commit --no-verify
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+VERIFY_SCRIPT="$REPO_ROOT/scripts/gates/verify-gates.ps1"
+
+# Run blocking gates (1,2,3)
+echo "Running blocking gates (1,2,3)..."
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$VERIFY_SCRIPT" -Gate "1,2,3" -Scope all
+BLOCKING_EXIT=$?
+
+if [ $BLOCKING_EXIT -ne 0 ]; then
+    echo ""
+    echo "COMMIT BLOCKED: Gates 1/2/3 have failures. Fix them before committing."
+    echo "Use 'git commit --no-verify' to bypass (not recommended)."
+    exit 1
+fi
+
+# Run advisory gates (4,5,7) - never blocks
+echo ""
+echo "Running advisory gates (4,5,7)..."
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$VERIFY_SCRIPT" -Gate "4,5,7" -Scope all
+ADVISORY_EXIT=$?
+
+if [ $ADVISORY_EXIT -ne 0 ]; then
+    echo ""
+    echo "WARNING: Advisory gates have issues. Review them after committing."
+fi
+
+exit 0

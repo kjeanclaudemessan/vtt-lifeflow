@@ -60,3 +60,5 @@ pubspec.lock
 *.ipr
 *.iws
 .idea/
+
+test/golden

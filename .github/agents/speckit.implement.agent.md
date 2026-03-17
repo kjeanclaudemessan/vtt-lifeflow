@@ -125,11 +125,20 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Suggest next steps if implementation cannot proceed
    - **IMPORTANT** For completed tasks, make sure to mark the task off as [X] in the tasks file.
 
-9. Completion validation:
+9. **Post-task gate verification** (after each implementation task):
+   - Run `scripts/gates/run-post-task.ps1 -TaskId <TASK_ID>` from the repo root
+   - If the script outputs a **Correction Prompt**, apply the corrections to the source code (NOT to gate scripts)
+   - Re-run the wrapper (up to 3 attempts total per task)
+   - If gates still FAIL after 3 attempts, log the remaining failures and continue to the next task
+   - WARN results are informational — do not block on them
+   - For file-scoped checks: `run-post-task.ps1 -TaskId <TASK_ID> -Files "lib/features/..." -Gate 2,3,4`
+
+10. Completion validation:
    - Verify all required tasks are completed
    - Check that implemented features match the original specification
    - Validate that tests pass and coverage meets requirements
    - Confirm the implementation follows the technical plan
-   - Report final status with summary of completed work
+   - Run a final full gate check: `scripts/gates/verify-gates.ps1 -Gate all -Scope all -Json`
+   - Report final status with summary of completed work and gate results
 
 Note: This command assumes a complete task breakdown exists in tasks.md. If tasks are incomplete or missing, suggest running `/speckit.tasks` first to regenerate the task list.
