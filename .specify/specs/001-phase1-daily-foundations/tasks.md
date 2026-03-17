@@ -2,6 +2,7 @@
 
 **Input**: Design documents from `/specs/001-phase1-daily-foundations/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories)
+**Last updated**: 2026-03-17 — synchronized with actual codebase state
 
 **Tests**: Not included in Phase 1 tasks (will be added in a separate pass).
 
@@ -28,9 +29,9 @@
 
 **Purpose**: Enums, shared types, and i18n keys needed by all features
 
-- [x] T001 [P] Create LifeFlow enums in `flutter/lib/core/enums/lifeflow_enums.dart` — HabitType (binary/quantitative), HabitFrequency (daily/weekly/custom), TaskPriority (low/medium/high), InboxItemStatus (pending/processed/discarded), RoutineLogStatus (completed/abandoned)
-- [ ] T002 [P] Add Phase 1 English i18n keys in `flutter/lib/l10n/arb/app_en.arb` — domains, habits, routines, tasks, inbox, today view labels
-- [ ] T003 [P] Add Phase 1 French i18n keys in `flutter/lib/l10n/arb/app_fr.arb` — matching French translations
+- [x] T001 [P] Create LifeFlow enums in `flutter/lib/core/enums/lifeflow_enums.dart` — HabitType (binary/quantitative), HabitFrequency (daily/weekly/custom), TaskPriority (low/medium/high), InboxItemStatus (pending/processed/discarded), RoutineLogStatus (completed/abandoned), TimeSlot (morning/afternoon/evening/anytime), TodayMode (morning/progress/bilan)
+- [ ] T002 [P] Add Phase 1 English i18n keys in `flutter/lib/l10n/arb/app_en.arb` — habits (creation, check, streak, form, filters), routines (creation, runner, steps, timer), tasks (creation, completion, filters, priority), inbox (capture, triage, discard), today view (sections, empty states, bilan trigger), counter (weekly total, delta, domain bars), bilan (weekly summary, highlights, share). **Currently partial**: domain keys + basic app keys exist, missing feature-specific UI keys.
+- [ ] T003 [P] Add Phase 1 French i18n keys in `flutter/lib/l10n/arb/app_fr.arb` — matching French translations for all keys in T002. **Currently partial**: same gaps as EN.
 
 ---
 
@@ -42,62 +43,86 @@
 
 ### Supabase Migrations
 
-- [x] T004 Create `supabase/migrations/20260220000001_create_domains.sql` — domains table (id UUID PK, user_id UUID FK auth.users, name TEXT, icon TEXT, color TEXT, sort_order INT, is_archived BOOL, created_at, updated_at) + RLS policies + indexes
-- [x] T005 Create `supabase/migrations/20260220000002_create_habits.sql` — habits table (id, user_id, domain_id FK, name, description, type enum binary/quantitative, target_value NUMERIC, unit TEXT, start_time TIME, end_time TIME, frequency, is_archived, created_at, updated_at) + habit_logs table (id, habit_id FK, log_date DATE, completed BOOL, value NUMERIC, created_at) + RLS + indexes + unique constraint (habit_id, log_date)
+- [x] T004 Create `supabase/migrations/20260220000001_create_domains.sql` — domains table (id UUID PK, user_id UUID FK auth.users, name TEXT, icon TEXT, color TEXT, sort_order INT, is_archived BOOL, created_at, updated_at) + RLS policies + indexes + trigger to auto-insert 5 default domains on signup
+- [x] T005 Create `supabase/migrations/20260220000002_create_habits.sql` — habits table (id, user_id, domain_id FK, name, description, type enum binary/quantitative, target_value NUMERIC, unit TEXT, estimated_duration_minutes INT, start_time TIME, end_time TIME, frequency, frequency_days INT[], is_archived, created_at, updated_at) + habit_logs table (id, habit_id FK, log_date DATE, completed BOOL, value NUMERIC, created_at) + RLS + indexes + unique constraint (habit_id, log_date)
 - [x] T006 Create `supabase/migrations/20260220000003_create_routines.sql` — routines table (id, user_id, domain_id FK, name, description, is_archived, created_at, updated_at) + routine_steps table (id, routine_id FK, name, description, estimated_duration INT seconds, sort_order INT, created_at) + routine_logs table (id, routine_id FK, user_id, started_at, completed_at, total_duration INT, status enum completed/abandoned, steps_completed INT, created_at) + RLS + indexes
 - [x] T007 Create `supabase/migrations/20260220000004_create_tasks.sql` — tasks table (id, user_id, domain_id FK, title, description, priority enum low/medium/high, due_date DATE, completed_at TIMESTAMPTZ, is_archived, created_at, updated_at) + RLS + indexes
 - [x] T008 Create `supabase/migrations/20260220000005_create_inbox_items.sql` — inbox_items table (id, user_id, raw_text TEXT, status enum pending/processed/discarded, processed_as TEXT nullable, linked_task_id UUID nullable FK, linked_habit_id UUID nullable FK, created_at, updated_at) + RLS + indexes
-- [x] T009 Create `supabase/seeds/001_default_domains.sql` — function to seed 5 default domains on new user signup (Santé/Health, Travail/Work, Relations/Relationships, Finances, Développement personnel/Personal Growth) with icons and colors, triggered via auth.users insert trigger
+- [x] T008b Create `supabase/migrations/20260220000006_create_notifications.sql` — notifications table (id, user_id, type enum general/reminder/alert/success/streak/bilan, channel enum reminders/streaks/bilan/general, title, body, is_read, action_url, metadata JSONB, created_at) + RLS + trigger: welcome notification on profile creation
+- [x] T008c Create `supabase/migrations/20260220000007_create_device_tokens.sql` — device_tokens table (user_id, token, platform enum android/ios/web, device_name, created_at, updated_at) + unique constraint (user_id, token) + RLS
+- [x] T008d Create `supabase/migrations/20260305000001_enhance_habits_and_logs.sql` — adds notifications_enabled BOOL + reminder_offset_minutes INT to habits; adds actual_start_time TIME + actual_end_time TIME to habit_logs for time adherence tracking
+- [x] T009 Create `supabase/seeds/001_default_domains.sql` — inserts 5 default domains for existing users (Santé 💪 #4CAF50, Travail 💼 #2196F3, Relations ❤️ #E91E63, Finances 💰 #FF9800, Développement personnel 🌱 #9C27B0) with ON CONFLICT skip
 - [x] T010 **GATE: Run `supabase db reset`** — must pass with zero errors before proceeding
+
+### Supabase Edge Functions
+
+- [x] T010b Create `supabase/functions/daily-streak-check/index.ts` — Cron (01:00 UTC daily): resets streaks for uncompleted habits, inserts "streak broken" notifications
+- [x] T010c Create `supabase/functions/push-notification/index.ts` — Webhook (on notification INSERT): sends FCM push via user device tokens
+- [x] T010d Create `supabase/functions/weekly-bilan-reminder/index.ts` — Cron (Sunday 19:00 UTC): creates weekly bilan notifications for users with active habits
+- [x] T010e Create `supabase/functions/_shared/` — cors.ts, response.ts, supabase-admin.ts shared utilities
 
 ### Domain Layer — Entities
 
-- [ ] T011 [P] Create `flutter/lib/domain/entities/domain_entity.dart` — DomainEntity (Equatable): id, userId, name, icon, color, sortOrder, isArchived, createdAt, updatedAt. Computed: `isDefault` (based on name matching defaults). Factory: `empty()`, `mock()`.
-- [ ] T012 [P] Create `flutter/lib/domain/entities/habit_entity.dart` — HabitEntity (Equatable): id, userId, domainId, name, description, type (HabitType), targetValue, unit, startTime (TimeOfDay), endTime (TimeOfDay), frequency, isArchived, createdAt, updatedAt. Computed: `isQuantitative`, `timeRangeLabel`. Factory: `empty()`, `mock()`.
-- [ ] T013 [P] Create `flutter/lib/domain/entities/habit_log_entity.dart` — HabitLogEntity (Equatable): id, habitId, logDate, completed, value, createdAt. Computed: `completionPercentage` (for quantitative: value/target).
+- [x] T011 [P] Create `flutter/lib/domain/entities/domain_entity.dart` — DomainEntity (Equatable): id, userId, name, icon, color, description, sortOrder, isArchived, createdAt, updatedAt. Computed: `displayColor` (Color from hex), `isDefault`. Factory: `empty()`.
+- [x] T012 [P] Create `flutter/lib/domain/entities/habit_entity.dart` — HabitEntity (Equatable): id, userId, domainId (nullable), name, description, type (HabitType), targetValue, unit, estimatedDurationMinutes, startTime (TimeOfDay), endTime (TimeOfDay), frequency, frequencyDays (List<int>), notificationsEnabled, reminderOffsetMinutes, isArchived, createdAt, updatedAt. Computed: `isQuantitative`, `timeSlot`, `timeRangeLabel`, `effectiveDuration(value?)`, `isScheduledForToday`.
+- [x] T013 [P] Create `flutter/lib/domain/entities/habit_log_entity.dart` — HabitLogEntity (Equatable): id, habitId, logDate, completed, value, actualStartTime, actualEndTime, createdAt. Computed: `completionPercentage(target)`, `contributedMinutes(habit)`, `timeAdherence(habit)`, `adherenceLabel(habit)`.
 - [ ] T014 [P] Create `flutter/lib/domain/entities/routine_entity.dart` — RoutineEntity (Equatable): id, userId, domainId, name, description, steps (List<RoutineStepEntity>), isArchived, createdAt, updatedAt. Computed: `totalEstimatedDuration`, `stepCount`.
 - [ ] T015 [P] Create `flutter/lib/domain/entities/routine_step_entity.dart` — RoutineStepEntity (Equatable): id, routineId, name, description, estimatedDuration (Duration), sortOrder, createdAt.
 - [ ] T016 [P] Create `flutter/lib/domain/entities/routine_log_entity.dart` — RoutineLogEntity (Equatable): id, routineId, userId, startedAt, completedAt, totalDuration (Duration), status (RoutineLogStatus), stepsCompleted, createdAt.
 - [ ] T017 [P] Create `flutter/lib/domain/entities/task_entity.dart` — TaskEntity (Equatable): id, userId, domainId, title, description, priority (TaskPriority), dueDate, completedAt, isArchived, createdAt, updatedAt. Computed: `isCompleted`, `isOverdue`, `isDueToday`.
 - [ ] T018 [P] Create `flutter/lib/domain/entities/inbox_item_entity.dart` — InboxItemEntity (Equatable): id, userId, rawText, status (InboxItemStatus), processedAs, linkedTaskId, linkedHabitId, createdAt, updatedAt. Computed: `isPending`, `isProcessed`.
+- [x] T018b [P] Create `flutter/lib/domain/entities/streak_info.dart` — StreakInfo: currentStreak, bestStreak, freezeUsedDates (List<DateTime>), isFreezeActive (1 freeze per 7-day window).
+- [x] T018c [P] Create `flutter/lib/domain/entities/weekly_bilan.dart` — WeeklyBilan: weekStartDate, domainTimes (List<TimeCounter>), totalMinutes, totalMinutesLastWeek, completionRate, topHabit, longestStreak, isFirstWeek.
+- [x] T018d [P] Create `flutter/lib/domain/entities/time_counter.dart` — TimeCounter: domainId, domainName, domainColor, domainIcon, totalMinutesThisWeek, totalMinutesLastWeek, habitBreakdown. Computed: `deltaMinutes`, `formattedTotal()`, `formattedDelta()`.
+- [x] T018e [P] Create `flutter/lib/domain/entities/notification_entity.dart` — NotificationEntity: id, userId, type, channel, title, body, isRead, actionUrl, metadata, createdAt.
 
 ### Domain Layer — Repository Contracts
 
-- [ ] T019 [P] Create `flutter/lib/domain/repositories/i_domain_repository.dart` — IDomainRepository: getDomains(), getDomainById(id), createDomain(entity), updateDomain(entity), reorderDomains(ids), archiveDomain(id). All return `FutureResult<T>`.
-- [ ] T020 [P] Create `flutter/lib/domain/repositories/i_habit_repository.dart` — IHabitRepository: getHabits(filters), getHabitById(id), createHabit(entity), updateHabit(entity), archiveHabit(id), getLogsForDate(date), getLogsForRange(start, end), logHabit(habitId, date, completed, value?), removeLog(habitId, date), getStreak(habitId). All return `FutureResult<T>`.
+- [x] T019 [P] Create `flutter/lib/domain/repositories/i_domain_repository.dart` — IDomainRepository: getDomains(), getDomainById(id), createDomain(entity), updateDomain(entity), reorderDomains(ids), archiveDomain(id), unarchiveDomain(id). All return `FutureResult<T>`.
+- [x] T020 [P] Create `flutter/lib/domain/repositories/i_habit_repository.dart` — IHabitRepository: getHabits(filters), getHabitById(id), createHabit(entity), updateHabit(entity), archiveHabit(id), getLogsForDate(date), getLogsForDateRange(start, end), logHabit(habitId, date, completed, value?), removeLog(habitId, date), getStreakInfo(habitId). All return `FutureResult<T>`.
 - [ ] T021 [P] Create `flutter/lib/domain/repositories/i_routine_repository.dart` — IRoutineRepository: getRoutines(), getRoutineById(id), createRoutine(entity, steps), updateRoutine(entity, steps), archiveRoutine(id), logRoutineExecution(log). All return `FutureResult<T>`.
 - [ ] T022 [P] Create `flutter/lib/domain/repositories/i_task_repository.dart` — ITaskRepository: getTasks(filters), getTaskById(id), createTask(entity), updateTask(entity), completeTask(id), uncompleteTask(id), archiveTask(id), getTasksDueOn(date). All return `FutureResult<T>`.
 - [ ] T023 [P] Create `flutter/lib/domain/repositories/i_inbox_repository.dart` — IInboxRepository: getInboxItems(status?), createItem(rawText), processAsTask(itemId, taskEntity), processAsHabit(itemId, habitEntity), discardItem(itemId), getPendingCount(). All return `FutureResult<T>`.
+- [x] T023b [P] Create `flutter/lib/domain/repositories/i_notification_repository.dart` — INotificationRepository: getNotifications(), markAsRead(id), deleteNotification(id), getUnreadCount(). All return `FutureResult<T>`.
 
 ### Data Layer — Models
 
-- [ ] T024 [P] Create `flutter/lib/data/models/domain_model.dart` — @JsonSerializable DomainModel: mirrors domains table with @JsonKey(name: 'snake_case'). Methods: toEntity(), fromEntity(), fromJson(), toJson().
-- [ ] T025 [P] Create `flutter/lib/data/models/habit_model.dart` — @JsonSerializable HabitModel: mirrors habits table. Methods: toEntity(), fromEntity(), fromJson(), toJson().
-- [ ] T026 [P] Create `flutter/lib/data/models/habit_log_model.dart` — @JsonSerializable HabitLogModel: mirrors habit_logs table. Methods: toEntity(), fromEntity(), fromJson(), toJson().
+- [x] T024 [P] Create `flutter/lib/data/models/domain_model.dart` — @JsonSerializable DomainModel: mirrors domains table. Methods: toEntity(), fromEntity(), fromJson(), toJson(), toInsertJson(), toUpdateJson().
+- [x] T025 [P] Create `flutter/lib/data/models/habit_model.dart` — @JsonSerializable HabitModel: mirrors habits table with enhanced fields (estimated_duration_minutes, frequency_days, notifications_enabled, reminder_offset_minutes). Methods: toEntity(), fromEntity(), fromJson(), toJson(), toInsertJson(), toUpdateJson().
+- [x] T026 [P] Create `flutter/lib/data/models/habit_log_model.dart` — @JsonSerializable HabitLogModel: mirrors habit_logs table with enhanced fields (actual_start_time, actual_end_time). Methods: toEntity(), fromEntity(), fromJson(), toJson().
 - [ ] T027 [P] Create `flutter/lib/data/models/routine_model.dart` — @JsonSerializable RoutineModel: mirrors routines table. Methods: toEntity(steps), fromEntity(), fromJson(), toJson().
 - [ ] T028 [P] Create `flutter/lib/data/models/routine_step_model.dart` — @JsonSerializable RoutineStepModel: mirrors routine_steps table. Methods: toEntity(), fromEntity(), fromJson(), toJson().
 - [ ] T029 [P] Create `flutter/lib/data/models/routine_log_model.dart` — @JsonSerializable RoutineLogModel: mirrors routine_logs table. Methods: toEntity(), fromEntity(), fromJson(), toJson().
 - [ ] T030 [P] Create `flutter/lib/data/models/task_model.dart` — @JsonSerializable TaskModel: mirrors tasks table. Methods: toEntity(), fromEntity(), fromJson(), toJson().
 - [ ] T031 [P] Create `flutter/lib/data/models/inbox_item_model.dart` — @JsonSerializable InboxItemModel: mirrors inbox_items table. Methods: toEntity(), fromEntity(), fromJson(), toJson().
+- [x] T031b [P] Create `flutter/lib/data/models/notification_model.dart` — @JsonSerializable NotificationModel: mirrors notifications table. Methods: toEntity(), fromEntity(), fromJson(), toJson().
 
 ### Data Layer — Repository Implementations
 
-- [ ] T032 [P] Create `flutter/lib/data/repositories/domain_repository_impl.dart` — DomainRepositoryImpl implements IDomainRepository. Uses `locator<SupabaseService>().client.from('domains')`. Each method wraps in try/catch → Left(Failure).
-- [ ] T033 [P] Create `flutter/lib/data/repositories/habit_repository_impl.dart` — HabitRepositoryImpl implements IHabitRepository. Uses `from('habits')` and `from('habit_logs')`. Streak calculated via ordered query on habit_logs.
+- [x] T032 [P] Create `flutter/lib/data/repositories/domain_repository_impl.dart` — DomainRepositoryImpl implements IDomainRepository. Uses `SupabaseService.client.from('domains')`. Each method wraps in try/catch → Left(Failure) via ErrorHandler.
+- [x] T033 [P] Create `flutter/lib/data/repositories/habit_repository_impl.dart` — HabitRepositoryImpl implements IHabitRepository. Uses `from('habits')` and `from('habit_logs')`. Streak calculated via ordered query. UPSERT for logs (unique constraint: habitId × logDate).
 - [ ] T034 [P] Create `flutter/lib/data/repositories/routine_repository_impl.dart` — RoutineRepositoryImpl implements IRoutineRepository. Uses `from('routines')`, `from('routine_steps')`, `from('routine_logs')`.
 - [ ] T035 [P] Create `flutter/lib/data/repositories/task_repository_impl.dart` — TaskRepositoryImpl implements ITaskRepository. Uses `from('tasks')`.
 - [ ] T036 [P] Create `flutter/lib/data/repositories/inbox_repository_impl.dart` — InboxRepositoryImpl implements IInboxRepository. Uses `from('inbox_items')`. processAsTask creates task + updates inbox_item in transaction.
+- [x] T036b [P] Create `flutter/lib/data/repositories/notification_repository_impl.dart` — NotificationRepositoryImpl implements INotificationRepository. Uses `from('notifications')`.
+
+### Domain Services
+
+- [x] T036c Create `flutter/lib/services/time_counter_service.dart` — Pure calculation service: `getWeeklyCounters()` returns TimeCounter per domain from habit logs, `getDailyTotal()` for single day. No Supabase dependency.
+- [x] T036d Create `flutter/lib/services/bilan_service.dart` — Pure calculation service: `generateBilan()` returns WeeklyBilan from raw data (habits + logs + domains). Computes completion rate, top habit, longest streak.
+- [x] T036e Create `flutter/lib/services/habit_event_service.dart` — Lightweight event bus: `notifyHabitChanged()` triggers VM reloads across TodayViewModel, HabitsViewModel, CounterViewModel.
+- [x] T036f Create `flutter/lib/services/habit_toggle_service.dart` — Shared toggle logic: `toggleHabit()` (check/uncheck + analytics + haptics), `logHabitValue()` (quantitative input), `editHabitTime()` (actual start/end time recording).
 
 ### DI Registration
 
-- [ ] T037 Register all 5 repositories in `flutter/lib/app/app.dart` — add imports + LazySingleton entries for DomainRepositoryImpl→IDomainRepository, HabitRepositoryImpl→IHabitRepository, RoutineRepositoryImpl→IRoutineRepository, TaskRepositoryImpl→ITaskRepository, InboxRepositoryImpl→IInboxRepository
-- [ ] T038 Run `dart run build_runner build --delete-conflicting-outputs` to regenerate app.locator.dart, app.router.dart
+- [x] T037 Register repositories + services in `flutter/lib/app/app.dart` — DomainRepositoryImpl→IDomainRepository, HabitRepositoryImpl→IHabitRepository, NotificationRepositoryImpl→INotificationRepository + TimeCounterService, BilanService, HabitEventService, HabitToggleService. **Remaining**: RoutineRepositoryImpl, TaskRepositoryImpl, InboxRepositoryImpl (after those are implemented).
+- [x] T038 Run `dart run build_runner build --delete-conflicting-outputs` — app.locator.dart, app.router.dart regenerated with current 19 routes, 30+ dependencies.
 
-**Checkpoint**: Foundation ready — all migrations pass, all entities/models/repos compile, DI registered. Feature implementation can begin.
+**Checkpoint**: Foundation partially ready — all migrations pass, habits/domains entities + models + repos compile and registered. **BLOCKING**: Routine/Task/Inbox entities, models, repos, and DI still needed before Phase 4, 5, 7.
 
 ---
 
-## Phase 3: User Story 1 — Create and Track Daily Habits (Priority: P1) 🎯 MVP
+## Phase 3: User Story 1 — Create and Track Daily Habits (Priority: P1) 🎯 MVP ✅ COMPLETE
 
 **Goal**: User can create binary/quantitative habits with time ranges, check them daily, and see streaks.
 
@@ -105,16 +130,16 @@
 
 ### Implementation for User Story 1
 
-- [ ] T039 [US1] Create `flutter/lib/features/habits/viewmodels/habits_viewmodel.dart` — HabitsViewModel: loads habits list, filters by domain/archived, groups by time range. Uses locator<IHabitRepository>(), locator<IDomainRepository>().
-- [ ] T040 [US1] Create `flutter/lib/features/habits/views/habits_view.dart` — HabitsView (StackedView<HabitsViewModel>): AppBar with filter, list of habits using AppCard/AppListTile from design system, FAB to create, empty state via AppEmptyState.
-- [ ] T041 [US1] Create `flutter/lib/features/habits/viewmodels/habit_form_viewmodel.dart` — HabitFormViewModel: create/edit mode, form validation, domain picker trigger, save via repository.
-- [ ] T042 [US1] Create `flutter/lib/features/habits/views/habit_form_view.dart` — HabitFormView: AppTextField for name/description, AppDropdown for type, AppSlider for target, time range pickers, domain picker button. Uses design system widgets.
-- [ ] T043 [P] [US1] Create `flutter/lib/features/habits/widgets/habit_check_tile.dart` — HabitCheckTile widget: shows habit name, domain color, time range, checkbox (binary) or progress bar (quantitative), streak badge. Uses AppCard, AppBadge, AppProgress from design system.
-- [ ] T044 [P] [US1] Create `flutter/lib/features/habits/widgets/habit_streak_badge.dart` — HabitStreakBadge widget: displays current streak with fire emoji, uses AppBadge from design system.
-- [ ] T045 [US1] Register habits routes in `flutter/lib/app/app.dart` — add MaterialRoute for HabitsView, HabitFormView
-- [ ] T046 [US1] Run `dart run build_runner build --delete-conflicting-outputs`
+- [x] T039 [US1] Create `flutter/lib/features/habits/viewmodels/habits_viewmodel.dart` — HabitsViewModel: loads habits list, filters by domain/archived/search, groups by time slot. Uses locator<IHabitRepository>(), locator<IDomainRepository>(). Listens to HabitEventService for cross-screen reactivity.
+- [x] T040 [US1] Create `flutter/lib/features/habits/views/habits_view.dart` — HabitsView (StackedView<HabitsViewModel>): AppBar with domain filter toggle + search, list of habits using HabitCheckTile, FAB to create, empty state via AppEmptyState.
+- [x] T041 [US1] Create `flutter/lib/features/habits/viewmodels/habit_form_viewmodel.dart` — HabitFormViewModel: create/edit mode, form validation, domain picker trigger, save via repository.
+- [x] T042 [US1] Create `flutter/lib/features/habits/views/habit_form_view.dart` — HabitFormView: AppTextField for name/description, type selector, target/unit for quantitative, time range pickers, frequency selector, notification settings, domain picker.
+- [x] T043 [P] [US1] Create `flutter/lib/features/habits/widgets/habit_check_tile.dart` — HabitCheckTile widget: SwipeToAction to check/uncheck, shows habit name, domain color, time range, streak badge. Progress bar for quantitative habits.
+- [x] T044 [P] [US1] Create `flutter/lib/features/habits/widgets/habit_streak_badge.dart` — HabitStreakBadge widget: displays current streak with fire emoji, uses AppBadge.
+- [x] T045 [US1] Register habits routes in `flutter/lib/app/app.dart` — MaterialRoute for HabitsView, HabitFormView.
+- [x] T046 [US1] Run `dart run build_runner build --delete-conflicting-outputs`
 
-**Checkpoint**: User Story 1 — habits CRUD + check + streak fully functional.
+**Checkpoint**: User Story 1 — habits CRUD + check + streak fully functional. ✅
 
 ---
 
@@ -123,6 +148,8 @@
 **Goal**: User can create routines with ordered steps, launch a step-by-step timer, and log completion.
 
 **Independent Test**: Create a routine with 3 steps, launch it, complete all steps, verify log exists.
+
+**Prerequisites**: T014, T015, T016 (entities) + T027, T028, T029 (models) + T034 (repo) must be completed first.
 
 ### Implementation for User Story 2
 
@@ -147,6 +174,8 @@
 
 **Independent Test**: Capture 3 items, triage one as task, one as habit, discard one. Verify inbox empty.
 
+**Prerequisites**: T018 (inbox entity) + T031 (inbox model) + T036 (inbox repo) must be completed first. Task triage also requires T017 + T030 + T035 (task entity/model/repo).
+
 ### Implementation for User Story 3
 
 - [ ] T057 [US3] Create `flutter/lib/features/inbox/viewmodels/inbox_viewmodel.dart` — InboxViewModel: loads pending items, capture new item, triage actions (→ task, → habit, → discard), pending count.
@@ -160,7 +189,7 @@
 
 ---
 
-## Phase 6: User Story 4 — Manage Life Domains (Priority: P2)
+## Phase 6: User Story 4 — Manage Life Domains (Priority: P2) ✅ COMPLETE
 
 **Goal**: User can customize domains (add/rename/reorder/archive) and select them during onboarding.
 
@@ -168,14 +197,14 @@
 
 ### Implementation for User Story 4
 
-- [ ] T063 [US4] Create `flutter/lib/features/domains/viewmodels/domains_viewmodel.dart` — DomainsViewModel: loads domains, reorder, add, edit, archive.
-- [ ] T064 [US4] Create `flutter/lib/features/domains/views/domains_view.dart` — DomainsView: ReorderableListView of domain tiles, FAB to add, swipe to archive. Uses design system.
-- [ ] T065 [P] [US4] Create `flutter/lib/features/domains/widgets/domain_tile.dart` — DomainTile: icon, name, color indicator, drag handle, edit/archive actions. Uses AppListTile, AppChip.
-- [ ] T066 [P] [US4] Create `flutter/lib/features/domains/widgets/domain_picker_sheet.dart` — DomainPickerSheet (bottom sheet): list of active domains for selection, returns selected DomainEntity. Used by habit/task/routine forms.
-- [ ] T067 [US4] Register domains route in `flutter/lib/app/app.dart` — add MaterialRoute for DomainsView
-- [ ] T068 [US4] Run `dart run build_runner build --delete-conflicting-outputs`
+- [x] T063 [US4] Create `flutter/lib/features/domains/viewmodels/domains_viewmodel.dart` — DomainsViewModel: loads domains (active + archived), habit count per domain, reorder, add, edit, archive/unarchive.
+- [x] T064 [US4] Create `flutter/lib/features/domains/views/domains_view.dart` — DomainsView: list of active domains with habit counts, create new domain button, toggle to show archived, archive/unarchive buttons (cannot archive last domain).
+- [x] T065 [P] [US4] Create `flutter/lib/features/domains/widgets/domain_tile.dart` — DomainTile: icon, name, color indicator, habit count, edit/archive actions.
+- [x] T066 [P] [US4] Create `flutter/lib/features/domains/widgets/domain_picker_sheet.dart` — DomainPickerSheet (bottom sheet): list of active domains for selection, returns selected DomainEntity. Used by habit/task/routine forms.
+- [x] T067 [US4] Register domains route in `flutter/lib/app/app.dart` — MaterialRoute for DomainsView.
+- [x] T068 [US4] Run `dart run build_runner build --delete-conflicting-outputs`
 
-**Checkpoint**: User Story 4 — domains CRUD + picker fully functional.
+**Checkpoint**: User Story 4 — domains CRUD + picker fully functional. ✅
 
 ---
 
@@ -184,6 +213,8 @@
 **Goal**: User can create tasks with priority/date/domain, mark them done, filter by domain.
 
 **Independent Test**: Create a task due today, see it in the list, mark done, verify it moves to completed.
+
+**Prerequisites**: T017 (task entity) + T030 (task model) + T035 (task repo) must be completed first.
 
 ### Implementation for User Story 5
 
@@ -199,24 +230,45 @@
 
 ---
 
-## Phase 8: User Story 6 — Today View (Priority: P2)
+## Phase 8: User Story 6 — Today View + Counter + Bilan (Priority: P2) — PARTIALLY COMPLETE
 
-**Goal**: User opens app and sees their entire day: habits by time range, active routine, tasks due today, inbox count.
+**Goal**: User opens app and sees their entire day: habits by time range, active routine, tasks due today, inbox count. Plus weekly time tracking (Counter) and weekly summary (Bilan).
 
 **Independent Test**: With 2 habits, 1 routine, 3 tasks today, 2 inbox items — verify Today view shows all.
 
-### Implementation for User Story 6
+### Today View (partially implemented — habits section done, routines/tasks/inbox pending)
 
-- [ ] T076 [US6] Create `flutter/lib/features/today/viewmodels/today_viewmodel.dart` — TodayViewModel: loads today's habits (with logs), routines, tasks due today + overdue, inbox pending count. Groups habits by time range. Uses all 5 repositories.
-- [ ] T077 [US6] Create `flutter/lib/features/today/views/today_view.dart` — TodayView: scrollable page with sections (habits, routine, tasks, inbox). Uses design system spacing, cards, sections.
-- [ ] T078 [P] [US6] Create `flutter/lib/features/today/widgets/today_habits_section.dart` — TodayHabitsSection: groups habits by time range (morning/afternoon/evening), each rendered as HabitCheckTile.
-- [ ] T079 [P] [US6] Create `flutter/lib/features/today/widgets/today_routine_card.dart` — TodayRoutineCard: shows next/active routine with launch button, duration, step count. Uses AppCard.
-- [ ] T080 [P] [US6] Create `flutter/lib/features/today/widgets/today_tasks_section.dart` — TodayTasksSection: lists tasks due today + overdue, each as TaskTile with checkbox.
-- [ ] T081 [P] [US6] Create `flutter/lib/features/today/widgets/today_inbox_badge.dart` — TodayInboxBadge: inbox icon with count badge, tappable to navigate to inbox. Uses AppBadge.
-- [ ] T082 [US6] Update HomeView to use TodayView as main content — replace existing HomeView body with TodayView or integrate via bottom navigation.
-- [ ] T083 [US6] Run `dart run build_runner build --delete-conflicting-outputs`
+- [x] T076 [US6] Create `flutter/lib/features/today/viewmodels/today_viewmodel.dart` — TodayViewModel: loads today's habits + logs + streaks, groups by TimeSlot, tracks completedHabits/remainingHabits/completionRate, calculates today's minutes per domain. Listens to HabitEventService. **Currently**: habits-only. **TODO**: add routines, tasks due today, inbox pending count integration.
+- [x] T077 [US6] Create `flutter/lib/features/today/views/today_view.dart` — TodayView: contextual UI by TodayMode (morning 5h-12h: greeting + habits + mini counter; progress 12h-18h: completed/remaining + progress bar; bilan 18h-5h: day summary + time recap). Celebration overlay on 100%. Notification badge.
+- [x] T078 [P] [US6] Create `flutter/lib/features/today/widgets/today_habits_section.dart` — TodayHabitsSection: habits grouped by time slot, swipe-to-toggle via HabitCheckTile.
+- [ ] T079 [P] [US6] Create `flutter/lib/features/today/widgets/today_routine_card.dart` — TodayRoutineCard: shows next/active routine with launch button, duration, step count. **Blocked by**: Phase 4 (Routines).
+- [ ] T080 [P] [US6] Create `flutter/lib/features/today/widgets/today_tasks_section.dart` — TodayTasksSection: lists tasks due today + overdue, each as TaskTile with checkbox. **Blocked by**: Phase 7 (Tasks).
+- [ ] T081 [P] [US6] Create `flutter/lib/features/today/widgets/today_inbox_badge.dart` — TodayInboxBadge: inbox icon with count badge, tappable to navigate to inbox. **Blocked by**: Phase 5 (Inbox).
+- [x] T081b [P] [US6] Create `flutter/lib/features/today/widgets/today_counter_summary.dart` — Mini weekly time counter + domain bars widget, shown in TodayView.
+- [x] T081c [P] [US6] Create `flutter/lib/features/today/widgets/today_bilan_card.dart` — Trigger card for full weekly bilan (shown Sunday evening/Monday morning).
+- [x] T081d [P] [US6] Create `flutter/lib/features/today/widgets/habit_value_sheet.dart` — Bottom sheet for quantitative habit value input.
+- [x] T081e [P] [US6] Create `flutter/lib/features/today/widgets/habit_time_edit_sheet.dart` — Bottom sheet to edit actual start/end time for time adherence.
 
-**Checkpoint**: User Story 6 — Today view assembles all features into a single daily dashboard.
+### Counter Feature (fully implemented)
+
+- [x] T082 [US6] Create `flutter/lib/features/counter/viewmodels/counter_viewmodel.dart` — CounterViewModel: loads all habits + logs (current week + last week), calculates TimeCounter per domain via TimeCounterService, tracks weekStart, allows prev/next/current week navigation.
+- [x] T082b [US6] Create `flutter/lib/features/counter/views/counter_view.dart` — CounterView: weekly total (hours formatted), delta vs last week, domain bars with expandable detail (habit breakdown), week navigator, bilan card link.
+- [x] T082c [P] [US6] Create `flutter/lib/features/counter/widgets/domain_time_bar.dart` — Animated bar showing minutes per domain, expandable to show habit breakdown.
+
+### Bilan Feature (fully implemented)
+
+- [x] T082d [US6] Create `flutter/lib/features/bilan/viewmodels/bilan_viewmodel.dart` — BilanViewModel: loads week data + generates WeeklyBilan via BilanService, week navigation, share functionality (capture widget as PNG).
+- [x] T082e [US6] Create `flutter/lib/features/bilan/views/bilan_view.dart` — BilanView: weekly summary card (total hours, completion %, week-over-week delta, top habit, longest streak), domain time breakdown, share button.
+- [x] T082f [P] [US6] Create `flutter/lib/features/bilan/widgets/bilan_domain_chart.dart` — Domain time distribution chart.
+- [x] T082g [P] [US6] Create `flutter/lib/features/bilan/widgets/bilan_highlights.dart` — Key stats display (completion rate, top habit, streak).
+- [x] T082h [P] [US6] Create `flutter/lib/features/bilan/widgets/bilan_share_widget.dart` — RepaintBoundary for shareable image capture.
+
+### HomeView + Navigation
+
+- [x] T083 [US6] Create `flutter/lib/ui/views/home/home_view.dart` — HomeView with 3-tab bottom navigation: Today, Habits, Counter. Uses IndexedStack. HomeViewModel tracks current tab.
+- [x] T083b [US6] Run `dart run build_runner build --delete-conflicting-outputs`
+
+**Checkpoint**: US6 partially done — **habits + counter + bilan = complete. Missing: routine card, tasks section, inbox badge in Today View (blocked by Phases 4, 5, 7).** Bottom nav has 3 tabs; needs 5 after all features are built.
 
 ---
 
@@ -224,12 +276,30 @@
 
 **Purpose**: Integration, navigation, final validation.
 
-- [ ] T084 Wire bottom navigation in HomeView — tabs for Today, Habits, Routines, Tasks, Inbox. Uses AppBottomNav from design system.
+- [ ] T084 Update bottom navigation in HomeView — expand from 3 tabs (Today, Habits, Counter) to 5 tabs (Today, Habits, Routines, Tasks, Counter). Inbox accessible via FAB or badge in Today View. Uses AppBottomNav from design system.
 - [ ] T085 Update onboarding flow — add domain selection step (step 2) using domain picker with pre-selected defaults.
-- [ ] T086 Update SplashView/StartupView — change initial route from designShowcaseView to proper app flow (splash → auth → onboarding/home).
+- [ ] T086 Update SplashView/StartupView — verify initial route flow is correct (splash → auth → onboarding/home), not designShowcaseView.
 - [ ] T087 Final `supabase db reset` validation — confirm all migrations + seed pass.
 - [ ] T088 Run `dart format .` + `dart analyze` — zero errors, zero warnings.
 - [ ] T089 Run `flutter run -d chrome` — verify app launches and all features are accessible.
+- [ ] T090 Integrate TodayViewModel with routines, tasks, inbox repos — update TodayViewModel to load routines (active), tasks due today, inbox pending count. Wire T079, T080, T081.
+
+---
+
+## Progress Summary
+
+| Phase | Total | Done | Remaining | Status |
+|-------|-------|------|-----------|--------|
+| Phase 1 (Setup) | 3 | 1 | 2 (i18n) | 🟡 Partial |
+| Phase 2 (Foundation) | 48 | 37 | 11 (routine/task/inbox entity+model+repo) | 🟡 Partial |
+| Phase 3 (US1 Habits) | 8 | 8 | 0 | ✅ Complete |
+| Phase 4 (US2 Routines) | 10 | 0 | 10 | ❌ Not started |
+| Phase 5 (US3 Inbox) | 6 | 0 | 6 | ❌ Not started |
+| Phase 6 (US4 Domains) | 6 | 6 | 0 | ✅ Complete |
+| Phase 7 (US5 Tasks) | 7 | 0 | 7 | ❌ Not started |
+| Phase 8 (US6 Today+Counter+Bilan) | 22 | 18 | 4 (blocked by Phases 4,5,7) | 🟡 Partial |
+| Phase 9 (Polish) | 7 | 0 | 7 | ❌ Not started |
+| **TOTAL** | **117** | **70** | **47** | **60% complete** |
 
 ---
 
@@ -238,42 +308,28 @@
 ### Phase Dependencies
 
 - **Setup (Phase 1)**: No dependencies — can start immediately
-- **Foundational (Phase 2)**: Depends on Setup — **BLOCKS all features**
-- **User Stories (Phases 3-8)**: All depend on Foundational completion
-  - US1 (Habits) + US2 (Routines) + US3 (Inbox): Can proceed in priority order P1 → P1 → P1
-  - US4 (Domains) + US5 (Tasks): P2 — after P1 stories, or in parallel if capacity allows
-  - US6 (Today): P2 — depends on US1 + US2 + US3 + US5 existing (it aggregates them)
+- **Foundational (Phase 2)**: Depends on Setup — **BLOCKS feature work**
+  - Habits/Domains foundation: ✅ COMPLETE
+  - Routines foundation (T014-T016, T027-T029, T034): BLOCKS Phase 4
+  - Tasks foundation (T017, T030, T035): BLOCKS Phase 5 (inbox triage to task) and Phase 7
+  - Inbox foundation (T018, T031, T036): BLOCKS Phase 5
+- **User Stories (Phases 3-8)**: Depend on their respective foundational tasks
+  - US1 (Habits): ✅ COMPLETE
+  - US4 (Domains): ✅ COMPLETE
+  - US2 (Routines): Needs foundation first
+  - US5 (Tasks): Needs foundation first
+  - US3 (Inbox): Needs foundation + tasks foundation
+  - US6 (Today): Habits part done; routine/task/inbox integration blocked
 - **Polish (Phase 9)**: Depends on all user stories being complete
 
-### Within Each User Story
+### Recommended Next Steps (Priority Order)
 
-- ViewModels before Views (VM contains the logic Views depend on)
-- Widgets can be created in parallel with VMs (they're stateless UI)
-- Route registration + build_runner after views are created
-- Story complete before moving to next priority
-
-### Parallel Opportunities
-
-- T001-T003 (setup): All parallel
-- T004-T009 (migrations): Sequential (ordered timestamps)
-- T011-T023 (entities + contracts): All parallel (independent files)
-- T024-T036 (models + repo impls): All parallel
-- T043-T044, T053-T054, T059-T060, T065-T066, T073, T078-T081: Widgets in parallel within each story
-
----
-
-## Implementation Strategy
-
-### Sequential Solo Developer
-
-1. Complete Phase 1 (Setup) → 3 tasks
-2. Complete Phase 2 (Foundational) → 35 tasks, ending with `supabase db reset` gate
-3. Complete Phase 3 (US1 Habits) → 8 tasks → **VALIDATE: habits work end-to-end**
-4. Complete Phase 4 (US2 Routines) → 10 tasks → **VALIDATE: runner works**
-5. Complete Phase 5 (US3 Inbox) → 6 tasks → **VALIDATE: capture + triage works**
-6. Complete Phase 6 (US4 Domains) → 6 tasks → **VALIDATE: domain management works**
-7. Complete Phase 7 (US5 Tasks) → 7 tasks → **VALIDATE: tasks work**
-8. Complete Phase 8 (US6 Today) → 8 tasks → **VALIDATE: today assembles everything**
-9. Complete Phase 9 (Polish) → 6 tasks → **VALIDATE: full app flow**
-
-Total: 89 tasks
+1. **T002-T003**: Complete i18n keys (unblocks proper UI text in all features)
+2. **T014-T016, T027-T029, T034**: Routine entities + models + repo (unblocks Phase 4)
+3. **T017, T030, T035**: Task entity + model + repo (unblocks Phase 7 and Phase 5 triage)
+4. **T018, T031, T036**: Inbox entity + model + repo (unblocks Phase 5)
+5. **Phase 4 (T047-T056)**: Implement routines feature
+6. **Phase 7 (T069-T075)**: Implement tasks feature
+7. **Phase 5 (T057-T062)**: Implement inbox feature
+8. **T079-T081, T090**: Wire remaining Today View sections
+9. **Phase 9 (T084-T089)**: Final polish and validation

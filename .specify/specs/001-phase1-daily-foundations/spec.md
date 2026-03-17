@@ -2,7 +2,8 @@
 
 **Feature Branch**: `001-phase1-daily-foundations`
 **Created**: 2026-02-19
-**Status**: Draft
+**Updated**: 2026-03-17 — synchronized with actual implementation state
+**Status**: In Progress (~60% complete)
 **Input**: User description: "MVP — L'utilisateur peut structurer sa journée complète (habitudes, routines, tâches), capturer des idées (inbox GTD), et tout voir sur un écran unique (Vue Aujourd'hui). Les domaines de vie servent de catégorisation transversale."
 
 ## User Scenarios & Testing *(mandatory)*
@@ -98,13 +99,13 @@ L'utilisateur crée des tâches ponctuelles ("Acheter du lait", "Préparer réun
 
 ---
 
-### User Story 6 - Vue Aujourd'hui (Priority: P2)
+### User Story 6 - Vue Aujourd'hui + Compteur Hebdo + Bilan (Priority: P2)
 
-L'utilisateur ouvre l'app et voit sa journée complète : habitudes du jour (groupées par plage horaire), routine active/suivante, tâches due today, et le compteur inbox.
+L'utilisateur ouvre l'app et voit sa journée complète : habitudes du jour (groupées par plage horaire), routine active/suivante, tâches due today, et le compteur inbox. L'interface est contextuelle selon l'heure (matin : greeting + habitudes, après-midi : progression, soir : bilan). Un onglet Compteur affiche le temps investi par domaine cette semaine. Un écran Bilan résume la semaine (taux de complétion, top habitude, plus long streak) et permet le partage.
 
 **Why this priority**: P2 car c'est une vue d'assemblage — elle n'existe que si les briques P1 (habits, routines, inbox) existent. Mais c'est l'écran le plus utilisé au quotidien.
 
-**Independent Test**: Avec 2 habitudes, 1 routine, 3 tâches today et 2 inbox items — vérifier que la Vue Aujourd'hui affiche tout correctement.
+**Independent Test**: Avec 2 habitudes, 1 routine, 3 tâches today et 2 inbox items — vérifier que la Vue Aujourd'hui affiche tout correctement. Le Compteur affiche les heures par domaine. Le Bilan affiche le résumé hebdo.
 
 **Acceptance Scenarios**:
 
@@ -112,6 +113,11 @@ L'utilisateur ouvre l'app et voit sa journée complète : habitudes du jour (gro
 2. **Given** une routine "Matin" programmée, **When** l'utilisateur est sur la Vue Aujourd'hui, **Then** il voit un bouton "Lancer routine Matin" avec la durée estimée.
 3. **Given** 2 tâches due today et 1 overdue, **When** il regarde la section tâches, **Then** les 3 apparaissent avec la tâche overdue en rouge.
 4. **Given** 5 items non triés dans l'inbox, **When** il regarde la Vue Aujourd'hui, **Then** un badge "5" apparaît sur l'icône inbox.
+5. **Given** un utilisateur qui a complété 100% de ses habitudes du jour, **When** il coche la dernière, **Then** une animation de célébration (confetti) se joue.
+6. **Given** un utilisateur le matin (5h-12h), **When** il ouvre la Vue Aujourd'hui, **Then** il voit un greeting contextuel + ses habitudes du matin en priorité + un mini compteur de temps.
+7. **Given** un utilisateur le soir (18h+), **When** il ouvre la Vue Aujourd'hui, **Then** il voit le mode bilan avec un résumé de sa journée + temps passé + lien vers le bilan hebdo.
+8. **Given** l'onglet Compteur, **When** l'utilisateur le consulte, **Then** il voit le total hebdomadaire en heures, le delta vs semaine précédente (+/- heures), et des barres par domaine avec breakdown par habitude.
+9. **Given** l'écran Bilan, **When** l'utilisateur y accède (via bouton ou dimanche soir), **Then** il voit le taux de complétion, la top habitude, le plus long streak, la répartition par domaine, et un bouton Partager (capture PNG).
 
 ---
 
@@ -130,32 +136,44 @@ L'utilisateur ouvre l'app et voit sa journée complète : habitudes du jour (gro
 
 ### Functional Requirements
 
-- **FR-001**: System MUST allow creating habits with type (binary/quantitative), domain, time range (start_time, end_time), and optional description.
-- **FR-002**: System MUST record daily habit completions (`habit_logs`) with date, value (for quantitative), and completed flag.
-- **FR-003**: System MUST calculate streaks locally (consecutive days completed) and display current/best streak.
+- **FR-001**: System MUST allow creating habits with type (binary/quantitative), domain, time range (start_time, end_time), estimated_duration_minutes, frequency (daily/weekly/custom with frequency_days), and optional description.
+- **FR-002**: System MUST record daily habit completions (`habit_logs`) with date, value (for quantitative), completed flag, actual_start_time, and actual_end_time for time adherence tracking.
+- **FR-003**: System MUST calculate streaks locally (consecutive days completed) and display current/best streak. Streak freeze: 1 allowed per 7-day window.
 - **FR-004**: System MUST allow creating routines with ordered steps, each step having a name, estimated duration, and optional description.
 - **FR-005**: System MUST provide a routine runner with step-by-step timer, next/skip/abandon actions, and log the result.
 - **FR-006**: System MUST allow quick capture of raw text items into the inbox (< 3 seconds per item).
 - **FR-007**: System MUST allow triaging inbox items into: task, habit, or discard.
 - **FR-008**: System MUST allow creating tasks with title, optional date, optional priority (low/medium/high), and domain.
-- **FR-009**: System MUST provide a Vue Aujourd'hui aggregating: today's habits by time range, active/next routine, tasks due today + overdue, inbox count.
+- **FR-009**: System MUST provide a Vue Aujourd'hui aggregating: today's habits by time slot (morning/afternoon/evening/anytime), active/next routine, tasks due today + overdue, inbox count. Contextual UI by time of day (TodayMode: morning/progress/bilan).
 - **FR-010**: System MUST allow creating/editing/reordering/archiving domains with name, icon, color, and sort order.
-- **FR-011**: System MUST provide 5 default domains at onboarding: Santé, Travail, Relations, Finances, Développement personnel.
+- **FR-011**: System MUST provide 5 default domains at onboarding: Santé 💪 #4CAF50, Travail 💼 #2196F3, Relations ❤️ #E91E63, Finances 💰 #FF9800, Développement personnel 🌱 #9C27B0.
 - **FR-012**: System MUST enforce RLS so users only see their own data across ALL tables.
 - **FR-013**: System MUST prevent deleting a domain — only archiving is allowed. Archived domains are hidden from pickers but existing links are preserved.
 - **FR-014**: System MUST allow only ONE active routine runner at a time.
 - **FR-015**: System MUST allow backdating habit check-ins up to 7 days in the past.
+- **FR-016**: System MUST provide a weekly time counter (Counter) showing total minutes per domain, with delta vs previous week, and habit-level breakdown.
+- **FR-017**: System MUST provide a weekly bilan (summary) with: completion rate, top habit, longest streak, domain time distribution, and shareable image capture.
+- **FR-018**: System MUST support habit notifications (enabled/disabled per habit, configurable reminder_offset_minutes before start_time).
+- **FR-019**: System MUST support in-app notifications (types: general/reminder/alert/success/streak/bilan) with channels, read/unread status, and action URLs.
+- **FR-020**: System MUST support FCM push notifications via device tokens (platform: android/ios/web).
+- **FR-021**: System MUST run automated edge functions: daily streak check (01:00 UTC), weekly bilan reminder (Sunday 19:00 UTC), push notification delivery on notification insert.
+- **FR-022**: System MUST celebrate 100% daily habit completion with confetti overlay animation.
 
 ### Key Entities *(include if feature involves data)*
 
-- **Domain**: A life area the user wants to track (name, icon, color, sort_order). Every habit/routine/task belongs to one domain.
-- **Habit**: A recurring behavior to track daily. Has a type (binary or quantitative with target+unit), time range (start_time, end_time), and frequency.
-- **HabitLog**: A daily record of habit completion. One per habit per day. Contains date, completed flag, and optional value for quantitative habits.
+- **Domain**: A life area the user wants to track (name, icon, color, sort_order). Every habit/routine/task belongs to one domain. Auto-seeded with 5 defaults on signup.
+- **Habit**: A recurring behavior to track daily. Has a type (binary or quantitative with target+unit), time range (start_time, end_time), estimated_duration_minutes, frequency (daily/weekly/custom with frequency_days), notifications_enabled, reminder_offset_minutes.
+- **HabitLog**: A daily record of habit completion. One per habit per day (unique constraint). Contains date, completed flag, optional value for quantitative habits, actual_start_time/actual_end_time for time adherence.
+- **StreakInfo**: Computed streak data for a habit. currentStreak, bestStreak, freezeUsedDates, isFreezeActive.
 - **Routine**: An ordered sequence of steps to execute. Has a name, domain, and estimated total duration (sum of steps).
 - **RoutineStep**: One step within a routine. Has name, order, estimated duration, and optional description.
 - **RoutineLog**: A record of a routine execution. Contains start/end time, status (completed/abandoned), total duration, and which steps were completed.
 - **Task**: A one-time actionable item. Has title, domain, optional due date, priority (low/medium/high), and completed_at timestamp.
 - **InboxItem**: A raw captured thought. Has raw_text, status (pending/processed/discarded), and optional link to the created entity (task_id or habit_id).
+- **TimeCounter**: Weekly time tracking per domain. domainId, domainName, domainColor, domainIcon, totalMinutesThisWeek, totalMinutesLastWeek, habitBreakdown (Map<Habit, int minutes>).
+- **WeeklyBilan**: Weekly summary. weekStartDate, domainTimes (List<TimeCounter>), totalMinutes, totalMinutesLastWeek, completionRate, topHabit, longestStreak, isFirstWeek.
+- **Notification**: In-app notification. type (general/reminder/alert/success/streak/bilan), channel, title, body, isRead, actionUrl, metadata.
+- **DeviceToken**: FCM push token. token, platform (android/ios/web), device_name.
 
 ## Success Criteria *(mandatory)*
 
