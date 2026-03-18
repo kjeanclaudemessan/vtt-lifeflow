@@ -42,73 +42,77 @@ void main() {
   });
 
   group('Flow 3 — Création et gestion d\'habitudes', () {
-    test('Créer une habitude binaire "Méditation" via HabitFormViewModel',
-        () async {
-      final formVm = HabitFormViewModel();
-      await formVm.init();
+    test(
+      'Créer une habitude binaire "Méditation" via HabitFormViewModel',
+      () async {
+        final formVm = HabitFormViewModel();
+        await formVm.init();
 
-      expect(formVm.isEditMode, isFalse);
-      expect(formVm.domains.length, greaterThanOrEqualTo(5));
+        expect(formVm.isEditMode, isFalse);
+        expect(formVm.domains.length, greaterThanOrEqualTo(5));
 
-      // Remplir le formulaire
-      formVm.nameController.text = 'Méditation';
-      formVm.descriptionController.text = '10 min de pleine conscience';
-      formVm.setType(HabitType.binary);
-      formVm.setEstimatedDuration(10);
-      formVm.setStartTime(const TimeOfDay(hour: 7, minute: 0));
-      formVm.setEndTime(const TimeOfDay(hour: 7, minute: 10));
-      formVm.setFrequency(HabitFrequency.daily);
+        // Remplir le formulaire
+        formVm.nameController.text = 'Méditation';
+        formVm.descriptionController.text = '10 min de pleine conscience';
+        formVm.setType(HabitType.binary);
+        formVm.setEstimatedDuration(10);
+        formVm.setStartTime(const TimeOfDay(hour: 7, minute: 0));
+        formVm.setFrequency(HabitFrequency.daily);
 
-      final sante = formVm.domains.firstWhere((d) => d.name == 'Santé');
-      formVm.setSelectedDomain(sante);
+        final sante = formVm.domains.firstWhere((d) => d.name == 'Santé');
+        formVm.setSelectedDomain(sante);
 
-      await formVm.save();
+        await formVm.save();
 
-      // Vérifier via HabitsViewModel
-      final habitsVm = HabitsViewModel();
-      await habitsVm.init();
+        // Vérifier via HabitsViewModel
+        final habitsVm = HabitsViewModel();
+        await habitsVm.init();
 
-      expect(habitsVm.filteredHabits.length, equals(1));
-      final med = habitsVm.filteredHabits.first;
-      expect(med.name, equals('Méditation'));
-      expect(med.type, equals(HabitType.binary));
-      expect(med.estimatedDurationMinutes, equals(10));
-      expect(med.domainId, equals(sante.id));
-      expect(med.frequency, equals(HabitFrequency.daily));
-      expect(med.startTime, equals(const TimeOfDay(hour: 7, minute: 0)));
+        expect(habitsVm.filteredHabits.length, equals(1));
+        final med = habitsVm.filteredHabits.first;
+        expect(med.name, equals('Méditation'));
+        expect(med.type, equals(HabitType.binary));
+        expect(med.estimatedDurationMinutes, equals(10));
+        expect(med.domainId, equals(sante.id));
+        expect(med.frequency, equals(HabitFrequency.daily));
+        expect(med.startTime, equals(const TimeOfDay(hour: 7, minute: 0)));
 
-      formVm.dispose();
-    });
+        formVm.dispose();
+      },
+    );
 
-    test('Créer une habitude quantitative "Eau" via HabitFormViewModel',
-        () async {
-      final formVm = HabitFormViewModel();
-      await formVm.init();
+    test(
+      'Créer une habitude quantitative "Eau" via HabitFormViewModel',
+      () async {
+        final formVm = HabitFormViewModel();
+        await formVm.init();
 
-      formVm.nameController.text = 'Boire de l\'eau';
-      formVm.setType(HabitType.quantitative);
-      formVm.targetValueController.text = '2000';
-      formVm.unitController.text = 'ml';
-      formVm.setEstimatedDuration(5);
-      formVm.setFrequency(HabitFrequency.daily);
+        formVm.nameController.text = 'Boire de l\'eau';
+        formVm.setType(HabitType.quantitative);
+        formVm.targetValueController.text = '2000';
+        formVm.unitController.text = 'ml';
+        formVm.setEstimatedDuration(5);
+        formVm.setFrequency(HabitFrequency.daily);
 
-      final sante = formVm.domains.firstWhere((d) => d.name == 'Santé');
-      formVm.setSelectedDomain(sante);
+        final sante = formVm.domains.firstWhere((d) => d.name == 'Santé');
+        formVm.setSelectedDomain(sante);
 
-      await formVm.save();
+        await formVm.save();
 
-      final habitsVm = HabitsViewModel();
-      await habitsVm.init();
+        final habitsVm = HabitsViewModel();
+        await habitsVm.init();
 
-      expect(habitsVm.filteredHabits.length, equals(2));
-      final water = habitsVm.filteredHabits
-          .firstWhere((h) => h.name == 'Boire de l\'eau');
-      expect(water.type, equals(HabitType.quantitative));
-      expect(water.targetValue, equals(2000));
-      expect(water.unit, equals('ml'));
+        expect(habitsVm.filteredHabits.length, equals(2));
+        final water = habitsVm.filteredHabits.firstWhere(
+          (h) => h.name == 'Boire de l\'eau',
+        );
+        expect(water.type, equals(HabitType.quantitative));
+        expect(water.targetValue, equals(2000));
+        expect(water.unit, equals('ml'));
 
-      formVm.dispose();
-    });
+        formVm.dispose();
+      },
+    );
 
     test('Créer une habitude hebdomadaire "Sport en salle"', () async {
       final formVm = HabitFormViewModel();
@@ -131,8 +135,9 @@ void main() {
       await habitsVm.init();
 
       expect(habitsVm.filteredHabits.length, equals(3));
-      final sport =
-          habitsVm.filteredHabits.firstWhere((h) => h.name == 'Sport en salle');
+      final sport = habitsVm.filteredHabits.firstWhere(
+        (h) => h.name == 'Sport en salle',
+      );
       expect(sport.frequency, equals(HabitFrequency.weekly));
       expect(sport.frequencyDays, containsAll([1, 3, 5]));
       expect(sport.estimatedDurationMinutes, equals(60));
@@ -188,8 +193,9 @@ void main() {
     test('Modifier une habitude existante via HabitFormViewModel', () async {
       final habitsVm = HabitsViewModel();
       await habitsVm.init();
-      final meditation =
-          habitsVm.filteredHabits.firstWhere((h) => h.name == 'Méditation');
+      final meditation = habitsVm.filteredHabits.firstWhere(
+        (h) => h.name == 'Méditation',
+      );
 
       // Ouvrir le formulaire en mode édition
       final formVm = HabitFormViewModel();
@@ -207,8 +213,9 @@ void main() {
       // Vérifier la persistance
       final habitsVm2 = HabitsViewModel();
       await habitsVm2.init();
-      final updated =
-          habitsVm2.filteredHabits.firstWhere((h) => h.id == meditation.id);
+      final updated = habitsVm2.filteredHabits.firstWhere(
+        (h) => h.id == meditation.id,
+      );
       expect(updated.name, equals('Méditation pleine conscience'));
       expect(updated.estimatedDurationMinutes, equals(20));
 
@@ -219,8 +226,9 @@ void main() {
       final habitsVm = HabitsViewModel();
       await habitsVm.init();
 
-      final water = habitsVm.filteredHabits
-          .firstWhere((h) => h.name == 'Boire de l\'eau');
+      final water = habitsVm.filteredHabits.firstWhere(
+        (h) => h.name == 'Boire de l\'eau',
+      );
 
       await habitsVm.archiveHabit(water.id);
 
@@ -247,10 +255,7 @@ void main() {
 
       // Sport n'a pas de startTime → anytime
       final anytimeHabits = bySlot[TimeSlot.anytime] ?? [];
-      expect(
-        anytimeHabits.any((h) => h.name == 'Sport en salle'),
-        isTrue,
-      );
+      expect(anytimeHabits.any((h) => h.name == 'Sport en salle'), isTrue);
     });
   });
 }

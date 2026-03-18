@@ -49,60 +49,65 @@ void main() {
     final domainsResult = await domainRepo.getDomains();
     final domains = domainsResult.getOrElse(() => []);
     final sante = domains.firstWhere((d) => d.name == 'Santé');
-    final devPerso =
-        domains.firstWhere((d) => d.name == 'Développement personnel');
+    final devPerso = domains.firstWhere(
+      (d) => d.name == 'Développement personnel',
+    );
 
     // ── Créer 3 habitudes ──
     final habitRepo = locator<IHabitRepository>();
     final now = DateTime.now();
 
-    final medResult = await habitRepo.createHabit(HabitEntity(
-      id: '',
-      userId: testUserId,
-      domainId: sante.id,
-      name: 'Méditation',
-      type: HabitType.binary,
-      estimatedDurationMinutes: 15,
-      startTime: const TimeOfDay(hour: 7, minute: 0),
-      endTime: const TimeOfDay(hour: 7, minute: 15),
-      frequency: HabitFrequency.daily,
-      frequencyDays: const [],
-      isArchived: false,
-      createdAt: now,
-      updatedAt: now,
-    ));
+    final medResult = await habitRepo.createHabit(
+      HabitEntity(
+        id: '',
+        userId: testUserId,
+        domainId: sante.id,
+        name: 'Méditation',
+        type: HabitType.binary,
+        estimatedDurationMinutes: 15,
+        startTime: const TimeOfDay(hour: 7, minute: 0),
+        frequency: HabitFrequency.daily,
+        frequencyDays: const [],
+        isArchived: false,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    );
     meditationHabit = medResult.getOrElse(() => throw Exception('create med'));
 
-    final sportResult = await habitRepo.createHabit(HabitEntity(
-      id: '',
-      userId: testUserId,
-      domainId: sante.id,
-      name: 'Sport',
-      type: HabitType.binary,
-      estimatedDurationMinutes: 60,
-      frequency: HabitFrequency.daily,
-      frequencyDays: const [],
-      isArchived: false,
-      createdAt: now,
-      updatedAt: now,
-    ));
+    final sportResult = await habitRepo.createHabit(
+      HabitEntity(
+        id: '',
+        userId: testUserId,
+        domainId: sante.id,
+        name: 'Sport',
+        type: HabitType.binary,
+        estimatedDurationMinutes: 60,
+        frequency: HabitFrequency.daily,
+        frequencyDays: const [],
+        isArchived: false,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    );
     sportHabit = sportResult.getOrElse(() => throw Exception('create sport'));
 
-    final readResult = await habitRepo.createHabit(HabitEntity(
-      id: '',
-      userId: testUserId,
-      domainId: devPerso.id,
-      name: 'Lecture',
-      type: HabitType.binary,
-      estimatedDurationMinutes: 30,
-      startTime: const TimeOfDay(hour: 21, minute: 0),
-      endTime: const TimeOfDay(hour: 21, minute: 30),
-      frequency: HabitFrequency.daily,
-      frequencyDays: const [],
-      isArchived: false,
-      createdAt: now,
-      updatedAt: now,
-    ));
+    final readResult = await habitRepo.createHabit(
+      HabitEntity(
+        id: '',
+        userId: testUserId,
+        domainId: devPerso.id,
+        name: 'Lecture',
+        type: HabitType.binary,
+        estimatedDurationMinutes: 30,
+        startTime: const TimeOfDay(hour: 21, minute: 0),
+        frequency: HabitFrequency.daily,
+        frequencyDays: const [],
+        isArchived: false,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    );
     lectureHabit = readResult.getOrElse(() => throw Exception('create read'));
 
     // ── Logger les habitudes sur plusieurs jours de la semaine courante ──
@@ -305,17 +310,19 @@ void main() {
       expect(sumMinutes, equals(bilan.totalMinutes));
     });
 
-    test('topHabit est l\'habitude avec le meilleur taux de complétion',
-        () async {
-      final vm = BilanViewModel();
-      await vm.init();
+    test(
+      'topHabit est l\'habitude avec le meilleur taux de complétion',
+      () async {
+        final vm = BilanViewModel();
+        await vm.init();
 
-      final bilan = vm.bilan;
-      // Méditation: 4/7 jours (57%) > Lecture: 3/7 (43%) > Sport: 2/7 (29%)
-      // topHabit = highest completion rate
-      expect(bilan.topHabit, isNotNull);
-      expect(bilan.topHabit!.name, equals('Méditation'));
-    });
+        final bilan = vm.bilan;
+        // Méditation: 4/7 jours (57%) > Lecture: 3/7 (43%) > Sport: 2/7 (29%)
+        // topHabit = highest completion rate
+        expect(bilan.topHabit, isNotNull);
+        expect(bilan.topHabit!.name, equals('Méditation'));
+      },
+    );
 
     test('deltaMinutes reflète la progression', () async {
       final vm = BilanViewModel();

@@ -172,7 +172,7 @@
 - [x] T056 [POLISH] **Full onboarding flow** — Wire: Welcome (step 1) → Domain selection (step 2, from T025) → First habit creation suggestion (step 3) → Done (step 4 → TodayView). Each step uses DS widgets.
 - [x] T057 [POLISH] Final `supabase db reset` validation — Confirm all migrations + seeds pass.
 - [x] T058 [POLISH] Run `dart format .` + `dart analyze` — zero errors, zero warnings.
-- [ ] T059 [POLISH] Run `flutter run -d chrome` — verify: app launches, 3 tabs visible, all features accessible, empty states work.
+- [x] T059 [POLISH] Run `flutter run -d chrome` — verify: app launches, 3 tabs visible, all features accessible, empty states work.
 
 ---
 

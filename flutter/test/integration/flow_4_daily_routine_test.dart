@@ -52,8 +52,9 @@ void main() {
     final domainsResult = await domainRepo.getDomains();
     final domains = domainsResult.getOrElse(() => []);
     final sante = domains.firstWhere((d) => d.name == 'Santé');
-    final devPerso =
-        domains.firstWhere((d) => d.name == 'Développement personnel');
+    final devPerso = domains.firstWhere(
+      (d) => d.name == 'Développement personnel',
+    );
     santeDomainId = sante.id;
     devPersoDomainId = devPerso.id;
 
@@ -61,55 +62,59 @@ void main() {
     final habitRepo = locator<IHabitRepository>();
     final now = DateTime.now();
 
-    final medResult = await habitRepo.createHabit(HabitEntity(
-      id: '',
-      userId: testUserId,
-      domainId: santeDomainId,
-      name: 'Méditation',
-      type: HabitType.binary,
-      estimatedDurationMinutes: 15,
-      startTime: const TimeOfDay(hour: 7, minute: 0),
-      endTime: const TimeOfDay(hour: 7, minute: 15),
-      frequency: HabitFrequency.daily,
-      frequencyDays: const [],
-      isArchived: false,
-      createdAt: now,
-      updatedAt: now,
-    ));
+    final medResult = await habitRepo.createHabit(
+      HabitEntity(
+        id: '',
+        userId: testUserId,
+        domainId: santeDomainId,
+        name: 'Méditation',
+        type: HabitType.binary,
+        estimatedDurationMinutes: 15,
+        startTime: const TimeOfDay(hour: 7, minute: 0),
+        frequency: HabitFrequency.daily,
+        frequencyDays: const [],
+        isArchived: false,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    );
     meditationHabit = medResult.getOrElse(() => throw Exception('create med'));
 
-    final waterResult = await habitRepo.createHabit(HabitEntity(
-      id: '',
-      userId: testUserId,
-      domainId: santeDomainId,
-      name: 'Boire de l\'eau',
-      type: HabitType.quantitative,
-      targetValue: 2000,
-      unit: 'ml',
-      estimatedDurationMinutes: 5,
-      frequency: HabitFrequency.daily,
-      frequencyDays: const [],
-      isArchived: false,
-      createdAt: now,
-      updatedAt: now,
-    ));
+    final waterResult = await habitRepo.createHabit(
+      HabitEntity(
+        id: '',
+        userId: testUserId,
+        domainId: santeDomainId,
+        name: 'Boire de l\'eau',
+        type: HabitType.quantitative,
+        targetValue: 2000,
+        unit: 'ml',
+        estimatedDurationMinutes: 5,
+        frequency: HabitFrequency.daily,
+        frequencyDays: const [],
+        isArchived: false,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    );
     waterHabit = waterResult.getOrElse(() => throw Exception('create water'));
 
-    final readResult = await habitRepo.createHabit(HabitEntity(
-      id: '',
-      userId: testUserId,
-      domainId: devPersoDomainId,
-      name: 'Lecture',
-      type: HabitType.binary,
-      estimatedDurationMinutes: 30,
-      startTime: const TimeOfDay(hour: 21, minute: 0),
-      endTime: const TimeOfDay(hour: 21, minute: 30),
-      frequency: HabitFrequency.daily,
-      frequencyDays: const [],
-      isArchived: false,
-      createdAt: now,
-      updatedAt: now,
-    ));
+    final readResult = await habitRepo.createHabit(
+      HabitEntity(
+        id: '',
+        userId: testUserId,
+        domainId: devPersoDomainId,
+        name: 'Lecture',
+        type: HabitType.binary,
+        estimatedDurationMinutes: 30,
+        startTime: const TimeOfDay(hour: 21, minute: 0),
+        frequency: HabitFrequency.daily,
+        frequencyDays: const [],
+        isArchived: false,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    );
     readingHabit = readResult.getOrElse(() => throw Exception('create read'));
   });
 
@@ -119,17 +124,19 @@ void main() {
   });
 
   group('Flow 4 — Routine quotidienne', () {
-    test('TodayViewModel affiche 3 habitudes planifiées aujourd\'hui',
-        () async {
-      final vm = TodayViewModel();
-      await vm.init();
+    test(
+      'TodayViewModel affiche 3 habitudes planifiées aujourd\'hui',
+      () async {
+        final vm = TodayViewModel();
+        await vm.init();
 
-      expect(vm.isBusy, isFalse);
-      expect(vm.todayHabits.length, equals(3));
-      expect(vm.completedHabits, isEmpty);
-      expect(vm.remainingHabits.length, equals(3));
-      expect(vm.completionRate, equals(0.0));
-    });
+        expect(vm.isBusy, isFalse);
+        expect(vm.todayHabits.length, equals(3));
+        expect(vm.completedHabits, isEmpty);
+        expect(vm.remainingHabits.length, equals(3));
+        expect(vm.completionRate, equals(0.0));
+      },
+    );
 
     test('Cocher la méditation (binaire) → completion rate monte', () async {
       final vm = TodayViewModel();
