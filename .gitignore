@@ -51,3 +51,6 @@ vendor/bundle/
 /_projects_example/
 
 apps_docs/
+
+# ═══ Mobile MCP Screenshots (generated) ═══
+docs/screenshots/

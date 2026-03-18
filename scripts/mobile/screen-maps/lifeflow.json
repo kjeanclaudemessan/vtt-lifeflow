@@ -1,0 +1,132 @@
+{
+  "app": {
+    "package": "com.vitatech.lifeflow",
+    "name": "LifeFlow"
+  },
+  "screens": [
+    {
+      "id": "splash",
+      "name": "Splash",
+      "route": "SplashView",
+      "type": "startup",
+      "navigateTo": "Auto-redirects to login or home",
+      "skipScreenshot": true
+    },
+    {
+      "id": "login",
+      "name": "Login",
+      "route": "LoginView",
+      "type": "auth",
+      "navigateTo": "First screen after splash (unauthenticated)"
+    },
+    {
+      "id": "register",
+      "name": "Register",
+      "route": "RegisterView",
+      "type": "auth",
+      "navigateFrom": "login",
+      "navigateAction": "Tap 'Register' link on login screen"
+    },
+    {
+      "id": "forgot_password",
+      "name": "Forgot Password",
+      "route": "ForgotPasswordView",
+      "type": "auth",
+      "navigateFrom": "login",
+      "navigateAction": "Tap 'Forgot Password' link on login screen"
+    },
+    {
+      "id": "home_today",
+      "name": "Home - Today",
+      "route": "HomeView",
+      "type": "home_tab",
+      "tabIndex": 0,
+      "navigateTo": "First tab after login"
+    },
+    {
+      "id": "home_habits",
+      "name": "Home - Habits",
+      "route": "HomeView",
+      "type": "home_tab",
+      "tabIndex": 1,
+      "navigateFrom": "home_today",
+      "navigateAction": "Tap 'Habits' tab"
+    },
+    {
+      "id": "home_counter",
+      "name": "Home - Counter",
+      "route": "HomeView",
+      "type": "home_tab",
+      "tabIndex": 2,
+      "navigateFrom": "home_today",
+      "navigateAction": "Tap 'Counter' tab"
+    },
+    {
+      "id": "profile",
+      "name": "Profile",
+      "route": "ProfileView",
+      "type": "feature",
+      "navigateFrom": "home_today",
+      "navigateAction": "Tap profile avatar or menu"
+    },
+    {
+      "id": "edit_profile",
+      "name": "Edit Profile",
+      "route": "EditProfileView",
+      "type": "feature",
+      "navigateFrom": "profile",
+      "navigateAction": "Tap 'Edit' button on profile screen"
+    },
+    {
+      "id": "settings",
+      "name": "Settings",
+      "route": "SettingsView",
+      "type": "feature",
+      "navigateFrom": "home_today",
+      "navigateAction": "Tap settings icon in AppBar"
+    },
+    {
+      "id": "notifications",
+      "name": "Notifications",
+      "route": "NotificationsView",
+      "type": "feature",
+      "navigateFrom": "home_today",
+      "navigateAction": "Tap notification bell in AppBar"
+    },
+    {
+      "id": "domains",
+      "name": "Domains",
+      "route": "DomainsView",
+      "type": "feature",
+      "navigateFrom": "home_today",
+      "navigateAction": "Tap domains section"
+    },
+    {
+      "id": "habit_form",
+      "name": "Habit Form",
+      "route": "HabitFormView",
+      "type": "feature",
+      "navigateFrom": "home_habits",
+      "navigateAction": "Tap FAB (+) on habits list"
+    },
+    {
+      "id": "bilan",
+      "name": "Bilan",
+      "route": "BilanView",
+      "type": "feature",
+      "navigateFrom": "home_today",
+      "navigateAction": "Tap bilan/summary section"
+    }
+  ],
+  "flows": {
+    "auth": ["login", "register", "forgot_password"],
+    "home_tabs": ["home_today", "home_habits", "home_counter"],
+    "profile": ["profile", "edit_profile"],
+    "main": ["home_today", "home_habits", "home_counter", "settings", "notifications", "domains", "habit_form", "bilan"]
+  },
+  "validation": {
+    "screenshotDir": "docs/screenshots",
+    "darkMode": true,
+    "maxLoops": 3
+  }
+}

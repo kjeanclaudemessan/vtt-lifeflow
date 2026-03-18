@@ -11,6 +11,7 @@
       Gate 5: Cross-Screen Reactivity (repo mutations must trigger UI refresh)
       Gate 6: Supabase RLS (DISABLED - re-enable when RLS is mandatory)
       Gate 7: Tests (flutter test runner)
+      Gate 8: Visual Validation (requires Mobile MCP screenshots - optional)
 
 .PARAMETER Scope
     What to check: file | task | phase | all (default: all)
@@ -117,6 +118,7 @@ $script:GateNames = @{
     5 = "Cross-Screen Reactivity"
     6 = "Supabase RLS (disabled)"
     7 = "Tests"
+    8 = "Visual Validation"
 }
 
 function Write-GateHeader {
@@ -186,6 +188,8 @@ function Test-FileContent {
 # Gate 6 (RLS) disabled - re-enable when RLS policy enforcement is mandatory
 # . "$script:GatesDir\gate6-rls.ps1"
 . "$script:GatesDir\gate7-tests.ps1"
+# Gate 8 (Visual) optional - loaded on demand when -Gate 8 is passed
+# Sourced conditionally below after gate parsing
 
 # ===================================================================
 # GATE EXECUTION
@@ -193,7 +197,19 @@ function Test-FileContent {
 
 # Parse gate list
 # Gate 6 (RLS) excluded from "all" - re-add when RLS is mandatory
+# Gate 8 (Visual) excluded from "all" - run explicitly with -Gate 8
 $gatesToRun = if ($Gate -eq "all") { @(1,2,3,4,5,7) } else { $Gate -split "," | ForEach-Object { [int]$_.Trim() } }
+
+# Conditionally source optional gates
+if ($gatesToRun -contains 8) {
+    $gate8Path = "$script:GatesDir\gate8-visual.ps1"
+    if (Test-Path $gate8Path) {
+        . $gate8Path
+    }
+    else {
+        Write-Host "  [WARN] gate8-visual.ps1 not found" -ForegroundColor Yellow
+    }
+}
 
 # Determine file list for scope=file
 $scopeFiles = @()
@@ -226,6 +242,7 @@ foreach ($g in $gatesToRun) {
         5 { Invoke-Gate5 -Scope $Scope -ScopeFiles $scopeFiles }
         # 6 { Invoke-Gate6 }  # RLS disabled
         7 { Invoke-Gate7 -Scope $Scope }
+        8 { Invoke-Gate8 -Scope $Scope -ScopeFiles $scopeFiles }
     }
 }
 
