@@ -164,21 +164,24 @@ class HabitFormViewModel extends BaseViewModel {
   }
 
   /// Validates and saves the habit.
-  Future<void> save() async {
+  Future<void> save({
+    String nameRequiredMessage = 'Name is required',
+    String domainRequiredMessage = 'Select a domain',
+  }) async {
     // Validate
     _nameError = null;
     _domainError = null;
 
     final name = nameController.text.trim();
     if (name.isEmpty) {
-      _nameError = 'Name is required';
+      _nameError = nameRequiredMessage;
       _haptic.error();
       _validationAttempt++;
       rebuildUi();
       return;
     }
     if (_selectedDomain == null) {
-      _domainError = 'Select a domain';
+      _domainError = domainRequiredMessage;
       _haptic.error();
       _validationAttempt++;
       rebuildUi();

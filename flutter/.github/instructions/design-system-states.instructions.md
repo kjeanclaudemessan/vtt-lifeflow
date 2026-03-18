@@ -202,6 +202,45 @@ After a successful action:
 
 ---
 
+## Completion State (All Done)
+
+> Product Soul Vérité #6: "Quand tout est fait, c'est LE PLUS BEL ÉCRAN de l'app."
+
+When the user has completed all tasks for a given context (e.g., all habits done today), show a **celebratory completion state** — not a bland empty list.
+
+### Requirements
+
+- **Visual**: Illustration or animated icon (confetti, checkmark bloom, trophy).
+- **Message**: Warm, celebratory l10n string (e.g., `context.l10n.todayAllDone`).
+- **Haptic**: `HapticFeedback.mediumImpact()` on first display.
+- **No CTA needed** — this is a moment of satisfaction, not a prompt for more work.
+
+```dart
+// ✅ CORRECT — celebratory "all done" state
+if (viewModel.todayHabits.isNotEmpty && viewModel.allDone) {
+  return AppCompletionState(
+    illustration: AppIllustrations.allDone,
+    title: context.l10n.todayAllDoneTitle,
+    description: context.l10n.todayAllDoneDescription,
+  );
+}
+
+// ❌ FORBIDDEN — showing empty list when all habits are checked
+if (viewModel.remainingHabits.isEmpty) {
+  return const SizedBox.shrink(); // dead end
+}
+```
+
+### Distinction: Empty vs Complete
+
+| State | Data exists? | All done? | Visual |
+|-------|-------------|-----------|--------|
+| **Empty** | No | — | Invitation to create (AppEmptyState) |
+| **Complete** | Yes | Yes | Celebration (AppCompletionState) |
+| **Partial** | Yes | No | Normal content list |
+
+---
+
 ## Corrupt Data Recovery (28.9)
 
 If JSON is malformed or data is corrupted locally, **never crash**. Show a recoverable state.

@@ -36,7 +36,7 @@ applyTo: "**/*_view.dart,**/*_dialog.dart,**/l10n/**"
 | **Screen title** | 5 words | "Mes habitudes" |
 | **Button label** | 3 words | "Sauvegarder" |
 | **Description** | 15 words | "Ajoute tes habitudes quotidiennes pour suivre ta progression" |
-| **Error message** | 12 words | "Oups, quelque chose a cassé. Réessaie." |
+| **Error message** | 12 words | "Service indisponible. Réessaie." |
 | **Snackbar** | 8 words | "Habitude sauvegardée !" |
 | **Empty state title** | 5 words | "Pas encore d'habitudes" |
 | **Empty state desc** | 15 words | "Commence par ajouter ta première habitude quotidienne" |
@@ -71,7 +71,7 @@ applyTo: "**/*_view.dart,**/*_dialog.dart,**/l10n/**"
 | Context | Message |
 |---------|---------|
 | Network error | "Pas de connexion. Vérifie ton réseau et réessaie." |
-| Server error | "Oups, quelque chose a cassé. Réessaie dans un instant." |
+| Server error | "Service momentanément indisponible. Réessaie dans un instant." |
 | Form validation | "Ce champ est requis." / "Adresse email invalide." |
 | Auth error | "Email ou mot de passe incorrect." |
 | Timeout | "Ça prend plus longtemps que prévu. Réessaie." |
@@ -273,11 +273,35 @@ lib/l10n/arb/
 
 ---
 
+## Forbidden Words (content-rules §VII)
+
+These words/patterns are **BANNED** from all user-facing text (ARB values, default params, instructions examples):
+
+| Forbidden | Replacement |
+|-----------|-------------|
+| Oups / Oops | *(remove — rephrase)* |
+| LOL, MDR | *(never)* |
+| "Tu as échoué" | "Reprends quand tu veux" |
+| "Erreur fatale" | "Service indisponible" |
+| "Interdit" | "Non disponible" |
+| Jargon technique (Error 500, SocketException) | Plain-language explanation |
+| Blame phrasing ("Tu as fait une erreur") | Neutral ("Ce champ est requis") |
+| Guilt-tripping ("Tu as perdu ta série") | Encouraging ("Reprends quand tu veux") |
+| Formal "Vous" (Flow family) | "Tu" (per tone table above) |
+| "Contenu" (for empty states) | *(use invitation verbs)* |
+| "Pas de" / "Aucun" as title | *(use positive invitation)* |
+
+> **Rule**: If a proposed text matches any pattern above, it MUST be rewritten before merge.
+
+---
+
 ## Self-Check
 
 - [ ] Zero `Text('...')` with hardcoded strings in views.
 - [ ] All strings use `context.l10n.keyName`.
 - [ ] No emoji prefixed labels in ARB files.
+- [ ] No forbidden words in any ARB value.
+- [ ] Error messages are neutral, never blame the user.
 - [ ] Error messages are human-readable + offer a next action.
 - [ ] Button labels are action verbs.
 - [ ] Dates use relative format when < 24h.

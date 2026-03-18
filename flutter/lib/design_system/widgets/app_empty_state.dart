@@ -178,7 +178,8 @@ class AppEmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final effectiveIconSize = iconSize ?? (isCompact ? 48.sp : 64.sp);
-    final effectiveIconColor = iconColor ??
+    final effectiveIconColor =
+        iconColor ??
         (isDark ? AppColors.contrastMediumDark : AppColors.contrastMediumLight);
 
     return Center(
@@ -195,8 +196,9 @@ class AppEmptyState extends StatelessWidget {
                 width: effectiveIconSize + 24.w,
                 height: effectiveIconSize + 24.w,
                 decoration: BoxDecoration(
-                  color:
-                      isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+                  color: isDark
+                      ? AppColors.surfaceDark
+                      : AppColors.surfaceLight,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -323,8 +325,8 @@ class AppErrorState extends StatelessWidget {
   /// Creates a server error state.
   factory AppErrorState.server({
     Key? key,
-    String title = 'Server Error',
-    String? description = 'Something went wrong on our end. Please try again.',
+    String title = 'Service Unavailable',
+    String? description = 'Please try again in a moment.',
     VoidCallback? onRetry,
   }) {
     return AppErrorState(
@@ -339,8 +341,8 @@ class AppErrorState extends StatelessWidget {
   /// Creates a generic error state.
   factory AppErrorState.generic({
     Key? key,
-    String title = 'Oops!',
-    String? description = 'Something went wrong. Please try again.',
+    String title = 'Error',
+    String? description = 'An error occurred. Please try again.',
     VoidCallback? onRetry,
   }) {
     return AppErrorState(
@@ -356,7 +358,7 @@ class AppErrorState extends StatelessWidget {
   factory AppErrorState.notFound({
     Key? key,
     String title = 'Not Found',
-    String? description = 'The page you\'re looking for doesn\'t exist',
+    String? description = 'This content is no longer available.',
     String? secondaryActionLabel = 'Go Back',
     VoidCallback? onSecondaryAction,
   }) {

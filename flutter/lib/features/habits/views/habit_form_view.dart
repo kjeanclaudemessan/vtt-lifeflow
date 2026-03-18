@@ -30,7 +30,12 @@ class HabitFormView extends StackedView<HabitFormViewModel> {
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
-            onPressed: viewModel.isBusy ? null : viewModel.save,
+            onPressed: viewModel.isBusy
+                ? null
+                : () => viewModel.save(
+                    nameRequiredMessage: l10n.nameRequired,
+                    domainRequiredMessage: l10n.habitSelectDomain,
+                  ),
           ),
         ],
       ),
@@ -172,7 +177,10 @@ class _HabitFormBodyState extends State<_HabitFormBody> {
           // Save button
           AppButton.primary(
             label: viewModel.isEditMode ? l10n.habitEdit : l10n.habitAdd,
-            onPressed: viewModel.save,
+            onPressed: () => viewModel.save(
+              nameRequiredMessage: l10n.nameRequired,
+              domainRequiredMessage: l10n.habitSelectDomain,
+            ),
             isLoading: viewModel.isBusy,
             isFullWidth: true,
           ),

@@ -2,7 +2,7 @@
   "@@locale": "en",
   "@@last_modified": "2025-01-21T00:00:00.000Z",
   "@_GENERAL": {},
-  "appName": "VTT Flutter Template",
+  "appName": "LifeFlow",
   "@appName": {
     "description": "The application name"
   },
@@ -324,8 +324,8 @@
   "settingsDeleteAccountConfirm": "Are you sure you want to delete your account? This action cannot be undone.",
   "@_NOTIFICATIONS_MODULE": {},
   "notificationPreferences": "Notification Preferences",
-  "notificationsEmptyTitle": "No Notifications",
-  "notificationsEmptyDescription": "You don't have any notifications yet. We'll let you know when something new happens.",
+  "notificationsEmptyTitle": "All Quiet",
+  "notificationsEmptyDescription": "Your notifications will appear here.",
   "markAllRead": "Mark all read",
   "clearAll": "Clear all",
   "notificationsChannelMarketing": "Promotions & Offers",
@@ -345,8 +345,8 @@
 
   "@_DOMAINS": {},
   "domainsTitle": "Life Domains",
-  "domainsEmptyTitle": "No Domains",
-  "domainsEmptyDescription": "Add your first life domain to organize your habits.",
+  "domainsEmptyTitle": "Organize Your Life",
+  "domainsEmptyDescription": "Create your first domain to group your habits.",
   "domainAdd": "New Domain",
   "domainName": "Domain name",
   "domainIcon": "Icon",
@@ -365,8 +365,8 @@
 
   "@_HABITS": {},
   "habitsTitle": "Habits",
-  "habitsEmptyTitle": "No Habits Yet",
-  "habitsEmptyDescription": "Create your first habit to start tracking your time.",
+  "habitsEmptyTitle": "Ready to Start?",
+  "habitsEmptyDescription": "Create your first habit and begin your journey.",
   "habitAdd": "New Habit",
   "habitEdit": "Edit Habit",
   "habitName": "Habit name",
@@ -459,8 +459,8 @@
   },
 
   "@_TODAY": {},
-  "todayEmptyTitle": "No habits yet",
-  "todayEmptySubtitle": "Start by adding your first habit!",
+  "todayEmptyTitle": "Your Day Starts Here",
+  "todayEmptySubtitle": "Add your first habit to get started!",
   "todayGreetingMorning": "Good morning ☀️",
   "todayGreetingAfternoon": "Keep going 💪",
   "todayGreetingEvening": "Well done today 🌙",

@@ -64,7 +64,11 @@ class TodayView extends StackedView<TodayViewModel> {
           viewModel.isBusy
               ? const AppLoadingState()
               : viewModel.hasError
-              ? AppErrorState.generic(onRetry: viewModel.init)
+              ? AppErrorState.generic(
+                  title: l10n.errorOccurred,
+                  description: l10n.errorUnknown,
+                  onRetry: viewModel.init,
+                )
               : viewModel.todayHabits.isEmpty
               ? _buildEmptyState(context, l10n)
               : AppRefreshIndicator(

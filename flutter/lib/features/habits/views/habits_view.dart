@@ -24,19 +24,21 @@ class HabitsView extends StackedView<HabitsViewModel> {
     final l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.habitsTitle),
-      ),
+      appBar: AppBar(title: Text(l10n.habitsTitle)),
       body: viewModel.isBusy
           ? const AppLoadingState()
           : viewModel.hasError
-              ? AppErrorState.generic(onRetry: viewModel.init)
-              : _buildContent(context, viewModel, brightness),
+          ? AppErrorState.generic(
+              title: l10n.errorOccurred,
+              description: l10n.errorUnknown,
+              onRetry: viewModel.init,
+            )
+          : _buildContent(context, viewModel, brightness),
       floatingActionButton: AppFab(
         icon: Icons.add,
         onPressed: () async {
-          final result =
-              await locator<NavigationService>().navigateToHabitFormView();
+          final result = await locator<NavigationService>()
+              .navigateToHabitFormView();
           if (result == true) await viewModel.refresh();
         },
       ),
@@ -58,8 +60,8 @@ class HabitsView extends StackedView<HabitsViewModel> {
         description: l10n.habitsEmptyDescription,
         actionLabel: l10n.habitAdd,
         onAction: () async {
-          final result =
-              await locator<NavigationService>().navigateToHabitFormView();
+          final result = await locator<NavigationService>()
+              .navigateToHabitFormView();
           if (result == true) await viewModel.refresh();
         },
       );
@@ -170,11 +172,8 @@ class HabitsView extends StackedView<HabitsViewModel> {
                     return false; // Don't remove from list — let refresh handle
                   },
                   child: AppLongPressWrapper(
-                    onLongPress: () => _showQuickActions(
-                      context,
-                      habit,
-                      viewModel,
-                    ),
+                    onLongPress: () =>
+                        _showQuickActions(context, habit, viewModel),
                     child: HabitCheckTile(
                       habit: habit,
                       domain: viewModel.domainFor(habit.domainId),
@@ -182,11 +181,11 @@ class HabitsView extends StackedView<HabitsViewModel> {
                       streak: viewModel.streakFor(habit.id),
                       onToggle: () => viewModel.toggleHabit(habit.id),
                       onTap: () async {
-                        final result =
-                            await locator<NavigationService>().navigateTo(
-                          Routes.habitFormView,
-                          arguments: HabitFormViewArguments(habit: habit),
-                        );
+                        final result = await locator<NavigationService>()
+                            .navigateTo(
+                              Routes.habitFormView,
+                              arguments: HabitFormViewArguments(habit: habit),
+                            );
                         if (result == true) await viewModel.refresh();
                       },
                     ),

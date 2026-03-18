@@ -28,7 +28,11 @@ class CounterView extends StackedView<CounterViewModel> {
       body: viewModel.isBusy
           ? const AppLoadingState()
           : viewModel.hasError
-          ? AppErrorState.generic(onRetry: viewModel.init)
+          ? AppErrorState.generic(
+              title: l10n.errorOccurred,
+              description: l10n.errorUnknown,
+              onRetry: viewModel.init,
+            )
           : _buildContent(context, viewModel, brightness),
     );
   }

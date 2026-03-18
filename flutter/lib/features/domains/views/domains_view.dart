@@ -33,10 +33,12 @@ class DomainsView extends StackedView<DomainsViewModel> {
       body: viewModel.isBusy
           ? const AppLoadingState()
           : viewModel.hasError
-              ? AppErrorState.generic(
-                  onRetry: viewModel.init,
-                )
-              : _buildContent(context, viewModel, brightness),
+          ? AppErrorState.generic(
+              title: context.l10n.errorOccurred,
+              description: context.l10n.errorUnknown,
+              onRetry: viewModel.init,
+            )
+          : _buildContent(context, viewModel, brightness),
     );
   }
 
@@ -59,9 +61,7 @@ class DomainsView extends StackedView<DomainsViewModel> {
                   onAction: () => _showCreateDomainDialog(context, viewModel),
                 )
               : ReorderableListView.builder(
-                  padding: EdgeInsets.symmetric(
-                    vertical: AppSpacing.sm,
-                  ),
+                  padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
                   itemCount: viewModel.activeDomains.length,
                   onReorder: viewModel.reorderDomains,
                   itemBuilder: (context, index) {
@@ -70,16 +70,10 @@ class DomainsView extends StackedView<DomainsViewModel> {
                       key: ValueKey(domain.id),
                       domain: domain,
                       habitCount: viewModel.getHabitCount(domain.id),
-                      onTap: () => _showEditDomainDialog(
-                        context,
-                        viewModel,
-                        domain,
-                      ),
-                      onArchive: () => _confirmArchive(
-                        context,
-                        viewModel,
-                        domain,
-                      ),
+                      onTap: () =>
+                          _showEditDomainDialog(context, viewModel, domain),
+                      onArchive: () =>
+                          _confirmArchive(context, viewModel, domain),
                     );
                   },
                 ),
@@ -230,7 +224,10 @@ class DomainsView extends StackedView<DomainsViewModel> {
       cancelLabel: context.l10n.cancel,
     );
     if (confirmed == true) {
-      await viewModel.archiveDomain(domain.id);
+      await viewModel.archiveDomain(
+        domain.id,
+        minActiveErrorMessage: context.l10n.domainCannotArchiveLast,
+      );
     }
   }
 

@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'VTT Flutter Template';
+  String get appName => 'LifeFlow';
 
   @override
   String get ok => 'OK';
@@ -731,11 +731,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationPreferences => 'Notification Preferences';
 
   @override
-  String get notificationsEmptyTitle => 'No Notifications';
+  String get notificationsEmptyTitle => 'All Quiet';
 
   @override
   String get notificationsEmptyDescription =>
-      'You don\'t have any notifications yet. We\'ll let you know when something new happens.';
+      'Your notifications will appear here.';
 
   @override
   String get markAllRead => 'Mark all read';
@@ -796,11 +796,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get domainsTitle => 'Life Domains';
 
   @override
-  String get domainsEmptyTitle => 'No Domains';
+  String get domainsEmptyTitle => 'Organize Your Life';
 
   @override
   String get domainsEmptyDescription =>
-      'Add your first life domain to organize your habits.';
+      'Create your first domain to group your habits.';
 
   @override
   String get domainAdd => 'New Domain';
@@ -846,11 +846,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitsTitle => 'Habits';
 
   @override
-  String get habitsEmptyTitle => 'No Habits Yet';
+  String get habitsEmptyTitle => 'Ready to Start?';
 
   @override
   String get habitsEmptyDescription =>
-      'Create your first habit to start tracking your time.';
+      'Create your first habit and begin your journey.';
 
   @override
   String get habitAdd => 'New Habit';
@@ -1025,10 +1025,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get todayEmptyTitle => 'No habits yet';
+  String get todayEmptyTitle => 'Your Day Starts Here';
 
   @override
-  String get todayEmptySubtitle => 'Start by adding your first habit!';
+  String get todayEmptySubtitle => 'Add your first habit to get started!';
 
   @override
   String get todayGreetingMorning => 'Good morning ☀️';

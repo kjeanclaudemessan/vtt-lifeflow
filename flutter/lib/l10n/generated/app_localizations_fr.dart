@@ -9,7 +9,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appName => 'VTT Flutter Template';
+  String get appName => 'LifeFlow';
 
   @override
   String get ok => 'OK';
@@ -733,11 +733,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notificationPreferences => 'Préférences de notification';
 
   @override
-  String get notificationsEmptyTitle => 'Aucune notification';
+  String get notificationsEmptyTitle => 'Tout est calme';
 
   @override
   String get notificationsEmptyDescription =>
-      'Vous n\'avez pas encore de notifications. Nous vous informerons quand quelque chose de nouveau arrivera.';
+      'Tes notifications apparaîtront ici.';
 
   @override
   String get markAllRead => 'Tout marquer comme lu';
@@ -798,11 +798,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get domainsTitle => 'Domaines de vie';
 
   @override
-  String get domainsEmptyTitle => 'Aucun domaine';
+  String get domainsEmptyTitle => 'Organise ta vie par domaines';
 
   @override
   String get domainsEmptyDescription =>
-      'Ajoutez votre premier domaine de vie pour organiser vos habitudes.';
+      'Crée ton premier domaine pour regrouper tes habitudes.';
 
   @override
   String get domainAdd => 'Nouveau domaine';
@@ -830,7 +830,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get domainCannotArchiveLast =>
-      'Vous devez garder au moins un domaine actif.';
+      'Tu dois garder au moins un domaine actif.';
 
   @override
   String domainHabitCount(int count) {
@@ -848,11 +848,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get habitsTitle => 'Habitudes';
 
   @override
-  String get habitsEmptyTitle => 'Aucune habitude';
+  String get habitsEmptyTitle => 'Prêt à créer ta première habitude ?';
 
   @override
   String get habitsEmptyDescription =>
-      'Créez votre première habitude pour commencer à tracker votre temps.';
+      'Crée ta première habitude et commence ton parcours.';
 
   @override
   String get habitAdd => 'Nouvelle habitude';
@@ -1027,11 +1027,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get todayEmptyTitle => 'Pas encore d\'habitudes';
+  String get todayEmptyTitle => 'Ta journée commence ici';
 
   @override
   String get todayEmptySubtitle =>
-      'Commence par ajouter ta première habitude !';
+      'Ajoute ta première habitude pour démarrer !';
 
   @override
   String get todayGreetingMorning => 'Bonjour ☀️';

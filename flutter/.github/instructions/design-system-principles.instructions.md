@@ -166,7 +166,7 @@ Every moment in the app targets a specific emotion. Design & copy must align:
 
 - **Max 5 push per day** across all notification types.
 - **Opt-in obligatoire** at first launch. Never assume consent.
-- **Quiet hours: 22h–7h** by default, user-configurable in Settings.
+- **Quiet hours: 22h–6h** by default, user-configurable in Settings.
 - **Each notification category** has its own toggle (Reminders, Social, System, Marketing).
 
 ### Dark Patterns INTERDITS

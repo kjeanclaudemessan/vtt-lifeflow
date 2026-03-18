@@ -36,14 +36,11 @@ class DomainsViewModel extends BaseViewModel {
 
   Future<void> _loadDomains() async {
     final result = await _domainRepo.getDomains();
-    result.fold(
-      (failure) => setError(failure.message),
-      (domains) {
-        _activeDomains = domains.where((d) => !d.isArchived).toList()
-          ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
-        _archivedDomains = domains.where((d) => d.isArchived).toList();
-      },
-    );
+    result.fold((failure) => setError(failure.message), (domains) {
+      _activeDomains = domains.where((d) => !d.isArchived).toList()
+        ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+      _archivedDomains = domains.where((d) => d.isArchived).toList();
+    });
 
     // Load habit counts per domain
     final habitsResult = await _habitRepo.getHabits(isArchived: false);
@@ -67,19 +64,13 @@ class DomainsViewModel extends BaseViewModel {
     final result = await _domainRepo.createDomain(
       entity.copyWith(sortOrder: _activeDomains.length),
     );
-    result.fold(
-      (failure) => setError(failure.message),
-      (_) {},
-    );
+    result.fold((failure) => setError(failure.message), (_) {});
     if (result.isRight()) await _loadDomains();
   }
 
   Future<void> updateDomain(DomainEntity entity) async {
     final result = await _domainRepo.updateDomain(entity);
-    result.fold(
-      (failure) => setError(failure.message),
-      (_) {},
-    );
+    result.fold((failure) => setError(failure.message), (_) {});
     if (result.isRight()) await _loadDomains();
   }
 
@@ -91,27 +82,24 @@ class DomainsViewModel extends BaseViewModel {
 
     final orderedIds = _activeDomains.map((d) => d.id).toList();
     final result = await _domainRepo.reorderDomains(orderedIds);
-    result.fold(
-      (failure) {
-        setError(failure.message);
-        _loadDomains(); // Revert on failure
-      },
-      (_) {},
-    );
+    result.fold((failure) {
+      setError(failure.message);
+      _loadDomains(); // Revert on failure
+    }, (_) {});
   }
 
-  Future<bool> archiveDomain(String id) async {
+  Future<bool> archiveDomain(
+    String id, {
+    String minActiveErrorMessage = 'You must keep at least one active domain.',
+  }) async {
     // Cannot archive last active domain
     if (_activeDomains.length <= 1) {
-      setError('You must keep at least one active domain.');
+      setError(minActiveErrorMessage);
       return false;
     }
 
     final result = await _domainRepo.archiveDomain(id);
-    result.fold(
-      (failure) => setError(failure.message),
-      (_) {},
-    );
+    result.fold((failure) => setError(failure.message), (_) {});
     if (result.isRight()) {
       await _loadDomains();
       return true;
@@ -121,10 +109,7 @@ class DomainsViewModel extends BaseViewModel {
 
   Future<void> unarchiveDomain(String id) async {
     final result = await _domainRepo.unarchiveDomain(id);
-    result.fold(
-      (failure) => setError(failure.message),
-      (_) {},
-    );
+    result.fold((failure) => setError(failure.message), (_) {});
     if (result.isRight()) await _loadDomains();
   }
 }

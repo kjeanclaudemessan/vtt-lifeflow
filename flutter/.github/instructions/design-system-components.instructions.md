@@ -314,11 +314,44 @@ if (viewModel.isBusy && viewModel.items.isEmpty) {
 
 ---
 
+## 17. AppDropdown
+
+Styled dropdown selector, consistent with design system tokens.
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `items` | `List<DropdownItem<T>>` | List of selectable options |
+| `value` | `T?` | Currently selected value |
+| `onChanged` | `ValueChanged<T?>` | Selection callback |
+| `label` | `String?` | Field label |
+| `hint` | `String?` | Placeholder text |
+| `errorText` | `String?` | Validation error |
+| `isExpanded` | `bool` | Full width (default: `true`) |
+
+```dart
+AppDropdown<String>(
+  label: context.l10n.habitType,
+  hint: context.l10n.selectType,
+  value: viewModel.selectedType,
+  items: viewModel.types.map((t) => DropdownItem(
+    value: t.name,
+    label: t.displayName,
+  )).toList(),
+  onChanged: viewModel.setType,
+  errorText: viewModel.typeError,
+)
+```
+
+**Rules**: Use `AppDropdown` instead of raw `DropdownButtonFormField`. Style inherits from `AppTextField` (same border radius, padding, font).
+
+---
+
 ## Usage Decision Tree
 
 ```
 Need a primary action?          → AppButton.primary
 Need user input?                → AppTextField
+Need a selection from a list?   → AppDropdown
 Need to display data?           → AppCard + AppListTile
 Need status indicator?          → AppBadge
 Need filtering?                 → AppChip.filter
@@ -332,5 +365,4 @@ Need extra options?             → AppBottomSheet
 Need user identity?             → AppAvatar
 Need separation?                → AppDivider
 Need loading placeholder?       → AppSkeleton
-```
 ```

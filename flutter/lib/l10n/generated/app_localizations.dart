@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// The application name
   ///
   /// In en, this message translates to:
-  /// **'VTT Flutter Template'**
+  /// **'LifeFlow'**
   String get appName;
 
   /// No description provided for @ok.
@@ -1451,13 +1451,13 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsEmptyTitle.
   ///
   /// In en, this message translates to:
-  /// **'No Notifications'**
+  /// **'All Quiet'**
   String get notificationsEmptyTitle;
 
   /// No description provided for @notificationsEmptyDescription.
   ///
   /// In en, this message translates to:
-  /// **'You don\'t have any notifications yet. We\'ll let you know when something new happens.'**
+  /// **'Your notifications will appear here.'**
   String get notificationsEmptyDescription;
 
   /// No description provided for @markAllRead.
@@ -1565,13 +1565,13 @@ abstract class AppLocalizations {
   /// No description provided for @domainsEmptyTitle.
   ///
   /// In en, this message translates to:
-  /// **'No Domains'**
+  /// **'Organize Your Life'**
   String get domainsEmptyTitle;
 
   /// No description provided for @domainsEmptyDescription.
   ///
   /// In en, this message translates to:
-  /// **'Add your first life domain to organize your habits.'**
+  /// **'Create your first domain to group your habits.'**
   String get domainsEmptyDescription;
 
   /// No description provided for @domainAdd.
@@ -1643,13 +1643,13 @@ abstract class AppLocalizations {
   /// No description provided for @habitsEmptyTitle.
   ///
   /// In en, this message translates to:
-  /// **'No Habits Yet'**
+  /// **'Ready to Start?'**
   String get habitsEmptyTitle;
 
   /// No description provided for @habitsEmptyDescription.
   ///
   /// In en, this message translates to:
-  /// **'Create your first habit to start tracking your time.'**
+  /// **'Create your first habit and begin your journey.'**
   String get habitsEmptyDescription;
 
   /// No description provided for @habitAdd.
@@ -1967,13 +1967,13 @@ abstract class AppLocalizations {
   /// No description provided for @todayEmptyTitle.
   ///
   /// In en, this message translates to:
-  /// **'No habits yet'**
+  /// **'Your Day Starts Here'**
   String get todayEmptyTitle;
 
   /// No description provided for @todayEmptySubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Start by adding your first habit!'**
+  /// **'Add your first habit to get started!'**
   String get todayEmptySubtitle;
 
   /// No description provided for @todayGreetingMorning.
