@@ -29,8 +29,10 @@ Le système de production automatisée d'apps mobiles.
 | [pipeline-strategy.md](factory/pipeline-strategy.md) | Stratégie d'exécution en 3 phases : Local → Orchestrateur → VPS + Telegram |
 | [certified-gate-loop.md](factory/certified-gate-loop.md) | Partie 1 — Fondations : diagnostic, pyramide de gates, dérives IA, boucle de validation |
 | [certified-gate-loop-part2.md](factory/certified-gate-loop-part2.md) | Partie 2 — Wireframe rules, validation visuelle MCP, vision "une instruction → app déployée" |
+| [clone-and-setup-guide.md](factory/clone-and-setup-guide.md) | **Guide clone & setup** : clonage `git archive`, renommage, scripts, .env, CI/CD, checklist |
+| [template-cleanup-guide.md](factory/template-cleanup-guide.md) | **Guide nettoyage template** : suppression éléments LifeFlow, script automatisé, vérification |
 
-**Ordre de lecture :** ai-app-factory → certified-gate-loop → part2 → pipeline-strategy
+**Ordre de lecture :** ai-app-factory → certified-gate-loop → part2 → pipeline-strategy → **clone-and-setup-guide** → **template-cleanup-guide**
 
 ---
 
