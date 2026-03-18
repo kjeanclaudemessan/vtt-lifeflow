@@ -12,6 +12,11 @@ import '../viewmodels/splash_viewmodel.dart';
 /// This is not a loading screen. It's a **moment of welcome**.
 /// The logo breathes in, the greeting adapts to time of day,
 /// and the transition out is choreographed, never a hard cut.
+///
+/// Supports three visual styles via [SplashStyle]:
+/// - [SplashStyle.centered]: Logo in the middle with greeting below (default).
+/// - [SplashStyle.minimal]: Logo only, no greeting or tagline.
+/// - [SplashStyle.branded]: Large logo with gradient background.
 class SplashView extends StackedView<SplashViewModel> {
   const SplashView({super.key});
 
@@ -22,16 +27,14 @@ class SplashView extends StackedView<SplashViewModel> {
     Widget? child,
   ) {
     final config = viewModel.config;
-    final l10n = context.l10n;
     final colorScheme = context.colorScheme;
-    final skin = context.brandSkin;
 
     return Scaffold(
       backgroundColor: config.backgroundColor != null
           ? Color(config.backgroundColor!)
           : colorScheme.surface,
       body: Semantics(
-        label: l10n.splashInitializing,
+        label: context.l10n.splashInitializing,
         child: SafeArea(
           child: AnimatedOpacity(
             opacity: viewModel.isExiting ? 0.0 : 1.0,
@@ -41,89 +44,232 @@ class SplashView extends StackedView<SplashViewModel> {
               scale: viewModel.isExiting ? 1.05 : 1.0,
               duration: AppAnimations.medium,
               curve: AppAnimations.easeIn,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Spacer(flex: 3),
-
-                    // ── Logo with breathing animation ──
-                    _BreathingLogo(
-                      animation: config.animation,
-                      logoAsset: config.logoAsset,
-                      isReady: viewModel.progress >= 1.0,
-                    ),
-
-                    SizedBox(height: AppSpacing.lg),
-
-                    // ── App name from brand skin ──
-                    _FadeInWidget(
-                      delay: const Duration(milliseconds: 400),
-                      child: Text(
-                        skin.appName,
-                        style: AppTypography.headlineLarge.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.5,
-                        ),
-                        semanticsLabel: skin.appName,
-                      ),
-                    ),
-
-                    SizedBox(height: AppSpacing.xs),
-
-                    // ── Contextual greeting or tagline ──
-                    _FadeInWidget(
-                      delay: const Duration(milliseconds: 600),
-                      child: AnimatedSwitcher(
-                        duration: AppAnimations.medium,
-                        switchInCurve: AppAnimations.easeOut,
-                        switchOutCurve: AppAnimations.easeIn,
-                        child: viewModel.hasError
-                            ? const SizedBox.shrink(key: ValueKey('empty'))
-                            : Text(
-                                config.showGreeting
-                                    ? viewModel.contextualGreeting(l10n)
-                                    : l10n.splashTagline,
-                                key: ValueKey(
-                                  config.showGreeting ? 'greeting' : 'tagline',
-                                ),
-                                style: AppTypography.bodyMedium.copyWith(
-                                  color: colorScheme.onSurfaceVariant,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                      ),
-                    ),
-
-                    const Spacer(flex: 2),
-
-                    // ── Error or progress ──
-                    AnimatedSwitcher(
-                      duration: AppAnimations.medium,
-                      switchInCurve: AppAnimations.easeOut,
-                      switchOutCurve: AppAnimations.easeIn,
-                      child: viewModel.hasError
-                          ? _SplashErrorState(
-                              key: const ValueKey('error'),
-                              viewModel: viewModel,
-                              l10n: l10n,
-                            )
-                          : _SplashProgress(
-                              key: const ValueKey('progress'),
-                              progress: viewModel.progress,
-                              l10n: l10n,
-                            ),
-                    ),
-
-                    SizedBox(height: AppSpacing.xl),
-                  ],
+              child: switch (config.style) {
+                SplashStyle.centered => _buildCenteredStyle(
+                  context,
+                  viewModel,
+                  config,
                 ),
-              ),
+                SplashStyle.minimal => _buildMinimalStyle(
+                  context,
+                  viewModel,
+                  config,
+                ),
+                SplashStyle.branded => _buildBrandedStyle(
+                  context,
+                  viewModel,
+                  config,
+                ),
+              },
             ),
           ),
         ),
       ),
+    );
+  }
+
+  // ── Centered style (default) ──────────────────────────────────────
+
+  Widget _buildCenteredStyle(
+    BuildContext context,
+    SplashViewModel viewModel,
+    SplashConfig config,
+  ) {
+    final l10n = context.l10n;
+    final colorScheme = context.colorScheme;
+    final skin = context.brandSkin;
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Spacer(flex: 3),
+
+          _BreathingLogo(
+            animation: config.animation,
+            logoAsset: config.logoAsset,
+            isReady: viewModel.progress >= 1.0,
+          ),
+
+          SizedBox(height: AppSpacing.lg),
+
+          _FadeInWidget(
+            delay: const Duration(milliseconds: 400),
+            child: Text(
+              skin.appName,
+              style: AppTypography.headlineLarge.copyWith(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.5,
+              ),
+              semanticsLabel: skin.appName,
+            ),
+          ),
+
+          SizedBox(height: AppSpacing.xs),
+
+          _FadeInWidget(
+            delay: const Duration(milliseconds: 600),
+            child: AnimatedSwitcher(
+              duration: AppAnimations.medium,
+              switchInCurve: AppAnimations.easeOut,
+              switchOutCurve: AppAnimations.easeIn,
+              child: viewModel.hasError
+                  ? const SizedBox.shrink(key: ValueKey('empty'))
+                  : Text(
+                      config.showGreeting
+                          ? viewModel.contextualGreeting(l10n)
+                          : l10n.splashTagline,
+                      key: ValueKey(
+                        config.showGreeting ? 'greeting' : 'tagline',
+                      ),
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+            ),
+          ),
+
+          const Spacer(flex: 2),
+
+          _buildBottomSection(context, viewModel, config),
+
+          SizedBox(height: AppSpacing.xl),
+        ],
+      ),
+    );
+  }
+
+  // ── Minimal style ─────────────────────────────────────────────────
+
+  Widget _buildMinimalStyle(
+    BuildContext context,
+    SplashViewModel viewModel,
+    SplashConfig config,
+  ) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Spacer(flex: 3),
+
+          _BreathingLogo(
+            animation: config.animation,
+            logoAsset: config.logoAsset,
+            isReady: viewModel.progress >= 1.0,
+          ),
+
+          const Spacer(flex: 2),
+
+          _buildBottomSection(context, viewModel, config),
+
+          SizedBox(height: AppSpacing.xl),
+        ],
+      ),
+    );
+  }
+
+  // ── Branded style ─────────────────────────────────────────────────
+
+  Widget _buildBrandedStyle(
+    BuildContext context,
+    SplashViewModel viewModel,
+    SplashConfig config,
+  ) {
+    final colorScheme = context.colorScheme;
+    final skin = context.brandSkin;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            colorScheme.primary.withValues(alpha: 0.15),
+            colorScheme.surface,
+          ],
+        ),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(flex: 2),
+
+            _BreathingLogo(
+              animation: config.animation,
+              logoAsset: config.logoAsset,
+              isReady: viewModel.progress >= 1.0,
+            ),
+
+            SizedBox(height: AppSpacing.xl),
+
+            _FadeInWidget(
+              delay: const Duration(milliseconds: 400),
+              child: Text(
+                skin.appName,
+                style: AppTypography.displaySmall.copyWith(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -1,
+                ),
+                semanticsLabel: skin.appName,
+              ),
+            ),
+
+            SizedBox(height: AppSpacing.sm),
+
+            if (config.showTagline)
+              _FadeInWidget(
+                delay: const Duration(milliseconds: 600),
+                child: Text(
+                  context.l10n.splashTagline,
+                  style: AppTypography.titleMedium.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
+            const Spacer(flex: 3),
+
+            _buildBottomSection(context, viewModel, config),
+
+            SizedBox(height: AppSpacing.xxl),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Shared bottom section (error or progress) ─────────────────────
+
+  Widget _buildBottomSection(
+    BuildContext context,
+    SplashViewModel viewModel,
+    SplashConfig config,
+  ) {
+    final l10n = context.l10n;
+
+    return AnimatedSwitcher(
+      duration: AppAnimations.medium,
+      switchInCurve: AppAnimations.easeOut,
+      switchOutCurve: AppAnimations.easeIn,
+      child: viewModel.hasError
+          ? _SplashErrorState(
+              key: const ValueKey('error'),
+              viewModel: viewModel,
+              l10n: l10n,
+            )
+          : viewModel.isBusy
+          ? const AppLoadingState(key: ValueKey('busy'))
+          : _SplashProgress(
+              key: const ValueKey('progress'),
+              progress: viewModel.progress,
+              l10n: l10n,
+            ),
     );
   }
 

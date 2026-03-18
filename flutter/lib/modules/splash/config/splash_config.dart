@@ -8,6 +8,9 @@ class SplashConfig {
   /// Default: 2500ms — enough to feel intentional without feeling slow.
   final int minDurationMs;
 
+  /// Visual layout style of the splash screen.
+  final SplashStyle style;
+
   /// Animation style for the logo entrance.
   final SplashAnimation animation;
 
@@ -48,6 +51,7 @@ class SplashConfig {
 
   const SplashConfig({
     this.minDurationMs = 2500,
+    this.style = SplashStyle.centered,
     this.animation = SplashAnimation.breathe,
     this.checkVersion = false,
     this.versionCheckUrl,
@@ -67,6 +71,7 @@ class SplashConfig {
   /// Creates a copy with the given fields replaced.
   SplashConfig copyWith({
     int? minDurationMs,
+    SplashStyle? style,
     SplashAnimation? animation,
     bool? checkVersion,
     String? versionCheckUrl,
@@ -81,6 +86,7 @@ class SplashConfig {
   }) {
     return SplashConfig(
       minDurationMs: minDurationMs ?? this.minDurationMs,
+      style: style ?? this.style,
       animation: animation ?? this.animation,
       checkVersion: checkVersion ?? this.checkVersion,
       versionCheckUrl: versionCheckUrl ?? this.versionCheckUrl,
@@ -94,6 +100,18 @@ class SplashConfig {
       onComplete: onComplete ?? this.onComplete,
     );
   }
+}
+
+/// Visual layout styles for the splash screen.
+enum SplashStyle {
+  /// Centered layout — logo in the middle with greeting below.
+  centered,
+
+  /// Minimal layout — logo only, no greeting or tagline, clean.
+  minimal,
+
+  /// Branded layout — large logo with gradient background.
+  branded,
 }
 
 /// Animation types for the splash logo.

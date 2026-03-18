@@ -239,7 +239,7 @@ function Invoke-Gate2 {
         }
 
         # No hardcoded colors
-        $colorPatterns = @("Colors\.\w+", "Color\(0x", "Color\.fromRGBO", "Color\.fromARGB")
+        $colorPatterns = @("(?<!App)Colors\.\w+", "Color\(0x", "Color\.fromRGBO", "Color\.fromARGB")
         $colorViolations = @()
         foreach ($pat in $colorPatterns) {
             $matches = [regex]::Matches($content, $pat)
